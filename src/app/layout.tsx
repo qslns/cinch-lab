@@ -1,13 +1,16 @@
 import type { Metadata } from 'next'
-import LuxuryNav from '@/components/layout/LuxuryNav'
-import Footer from '@/components/layout/Footer'
+import CinchNav from '@/components/layout/CinchNav'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
+import '@/styles/cinch-lab.css'
 
 export const metadata: Metadata = {
-  title: 'CINCH LAB | Luxury Fashion House',
-  description: 'Discover the latest collections from CINCH LAB. Avant-garde designs merging minimalism with architectural forms.',
-  keywords: 'luxury fashion, designer clothing, haute couture, ready-to-wear, CINCH LAB',
+  title: 'CINCH LAB | Experimental Fashion Laboratory',
+  description: 'Cinch • Release • Repeat. Enter the digital fashion laboratory where chaos meets control.',
+  keywords: 'experimental fashion, digital art, avant-garde, fashion laboratory, CINCH LAB',
+  authors: [{ name: 'CINCH LAB' }],
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#000000',
 }
 
 export default function RootLayout({
@@ -18,11 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LuxuryNav />
-        <main>
-          {children}
-        </main>
-        <Footer />
+        <CinchNav />
+        {children}
       </body>
     </html>
   )

@@ -1,229 +1,343 @@
 'use client'
 
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import CinchFilters from '@/components/CinchFilters'
+import { 
+  performanceMonitor, 
+  animationController, 
+  effectObserver,
+  isMobile,
+  throttle,
+  easings
+} from '@/lib/performance'
 
-export default function HomePage() {
-  const [currentSlide, setCurrentSlide] = useState(0)
+export default function ExperimentalHomePage() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [fps, setFps] = useState(60)
+  const [isAccessible, setIsAccessible] = useState(false)
+  const [extremeMode, setExtremeMode] = useState(false)
+  const [timeMode, setTimeMode] = useState('night')
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const mainRef = useRef<HTMLDivElement>(null)
+  const konamiCode = useRef<string[]>([])
 
-  const heroSlides = [
-    {
-      id: 1,
-      title: 'Spring Summer 2025',
-      subtitle: 'The New Collection',
-      cta: 'Discover Now',
-      link: '/collections/ss25',
-      video: true
-    },
-    {
-      id: 2,
-      title: 'Architectural Forms',
-      subtitle: 'Editorial',
-      cta: 'View Editorial',
-      link: '/editorial/architectural-forms'
-    },
-    {
-      id: 3,
-      title: 'CINCH Essentials',
-      subtitle: 'Timeless Pieces',
-      cta: 'Shop Essentials',
-      link: '/collections/essentials'
-    }
-  ]
-
+  // Initialize performance monitoring
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-    }, 5000)
-    return () => clearInterval(timer)
+    performanceMonitor.start()
+    const unsubscribe = performanceMonitor.onFPSUpdate((currentFps) => {
+      setFps(currentFps)
+      if (currentFps < 30) {
+        document.body.classList.add('low-performance')
+      } else {
+        document.body.classList.remove('low-performance')
+      }
+    })
+
+    // Set time-based theme
+    const hour = new Date().getHours()
+    if (hour >= 6 && hour < 12) setTimeMode('dawn')
+    else if (hour >= 12 && hour < 18) setTimeMode('day')
+    else if (hour >= 18 && hour < 24) setTimeMode('dusk')
+    else setTimeMode('night')
+
+    // Loading complete
+    const timer = setTimeout(() => setIsLoading(false), 1500)
+
+    return () => {
+      performanceMonitor.stop()
+      unsubscribe()
+      clearTimeout(timer)
+    }
   }, [])
 
-  const featuredProducts = [
-    { id: 1, name: 'Structured Blazer', price: '$2,450', tag: 'New' },
-    { id: 2, name: 'Wide Leg Trouser', price: '$1,280' },
-    { id: 3, name: 'Asymmetric Dress', price: '$3,200', tag: 'Bestseller' },
-    { id: 4, name: 'Oversized Coat', price: '$4,500' },
+  // Apply time mode
+  useEffect(() => {
+    document.body.className = ''
+    document.body.classList.add(`${timeMode}-mode`)
+    if (isAccessible) document.body.classList.add('accessible-mode')
+    if (extremeMode) document.body.classList.add('extreme-mode')
+  }, [timeMode, isAccessible, extremeMode])
+
+  // Konami Code Detection
+  useEffect(() => {
+    const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+    
+    const handleKeyPress = (e: KeyboardEvent) => {
+      konamiCode.current.push(e.key)
+      if (konamiCode.current.length > KONAMI.length) {
+        konamiCode.current.shift()
+      }
+      
+      if (konamiCode.current.join('') === KONAMI.join('')) {
+        setExtremeMode(true)
+        setTimeout(() => setExtremeMode(false), 10000) // 10 seconds of extreme mode
+      }
+      
+      // ESC to cancel effects
+      if (e.key === 'Escape') {
+        setIsAccessible(true)
+        setExtremeMode(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
+
+  // Mouse tracking for magnetic effects
+  const handleMouseMove = useCallback(
+    throttle((e: MouseEvent) => {
+      if (!isAccessible && !isMobile()) {
+        setMousePos({ x: e.clientX, y: e.clientY })
+        
+        // Magnetic effect on elements
+        const magneticElements = document.querySelectorAll('.magnetic-zone')
+        magneticElements.forEach((el) => {
+          const rect = el.getBoundingClientRect()
+          const centerX = rect.left + rect.width / 2
+          const centerY = rect.top + rect.height / 2
+          const deltaX = e.clientX - centerX
+          const deltaY = e.clientY - centerY
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+          
+          if (distance < 150) {
+            const force = (150 - distance) / 150
+            const translateX = deltaX * force * 0.2
+            const translateY = deltaY * force * 0.2
+            ;(el as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px)`
+          } else {
+            ;(el as HTMLElement).style.transform = ''
+          }
+        })
+      }
+    }, 16),
+    [isAccessible]
+  )
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [handleMouseMove])
+
+  const sections = [
+    { id: 'manifesto', title: 'MANIFESTO', subtitle: 'Cinch • Release • Repeat' },
+    { id: 'collections', title: 'COLLECTIONS', subtitle: 'Experimental Fashion' },
+    { id: 'laboratory', title: 'LABORATORY', subtitle: 'Digital Experiments' },
+    { id: 'archive', title: 'ARCHIVE', subtitle: 'Past • Present • Future' },
   ]
 
   return (
     <>
-      {/* Hero Carousel */}
-      <section className="relative h-screen overflow-hidden">
-        <AnimatePresence mode="wait">
-          {heroSlides.map((slide, index) => (
-            index === currentSlide && (
+      <CinchFilters />
+      
+      {/* Loading Screen */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            className="cinch-loading"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* FPS Counter */}
+      <div className={`fps-counter ${fps < 30 ? 'low-fps' : ''}`}>
+        FPS: {fps}
+      </div>
+
+      {/* Accessibility Toggle */}
+      <button
+        className="accessibility-toggle"
+        onClick={() => setIsAccessible(!isAccessible)}
+        aria-label="Toggle Accessibility Mode"
+      >
+        A
+      </button>
+
+      {/* Noise Overlay */}
+      {!isAccessible && !isMobile() && <div className="noise-overlay" />}
+
+      {/* Main Content */}
+      <main ref={mainRef} className="min-h-screen relative">
+        {/* Hero Section */}
+        <section className="h-screen flex items-center justify-center relative overflow-hidden">
+          {/* Background Distortion */}
+          <div className="absolute inset-0 distortion-container" />
+          
+          {/* Glitch Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 1.5 }}
+            className="text-center z-10"
+          >
+            <h1 
+              className="glitch text-6xl md:text-8xl lg:text-9xl mb-4"
+              data-text="CINCH LAB"
+            >
+              CINCH LAB
+            </h1>
+            <p className="liquid-text">
+              Experimental Fashion Laboratory
+            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2, duration: 0.8 }}
+              className="mt-8 text-sm tracking-[0.3em] uppercase"
+            >
+              Cinch • Release • Repeat
+            </motion.p>
+          </motion.div>
+
+          {/* Scroll Indicator */}
+          <motion.div
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <div className="w-[1px] h-20 bg-white opacity-50" />
+          </motion.div>
+        </section>
+
+        {/* Navigation Grid */}
+        <section className="min-h-screen flex items-center justify-center px-4 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
+            {sections.map((section, index) => (
               <motion.div
-                key={slide.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-                className="absolute inset-0"
+                key={section.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="tear-content"
               >
-                {slide.video ? (
-                  <div className="absolute inset-0 bg-gray-900" />
-                ) : (
-                  <div className="absolute inset-0 bg-gray-100" />
-                )}
-                
-                <div className="relative h-full flex items-center justify-center text-center z-10">
-                  <div>
-                    <motion.p
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                      className="text-xs tracking-luxury uppercase mb-4"
-                    >
-                      {slide.subtitle}
-                    </motion.p>
-                    <motion.h1
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.5 }}
-                      className="text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8"
-                    >
-                      {slide.title}
-                    </motion.h1>
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.7 }}
-                    >
-                      <Link href={slide.link} className="btn btn-secondary">
-                        {slide.cta}
-                      </Link>
-                    </motion.div>
+                <Link
+                  href={`/${section.id}`}
+                  className="block group relative overflow-hidden"
+                >
+                  <div className="aspect-square bg-black border border-white relative">
+                    {/* RGB Split Effect */}
+                    <div className="rgb-split absolute inset-0">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center magnetic-zone">
+                          <h2 className="morph-nav text-2xl md:text-3xl mb-2">
+                            {section.title}
+                          </h2>
+                          <p className="text-xs tracking-widest opacity-50 group-hover:opacity-100 transition-opacity">
+                            {section.subtitle}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Hover Effect */}
+                    <div className="absolute inset-0 bg-white mix-blend-difference opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Featured Products - 3D Showcase */}
+        <section className="min-h-screen py-20 px-4 md:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+            className="max-w-7xl mx-auto"
+          >
+            <h2 className="glitch text-4xl md:text-6xl mb-12" data-text="NEW EXPERIMENTS">
+              NEW EXPERIMENTS
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="product-3d">
+                  <div className="product-3d-inner">
+                    <div className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                        <p className="text-sm mb-1">PRODUCT {String(item).padStart(3, '0')}</p>
+                        <p className="text-xs opacity-70">EXPERIMENTAL PIECE</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
-            )
-          ))}
-        </AnimatePresence>
-        
-        {/* Slide Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-12 h-[2px] transition-all ${
-                index === currentSlide ? 'bg-black' : 'bg-gray-400'
-              }`}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="container-wide py-20">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="text-3xl font-light mb-2">New Arrivals</h2>
-            <p className="text-sm text-gray-600">Discover the latest pieces from SS25</p>
-          </div>
-          <Link href="/collections/new-arrivals" className="link-underline text-sm">
-            View All
-          </Link>
-        </div>
-        
-        <div className="product-grid">
-          {featuredProducts.map((product) => (
-            <Link key={product.id} href={`/product/${product.id}`} className="group">
-              <div className="relative aspect-product bg-gray-100 mb-4 overflow-hidden">
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                {product.tag && (
-                  <span className="absolute top-4 left-4 bg-white px-2 py-1 text-[10px] tracking-wider uppercase">
-                    {product.tag}
-                  </span>
-                )}
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" />
-              </div>
-              <h3 className="text-sm mb-1 group-hover:underline">{product.name}</h3>
-              <p className="text-sm text-gray-600">{product.price}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Editorial Feature */}
-      <section className="bg-gray-50">
-        <div className="container-wide py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-xs tracking-luxury uppercase mb-4">Editorial</p>
-              <h2 className="text-4xl font-light mb-6">The Art of Minimalism</h2>
-              <p className="text-sm text-gray-600 mb-8 leading-relaxed">
-                Exploring the intersection of fashion and architecture through our 
-                latest collection. Each piece is a study in form, function, and the 
-                beauty of restraint.
-              </p>
-              <Link href="/editorial/art-of-minimalism" className="btn btn-secondary">
-                Read More
-              </Link>
+              ))}
             </div>
-            <div className="aspect-[4/5] bg-gray-200" />
+          </motion.div>
+        </section>
+
+        {/* Philosophy Section */}
+        <section className="min-h-screen flex items-center justify-center px-4 md:px-8 relative">
+          <div className="max-w-4xl text-center">
+            <motion.blockquote
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight"
+            >
+              <span className="liquid-text">
+                "Fashion's extreme limits lie not in excess,
+              </span>
+              <br />
+              <span className="glitch inline-block mt-4" data-text="but in controlled chaos.">
+                but in controlled chaos."
+              </span>
+            </motion.blockquote>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mt-8 text-sm tracking-[0.3em] uppercase opacity-70"
+            >
+              CINCH LAB MANIFESTO
+            </motion.p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Categories */}
-      <section className="container-wide py-20">
-        <h2 className="text-3xl font-light mb-12 text-center">Shop by Category</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {['Ready-to-Wear', 'Bags', 'Shoes', 'Accessories'].map((category) => (
-            <Link key={category} href={`/shop/${category.toLowerCase().replace(' ', '-')}`} className="group">
-              <div className="aspect-square bg-gray-100 mb-4 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" />
-              </div>
-              <h3 className="text-sm text-center group-hover:underline">{category}</h3>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Brand Story */}
-      <section className="bg-black text-white">
-        <div className="container-wide py-20">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl font-light mb-6">CINCH LAB</h2>
-            <p className="text-sm leading-relaxed mb-8 text-gray-300">
-              Founded in 2022, CINCH LAB represents a new vision in luxury fashion. 
-              Our collections merge architectural precision with fluid forms, creating 
-              pieces that transcend seasons and trends. Each garment is meticulously 
-              crafted in limited quantities, ensuring exclusivity and attention to detail.
-            </p>
-            <Link href="/about" className="btn btn-secondary" style={{ borderColor: 'white', color: 'white' }}>
-              Our Story
-            </Link>
+        {/* Call to Action */}
+        <section className="py-20 px-4 md:px-8">
+          <div className="max-w-6xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-2xl md:text-3xl mb-8">ENTER THE LABORATORY</h3>
+              <Link
+                href="/laboratory"
+                className="morph-nav inline-block border border-white px-8 py-4 text-sm tracking-widest uppercase"
+              >
+                EXPERIMENT NOW
+              </Link>
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Newsletter */}
-      <section className="container-wide py-20">
-        <div className="max-w-xl mx-auto text-center">
-          <h2 className="text-2xl font-light mb-4">Stay Connected</h2>
-          <p className="text-sm text-gray-600 mb-8">
-            Be the first to know about new collections, exclusive events, and special offers.
-          </p>
-          <form className="flex gap-0">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 px-4 py-3 border border-r-0 border-gray-300 text-sm focus:outline-none focus:border-black"
-            />
-            <button type="submit" className="btn btn-primary">
-              Subscribe
-            </button>
-          </form>
-          <p className="text-xs text-gray-500 mt-4">
-            By subscribing, you agree to our Privacy Policy and consent to receive updates.
-          </p>
-        </div>
-      </section>
+      {/* Custom Cursor (desktop only) */}
+      {!isAccessible && !isMobile() && (
+        <div
+          className="fixed w-4 h-4 border border-white pointer-events-none z-[9999] mix-blend-difference"
+          style={{
+            left: mousePos.x - 8,
+            top: mousePos.y - 8,
+            transition: 'transform 0.1s ease-out',
+            transform: extremeMode ? 'rotate(45deg) scale(2)' : 'rotate(0deg) scale(1)'
+          }}
+        />
+      )}
     </>
   )
 }
-
