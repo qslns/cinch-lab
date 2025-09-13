@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  outputFileTracingRoot: 'C:\\Users\\t9140\\OneDrive\\바탕 화면\\cinch-lab',
 
   // Performance optimizations
   compiler: {

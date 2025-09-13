@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import CinchNav from '@/components/layout/CinchNav'
+import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/cinch-lab.css'
@@ -25,8 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CinchNav />
-        {children}
+        <SmoothScrollProvider>
+          <CinchNav />
+          {children}
+        </SmoothScrollProvider>
       </body>
     </html>
   )

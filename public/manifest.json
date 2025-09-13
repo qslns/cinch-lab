@@ -1,0 +1,63 @@
+{
+  "name": "CINCH LAB - Extreme Fashion Laboratory",
+  "short_name": "CINCH LAB",
+  "description": "Experimental fashion laboratory with 475 curated images and advanced gallery features",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "photo", "entertainment"],
+  "screenshots": [
+    {
+      "src": "/screenshot-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "3D Gallery View"
+    },
+    {
+      "src": "/screenshot-2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Image Processing"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gallery",
+      "url": "/gallery",
+      "description": "View the complete image gallery"
+    },
+    {
+      "name": "3D Experience",
+      "url": "/gallery?view=3d",
+      "description": "Experience the 3D gallery"
+    },
+    {
+      "name": "Collections",
+      "url": "/collections",
+      "description": "Browse curated collections"
+    }
+  ],
+  "features": [
+    "Cross Platform",
+    "Offline Capable",
+    "Install",
+    "WebGL",
+    "WebWorkers"
+  ]
+}
