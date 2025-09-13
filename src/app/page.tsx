@@ -1,107 +1,133 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 export default function HomePage() {
-  const sections = [
-    { id: 'lab', title: 'LAB', subtitle: 'Digital Experiments' },
-    { id: 'collections', title: 'COLLECTIONS', subtitle: 'Fashion Archive' },
-    { id: 'archive', title: 'ARCHIVE', subtitle: 'Past • Present • Future' },
-    { id: 'about', title: 'ABOUT', subtitle: 'Philosophy' },
-  ]
+  const [scrollY, setScrollY] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+
+    const handleScroll = () => {
+      requestAnimationFrame(() => {
+        setScrollY(window.scrollY)
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <main className="min-h-screen">
+    <main className="relative bg-black text-white overflow-x-hidden">
       {/* Hero Section */}
-      <section className="h-screen flex items-center justify-center relative overflow-hidden">
-        <div className="text-center">
-          <h1 className="cinch-title text-6xl md:text-8xl lg:text-9xl mb-4">
-            CINCH LAB
+      <section className="min-h-screen flex items-center justify-center relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-50" />
+
+        <div className={`text-center z-10 transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-8xl md:text-[12rem] font-black tracking-tighter mb-4">
+            <span className="block bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">
+              CINCH
+            </span>
+            <span className="block text-3xl md:text-5xl tracking-[0.5em] text-gray-400">
+              LAB
+            </span>
           </h1>
-          <p className="text-sm md:text-base tracking-[0.2em] opacity-70">
-            Experimental Fashion Laboratory
+          <p className="text-xl md:text-2xl text-gray-500 mt-8">
+            EXPERIMENTAL FASHION LABORATORY
           </p>
-          <p className="mt-8 text-xs tracking-[0.3em] uppercase opacity-50">
-            Minimalism • Innovation • Excellence
-          </p>
-        </div>
-
-        {/* Minimal scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-indicator">
-          <div className="w-[1px] h-16 bg-white opacity-30" />
-        </div>
-      </section>
-
-      {/* Navigation Grid */}
-      <section className="min-h-screen flex items-center justify-center px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full">
-          {sections.map((section) => (
-            <Link
-              key={section.id}
-              href={`/${section.id}`}
-              className="group block"
-            >
-              <div className="aspect-square border border-white/20 hover:border-white transition-colors duration-500 p-8 flex flex-col justify-center items-center text-center">
-                <h2 className="text-2xl md:text-3xl mb-2 tracking-wider group-hover:scale-105 transition-transform duration-500">
-                  {section.title}
-                </h2>
-                <p className="text-xs tracking-widest opacity-50 group-hover:opacity-100 transition-opacity duration-500">
-                  {section.subtitle}
-                </p>
-              </div>
-            </Link>
-          ))}
         </div>
       </section>
 
       {/* Featured Section */}
-      <section className="min-h-screen py-20 px-4 md:px-8">
+      <section className="py-32 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-6xl mb-12 tracking-wider">
-            NEW EXPERIMENTS
+          <h2 className="text-4xl md:text-6xl font-bold mb-16 text-center"
+              style={{ opacity: Math.max(0, 1 - scrollY * 0.001) }}>
+            EXPLORE THE EXTREME
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="group">
-                <div className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-sm mb-1">EXPERIMENT {String(item).padStart(3, '0')}</p>
-                    <p className="text-xs opacity-70">DIGITAL PIECE</p>
-                  </div>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { href: '/extreme', title: 'EXTREME', desc: 'Maximum Visual Chaos' },
+              { href: '/runway', title: 'RUNWAY', desc: 'Fashion Show Experience' },
+              { href: '/chaos', title: 'CHAOS', desc: 'Product Collection' },
+              { href: '/void', title: 'VOID', desc: 'Enter The Nothingness' },
+              { href: '/distortion', title: 'DISTORTION', desc: 'Optimized Experiments' },
+              { href: '/lab', title: 'LABORATORY', desc: 'Visual Experiments' },
+            ].map((item, index) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group relative border border-gray-800 p-8 hover:border-white transition-all duration-500"
+                style={{
+                  transform: `translateY(${Math.sin(scrollY * 0.001 + index) * 10}px)`,
+                  opacity: Math.max(0.5, 1 - scrollY * 0.0005)
+                }}
+              >
+                <h3 className="text-2xl font-bold mb-2 group-hover:text-gray-300 transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-gray-500 group-hover:text-gray-400 transition-colors">
+                  {item.desc}
+                </p>
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="min-h-screen flex items-center justify-center px-4 md:px-8">
-        <div className="max-w-4xl text-center">
-          <blockquote className="text-2xl md:text-4xl lg:text-5xl font-thin leading-tight mb-8">
-            <span className="block">
-              "Less is more, but better."
-            </span>
-          </blockquote>
-
-          <p className="text-sm tracking-[0.3em] uppercase opacity-70">
-            CINCH LAB PHILOSOPHY
+      {/* Manifesto */}
+      <section className="py-32 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-6xl font-bold mb-8">
+            PUSH THE BOUNDARIES
+          </h2>
+          <p className="text-xl text-gray-400 mb-4">
+            Where fashion meets digital experimentation
+          </p>
+          <p className="text-xl text-gray-400">
+            Creating tomorrow's aesthetic today
           </p>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-2xl md:text-3xl mb-8 tracking-wider">ENTER THE LABORATORY</h3>
-          <Link
-            href="/lab"
-            className="inline-block border border-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-colors duration-500"
-          >
-            EXPLORE NOW
-          </Link>
+      {/* Navigation Links */}
+      <section className="py-32 px-4">
+        <div className="max-w-7xl mx-auto">
+          <nav className="space-y-4">
+            {[
+              { href: '/collections', label: 'COLLECTIONS' },
+              { href: '/archive', label: 'ARCHIVE' },
+              { href: '/about', label: 'ABOUT' },
+              { href: '/contact', label: 'CONTACT' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block group py-6 px-8 border border-gray-800 hover:border-white transition-all duration-300"
+              >
+                <span className="text-2xl font-bold group-hover:translate-x-4 inline-block transition-transform">
+                  {item.label}
+                </span>
+              </Link>
+            ))}
+          </nav>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-16 px-4 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <p className="text-gray-500">© 2024 CINCH LAB</p>
+          <p className="text-gray-500">EXTREME FASHION LABORATORY</p>
+        </div>
+      </footer>
     </main>
   )
 }

@@ -1,12 +1,22 @@
-/* CINCH LAB - Minimalist Fashion Laboratory */
+/* CINCH LAB - OPTIMIZED EXPERIMENTAL FASHION LABORATORY */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 
 :root {
+  /* Core Colors */
   --black: #000000;
   --white: #ffffff;
-  --gray: #1a1a1a;
+  --gray-900: #111111;
+  --gray-800: #1a1a1a;
+  --gray-700: #2a2a2a;
+  --gray-500: #666666;
+  --gray-400: #999999;
+
+  /* Accent Colors */
+  --accent-primary: #ffffff;
+  --accent-secondary: #666666;
 }
 
-/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -14,188 +24,127 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background: var(--black);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  background: var(--black);
+  font-family: 'Inter', sans-serif;
   color: var(--white);
+  background: var(--black);
+  position: relative;
+  min-height: 100vh;
   overflow-x: hidden;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 300;
-  letter-spacing: 0.05em;
+  font-weight: 900;
+  line-height: 1.1;
 }
 
-/* CINCH Title Effect */
-.cinch-title {
-  font-weight: 100;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+/* Simple Glitch Effect - Performance Optimized */
+.glitch-text {
   position: relative;
-  display: inline-block;
+  color: var(--white);
 }
 
-.cinch-title:hover {
-  transform: scale(1.02);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-}
-
-/* Lab Animations */
-.wave-animation {
-  width: 100%;
-  height: 2px;
-  background: var(--white);
-  animation: wave 3s ease-in-out infinite;
-}
-
-@keyframes wave {
-  0%, 100% {
-    transform: scaleX(0.5);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-}
-
-.rotating-square {
-  width: 50px;
-  height: 50px;
-  border: 1px solid var(--white);
-  animation: rotate 8s linear infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.scaling-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--white);
-  opacity: 0.2;
-  transition: transform 0.5s ease;
-}
-
-.scaling-circle.active {
-  animation: scale 2s ease-in-out infinite;
-}
-
-@keyframes scale {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.2;
-  }
-  50% {
-    transform: scale(3);
-    opacity: 0.5;
-  }
-}
-
-.clock-container {
-  width: 80px;
-  height: 80px;
-  position: relative;
-}
-
-.hour-hand, .minute-hand {
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
   position: absolute;
-  background: var(--white);
-  transform-origin: bottom center;
-  bottom: 50%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
 }
 
-.hour-hand {
-  width: 2px;
-  height: 25px;
-  animation: rotate 60s linear infinite;
+.glitch-text::before {
+  animation: glitch-simple 2s infinite;
+  color: #ff0066;
+  z-index: -1;
+  animation-delay: 0.1s;
 }
 
-.minute-hand {
-  width: 1px;
-  height: 35px;
-  animation: rotate 10s linear infinite;
+.glitch-text::after {
+  animation: glitch-simple 2s infinite;
+  color: #00ffff;
+  z-index: -2;
+  animation-delay: 0.2s;
 }
 
-/* Grid Background */
-.grid-background {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
+@keyframes glitch-simple {
+  0%, 90%, 100% {
+    transform: translate(0);
+  }
+  95% {
+    transform: translate(2px, -2px);
+  }
 }
 
-/* Utility Classes */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+/* Noise Overlay - Subtle */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.02;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
-/* Hover Effects */
-a, button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Optimized Hover States */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* Grid Layout */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Performance Optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-  .cinch-title {
-    letter-spacing: 0.1em;
+  body {
+    font-size: 14px;
   }
 
-  .container {
-    padding: 0 1rem;
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .grid-responsive {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 
-/* Performance Optimizations */
+/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -204,17 +153,5 @@ a, button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* Print Styles */
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-
-  .no-print {
-    display: none !important;
   }
 }

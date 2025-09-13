@@ -31,3 +31,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# images folder (too large for git)
+/웹 꾸미기 사진
+/public/웹 꾸미기 사진
