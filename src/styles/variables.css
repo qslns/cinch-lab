@@ -1,0 +1,43 @@
+:root {
+  /* Primary Colors */
+  --black: #000000;
+  --off-black: #0a0a0a;
+  --charcoal: #1a1a1a;
+  --white: #ffffff;
+  --off-white: #f8f8f8;
+  
+  /* 2025 Trend Colors - Mocha Mousse Palette */
+  --mocha: #6F4E37;
+  --mocha-light: #8B6946;
+  --mocha-dark: #4A3427;
+  --cream: #F5E6D3;
+  --sand: #D4B5A0;
+  --taupe: #483C32;
+  
+  /* Neutrals */
+  --zinc-950: #09090b;
+  --zinc-900: #18181b;
+  --neutral-900: #171717;
+  --stone-900: #1c1917;
+  --slate-900: #0f172a;
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 8rem;
+  
+  /* Typography */
+  --font-extralight: 200;
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-bold: 700;
+  --font-black: 900;
+  
+  /* Transitions */
+  --transition-fast: 200ms;
+  --transition-normal: 500ms;
+  --transition-slow: 1000ms;
+}
