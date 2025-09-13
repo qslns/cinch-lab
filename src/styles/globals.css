@@ -2,51 +2,372 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Premium Typography System inspired by luxury brands */
+@layer base {
+  :root {
+    /* Colors - Minimal Palette */
+    --black: #000000;
+    --white: #ffffff;
+    --gray-50: #fafafa;
+    --gray-100: #f4f4f4;
+    --gray-200: #e5e5e5;
+    --gray-300: #d1d1d1;
+    --gray-400: #a1a1a1;
+    --gray-500: #717171;
+    --gray-600: #4a4a4a;
+    --gray-700: #2a2a2a;
+    --gray-800: #1a1a1a;
+    --gray-900: #0a0a0a;
+    
+    /* Typography Scale */
+    --text-xs: 0.65rem;      /* 10.4px */
+    --text-sm: 0.75rem;      /* 12px */
+    --text-base: 0.8125rem;  /* 13px */
+    --text-md: 0.875rem;     /* 14px */
+    --text-lg: 1rem;         /* 16px */
+    --text-xl: 1.125rem;     /* 18px */
+    --text-2xl: 1.375rem;    /* 22px */
+    --text-3xl: 1.75rem;     /* 28px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
+    --text-6xl: 4rem;        /* 64px */
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  letter-spacing: 0.02em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #000;
-  color: #fff;
-  overflow-x: hidden;
-}
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
 
-::selection {
-  background: #fff;
-  color: #000;
-}
-
-/* Clean minimal styles */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-/* Utility classes */
-.mix-blend-difference {
-  mix-blend-mode: difference;
-}
-
-@media (max-width: 768px) {
   body {
-    font-size: 14px;
+    font-family: 'Helvetica Neue', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
+    font-weight: 400;
+    font-size: var(--text-base);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--black);
+    background: var(--white);
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  h1 { font-size: var(--text-5xl); }
+  h2 { font-size: var(--text-4xl); }
+  h3 { font-size: var(--text-3xl); }
+  h4 { font-size: var(--text-2xl); }
+  h5 { font-size: var(--text-xl); }
+  h6 { font-size: var(--text-lg); }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  a:hover {
+    opacity: 0.7;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  ::selection {
+    background: var(--black);
+    color: var(--white);
   }
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* Utility Classes */
+.text-xs { font-size: var(--text-xs) !important; }
+.text-sm { font-size: var(--text-sm) !important; }
+.text-base { font-size: var(--text-base) !important; }
+.text-md { font-size: var(--text-md) !important; }
+.text-lg { font-size: var(--text-lg) !important; }
+.text-xl { font-size: var(--text-xl) !important; }
+.text-2xl { font-size: var(--text-2xl) !important; }
+.text-3xl { font-size: var(--text-3xl) !important; }
+.text-4xl { font-size: var(--text-4xl) !important; }
+.text-5xl { font-size: var(--text-5xl) !important; }
+
+.tracking-tighter { letter-spacing: -0.03em !important; }
+.tracking-tight { letter-spacing: -0.01em !important; }
+.tracking-normal { letter-spacing: 0 !important; }
+.tracking-wide { letter-spacing: 0.02em !important; }
+.tracking-wider { letter-spacing: 0.04em !important; }
+.tracking-widest { letter-spacing: 0.08em !important; }
+.tracking-luxury { letter-spacing: 0.12em !important; }
+
+/* Button Styles */
+.btn {
+  display: inline-block;
+  padding: 12px 32px;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--black);
+  color: var(--white);
+  border: 1px solid var(--black);
+}
+
+.btn-primary:hover {
+  background: var(--gray-800);
+  border-color: var(--gray-800);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--black);
+  border: 1px solid var(--black);
+}
+
+.btn-secondary:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+.btn-text {
+  padding: 0;
+  border: none;
+  background: none;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid transparent;
+}
+
+.btn-text:hover {
+  border-bottom-color: var(--black);
+}
+
+/* Link Styles */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Container */
+.container-wide {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .container-wide {
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-wide {
+    padding: 0 60px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.6s ease-out forwards;
+}
+
+/* Loading States */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Grid System */
+.grid-luxury {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .grid-luxury {
+    gap: 30px;
+  }
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+  }
+}
+
+/* Focus States */
+*:focus-visible {
+  outline: 1px solid var(--black);
+  outline-offset: 2px;
+}
+
+/* Transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-opacity {
+  transition: opacity 0.3s ease;
+}
+
+.transition-transform {
+  transition: transform 0.3s ease;
+}
+
+/* Hover Effects */
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Text Overflow */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Aspect Ratios */
+.aspect-square { aspect-ratio: 1 / 1; }
+.aspect-portrait { aspect-ratio: 3 / 4; }
+.aspect-landscape { aspect-ratio: 16 / 9; }
+.aspect-product { aspect-ratio: 2 / 3; }
+
+/* Z-Index Scale */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+.z-modal { z-index: 9999; }
+.z-tooltip { z-index: 10000; }
