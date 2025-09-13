@@ -4,7 +4,19 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 
-const archiveData = [
+interface Collection {
+  id: string
+  title: string
+  items: number
+  status?: string
+}
+
+interface ArchiveYear {
+  year: string
+  collections: Collection[]
+}
+
+const archiveData: ArchiveYear[] = [
   {
     year: '2025',
     collections: [

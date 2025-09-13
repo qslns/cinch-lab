@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
@@ -227,6 +227,3 @@ export default function HomePage() {
   )
 }
 
-const AnimatePresence = ({ children, mode }: { children: React.ReactNode, mode?: string }) => {
-  return <>{children}</>
-}

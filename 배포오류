@@ -1,0 +1,41 @@
+[16:15:01.265] Running build in Washington, D.C., USA (East) – iad1
+[16:15:01.265] Build machine configuration: 2 cores, 8 GB
+[16:15:01.346] Cloning github.com/qslns/cinch-lab (Branch: main, Commit: 6e8c42b)
+[16:15:02.591] Cloning completed: 1.245s
+[16:15:03.810] Restored build cache from previous deployment (H3J3LFhWcdgeSmBLL887KGQybaa2)
+[16:15:04.855] Running "vercel build"
+[16:15:05.817] Vercel CLI 47.1.1
+[16:15:06.759] Running "install" command: `npm install`...
+[16:15:12.574] 
+[16:15:12.575] up to date, audited 78 packages in 3s
+[16:15:12.575] 
+[16:15:12.579] 19 packages are looking for funding
+[16:15:12.579]   run `npm fund` for details
+[16:15:12.579] 
+[16:15:12.580] found 0 vulnerabilities
+[16:15:12.651] Detected Next.js version: 15.5.3
+[16:15:12.651] Running "npm run build"
+[16:15:12.991] 
+[16:15:12.991] > cinch-lab@1.0.0 build
+[16:15:12.991] > next build
+[16:15:12.991] 
+[16:15:15.333]    ▲ Next.js 15.5.3
+[16:15:15.334] 
+[16:15:15.520]    Creating an optimized production build ...
+[16:15:29.494]  ✓ Compiled successfully in 10.7s
+[16:15:29.500]    Linting and checking validity of types ...
+[16:15:36.457] Failed to compile.
+[16:15:36.458] 
+[16:15:36.458] ./src/app/archive/page.tsx:93:39
+[16:15:36.458] Type error: Property 'status' does not exist on type '{ id: string; title: string; items: number; status: string; } | { id: string; title: string; items: number; }'.
+[16:15:36.458]   Property 'status' does not exist on type '{ id: string; title: string; items: number; }'.
+[16:15:36.458] 
+[16:15:36.459] [0m [90m 91 |[39m                         [33m<[39m[33mdiv[39m className[33m=[39m[32m"aspect-[4/5] bg-gray-100 mb-4 relative overflow-hidden"[39m[33m>[39m
+[16:15:36.459]  [90m 92 |[39m                           [33m<[39m[33mdiv[39m className[33m=[39m[32m"absolute inset-0 bg-gray-200 animate-pulse"[39m [33m/[39m[33m>[39m
+[16:15:36.459] [31m[1m>[22m[39m[90m 93 |[39m                           {collection[33m.[39mstatus [33m===[39m [32m'current'[39m [33m&&[39m (
+[16:15:36.459]  [90m    |[39m                                       [31m[1m^[22m[39m
+[16:15:36.459]  [90m 94 |[39m                             [33m<[39m[33mdiv[39m className[33m=[39m[32m"absolute top-4 left-4"[39m[33m>[39m
+[16:15:36.460]  [90m 95 |[39m                               [33m<[39m[33mspan[39m className[33m=[39m[32m"px-2 py-1 bg-black text-white text-xs tracking-[0.15em]"[39m[33m>[39m
+[16:15:36.460]  [90m 96 |[39m                                 [33mCURRENT[39m[0m
+[16:15:36.547] Next.js build worker exited with code: 1 and signal: null
+[16:15:36.620] Error: Command "npm run build" exited with 1
