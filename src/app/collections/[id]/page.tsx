@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 
 const collectionsData: { [key: string]: any } = {
@@ -42,32 +41,32 @@ export default function CollectionDetailPage() {
   const collection = collectionsData[params.id as string] || collectionsData['ss25']
 
   return (
-    <div className="px-4 md:px-8 py-8">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen py-20">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <Link href="/collections" className="text-xs tracking-[0.15em] text-gray-500 hover:text-black mb-4 inline-block">
+        <div className="mb-16">
+          <Link href="/collections" className="text-xs tracking-[0.2em] opacity-50 hover:opacity-100 mb-6 inline-block transition-opacity">
             ← BACK TO COLLECTIONS
           </Link>
-          <h1 className="text-3xl md:text-4xl font-thin mb-2">{collection.title}</h1>
-          <p className="text-sm tracking-[0.15em] text-gray-600 mb-4">{collection.subtitle}</p>
-          <p className="text-sm max-w-2xl">{collection.description}</p>
+          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">{collection.title}</h1>
+          <p className="text-sm tracking-[0.2em] opacity-70 mb-4">{collection.subtitle}</p>
+          <p className="text-sm max-w-2xl opacity-70">{collection.description}</p>
         </div>
 
         {/* View Toggle */}
-        <div className="flex gap-6 mb-8 border-b border-gray-200">
+        <div className="flex gap-6 mb-12 border-b border-white/20">
           <button
             onClick={() => setView('lookbook')}
-            className={`pb-2 text-xs tracking-[0.15em] ${
-              view === 'lookbook' ? 'border-b-2 border-black' : 'text-gray-500'
+            className={`pb-2 text-sm tracking-[0.2em] transition-colors ${
+              view === 'lookbook' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white'
             }`}
           >
             LOOKBOOK
           </button>
           <button
             onClick={() => setView('products')}
-            className={`pb-2 text-xs tracking-[0.15em] ${
-              view === 'products' ? 'border-b-2 border-black' : 'text-gray-500'
+            className={`pb-2 text-sm tracking-[0.2em] transition-colors ${
+              view === 'products' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white'
             }`}
           >
             PRODUCTS
@@ -78,38 +77,40 @@ export default function CollectionDetailPage() {
         {view === 'lookbook' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {collection.lookbook.map((item: number, index: number) => (
-              <motion.div
+              <div
                 key={item}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="aspect-[3/4] bg-gray-100"
+                className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="w-full h-full bg-gray-200 animate-pulse" />
-              </motion.div>
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-6xl opacity-10">{String(index + 1).padStart(2, '0')}</span>
+                </div>
+              </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {collection.products.map((product: any, index: number) => (
-              <motion.div
+              <Link
                 key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="group"
+                href={`/product/${product.id}`}
+                className="group block fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="aspect-[3/4] bg-gray-100 mb-4 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                <div className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 mb-4">
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-6xl opacity-10">{String(product.id).padStart(2, '0')}</span>
+                  </div>
                 </div>
-                <h3 className="text-sm mb-1">{product.name}</h3>
-                <p className="text-sm text-gray-600">{product.price}</p>
-              </motion.div>
+                <h3 className="text-sm tracking-wider mb-1 group-hover:translate-x-2 transition-transform duration-300">
+                  {product.name}
+                </h3>
+                <p className="text-sm opacity-50">{product.price}</p>
+              </Link>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </main>
   )
 }

@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   description: 'Cinch • Release • Repeat. Enter the digital fashion laboratory where chaos meets control.',
   keywords: 'experimental fashion, digital art, avant-garde, fashion laboratory, CINCH LAB',
   authors: [{ name: 'CINCH LAB' }],
-  viewport: 'width=device-width, initial-scale=1',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
   themeColor: '#000000',
 }
 

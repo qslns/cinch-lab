@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -16,66 +15,73 @@ const collections = [
 export default function CollectionsPage() {
   const [filter, setFilter] = useState('all')
 
-  const filteredCollections = filter === 'all' 
-    ? collections 
+  const filteredCollections = filter === 'all'
+    ? collections
     : collections.filter(c => c.title.toLowerCase().includes(filter))
 
   return (
-    <div className="px-4 md:px-8 py-8">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen py-20">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-thin mb-4">Collections</h1>
-          <div className="flex gap-4">
-            <button 
+        <header className="mb-16">
+          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">COLLECTIONS</h1>
+          <div className="flex gap-6">
+            <button
               onClick={() => setFilter('all')}
-              className={`text-xs tracking-[0.15em] pb-1 ${filter === 'all' ? 'border-b border-black' : 'text-gray-500'}`}
+              className={`text-sm tracking-[0.2em] pb-1 transition-colors ${
+                filter === 'all' ? 'border-b border-white text-white' : 'text-white/50 hover:text-white'
+              }`}
             >
               ALL
             </button>
-            <button 
+            <button
               onClick={() => setFilter('ss')}
-              className={`text-xs tracking-[0.15em] pb-1 ${filter === 'ss' ? 'border-b border-black' : 'text-gray-500'}`}
+              className={`text-sm tracking-[0.2em] pb-1 transition-colors ${
+                filter === 'ss' ? 'border-b border-white text-white' : 'text-white/50 hover:text-white'
+              }`}
             >
               SPRING/SUMMER
             </button>
-            <button 
+            <button
               onClick={() => setFilter('fw')}
-              className={`text-xs tracking-[0.15em] pb-1 ${filter === 'fw' ? 'border-b border-black' : 'text-gray-500'}`}
+              className={`text-sm tracking-[0.2em] pb-1 transition-colors ${
+                filter === 'fw' ? 'border-b border-white text-white' : 'text-white/50 hover:text-white'
+              }`}
             >
               FALL/WINTER
             </button>
           </div>
-        </div>
+        </header>
 
         {/* Collections Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCollections.map((collection, index) => (
-            <motion.div
+            <Link
               key={collection.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              href={`/collections/${collection.id}`}
+              className="group block fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <Link href={`/collections/${collection.id}`} className="group block">
-                <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden mb-4">
-                  <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                  {collection.status && (
-                    <div className="absolute top-4 left-4">
-                      <span className="px-2 py-1 bg-black text-white text-xs tracking-[0.15em]">
-                        {collection.status}
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                </div>
-                <h2 className="text-lg font-light mb-1 group-hover:underline">{collection.title}</h2>
-                <p className="text-xs tracking-[0.15em] text-gray-600">{collection.subtitle}</p>
-              </Link>
-            </motion.div>
+              <div className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 relative overflow-hidden mb-4">
+                {collection.status && (
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-white text-black text-xs tracking-[0.2em]">
+                      {collection.status}
+                    </span>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
+              </div>
+              <h2 className="text-lg tracking-wider mb-1 group-hover:translate-x-2 transition-transform duration-300">
+                {collection.title}
+              </h2>
+              <p className="text-xs tracking-[0.2em] opacity-70">
+                {collection.subtitle}
+              </p>
+            </Link>
           ))}
         </div>
       </div>
-    </div>
+    </main>
   )
 }

@@ -1,139 +1,90 @@
-'use client'
-
-import { motion } from 'framer-motion'
-
 export default function AboutPage() {
   return (
-    <div className="px-4 md:px-8 py-8">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen py-20">
+      <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
-        >
-          <h1 className="text-3xl md:text-4xl font-thin mb-8">About</h1>
-        </motion.div>
+        <header className="mb-16">
+          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">ABOUT</h1>
+        </header>
 
         {/* Main Content */}
-        <div className="space-y-12">
+        <div className="space-y-16">
           {/* Philosophy */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-4">PHILOSOPHY</h2>
-            <p className="text-lg font-light leading-relaxed mb-4">
-              CINCH LAB is an experimental fashion house that challenges the boundaries 
+          <section className="fade-in">
+            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-6">PHILOSOPHY</h2>
+            <p className="text-2xl font-thin leading-relaxed mb-6">
+              CINCH LAB is an experimental fashion laboratory that challenges the boundaries
               between art and wearability.
             </p>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Founded in 2022, we create limited collections that explore minimalism, 
-              architectural forms, and the poetry of negative space. Each piece is a 
+            <p className="text-sm opacity-70 leading-relaxed">
+              Founded in 2022, we create limited experiments that explore minimalism,
+              architectural forms, and the poetry of negative space. Each piece is a
               meditation on restraint and intention.
             </p>
-          </motion.section>
+          </section>
 
           {/* Process */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-4">PROCESS</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="fade-in" style={{ animationDelay: '100ms' }}>
+            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-6">PROCESS</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="font-light mb-2">Concept</h3>
-                <p className="text-sm text-gray-600">
-                  Each collection begins with a philosophical exploration, 
+                <h3 className="text-lg mb-3">Concept</h3>
+                <p className="text-sm opacity-70">
+                  Each collection begins with a philosophical exploration,
                   drawing from architecture, nature, and abstract concepts.
                 </p>
               </div>
               <div>
-                <h3 className="font-light mb-2">Design</h3>
-                <p className="text-sm text-gray-600">
-                  Silhouettes are refined through countless iterations, 
+                <h3 className="text-lg mb-3">Design</h3>
+                <p className="text-sm opacity-70">
+                  Silhouettes are refined through countless iterations,
                   removing everything unnecessary until only essence remains.
                 </p>
               </div>
               <div>
-                <h3 className="font-light mb-2">Creation</h3>
-                <p className="text-sm text-gray-600">
-                  Limited quantities ensure attention to detail and exclusivity, 
+                <h3 className="text-lg mb-3">Creation</h3>
+                <p className="text-sm opacity-70">
+                  Limited quantities ensure attention to detail and exclusivity,
                   with each piece numbered and documented.
                 </p>
               </div>
             </div>
-          </motion.section>
+          </section>
 
-          {/* Team */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-4">TEAM</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-light mb-2">Creative Direction</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Led by a collective of designers who believe fashion 
-                  should provoke thought as much as it adorns the body.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-light mb-2">Craftsmanship</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Working with master artisans who share our commitment 
-                  to precision and innovation in construction.
-                </p>
-              </div>
-            </div>
-          </motion.section>
+          {/* Manifesto */}
+          <section className="fade-in border-t border-white/20 pt-16" style={{ animationDelay: '200ms' }}>
+            <blockquote className="text-2xl md:text-3xl font-thin leading-relaxed">
+              "Fashion's extreme limits lie not in excess, but in controlled minimalism."
+            </blockquote>
+            <p className="mt-6 text-sm tracking-[0.2em] opacity-50">
+              — CINCH LAB MANIFESTO
+            </p>
+          </section>
 
           {/* Values */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-4">VALUES</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center py-8 border border-gray-200">
-                <p className="text-xs tracking-[0.15em]">MINIMALISM</p>
-              </div>
-              <div className="text-center py-8 border border-gray-200">
-                <p className="text-xs tracking-[0.15em]">QUALITY</p>
-              </div>
-              <div className="text-center py-8 border border-gray-200">
-                <p className="text-xs tracking-[0.15em]">INNOVATION</p>
-              </div>
-              <div className="text-center py-8 border border-gray-200">
-                <p className="text-xs tracking-[0.15em]">TIMELESSNESS</p>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* Quote */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="py-12 border-t border-b border-gray-200"
-          >
-            <blockquote className="text-center">
-              <p className="text-xl font-light italic mb-4">
-                "Fashion's extreme limits lie not in excess, but in absence."
-              </p>
-              <cite className="text-xs tracking-[0.15em] text-gray-500">
-                CINCH LAB MANIFESTO
-              </cite>
-            </blockquote>
-          </motion.section>
+          <section className="fade-in" style={{ animationDelay: '300ms' }}>
+            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-6">VALUES</h2>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start">
+                <span className="mr-4 opacity-50">01</span>
+                <span className="opacity-70">MINIMALISM AS MAXIMUM EXPRESSION</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-4 opacity-50">02</span>
+                <span className="opacity-70">QUALITY OVER QUANTITY</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-4 opacity-50">03</span>
+                <span className="opacity-70">SUSTAINABLE BY DESIGN</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-4 opacity-50">04</span>
+                <span className="opacity-70">TIMELESS OVER TRENDY</span>
+              </li>
+            </ul>
+          </section>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

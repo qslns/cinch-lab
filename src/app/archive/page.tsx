@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
 
@@ -47,31 +46,33 @@ const archiveData: ArchiveYear[] = [
 ]
 
 export default function ArchivePage() {
-  const [selectedYear, setSelectedYear] = useState<string | null>(null)
+  const [selectedYear, setSelectedYear] = useState<string>('2025')
 
   return (
-    <div className="px-4 md:px-8 py-8">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen py-20">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-thin mb-4">Archive</h1>
-          <p className="text-sm text-gray-600">Complete collection history since 2022</p>
-        </div>
+        <header className="mb-16">
+          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">ARCHIVE</h1>
+          <p className="text-sm tracking-[0.2em] opacity-70">
+            COMPLETE COLLECTION HISTORY
+          </p>
+        </header>
 
         {/* Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Years */}
-          <div className="md:border-r border-gray-200 pr-8">
-            <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-6">SELECT YEAR</h2>
-            <div className="space-y-2">
+          <div className="md:border-r border-white/20 pr-8">
+            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-8">SELECT YEAR</h2>
+            <div className="space-y-3">
               {archiveData.map((yearData) => (
                 <button
                   key={yearData.year}
                   onClick={() => setSelectedYear(yearData.year)}
-                  className={`block w-full text-left text-lg py-2 transition-all ${
-                    selectedYear === yearData.year 
-                      ? 'font-medium pl-2 border-l-2 border-black' 
-                      : 'hover:pl-2'
+                  className={`block w-full text-left text-lg py-2 transition-all duration-300 ${
+                    selectedYear === yearData.year
+                      ? 'text-white pl-4 border-l-2 border-white'
+                      : 'text-white/50 hover:text-white hover:pl-2'
                   }`}
                 >
                   {yearData.year}
@@ -82,73 +83,45 @@ export default function ArchivePage() {
 
           {/* Collections */}
           <div className="md:col-span-3">
-            {selectedYear ? (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <h2 className="text-xs tracking-[0.15em] text-gray-500 mb-6">
-                  COLLECTIONS FROM {selectedYear}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {archiveData
-                    .find(d => d.year === selectedYear)
-                    ?.collections.map((collection) => (
-                      <Link
-                        key={collection.id}
-                        href={`/collections/${collection.id}`}
-                        className="group"
-                      >
-                        <div className="aspect-[4/5] bg-gray-100 mb-4 relative overflow-hidden">
-                          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                          {collection.status === 'current' && (
-                            <div className="absolute top-4 left-4">
-                              <span className="px-2 py-1 bg-black text-white text-xs tracking-[0.15em]">
-                                CURRENT
-                              </span>
-                            </div>
-                          )}
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                        </div>
-                        <h3 className="text-sm font-light mb-1 group-hover:underline">
-                          {collection.title}
-                        </h3>
-                        <p className="text-xs text-gray-600">{collection.items} items</p>
-                      </Link>
-                    ))}
-                </div>
-              </motion.div>
-            ) : (
-              <div className="text-center py-16">
-                <p className="text-sm text-gray-500">Select a year to view collections</p>
-              </div>
-            )}
+            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-8">
+              COLLECTIONS FROM {selectedYear}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {archiveData
+                .find(d => d.year === selectedYear)
+                ?.collections.map((collection, index) => (
+                  <Link
+                    key={collection.id}
+                    href={`/collections/${collection.id}`}
+                    className="group block fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className="border border-white/20 hover:border-white transition-colors duration-500 p-6">
+                      {collection.status && (
+                        <span className="inline-block px-2 py-1 bg-white text-black text-xs tracking-[0.2em] mb-4">
+                          {collection.status.toUpperCase()}
+                        </span>
+                      )}
+                      <h3 className="text-lg mb-2 group-hover:translate-x-2 transition-transform duration-300">
+                        {collection.title}
+                      </h3>
+                      <p className="text-sm opacity-50">
+                        {collection.items} pieces
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+            </div>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-16 pt-8 border-t border-gray-200">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="text-2xl font-light mb-1">8</p>
-              <p className="text-xs tracking-[0.15em] text-gray-500">COLLECTIONS</p>
-            </div>
-            <div>
-              <p className="text-2xl font-light mb-1">172</p>
-              <p className="text-xs tracking-[0.15em] text-gray-500">TOTAL PIECES</p>
-            </div>
-            <div>
-              <p className="text-2xl font-light mb-1">4</p>
-              <p className="text-xs tracking-[0.15em] text-gray-500">YEARS</p>
-            </div>
-            <div>
-              <p className="text-2xl font-light mb-1">∞</p>
-              <p className="text-xs tracking-[0.15em] text-gray-500">POSSIBILITIES</p>
-            </div>
-          </div>
+        {/* Philosophy Quote */}
+        <div className="mt-32 text-center">
+          <blockquote className="text-xl md:text-2xl font-thin opacity-70">
+            "Time is a flat circle. Fashion repeats, but never the same."
+          </blockquote>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
