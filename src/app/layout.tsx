@@ -6,6 +6,7 @@ import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/cinch-lab.css'
 import '@/styles/animations.css'
+import '@/styles/modern.css'
 
 export const metadata: Metadata = {
   title: 'CINCH LAB | Experimental Fashion Laboratory',
