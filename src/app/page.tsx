@@ -50,37 +50,6 @@ export default function HomePage() {
       {/* Subtle grid overlay */}
       <div className="grid-overlay" />
 
-      {/* Navigation */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-black/5"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      >
-        <nav className="flex justify-between items-center px-20 py-6">
-          <div className="flex items-center gap-12">
-            <h1 className="text-2xl font-light tracking-tight">CINCH—LAB</h1>
-            <span className="text-label text-gray-400 hidden md:block">001</span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-10">
-            <Link href="/lab" className="hover-underline text-sm tracking-wide">LAB</Link>
-            <Link href="/mood" className="hover-underline text-sm tracking-wide">MOOD</Link>
-            <Link href="/collections" className="hover-underline text-sm tracking-wide">COLLECTIONS</Link>
-            <Link href="/archive" className="hover-underline text-sm tracking-wide">ARCHIVE</Link>
-            <Link href="/about" className="hover-underline text-sm tracking-wide">ABOUT</Link>
-          </div>
-
-          <div className="flex items-center gap-8">
-            <span className="text-label hidden md:block">{currentTime}</span>
-            <button className="w-9 h-9 flex flex-col justify-center gap-1.5 md:hidden">
-              <span className="w-full h-[1px] bg-black"></span>
-              <span className="w-6 h-[1px] bg-black"></span>
-            </button>
-          </div>
-        </nav>
-      </motion.header>
-
       {/* Hero Section */}
       <section className="h-screen flex items-center justify-center relative overflow-hidden">
         <motion.div

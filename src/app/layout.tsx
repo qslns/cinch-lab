@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
+import Navigation from '@/components/Navigation'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/modern.css'
@@ -27,7 +28,8 @@ export default function RootLayout({
       <body>
         <SkipToMain />
         <KeyboardNavigationIndicator />
-        <main id="main-content">
+        <Navigation />
+        <main id="main-content" className="pt-14">
           {children}
         </main>
       </body>

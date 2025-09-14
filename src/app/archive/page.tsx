@@ -1,127 +1,217 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-interface Collection {
-  id: string
-  title: string
-  items: number
-  status?: string
-}
+// Complete archive data
+const archiveData = [
+  { year: 2025, events: 12, collections: 2, experiments: 45 },
+  { year: 2024, events: 18, collections: 2, experiments: 52 },
+  { year: 2023, events: 15, collections: 2, experiments: 48 },
+  { year: 2022, events: 14, collections: 2, experiments: 39 },
+  { year: 2021, events: 10, collections: 2, experiments: 31 },
+  { year: 2020, events: 8, collections: 1, experiments: 22 },
+  { year: 2019, events: 5, collections: 1, experiments: 15 },
+]
 
-interface ArchiveYear {
-  year: string
-  collections: Collection[]
-}
-
-const archiveData: ArchiveYear[] = [
-  {
-    year: '2025',
-    collections: [
-      { id: 'ss25', title: 'Spring Summer 2025', items: 24, status: 'current' }
-    ]
-  },
-  {
-    year: '2024',
-    collections: [
-      { id: 'fw24', title: 'Fall Winter 2024', items: 28 },
-      { id: 'ss24', title: 'Spring Summer 2024', items: 22 }
-    ]
-  },
-  {
-    year: '2023',
-    collections: [
-      { id: 'fw23', title: 'Fall Winter 2023', items: 26 },
-      { id: 'ss23', title: 'Spring Summer 2023', items: 20 }
-    ]
-  },
-  {
-    year: '2022',
-    collections: [
-      { id: 'fw22', title: 'Fall Winter 2022', items: 18 },
-      { id: 'ss22', title: 'Spring Summer 2022', items: 16 }
-    ]
-  }
+const monthlyEvents = [
+  { month: 'JAN', event: 'SS25 Launch', type: 'collection' },
+  { month: 'FEB', event: 'Lab Experiment 045', type: 'experiment' },
+  { month: 'MAR', event: 'Paris Presentation', type: 'event' },
+  { month: 'APR', event: 'Material Research', type: 'research' },
+  { month: 'MAY', event: 'Digital Archive Update', type: 'digital' },
+  { month: 'JUN', event: 'Collaboration Announcement', type: 'collab' },
+  { month: 'JUL', event: 'FW25 Preview', type: 'collection' },
+  { month: 'AUG', event: 'Lab Experiment 046', type: 'experiment' },
+  { month: 'SEP', event: 'Seoul Exhibition', type: 'event' },
+  { month: 'OCT', event: 'Archive Publication', type: 'publication' },
+  { month: 'NOV', event: 'Technical Workshop', type: 'workshop' },
+  { month: 'DEC', event: 'Year Review', type: 'review' },
 ]
 
 export default function ArchivePage() {
-  const [selectedYear, setSelectedYear] = useState<string>('2025')
+  const [selectedYear, setSelectedYear] = useState(2025)
+  const [viewMode, setViewMode] = useState<'timeline' | 'grid'>('timeline')
+
+  const currentYearData = archiveData.find(d => d.year === selectedYear)
 
   return (
-    <main className="min-h-screen py-20">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <header className="mb-16">
-          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">ARCHIVE</h1>
-          <p className="text-sm tracking-[0.2em] opacity-70">
-            COMPLETE COLLECTION HISTORY
-          </p>
-        </header>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <section className="pt-20 pb-12 px-8 md:px-20 border-b border-black/5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-hero mb-4">ARCHIVE</h1>
+          <p className="text-label text-gray-600">COMPLETE CHRONOLOGICAL HISTORY</p>
+        </motion.div>
 
-        {/* Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Years */}
-          <div className="md:border-r border-white/20 pr-8">
-            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-8">SELECT YEAR</h2>
-            <div className="space-y-3">
-              {archiveData.map((yearData) => (
-                <button
-                  key={yearData.year}
-                  onClick={() => setSelectedYear(yearData.year)}
-                  className={`block w-full text-left text-lg py-2 transition-all duration-300 ${
-                    selectedYear === yearData.year
-                      ? 'text-white pl-4 border-l-2 border-white'
-                      : 'text-white/50 hover:text-white hover:pl-2'
-                  }`}
+        {/* View Toggle */}
+        <div className="mt-12 flex gap-4">
+          <button
+            onClick={() => setViewMode('timeline')}
+            className={`text-xs tracking-[0.15em] ${
+              viewMode === 'timeline' ? 'opacity-100' : 'opacity-40'
+            }`}
+          >
+            TIMELINE
+          </button>
+          <span className="text-xs opacity-20">/</span>
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`text-xs tracking-[0.15em] ${
+              viewMode === 'grid' ? 'opacity-100' : 'opacity-40'
+            }`}
+          >
+            GRID VIEW
+          </button>
+        </div>
+      </section>
+
+      {/* Timeline Visualization */}
+      {viewMode === 'timeline' ? (
+        <section className="px-8 md:px-20 py-16">
+          {/* Year Selector Timeline */}
+          <div className="relative mb-20">
+            <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gray-200" />
+            <div className="flex justify-between items-center relative">
+              {archiveData.map((data, index) => (
+                <motion.button
+                  key={data.year}
+                  className="relative"
+                  onClick={() => setSelectedYear(data.year)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
                 >
-                  {yearData.year}
-                </button>
+                  <div
+                    className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
+                      selectedYear === data.year
+                        ? 'bg-black border-black scale-150'
+                        : 'bg-white border-gray-400 hover:border-black'
+                    }`}
+                  />
+                  <span
+                    className={`absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap transition-opacity ${
+                      selectedYear === data.year ? 'opacity-100' : 'opacity-40'
+                    }`}
+                  >
+                    {data.year}
+                  </span>
+                </motion.button>
               ))}
             </div>
           </div>
 
-          {/* Collections */}
-          <div className="md:col-span-3">
-            <h2 className="text-xs tracking-[0.2em] opacity-50 mb-8">
-              COLLECTIONS FROM {selectedYear}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {archiveData
-                .find(d => d.year === selectedYear)
-                ?.collections.map((collection, index) => (
-                  <Link
-                    key={collection.id}
-                    href={`/collections/${collection.id}`}
-                    className="group block fade-in"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="border border-white/20 hover:border-white transition-colors duration-500 p-6">
-                      {collection.status && (
-                        <span className="inline-block px-2 py-1 bg-white text-black text-xs tracking-[0.2em] mb-4">
-                          {collection.status.toUpperCase()}
-                        </span>
-                      )}
-                      <h3 className="text-lg mb-2 group-hover:translate-x-2 transition-transform duration-300">
-                        {collection.title}
-                      </h3>
-                      <p className="text-sm opacity-50">
-                        {collection.items} pieces
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+          {/* Year Overview */}
+          <motion.div
+            key={selectedYear}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="text-center">
+              <p className="text-5xl font-light">{currentYearData?.collections}</p>
+              <p className="text-xs text-gray-600 mt-2">COLLECTIONS</p>
             </div>
-          </div>
-        </div>
+            <div className="text-center">
+              <p className="text-5xl font-light">{currentYearData?.experiments}</p>
+              <p className="text-xs text-gray-600 mt-2">EXPERIMENTS</p>
+            </div>
+            <div className="text-center">
+              <p className="text-5xl font-light">{currentYearData?.events}</p>
+              <p className="text-xs text-gray-600 mt-2">EVENTS</p>
+            </div>
+          </motion.div>
 
-        {/* Philosophy Quote */}
-        <div className="mt-32 text-center">
-          <blockquote className="text-xl md:text-2xl font-thin opacity-70">
-            "Time is a flat circle. Fashion repeats, but never the same."
-          </blockquote>
-        </div>
-      </div>
-    </main>
+          {/* Monthly Timeline */}
+          <div className="relative">
+            <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gray-200 md:left-1/2" />
+
+            {monthlyEvents.map((event, index) => (
+              <motion.div
+                key={event.month}
+                className={`relative flex items-center mb-12 ${
+                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                }`}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <div className="w-full md:w-1/2 px-8">
+                  <div className={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                    <span className="text-label opacity-60">{event.month} {selectedYear}</span>
+                    <h3 className="text-2xl font-light mt-2">{event.event}</h3>
+                    <span className="text-xs text-gray-600 uppercase tracking-wider">
+                      {event.type}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="absolute left-0 md:left-1/2 w-3 h-3 bg-white border-2 border-black rounded-full -translate-x-1/2" />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      ) : (
+        /* Grid View */
+        <section className="px-8 md:px-20 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {archiveData.map((data, index) => (
+              <motion.div
+                key={data.year}
+                className="border border-black/10 p-8 hover:border-black transition-colors duration-300"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <h3 className="text-4xl font-light mb-6">{data.year}</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between pb-2 border-b border-gray-200">
+                    <span className="text-sm">Collections</span>
+                    <span className="text-sm font-light">{data.collections}</span>
+                  </div>
+                  <div className="flex justify-between pb-2 border-b border-gray-200">
+                    <span className="text-sm">Experiments</span>
+                    <span className="text-sm font-light">{data.experiments}</span>
+                  </div>
+                  <div className="flex justify-between pb-2 border-b border-gray-200">
+                    <span className="text-sm">Events</span>
+                    <span className="text-sm font-light">{data.events}</span>
+                  </div>
+                </div>
+                <Link
+                  href={`/collections?year=${data.year}`}
+                  className="text-xs tracking-[0.15em] hover-underline inline-block mt-6"
+                >
+                  VIEW YEAR →
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Quote Section */}
+      <section className="border-t border-black/5 py-16 px-8 md:px-20">
+        <motion.div
+          className="max-w-3xl mx-auto text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-display mb-6 leading-tight">
+            "Time is a flat circle."
+          </h3>
+          <p className="text-gray-600">
+            Every moment in our archive represents a point in the continuous evolution of fashion and technology.
+          </p>
+        </motion.div>
+      </section>
+    </div>
   )
 }

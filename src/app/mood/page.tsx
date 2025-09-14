@@ -1,353 +1,235 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
-// Mood categories with vibrant colors
-const moods = [
-  { name: 'EUPHORIC', color: '#ff006e', gradient: 'from-pink-500 to-purple-500', emoji: '✨' },
-  { name: 'CHAOTIC', color: '#00f5ff', gradient: 'from-cyan-400 to-blue-500', emoji: '🌪️' },
-  { name: 'DREAMY', color: '#bfff00', gradient: 'from-lime-400 to-green-500', emoji: '☁️' },
-  { name: 'ELECTRIC', color: '#8b00ff', gradient: 'from-purple-500 to-indigo-500', emoji: '⚡' },
-  { name: 'SURREAL', color: '#ff6b00', gradient: 'from-orange-500 to-red-500', emoji: '🎭' },
-  { name: 'COSMIC', color: '#ffef00', gradient: 'from-yellow-400 to-orange-500', emoji: '🌌' }
+// Mood images with minimalist aesthetic
+const moodItems = [
+  { id: 1, aspect: 'portrait', category: 'texture', title: 'SURFACE 001' },
+  { id: 2, aspect: 'landscape', category: 'form', title: 'STRUCTURE 002' },
+  { id: 3, aspect: 'square', category: 'shadow', title: 'LIGHT 003' },
+  { id: 4, aspect: 'portrait', category: 'minimal', title: 'VOID 004' },
+  { id: 5, aspect: 'landscape', category: 'texture', title: 'GRAIN 005' },
+  { id: 6, aspect: 'portrait', category: 'form', title: 'SHAPE 006' },
+  { id: 7, aspect: 'square', category: 'shadow', title: 'CONTRAST 007' },
+  { id: 8, aspect: 'landscape', category: 'minimal', title: 'SPACE 008' },
+  { id: 9, aspect: 'portrait', category: 'texture', title: 'MATERIAL 009' },
+  { id: 10, aspect: 'square', category: 'form', title: 'GEOMETRY 010' },
+  { id: 11, aspect: 'landscape', category: 'shadow', title: 'DEPTH 011' },
+  { id: 12, aspect: 'portrait', category: 'minimal', title: 'ESSENCE 012' },
 ]
 
-// Sample images (replace with actual images from 웹 꾸미기 사진 folder)
-const moodImages = {
-  EUPHORIC: ['/웹 꾸미기 사진/image-1.png', '/웹 꾸미기 사진/image-2.png', '/웹 꾸미기 사진/image-3.png'],
-  CHAOTIC: ['/웹 꾸미기 사진/image-4.png', '/웹 꾸미기 사진/image-5.png', '/웹 꾸미기 사진/image-6.png'],
-  DREAMY: ['/웹 꾸미기 사진/image-7.png', '/웹 꾸미기 사진/image-8.png', '/웹 꾸미기 사진/image-9.png'],
-  ELECTRIC: ['/웹 꾸미기 사진/image-10.png', '/웹 꾸미기 사진/image-11.png', '/웹 꾸미기 사진/image-12.png'],
-  SURREAL: ['/웹 꾸미기 사진/image-13.png', '/웹 꾸미기 사진/image-14.png', '/웹 꾸미기 사진/image-15.png'],
-  COSMIC: ['/웹 꾸미기 사진/image-16.png', '/웹 꾸미기 사진/image-17.png', '/웹 꾸미기 사진/image-18.png']
-}
+const categories = ['ALL', 'TEXTURE', 'FORM', 'SHADOW', 'MINIMAL']
 
 export default function MoodPage() {
-  const [selectedMood, setSelectedMood] = useState<string | null>(null)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [colorMode, setColorMode] = useState('#ff006e')
-  const [floatingShapes, setFloatingShapes] = useState<{x: number, y: number, shape: string}[]>([])
+  const [selectedCategory, setSelectedCategory] = useState('ALL')
+  const [selectedItem, setSelectedItem] = useState<number | null>(null)
+  const [columns, setColumns] = useState(3)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
 
-  // Parallax effects
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 180])
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 0.8])
-
-  // Auto-cycle through moods when none selected
+  // Responsive columns
   useEffect(() => {
-    if (!selectedMood) {
-      const interval = setInterval(() => {
-        const randomMood = moods[Math.floor(Math.random() * moods.length)]
-        setColorMode(randomMood.color)
-      }, 2000)
-      return () => clearInterval(interval)
+    const handleResize = () => {
+      const width = window.innerWidth
+      if (width < 640) setColumns(1)
+      else if (width < 1024) setColumns(2)
+      else if (width < 1536) setColumns(3)
+      else setColumns(4)
     }
-  }, [selectedMood])
 
-  // Generate floating shapes
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (Math.random() > 0.95) {
-        const shapes = ['◆', '◇', '○', '△', '▽', '□', '▭']
-        setFloatingShapes(prev => [...prev, {
-          x: e.clientX,
-          y: e.clientY,
-          shape: shapes[Math.floor(Math.random() * shapes.length)]
-        }])
-
-        setTimeout(() => {
-          setFloatingShapes(prev => prev.slice(1))
-        }, 3000)
-      }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Auto-slide images when mood is selected
-  useEffect(() => {
-    if (selectedMood) {
-      const interval = setInterval(() => {
-        setCurrentImageIndex(prev => (prev + 1) % 3)
-      }, 3000)
-      return () => clearInterval(interval)
-    }
-  }, [selectedMood])
+  // Filter items
+  const filteredItems = selectedCategory === 'ALL'
+    ? moodItems
+    : moodItems.filter(item => item.category === selectedCategory.toLowerCase())
 
-  const handleMoodSelect = (mood: string) => {
-    setSelectedMood(mood === selectedMood ? null : mood)
-    setCurrentImageIndex(0)
-    const selected = moods.find(m => m.name === mood)
-    if (selected) {
-      setColorMode(selected.color)
-    }
+  // Distribute items into columns for masonry
+  const distributeIntoColumns = () => {
+    const cols: typeof moodItems[] = Array.from({ length: columns }, () => [])
+
+    filteredItems.forEach((item, index) => {
+      const columnIndex = index % columns
+      cols[columnIndex].push(item)
+    })
+
+    return cols
   }
 
+  const columnizedItems = distributeIntoColumns()
+
   return (
-    <div ref={containerRef} className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Dynamic gradient background */}
-      <motion.div
-        className="fixed inset-0"
-        animate={{
-          background: [
-            `radial-gradient(circle at 20% 50%, ${colorMode}40 0%, transparent 50%)`,
-            `radial-gradient(circle at 80% 50%, ${colorMode}40 0%, transparent 50%)`,
-            `radial-gradient(circle at 50% 20%, ${colorMode}40 0%, transparent 50%)`,
-            `radial-gradient(circle at 50% 80%, ${colorMode}40 0%, transparent 50%)`
-          ]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* Floating shapes */}
-      <AnimatePresence>
-        {floatingShapes.map((item, index) => (
-          <motion.div
-            key={`${item.x}-${item.y}-${index}`}
-            className="fixed text-4xl pointer-events-none z-20"
-            style={{ color: colorMode }}
-            initial={{ x: item.x - 20, y: item.y - 20, scale: 0, opacity: 0 }}
-            animate={{
-              y: item.y - 300,
-              scale: [0, 2, 1],
-              rotate: 360,
-              opacity: [0, 1, 0]
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 3, ease: "easeOut" }}
-          >
-            {item.shape}
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {/* Header */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 p-8"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-black tracking-widest">MOOD</h1>
-          <motion.div
-            className="text-sm tracking-widest opacity-50"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            SELECT YOUR VIBE
-          </motion.div>
-        </div>
-      </motion.header>
-
-      {/* Main Content */}
-      <section className="min-h-screen pt-32 px-8">
-        {/* Mood Selector Grid */}
+    <div className="min-h-screen bg-white">
+      {/* Header Section */}
+      <section className="pt-20 pb-12 px-8 md:px-20 border-b border-black/5">
         <motion.div
-          className="max-w-7xl mx-auto mb-20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {moods.map((mood, index) => (
-              <motion.button
-                key={mood.name}
-                className={`relative p-6 rounded-2xl border-2 transition-all duration-300 group overflow-hidden ${
-                  selectedMood === mood.name ? 'scale-105' : ''
-                }`}
-                style={{
-                  borderColor: selectedMood === mood.name ? mood.color : 'rgba(255,255,255,0.2)',
-                  background: selectedMood === mood.name
-                    ? `linear-gradient(135deg, ${mood.color}20, transparent)`
-                    : 'rgba(255,255,255,0.05)'
-                }}
-                onClick={() => handleMoodSelect(mood.name)}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.1, rotate: [-2, 2, -2] }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="text-3xl mb-2 block">{mood.emoji}</span>
-                <span className="text-xs font-bold tracking-widest">{mood.name}</span>
-
-                {/* Animated background on hover */}
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${mood.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
-                />
-              </motion.button>
-            ))}
-          </div>
+          <h1 className="text-hero mb-4">MOOD</h1>
+          <p className="text-label text-gray-600">VISUAL RESEARCH & INSPIRATION</p>
         </motion.div>
 
-        {/* Selected Mood Display */}
-        <AnimatePresence mode="wait">
-          {selectedMood && (
-            <motion.div
-              key={selectedMood}
-              className="max-w-7xl mx-auto"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
+        {/* Category Filter */}
+        <motion.div
+          className="mt-12 flex flex-wrap gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`text-xs tracking-[0.15em] px-4 py-2 border transition-all duration-300 ${
+                selectedCategory === category
+                  ? 'border-black bg-black text-white'
+                  : 'border-gray-300 hover:border-black'
+              }`}
             >
-              {/* Mood Title */}
-              <motion.h2
-                className="text-6xl md:text-9xl font-black text-center mb-16"
-                style={{ color: colorMode }}
-                animate={{
-                  textShadow: [
-                    `0 0 20px ${colorMode}`,
-                    `0 0 40px ${colorMode}`,
-                    `0 0 20px ${colorMode}`
-                  ]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {selectedMood}
-              </motion.h2>
+              {category}
+            </button>
+          ))}
+        </motion.div>
+      </section>
 
-              {/* Image Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {moodImages[selectedMood as keyof typeof moodImages].map((img, index) => (
-                  <motion.div
-                    key={img}
-                    className="relative aspect-[3/4] overflow-hidden rounded-2xl group cursor-pointer"
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                    whileHover={{ scale: 1.05, rotate: index % 2 === 0 ? 2 : -2 }}
-                  >
-                    <div className={`absolute inset-0 bg-gradient-to-t ${
-                      moods.find(m => m.name === selectedMood)?.gradient
-                    } opacity-30 z-10`} />
-
-                    <Image
-                      src={img}
-                      alt={`${selectedMood} mood ${index + 1}`}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-
-                    {/* Overlay text */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                      <motion.p
-                        className="text-white font-bold text-lg"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 + index * 0.1 }}
-                      >
-                        #{selectedMood.toLowerCase()}_{String(index + 1).padStart(3, '0')}
-                      </motion.p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Mood Description */}
-              <motion.div
-                className="mt-16 text-center max-w-3xl mx-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-              >
-                <p className="text-2xl md:text-3xl font-light leading-relaxed">
-                  <span style={{ color: colorMode }}>"{selectedMood}"</span> is not just a feeling,
-                  it's a whole universe of possibilities waiting to be explored.
-                </p>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Floating Inspiration Words */}
-        {!selectedMood && (
-          <motion.div
-            className="max-w-7xl mx-auto text-center"
-            style={{ y }}
-          >
-            <motion.h2
-              className="text-6xl md:text-9xl font-black mb-8"
-              animate={{
-                backgroundImage: [
-                  'linear-gradient(45deg, #ff006e, #00f5ff)',
-                  'linear-gradient(45deg, #00f5ff, #bfff00)',
-                  'linear-gradient(45deg, #bfff00, #8b00ff)',
-                  'linear-gradient(45deg, #8b00ff, #ff6b00)',
-                  'linear-gradient(45deg, #ff6b00, #ffef00)',
-                  'linear-gradient(45deg, #ffef00, #ff006e)'
-                ]
-              }}
-              transition={{ duration: 5, repeat: Infinity }}
-              style={{
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              CHOOSE YOUR MOOD
-            </motion.h2>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-16">
-              {['VIBE', 'ENERGY', 'AURA', 'SPIRIT', 'ESSENCE', 'FREQUENCY'].map((word, index) => (
+      {/* Masonry Grid */}
+      <section className="px-8 md:px-20 py-12" ref={containerRef}>
+        <div className="grid gap-6" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+          {columnizedItems.map((column, colIndex) => (
+            <div key={colIndex} className="flex flex-col gap-6">
+              {column.map((item, index) => (
                 <motion.div
-                  key={word}
-                  className="text-3xl md:text-5xl font-bold opacity-30"
-                  animate={{
-                    opacity: [0.3, 1, 0.3],
-                    y: [0, -20, 0]
-                  }}
+                  key={item.id}
+                  className="relative group cursor-pointer overflow-hidden"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 3,
-                    delay: index * 0.3,
-                    repeat: Infinity
+                    delay: colIndex * 0.1 + index * 0.05,
+                    duration: 0.6
+                  }}
+                  onClick={() => setSelectedItem(item.id)}
+                  whileHover={{ scale: 0.98 }}
+                  style={{
+                    aspectRatio:
+                      item.aspect === 'portrait' ? '3/4' :
+                      item.aspect === 'landscape' ? '4/3' : '1/1'
                   }}
                 >
-                  {word}
+                  {/* Placeholder for image */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-gray-100 to-gray-200">
+                    <Image
+                      src={`/placeholder-${item.id}.jpg`}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                      }}
+                    />
+                  </div>
+
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* Title on hover */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white/90 px-6 py-3">
+                      <p className="text-label text-black">{item.title}</p>
+                    </div>
+                  </div>
+
+                  {/* Number marker */}
+                  <span className="absolute top-4 left-4 text-label text-white mix-blend-difference">
+                    {String(item.id).padStart(3, '0')}
+                  </span>
                 </motion.div>
               ))}
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            className="fixed inset-0 bg-white z-50 flex items-center justify-center p-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setSelectedItem(null)}
+          >
+            <button
+              className="absolute top-8 right-8 text-3xl hover:rotate-90 transition-transform duration-300"
+              onClick={() => setSelectedItem(null)}
+            >
+              ×
+            </button>
+
+            <motion.div
+              className="max-w-4xl w-full"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="aspect-[3/2] bg-gradient-to-b from-gray-100 to-gray-200 relative">
+                <Image
+                  src={`/placeholder-${selectedItem}.jpg`}
+                  alt={moodItems.find(i => i.id === selectedItem)?.title || ''}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                  }}
+                />
+              </div>
+
+              <div className="mt-8 flex justify-between items-start">
+                <div>
+                  <h3 className="text-2xl font-light">
+                    {moodItems.find(i => i.id === selectedItem)?.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Category: {moodItems.find(i => i.id === selectedItem)?.category?.toUpperCase()}
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <button className="text-xs tracking-[0.15em] hover:opacity-60 transition-opacity">
+                    SAVE
+                  </button>
+                  <button className="text-xs tracking-[0.15em] hover:opacity-60 transition-opacity">
+                    SHARE
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
-      </section>
+      </AnimatePresence>
 
-      {/* Interactive Color Palette */}
-      <section className="py-20 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-2xl font-bold mb-8 text-center tracking-widest">COLOR PALETTE</h3>
-          <div className="flex justify-center gap-4 flex-wrap">
-            {moods.map((mood) => (
-              <motion.button
-                key={mood.name}
-                className="w-20 h-20 rounded-full border-2 border-white/20"
-                style={{ backgroundColor: mood.color }}
-                whileHover={{ scale: 1.2, rotate: 180 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setColorMode(mood.color)}
-              />
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-16 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-8 text-center">
-          <p className="text-sm tracking-[0.3em] opacity-50">
-            MOOD BOARD × CINCH LAB
+      {/* Footer Info */}
+      <section className="border-t border-black/5 py-16 px-8 md:px-20">
+        <div className="max-w-3xl">
+          <h3 className="text-display mb-6 leading-tight">
+            Visual research archive.
+          </h3>
+          <p className="text-gray-600 text-body-large">
+            A curated collection of textures, forms, and concepts that inform our design process.
+            Each image represents a study in minimalism and the interplay between light, shadow, and material.
           </p>
         </div>
-      </footer>
+      </section>
     </div>
   )
 }

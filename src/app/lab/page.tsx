@@ -194,32 +194,8 @@ export default function LabPage() {
     <div className="min-h-screen bg-white">
       <div className="grid-overlay" />
 
-      {/* Header */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-black/5"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      >
-        <nav className="flex justify-between items-center px-8 md:px-20 py-6">
-          <Link href="/">
-            <h1 className="text-2xl font-light tracking-tight hover:opacity-50 transition-opacity">
-              CINCH—LAB
-            </h1>
-          </Link>
-          <div className="flex items-center gap-8">
-            <span className="text-label">EXPERIMENTAL ZONE</span>
-            <Link href="/">
-              <button className="w-8 h-8 flex items-center justify-center text-2xl hover:rotate-90 transition-transform duration-300">
-                ×
-              </button>
-            </Link>
-          </div>
-        </nav>
-      </motion.header>
-
       {/* Main Content */}
-      <section className="pt-32 pb-20 px-8 md:px-20">
+      <section className="pt-20 pb-20 px-8 md:px-20">
         <div className="max-w-7xl mx-auto">
           {/* Title */}
           <motion.div
