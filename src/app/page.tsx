@@ -1,361 +1,300 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-
-const ParticleBackground = dynamic(
-  () => import('@/components/effects/ParticleBackground'),
-  { ssr: false }
-)
-
-const emojis = ['✨', '🔥', '💫', '⚡', '🌟', '💎', '🚀', '🎨', '🌈', '💥']
-const words = ['EXTREME', 'CHAOS', 'FUTURE', 'VISION', 'DIGITAL', 'INFINITY']
+import Image from 'next/image'
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
-  const [currentWord, setCurrentWord] = useState(0)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const [randomEmojis, setRandomEmojis] = useState<{x: number, y: number, emoji: string}[]>([])
+  const [currentTime, setCurrentTime] = useState('')
+  const [isLoaded, setIsLoaded] = useState(false)
 
   // Parallax transforms
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2])
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360])
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3])
 
-  // Word rotation
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWord((prev) => (prev + 1) % words.length)
-    }, 2000)
-    return () => clearInterval(interval)
+    setIsLoaded(true)
+    const timer = setInterval(() => {
+      const now = new Date()
+      setCurrentTime(now.toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }))
+    }, 1000)
+    return () => clearInterval(timer)
   }, [])
-
-  // Mouse tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY })
-
-      // Random emoji spawn
-      if (Math.random() > 0.98) {
-        setRandomEmojis(prev => [...prev, {
-          x: e.clientX,
-          y: e.clientY,
-          emoji: emojis[Math.floor(Math.random() * emojis.length)]
-        }])
-
-        setTimeout(() => {
-          setRandomEmojis(prev => prev.slice(1))
-        }, 3000)
-      }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  const menuItems = [
-    { name: 'LAB', path: '/lab', color: '#ff006e' },
-    { name: 'MOOD', path: '/mood', color: '#00f5ff' },
-    { name: 'COLLECTIONS', path: '/collections', color: '#bfff00' },
-    { name: 'ARCHIVE', path: '/archive', color: '#8b00ff' },
-    { name: 'ABOUT', path: '/about', color: '#ff6b00' },
-    { name: 'CONTACT', path: '/contact', color: '#ffef00' }
-  ]
 
   return (
-    <div ref={containerRef} className="bg-black text-white overflow-hidden min-h-screen">
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 mesh-gradient" />
-      <ParticleBackground count={50} />
+    <div ref={containerRef} className="min-h-screen bg-white">
+      {/* Grid overlay */}
+      <div className="grid-overlay" />
 
-      {/* Noise & Effects */}
-      <div className="noise-overlay" />
-      <div className="scan-lines" />
-
-      {/* Cursor Follower */}
-      <motion.div
-        className="cursor-follower"
-        animate={{
-          x: mousePos.x,
-          y: mousePos.y,
-        }}
-        transition={{ type: "spring", stiffness: 500, damping: 28 }}
-      />
-
-      {/* Random Floating Emojis */}
-      <AnimatePresence>
-        {randomEmojis.map((item, index) => (
-          <motion.div
-            key={`${item.x}-${item.y}-${index}`}
-            className="fixed text-4xl pointer-events-none z-50"
-            initial={{ x: item.x - 20, y: item.y - 20, scale: 0, rotate: 0 }}
-            animate={{
-              y: item.y - 200,
-              scale: [0, 1.5, 1],
-              rotate: 360,
-              opacity: [0, 1, 0]
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 3, ease: "easeOut" }}
-          >
-            {item.emoji}
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-black/10">
+        <div className="flex justify-between items-center px-8 py-6">
+          <div className="flex items-center gap-8">
+            <h1 className="text-2xl font-light tracking-tight">CINCH—LAB</h1>
+            <span className="technical-text text-gray-400">001</span>
+          </div>
+          <div className="flex items-center gap-8">
+            <span className="technical-text">{currentTime}</span>
+            <button className="w-8 h-8 flex flex-col justify-center gap-1.5">
+              <span className="w-full h-[1px] bg-black"></span>
+              <span className="w-full h-[1px] bg-black"></span>
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* Hero Section */}
-      <section className="min-h-screen relative flex items-center justify-center">
+      <section className="h-screen flex items-center justify-center relative overflow-hidden">
         <motion.div
-          style={{ y, scale }}
-          className="relative z-10 text-center"
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoaded ? 1 : 0 }}
+          transition={{ duration: 1 }}
         >
-          {/* Main Title with Dynamic Effects */}
-          <motion.div className="relative">
-            <motion.h1
-              className="text-[10rem] md:text-[15rem] lg:text-[20rem] font-black leading-none"
-              animate={{ rotateY: [0, 10, 0] }}
-              transition={{ duration: 5, repeat: Infinity }}
-            >
-              <span className="text-stroke">C</span>
-              <span className="gradient-text-animated">I</span>
-              <span className="text-stroke">N</span>
-              <span className="gradient-text-animated">C</span>
-              <span className="text-stroke">H</span>
-            </motion.h1>
-
-            {/* Floating decorative elements */}
-            <motion.div
-              className="absolute -top-10 -right-10 text-6xl"
-              animate={{
-                rotate: 360,
-                scale: [1, 1.2, 1]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              ✦
-            </motion.div>
-
-            <motion.div
-              className="absolute -bottom-10 -left-10 text-6xl"
-              animate={{
-                rotate: -360,
-                y: [0, -20, 0]
-              }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
-              ◈
-            </motion.div>
-          </motion.div>
-
-          {/* Animated Subtitle */}
-          <div className="mt-8 overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentWord}
-                className="text-4xl md:text-6xl font-bold tracking-[0.3em]"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{ color: menuItems[currentWord % menuItems.length].color }}
-              >
-                {words[currentWord]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          {/* Interactive Menu Grid */}
+          {/* Main Title */}
           <motion.div
-            className="mt-20 grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto px-8"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, staggerChildren: 0.1 }}
+            className="relative"
+            style={{ y, opacity }}
           >
-            {menuItems.map((item, index) => (
-              <Link key={item.name} href={item.path}>
-                <motion.div
-                  className="relative group cursor-pointer"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  onHoverStart={() => setHoveredItem(item.name)}
-                  onHoverEnd={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.05, rotate: [-1, 1, -1] }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <div
-                    className="p-8 border-2 rounded-2xl transition-all duration-300 overflow-hidden"
-                    style={{
-                      borderColor: hoveredItem === item.name ? item.color : 'rgba(255,255,255,0.2)',
-                      background: hoveredItem === item.name
-                        ? `linear-gradient(135deg, ${item.color}20, transparent)`
-                        : 'rgba(255,255,255,0.05)'
-                    }}
-                  >
-                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+            <h2 className="text-[8vw] leading-none font-light tracking-tight">
+              FASHION
+              <br />
+              <span className="font-thin italic">EXTREME</span>
+              <br />
+              TECHNICAL
+              <br />
+              <span className="text-stroke" style={{ WebkitTextStroke: '1px black', WebkitTextFillColor: 'transparent' }}>
+                LABORATORY
+              </span>
+            </h2>
 
-                    {/* Animated underline */}
-                    <motion.div
-                      className="h-1 rounded-full"
-                      style={{ backgroundColor: item.color }}
-                      initial={{ width: 0 }}
-                      animate={{ width: hoveredItem === item.name ? '100%' : '30%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-
-                    {/* Hover reveal text */}
-                    <AnimatePresence>
-                      {hoveredItem === item.name && (
-                        <motion.p
-                          className="mt-4 text-sm opacity-70"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                        >
-                          EXPLORE →
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Corner decorations */}
-                  <span
-                    className="absolute -top-2 -left-2 text-2xl"
-                    style={{ color: item.color }}
-                  >
-                    ◆
-                  </span>
-                  <span
-                    className="absolute -bottom-2 -right-2 text-2xl"
-                    style={{ color: item.color }}
-                  >
-                    ◇
-                  </span>
-                </motion.div>
-              </Link>
-            ))}
+            {/* Corner markers */}
+            <span className="absolute top-0 left-0 technical-text">[ 01 ]</span>
+            <span className="absolute bottom-0 right-0 technical-text">[ EXPERIMENTAL ]</span>
           </motion.div>
+
+          {/* Subtitle */}
+          <motion.p
+            className="mt-12 text-sm tracking-widest text-gray-600"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            CINCH × RELEASE × REPEAT
+          </motion.p>
         </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 20, 0] }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-xs tracking-widest opacity-50">SCROLL</span>
-            <div className="w-px h-20 bg-gradient-to-b from-white via-white to-transparent opacity-30" />
-          </div>
+          <div className="w-[1px] h-16 bg-black/20" />
         </motion.div>
       </section>
 
-      {/* Feature Section */}
-      <section className="py-32 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          {/* Marquee Text */}
-          <div className="marquee mb-20">
-            <div className="marquee-content">
-              {[...Array(10)].map((_, i) => (
-                <span key={i} className="text-6xl md:text-8xl font-black whitespace-nowrap">
-                  CINCH LAB × EXPERIMENTAL × FUTURE ×
-                </span>
-              ))}
+      {/* Navigation Grid */}
+      <section className="py-32">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid grid-cols-12 gap-4">
+            {/* Lab */}
+            <Link href="/lab" className="col-span-12 md:col-span-6 group">
+              <motion.div
+                className="border border-black/10 p-8 h-[400px] flex flex-col justify-between relative overflow-hidden"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div>
+                  <span className="technical-text">002</span>
+                  <h3 className="text-5xl font-light mt-4">LAB</h3>
+                  <p className="text-sm text-gray-600 mt-2">Experimental Zone</p>
+                </div>
+                <div className="flex justify-between items-end">
+                  <span className="text-xs">ENTER →</span>
+                  <div className="w-20 h-20 border border-black/20 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
+                </div>
+                <div className="absolute inset-0 bg-black/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              </motion.div>
+            </Link>
+
+            {/* Mood */}
+            <Link href="/mood" className="col-span-12 md:col-span-6 group">
+              <motion.div
+                className="border border-black/10 p-8 h-[400px] flex flex-col justify-between relative overflow-hidden"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div>
+                  <span className="technical-text">003</span>
+                  <h3 className="text-5xl font-light mt-4">MOOD</h3>
+                  <p className="text-sm text-gray-600 mt-2">Visual Inspiration</p>
+                </div>
+                <div className="flex justify-between items-end">
+                  <span className="text-xs">EXPLORE →</span>
+                  <div className="w-20 h-[1px] bg-black group-hover:w-full transition-all duration-500" />
+                </div>
+              </motion.div>
+            </Link>
+
+            {/* Collections */}
+            <Link href="/collections" className="col-span-12 md:col-span-4 group">
+              <motion.div
+                className="border border-black/10 p-8 h-[300px] flex flex-col justify-between diagonal-cut"
+                whileHover={{ scale: 1.01 }}
+              >
+                <div>
+                  <span className="technical-text">004</span>
+                  <h3 className="text-3xl font-light mt-4">COLLECTIONS</h3>
+                </div>
+                <span className="text-xs">VIEW ALL →</span>
+              </motion.div>
+            </Link>
+
+            {/* Archive */}
+            <Link href="/archive" className="col-span-12 md:col-span-4 group">
+              <motion.div
+                className="border border-black/10 p-8 h-[300px] flex flex-col justify-between"
+                whileHover={{ scale: 1.01 }}
+              >
+                <div>
+                  <span className="technical-text">005</span>
+                  <h3 className="text-3xl font-light mt-4">ARCHIVE</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="h-10 bg-black/5" />
+                  <div className="h-10 bg-black/10" />
+                  <div className="h-10 bg-black/10" />
+                  <div className="h-10 bg-black/5" />
+                </div>
+              </motion.div>
+            </Link>
+
+            {/* About */}
+            <Link href="/about" className="col-span-12 md:col-span-4 group">
+              <motion.div
+                className="border border-black/10 p-8 h-[300px] flex flex-col justify-between inverted"
+                whileHover={{ scale: 1.01 }}
+              >
+                <div>
+                  <span className="technical-text text-gray-400">006</span>
+                  <h3 className="text-3xl font-light mt-4">ABOUT</h3>
+                </div>
+                <p className="text-xs opacity-60">
+                  Fashion's extreme limits.<br />
+                  Technical experimentation.
+                </p>
+              </motion.div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Statement Section */}
+      <section className="py-32 border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid grid-cols-12 gap-8">
+            <div className="col-span-12 md:col-span-2">
+              <p className="technical-text vertical-text">STATEMENT</p>
+            </div>
+            <div className="col-span-12 md:col-span-7">
+              <h3 className="text-6xl font-light leading-tight">
+                We don't create fashion.
+                <br />
+                We engineer
+                <span className="italic"> experiences</span>.
+              </h3>
+              <p className="mt-8 text-gray-600 max-w-2xl">
+                CINCH LAB operates at the intersection of fashion and technology,
+                pushing boundaries through experimental design and technical innovation.
+                Our approach challenges conventional aesthetics, creating pieces that
+                exist beyond traditional fashion paradigms.
+              </p>
+            </div>
+            <div className="col-span-12 md:col-span-3">
+              <div className="sticky top-32">
+                <p className="technical-text mb-4">STATISTICS</p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-3xl font-light">475</p>
+                    <p className="text-xs text-gray-600">Experiments</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-light">∞</p>
+                    <p className="text-xs text-gray-600">Possibilities</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-light">001</p>
+                    <p className="text-xs text-gray-600">Laboratory</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { number: '475', label: 'VISUALS', emoji: '🎨' },
-              { number: '∞', label: 'POSSIBILITIES', emoji: '✨' },
-              { number: '24/7', label: 'ONLINE', emoji: '🌐' },
-              { number: '001', label: 'LABORATORY', emoji: '🔬' }
-            ].map((stat, index) => (
+      {/* Visual Grid */}
+      <section className="py-32">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid grid-cols-12 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <motion.div
-                key={stat.label}
-                className="text-center group cursor-pointer"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                key={i}
+                className="col-span-6 md:col-span-4 aspect-[3/4] bg-gray-100 relative group overflow-hidden"
+                whileHover={{ scale: 0.98 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="relative">
-                  <h3 className="text-5xl md:text-7xl font-black gradient-text-animated">
-                    {stat.number}
-                  </h3>
-                  <span className="absolute -top-4 -right-4 text-3xl group-hover:animate-bounce">
-                    {stat.emoji}
-                  </span>
+                <Image
+                  src={`/웹 꾸미기 사진/image-${i}.png`}
+                  alt=""
+                  fill
+                  className="object-cover img-grayscale"
+                />
+                <div className="absolute inset-0 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <p className="technical-text">VIEW</p>
                 </div>
-                <p className="mt-2 text-sm tracking-widest opacity-70">
-                  {stat.label}
-                </p>
+                <span className="absolute top-4 left-4 technical-text">{String(i).padStart(3, '0')}</span>
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Interactive Quote */}
-      <section className="py-20 px-8 relative">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-6xl font-black mb-8">
-            <span className="holographic">FASHION IS</span>
-            <br />
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={currentWord}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                className="text-stroke"
-              >
-                {words[currentWord]}
-              </motion.span>
-            </AnimatePresence>
-          </h2>
-
-          <p className="text-xl opacity-70">
-            Where creativity meets chaos ⚡
-          </p>
-        </motion.div>
+      {/* Contact Bar */}
+      <section className="border-t border-black/10">
+        <Link href="/contact">
+          <motion.div
+            className="py-8 px-8 flex justify-between items-center group"
+            whileHover={{ backgroundColor: 'rgb(0, 0, 0)', color: 'rgb(255, 255, 255)' }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="text-4xl font-light">GET IN TOUCH</h3>
+            <span className="text-xl">→</span>
+          </motion.div>
+        </Link>
       </section>
 
       {/* Footer */}
-      <footer className="py-16 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-8 text-center">
-          <div className="flex justify-center gap-8 mb-8">
-            {['Instagram', 'TikTok', 'Twitter', 'Discord'].map((social) => (
-              <motion.a
-                key={social}
-                href="#"
-                className="text-sm uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {social}
-              </motion.a>
-            ))}
+      <footer className="border-t border-black/10 py-12">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-sm">© 2024 CINCH LAB</p>
+              <p className="text-xs text-gray-600 mt-1">Experimental Fashion Laboratory</p>
+            </div>
+            <div className="text-right">
+              <p className="technical-text">SEOUL — NEW YORK — TOKYO</p>
+            </div>
           </div>
-          <p className="text-xs tracking-[0.3em] opacity-30">
-            © 2024 CINCH LAB — EXPERIMENTAL FASHION LABORATORY
-          </p>
         </div>
       </footer>
     </div>
