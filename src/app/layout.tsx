@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import CinchNav from '@/components/layout/CinchNav'
 import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider'
+import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/cinch-lab.css'
+import '@/styles/animations.css'
 
 export const metadata: Metadata = {
   title: 'CINCH LAB | Experimental Fashion Laboratory',
@@ -26,9 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <SkipToMain />
+        <KeyboardNavigationIndicator />
         <SmoothScrollProvider>
           <CinchNav />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
         </SmoothScrollProvider>
       </body>
     </html>

@@ -7,6 +7,13 @@ import { EffectComposer } from 'three-stdlib'
 import { RenderPass } from 'three-stdlib'
 import { UnrealBloomPass } from 'three-stdlib'
 import { ImageMetadata } from '@/lib/imageDatabase'
+import {
+  SceneOptimizer,
+  PerformanceMonitor,
+  TextureOptimizer,
+  GeometryInstancer,
+  getAdaptiveQuality
+} from '@/lib/three-optimizations'
 
 interface Gallery3DProps {
   images: ImageMetadata[]
@@ -37,10 +44,11 @@ export default function Gallery3D({
 
   // Initialize Three.js scene
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mount = mountRef.current
+    if (!mount) return;
 
-    const width = mountRef.current.clientWidth
-    const height = mountRef.current.clientHeight
+    const width = mount.clientWidth
+    const height = mount.clientHeight
 
     // Scene setup
     const scene = new THREE.Scene()
@@ -64,7 +72,7 @@ export default function Gallery3D({
     renderer.shadowMap.enabled = performanceStats.quality === 'high'
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     rendererRef.current = renderer
-    mountRef.current.appendChild(renderer.domElement)
+    mount.appendChild(renderer.domElement)
 
     // Post-processing
     if (effects && performanceStats.quality === 'high') {
@@ -115,7 +123,69 @@ export default function Gallery3D({
     // Add image group to scene
     scene.add(imagesRef.current)
 
-    // Create image meshes
+    // Create image meshes function
+    const createImageMeshes = () => {
+      const group = imagesRef.current
+      group.clear()
+
+      const loader = new THREE.TextureLoader()
+      const imageCount = Math.min(images.length, 100) // Limit for performance
+
+      images.slice(0, imageCount).forEach((image, index) => {
+        // Create geometry
+        const geometry = new THREE.BoxGeometry(10, 10, 0.5)
+
+        // Create material with texture
+        const material = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          emissive: new THREE.Color(image.dominantColor.r / 255, image.dominantColor.g / 255, image.dominantColor.b / 255),
+          emissiveIntensity: 0.2,
+          shininess: 100,
+          specular: 0x222222
+        })
+
+        // Load texture asynchronously
+        loader.load(
+          `/웹 꾸미기 사진/${image.filename}`,
+          (texture) => {
+            material.map = texture
+            material.needsUpdate = true
+          },
+          undefined,
+          (error) => {
+            console.error('Error loading texture:', error)
+          }
+        )
+
+        const mesh = new THREE.Mesh(geometry, material)
+        mesh.castShadow = true
+        mesh.receiveShadow = true
+
+        // Position based on layout
+        const position = calculatePosition(index, imageCount, layout)
+        mesh.position.set(position.x, position.y, position.z)
+
+        // Random initial rotation for variety
+        mesh.rotation.set(
+          Math.random() * Math.PI * 0.1,
+          Math.random() * Math.PI * 0.1,
+          Math.random() * Math.PI * 0.1
+        )
+
+        // Store metadata
+        mesh.userData = { image, index }
+
+        // Add interaction
+        if (interactive) {
+          mesh.userData.originalPosition = position
+          mesh.userData.originalScale = { x: 1, y: 1, z: 1 }
+        }
+
+        group.add(mesh)
+      })
+    }
+
+    // Call the function
     createImageMeshes()
 
     // Animation loop
@@ -146,10 +216,10 @@ export default function Gallery3D({
 
     // Handle resize
     const handleResize = () => {
-      if (!mountRef.current || !camera || !renderer) return
+      if (!mount || !camera || !renderer) return
 
-      const newWidth = mountRef.current.clientWidth
-      const newHeight = mountRef.current.clientHeight
+      const newWidth = mount.clientWidth
+      const newHeight = mount.clientHeight
 
       camera.aspect = newWidth / newHeight
       camera.updateProjectionMatrix()
@@ -169,75 +239,13 @@ export default function Gallery3D({
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current)
       }
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement)
+      if (mount && renderer.domElement && mount.contains(renderer.domElement)) {
+        mount.removeChild(renderer.domElement)
       }
       renderer.dispose()
       scene.clear()
     }
-  }, [])
-
-  // Create image meshes based on layout
-  const createImageMeshes = useCallback(() => {
-    const group = imagesRef.current
-    group.clear()
-
-    const loader = new THREE.TextureLoader()
-    const imageCount = Math.min(images.length, 100) // Limit for performance
-
-    images.slice(0, imageCount).forEach((image, index) => {
-      // Create geometry
-      const geometry = new THREE.BoxGeometry(10, 10, 0.5)
-
-      // Create material with texture
-      const material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        emissive: new THREE.Color(image.dominantColor.r / 255, image.dominantColor.g / 255, image.dominantColor.b / 255),
-        emissiveIntensity: 0.2,
-        shininess: 100,
-        specular: 0x222222
-      })
-
-      // Load texture asynchronously
-      loader.load(
-        `/웹 꾸미기 사진/${image.filename}`,
-        (texture) => {
-          material.map = texture
-          material.needsUpdate = true
-        },
-        undefined,
-        (error) => {
-          console.error('Error loading texture:', error)
-        }
-      )
-
-      const mesh = new THREE.Mesh(geometry, material)
-      mesh.castShadow = true
-      mesh.receiveShadow = true
-
-      // Position based on layout
-      const position = calculatePosition(index, imageCount, layout)
-      mesh.position.set(position.x, position.y, position.z)
-
-      // Random initial rotation for variety
-      mesh.rotation.set(
-        Math.random() * Math.PI * 0.1,
-        Math.random() * Math.PI * 0.1,
-        Math.random() * Math.PI * 0.1
-      )
-
-      // Store metadata
-      mesh.userData = { image, index }
-
-      // Add interaction
-      if (interactive) {
-        mesh.userData.originalPosition = position
-        mesh.userData.originalScale = { x: 1, y: 1, z: 1 }
-      }
-
-      group.add(mesh)
-    })
-  }, [images, layout, interactive])
+  }, [autoRotate, effects, interactive, performanceStats.quality, images, layout])
 
   // Calculate position based on layout type
   const calculatePosition = (index: number, total: number, layoutType: string) => {

@@ -25,7 +25,8 @@ export default function ParticleBackground({
   const mouseRef = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    if (!mountRef.current) return
+    const mount = mountRef.current
+    if (!mount) return
 
     // Scene setup
     const scene = new THREE.Scene()
@@ -50,7 +51,7 @@ export default function ParticleBackground({
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     rendererRef.current = renderer
-    mountRef.current.appendChild(renderer.domElement)
+    mount.appendChild(renderer.domElement)
 
     // Create particles
     const geometry = new THREE.BufferGeometry()
@@ -199,8 +200,8 @@ export default function ParticleBackground({
         cancelAnimationFrame(frameRef.current)
       }
 
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement)
+      if (mount && renderer.domElement && mount.contains(renderer.domElement)) {
+        mount.removeChild(renderer.domElement)
       }
 
       geometry.dispose()

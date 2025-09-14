@@ -48,7 +48,8 @@ export default function CinchNav() {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="relative w-10 h-10 flex items-center justify-center"
-            aria-label="Toggle Menu"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             <div className="w-6 h-5 flex flex-col justify-between">
               <span className={`block h-0.5 w-full bg-white transition-transform ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />

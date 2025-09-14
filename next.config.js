@@ -1,7 +1,15 @@
 /** @type {import('next').NextConfig} */
+const path = require('path')
+
 const nextConfig = {
   reactStrictMode: true,
-  outputFileTracingRoot: 'C:\\Users\\t9140\\OneDrive\\바탕 화면\\cinch-lab',
+  outputFileTracingRoot: path.join(__dirname),
+
+  // Experimental features for better performance
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@react-three/fiber', '@react-three/drei', 'three', 'framer-motion', 'gsap'],
+  },
 
   // Performance optimizations
   compiler: {
