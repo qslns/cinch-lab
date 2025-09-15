@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import CipherText from '@/components/CipherText'
 
 const collections = [
   {
@@ -89,8 +90,8 @@ export default function CollectionsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-hero mb-4">COLLECTIONS</h1>
-          <p className="text-label text-gray-600">COMPLETE ARCHIVE OF SEASONAL RELEASES</p>
+          <h1 className="text-hero mb-4"><CipherText text="COLLECTIONS" /></h1>
+          <p className="text-label text-gray-600"><CipherText text="COMPLETE ARCHIVE OF SEASONAL RELEASES" /></p>
         </motion.div>
 
         {/* Year Navigation */}
@@ -110,14 +111,14 @@ export default function CollectionsPage() {
                   : 'border-transparent opacity-40 hover:opacity-70'
               }`}
             >
-              {year}
+              <CipherText text={String(year)} />
             </button>
           ))}
           <Link
             href="/archive"
             className="text-sm tracking-[0.1em] pb-2 opacity-40 hover:opacity-70 transition-opacity"
           >
-            FULL ARCHIVE →
+            <CipherText text="FULL ARCHIVE →" />
           </Link>
         </motion.div>
 
@@ -129,7 +130,7 @@ export default function CollectionsPage() {
               viewMode === 'editorial' ? 'opacity-100' : 'opacity-40'
             }`}
           >
-            EDITORIAL
+            <CipherText text="EDITORIAL" />
           </button>
           <span className="text-xs opacity-20">/</span>
           <button
@@ -138,7 +139,7 @@ export default function CollectionsPage() {
               viewMode === 'grid' ? 'opacity-100' : 'opacity-40'
             }`}
           >
-            GRID
+            <CipherText text="GRID" />
           </button>
         </div>
       </section>
@@ -179,27 +180,27 @@ export default function CollectionsPage() {
                         />
                       </div>
                       <div className="py-12 md:px-12">
-                        <span className="text-label opacity-60">{season.name}</span>
-                        <h2 className="text-display mt-4 mb-6">{season.title}</h2>
+                        <span className="text-label opacity-60"><CipherText text={season.name} /></span>
+                        <h2 className="text-display mt-4 mb-6"><CipherText text={season.title} /></h2>
                         <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                          {season.description}
+                          <CipherText text={season.description} />
                         </p>
                         <div className="flex items-center gap-8 mb-12">
                           <div>
-                            <p className="text-3xl font-light">{season.looks}</p>
-                            <p className="text-xs text-gray-600">LOOKS</p>
+                            <p className="text-3xl font-light"><CipherText text={String(season.looks)} /></p>
+                            <p className="text-xs text-gray-600"><CipherText text="LOOKS" /></p>
                           </div>
                           <div className="w-[1px] h-12 bg-gray-300" />
                           <div>
-                            <p className="text-3xl font-light">{selectedYear}</p>
-                            <p className="text-xs text-gray-600">YEAR</p>
+                            <p className="text-3xl font-light"><CipherText text={String(selectedYear)} /></p>
+                            <p className="text-xs text-gray-600"><CipherText text="YEAR" /></p>
                           </div>
                         </div>
                         <button
                           onClick={() => setSelectedSeason(season.id)}
                           className="btn btn-outline"
                         >
-                          VIEW COLLECTION
+                          <CipherText text="VIEW COLLECTION" />
                         </button>
                       </div>
                     </div>
@@ -221,16 +222,16 @@ export default function CollectionsPage() {
                         </div>
                       </div>
                       <div className="md:col-span-7 flex flex-col justify-center">
-                        <span className="text-label opacity-60">{season.name}</span>
-                        <h2 className="text-5xl font-light mt-4 mb-4">{season.title}</h2>
-                        <p className="text-gray-600 mb-8">{season.description}</p>
+                        <span className="text-label opacity-60"><CipherText text={season.name} /></span>
+                        <h2 className="text-5xl font-light mt-4 mb-4"><CipherText text={season.title} /></h2>
+                        <p className="text-gray-600 mb-8"><CipherText text={season.description} /></p>
                         <div className="flex items-center gap-6">
-                          <span className="text-sm">{season.looks} LOOKS</span>
+                          <span className="text-sm"><CipherText text={`${season.looks} LOOKS`} /></span>
                           <button
                             onClick={() => setSelectedSeason(season.id)}
                             className="text-sm tracking-[0.15em] hover-underline"
                           >
-                            VIEW COLLECTION →
+                            <CipherText text="VIEW COLLECTION →" />
                           </button>
                         </div>
                       </div>
@@ -265,9 +266,9 @@ export default function CollectionsPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                   <div className="mt-4">
-                    <p className="text-xs tracking-[0.15em] opacity-60">{season.name}</p>
-                    <h3 className="text-2xl font-light mt-2">{season.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{season.looks} looks</p>
+                    <p className="text-xs tracking-[0.15em] opacity-60"><CipherText text={season.name} /></p>
+                    <h3 className="text-2xl font-light mt-2"><CipherText text={season.title} /></h3>
+                    <p className="text-sm text-gray-600 mt-1"><CipherText text={`${season.looks} looks`} /></p>
                   </div>
                 </motion.div>
               ))}
@@ -290,7 +291,7 @@ export default function CollectionsPage() {
                 className="fixed top-8 right-8 z-10 text-3xl hover:rotate-90 transition-transform duration-300"
                 onClick={() => setSelectedSeason(null)}
               >
-                ×
+                <CipherText text="×" />
               </button>
 
               <div className="px-8 md:px-20 py-20">
@@ -300,10 +301,10 @@ export default function CollectionsPage() {
                   transition={{ delay: 0.1 }}
                 >
                   <h2 className="text-hero mb-4">
-                    {currentCollections?.seasons.find(s => s.id === selectedSeason)?.title}
+                    <CipherText text={currentCollections?.seasons.find(s => s.id === selectedSeason)?.title || ''} />
                   </h2>
                   <p className="text-label mb-12">
-                    {currentCollections?.seasons.find(s => s.id === selectedSeason)?.name}
+                    <CipherText text={currentCollections?.seasons.find(s => s.id === selectedSeason)?.name || ''} />
                   </p>
                 </motion.div>
 
@@ -318,7 +319,7 @@ export default function CollectionsPage() {
                       transition={{ delay: i * 0.02 }}
                     >
                       <span className="absolute top-4 left-4 text-label text-white mix-blend-difference">
-                        LOOK {String(i + 1).padStart(3, '0')}
+                        <CipherText text={`LOOK ${String(i + 1).padStart(3, '0')}`} />
                       </span>
                     </motion.div>
                   ))}

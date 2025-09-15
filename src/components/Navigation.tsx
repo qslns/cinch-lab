@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import CipherText from './CipherText'
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -20,12 +21,12 @@ export default function Navigation() {
       <nav className="flex justify-between items-center h-14 px-8 md:px-20">
         {/* Logo */}
         <Link href="/" className="text-xl font-light tracking-tight hover:opacity-70 transition-opacity">
-          CINCH LAB
+          <CipherText text="CINCH LAB" />
         </Link>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-6 md:gap-10">
-          {navLinks.slice(1).map((link) => (
+        <div className="flex items-center gap-8 md:gap-12">
+          {navLinks.slice(1).map((link, index) => (
             <Link
               key={link.href}
               href={link.href}
@@ -33,7 +34,7 @@ export default function Navigation() {
                 pathname === link.href ? 'opacity-100' : 'opacity-60 hover:opacity-100'
               }`}
             >
-              {link.label}
+              <CipherText text={link.label} delay={index * 50} />
             </Link>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import CipherText from '@/components/CipherText'
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -68,10 +69,10 @@ export default function HomePage() {
             transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
           >
             <h2 className="text-hero text-center leading-[0.85]">
-              <span className="block">FASHION</span>
-              <span className="block text-italic font-light opacity-80">EXTREME</span>
-              <span className="block">TECHNICAL</span>
-              <span className="block text-outline">LABORATORY</span>
+              <CipherText text="FASHION" as="span" className="block" />
+              <CipherText text="EXTREME" as="span" className="block text-italic font-light opacity-80" delay={100} />
+              <CipherText text="TECHNICAL" as="span" className="block" delay={200} />
+              <CipherText text="LABORATORY" as="span" className="block text-outline" delay={300} />
             </h2>
 
             {/* Floating markers */}
@@ -80,14 +81,14 @@ export default function HomePage() {
               animate={{ opacity: [0.4, 0.8, 0.4] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              [ 01 ]
+              <CipherText text="[ 01 ]" />
             </motion.span>
             <motion.span
               className="absolute -bottom-8 -right-8 text-label"
               animate={{ opacity: [0.4, 0.8, 0.4] }}
               transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
             >
-              [ EXPERIMENTAL ]
+              <CipherText text="[ EXPERIMENTAL ]" />
             </motion.span>
           </motion.div>
 
@@ -98,7 +99,7 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 1 }}
           >
-            CINCH × RELEASE × REPEAT
+            <CipherText text="CINCH × RELEASE × REPEAT" delay={400} />
           </motion.p>
         </motion.div>
 
@@ -130,13 +131,13 @@ export default function HomePage() {
                 transition={{ duration: 0.3 }}
               >
                 <div>
-                  <span className="text-label marker">002</span>
-                  <h3 className="text-5xl font-light mt-6">LAB</h3>
-                  <p className="text-sm text-gray-600 mt-3">Experimental Zone</p>
+                  <span className="text-label marker"><CipherText text="002" /></span>
+                  <h3 className="text-5xl font-light mt-6"><CipherText text="LAB" /></h3>
+                  <p className="text-sm text-gray-600 mt-3"><CipherText text="Experimental Zone" /></p>
                 </div>
 
                 <div className="flex justify-between items-end">
-                  <span className="text-xs tracking-widest">ENTER →</span>
+                  <span className="text-xs tracking-widest"><CipherText text="ENTER →" /></span>
                   <motion.div
                     className="w-16 h-16 border border-black/20"
                     animate={{ rotate: 45 }}
@@ -157,13 +158,13 @@ export default function HomePage() {
                 transition={{ duration: 0.3 }}
               >
                 <div>
-                  <span className="text-label marker">003</span>
-                  <h3 className="text-5xl font-light mt-6">MOOD</h3>
-                  <p className="text-sm text-gray-600 mt-3">Visual Inspiration</p>
+                  <span className="text-label marker"><CipherText text="003" /></span>
+                  <h3 className="text-5xl font-light mt-6"><CipherText text="MOOD" /></h3>
+                  <p className="text-sm text-gray-600 mt-3"><CipherText text="Visual Inspiration" /></p>
                 </div>
 
                 <div className="flex justify-between items-end">
-                  <span className="text-xs tracking-widest">EXPLORE →</span>
+                  <span className="text-xs tracking-widest"><CipherText text="EXPLORE →" /></span>
                   <div className="w-20 h-[1px] bg-black group-hover:w-full transition-all duration-500" />
                 </div>
               </motion.div>
@@ -177,12 +178,12 @@ export default function HomePage() {
                 transition={{ duration: 0.3 }}
               >
                 <div>
-                  <span className="text-label marker">004</span>
-                  <h3 className="text-5xl font-light mt-6">ARCHIVE</h3>
-                  <p className="text-sm text-gray-600 mt-3">Complete History</p>
+                  <span className="text-label marker"><CipherText text="004" /></span>
+                  <h3 className="text-5xl font-light mt-6"><CipherText text="ARCHIVE" /></h3>
+                  <p className="text-sm text-gray-600 mt-3"><CipherText text="Complete History" /></p>
                 </div>
 
-                <span className="text-xs tracking-widest">VIEW ALL →</span>
+                <span className="text-xs tracking-widest"><CipherText text="VIEW ALL →" /></span>
               </motion.div>
             </Link>
           </motion.div>
@@ -202,12 +203,11 @@ export default function HomePage() {
                   whileHover={{ scale: 1.01 }}
                 >
                   <div>
-                    <span className="text-label text-gray-400">005</span>
-                    <h3 className="text-4xl font-light mt-4">ABOUT</h3>
+                    <span className="text-label text-gray-400"><CipherText text="005" /></span>
+                    <h3 className="text-4xl font-light mt-4"><CipherText text="ABOUT" /></h3>
                   </div>
                   <p className="text-sm opacity-70 max-w-md">
-                    Fashion's extreme limits. Technical experimentation.
-                    Challenging conventions since 2019.
+                    <CipherText text="Fashion's extreme limits. Technical experimentation. Challenging conventions since 2019." />
                   </p>
                 </motion.div>
               </Link>
@@ -220,10 +220,10 @@ export default function HomePage() {
                   whileHover={{ scale: 1.01 }}
                 >
                   <div>
-                    <span className="text-label marker">006</span>
-                    <h3 className="text-3xl font-light mt-4">CONTACT</h3>
+                    <span className="text-label marker"><CipherText text="006" /></span>
+                    <h3 className="text-3xl font-light mt-4"><CipherText text="CONTACT" /></h3>
                   </div>
-                  <span className="text-xs tracking-widest">GET IN TOUCH →</span>
+                  <span className="text-xs tracking-widest"><CipherText text="GET IN TOUCH →" /></span>
                 </motion.div>
               </Link>
             </div>
@@ -242,27 +242,25 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
           >
             <div className="md:col-span-2">
-              <p className="text-label text-vertical">STATEMENT</p>
+              <p className="text-label text-vertical"><CipherText text="STATEMENT" /></p>
             </div>
 
             <div className="md:col-span-7">
               <h3 className="text-display leading-tight">
-                We don't create fashion.
+                <CipherText text="We don't create fashion." as="span" />
                 <br />
-                We engineer
-                <span className="text-italic"> experiences</span>.
+                <CipherText text="We engineer" as="span" delay={50} />
+                <span className="text-italic"> <CipherText text="experiences" delay={100} /></span>
+                <CipherText text="." as="span" delay={150} />
               </h3>
               <p className="mt-12 text-body-large text-gray-600 max-w-2xl">
-                CINCH LAB operates at the intersection of fashion and technology,
-                pushing boundaries through experimental design and technical innovation.
-                Our approach challenges conventional aesthetics, creating pieces that
-                exist beyond traditional fashion paradigms.
+                <CipherText text="CINCH LAB operates at the intersection of fashion and technology, pushing boundaries through experimental design and technical innovation. Our approach challenges conventional aesthetics, creating pieces that exist beyond traditional fashion paradigms." />
               </p>
             </div>
 
             <div className="md:col-span-3">
               <div className="sticky top-32">
-                <p className="text-label mb-8">STATISTICS</p>
+                <p className="text-label mb-8"><CipherText text="STATISTICS" /></p>
                 <div className="space-y-6">
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -270,8 +268,8 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 }}
                   >
-                    <p className="text-4xl font-light">475</p>
-                    <p className="text-xs text-gray-600">Experiments</p>
+                    <p className="text-4xl font-light"><CipherText text="475" /></p>
+                    <p className="text-xs text-gray-600"><CipherText text="Experiments" /></p>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -279,8 +277,8 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
                   >
-                    <p className="text-4xl font-light">∞</p>
-                    <p className="text-xs text-gray-600">Possibilities</p>
+                    <p className="text-4xl font-light"><CipherText text="∞" /></p>
+                    <p className="text-xs text-gray-600"><CipherText text="Possibilities" /></p>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -288,8 +286,8 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 }}
                   >
-                    <p className="text-4xl font-light">001</p>
-                    <p className="text-xs text-gray-600">Laboratory</p>
+                    <p className="text-4xl font-light"><CipherText text="001" /></p>
+                    <p className="text-xs text-gray-600"><CipherText text="Laboratory" /></p>
                   </motion.div>
                 </div>
               </div>
@@ -307,7 +305,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            RECENT EXPERIMENTS
+            <CipherText text="RECENT EXPERIMENTS" />
           </motion.p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -333,10 +331,10 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
                 <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-90 transition-opacity duration-300 flex items-center justify-center">
-                  <p className="text-label">VIEW</p>
+                  <p className="text-label"><CipherText text="VIEW" /></p>
                 </div>
                 <span className="absolute top-4 left-4 text-label text-white mix-blend-difference">
-                  {String(i).padStart(3, '0')}
+                  <CipherText text={String(i).padStart(3, '0')} />
                 </span>
               </motion.div>
             ))}
@@ -347,14 +345,14 @@ export default function HomePage() {
       {/* Marquee */}
       <section className="marquee">
         <div className="marquee-content">
-          <span>FASHION EXTREME</span>
-          <span>TECHNICAL LABORATORY</span>
-          <span>EXPERIMENTAL DESIGN</span>
-          <span>CINCH LAB</span>
-          <span>FASHION EXTREME</span>
-          <span>TECHNICAL LABORATORY</span>
-          <span>EXPERIMENTAL DESIGN</span>
-          <span>CINCH LAB</span>
+          <span><CipherText text="FASHION EXTREME" /></span>
+          <span><CipherText text="TECHNICAL LABORATORY" /></span>
+          <span><CipherText text="EXPERIMENTAL DESIGN" /></span>
+          <span><CipherText text="CINCH LAB" /></span>
+          <span><CipherText text="FASHION EXTREME" /></span>
+          <span><CipherText text="TECHNICAL LABORATORY" /></span>
+          <span><CipherText text="EXPERIMENTAL DESIGN" /></span>
+          <span><CipherText text="CINCH LAB" /></span>
         </div>
       </section>
 
@@ -363,11 +361,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
             <div>
-              <p className="text-sm">© 2025 CINCH LAB</p>
-              <p className="text-xs text-gray-600 mt-1">Experimental Fashion Laboratory</p>
+              <p className="text-sm"><CipherText text="© 2025 CINCH LAB" /></p>
+              <p className="text-xs text-gray-600 mt-1"><CipherText text="Experimental Fashion Laboratory" /></p>
             </div>
             <div className="text-right">
-              <p className="text-label">SEOUL — NEW YORK — TOKYO</p>
+              <p className="text-label"><CipherText text="SEOUL — NEW YORK — TOKYO" /></p>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import CipherText from '@/components/CipherText'
 
 // Contact methods with Gen-Z energy
 const contactMethods = [
@@ -169,13 +170,13 @@ export default function ContactPage() {
         transition={{ duration: 0.5 }}
       >
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-black tracking-widest">CONTACT</h1>
+          <h1 className="text-3xl font-black tracking-widest"><CipherText>CONTACT</CipherText></h1>
           <motion.div
             className="text-sm tracking-widest"
             animate={{ opacity: [0.3, 1, 0.3] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            WE'RE ONLINE 24/7
+            <CipherText>WE'RE ONLINE 24/7</CipherText>
           </motion.div>
         </div>
       </motion.header>
@@ -207,7 +208,7 @@ export default function ContactPage() {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              LET'S CONNECT
+              <CipherText>LET'S CONNECT</CipherText>
             </motion.h2>
 
             <motion.p
@@ -215,7 +216,7 @@ export default function ContactPage() {
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              Choose your weapon of communication
+              <CipherText>Choose your weapon of communication</CipherText>
             </motion.p>
           </motion.div>
 
@@ -257,11 +258,11 @@ export default function ContactPage() {
                     className="text-xl font-bold mb-2"
                     style={{ color: hoveredMethod === method.type ? method.color : '#fff' }}
                   >
-                    {method.type}
+                    <CipherText>{method.type}</CipherText>
                   </h3>
 
                   <p className="text-sm opacity-70 mb-4">
-                    {method.value}
+                    <CipherText>{method.value}</CipherText>
                   </p>
 
                   <AnimatePresence>
@@ -272,7 +273,7 @@ export default function ContactPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                       >
-                        COPIED!
+                        <CipherText>COPIED!</CipherText>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -282,7 +283,7 @@ export default function ContactPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hoveredMethod === method.type ? 1 : 0 }}
                   >
-                    Click to copy
+                    <CipherText>Click to copy</CipherText>
                   </motion.div>
                 </motion.div>
               </motion.div>
@@ -297,7 +298,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-              <span className="text-stroke">OR JUST SCREAM AT US</span>
+              <span className="text-stroke"><CipherText>OR JUST SCREAM AT US</CipherText></span>
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -308,7 +309,7 @@ export default function ContactPage() {
               >
                 <input
                   type="text"
-                  placeholder="YOUR NAME (OR ALIAS)"
+                  placeholder={"YOUR NAME (OR ALIAS)"}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all"
@@ -323,7 +324,7 @@ export default function ContactPage() {
               >
                 <input
                   type="email"
-                  placeholder="YOUR EMAIL (WE WON'T SPAM)"
+                  placeholder={"YOUR EMAIL (WE WON'T SPAM)"}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all"
@@ -337,7 +338,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
               >
                 <textarea
-                  placeholder="YOUR MESSAGE (MAKE IT INTERESTING)"
+                  placeholder={"YOUR MESSAGE (MAKE IT INTERESTING)"}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all min-h-[150px] resize-none"
@@ -367,7 +368,7 @@ export default function ContactPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      SEND IT 🚀
+                      <CipherText>SEND IT 🚀</CipherText>
                     </motion.span>
                   )}
                   {formStatus === 'sending' && (
@@ -377,7 +378,7 @@ export default function ContactPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      SENDING...
+                      <CipherText>SENDING...</CipherText>
                     </motion.span>
                   )}
                   {formStatus === 'sent' && (
@@ -387,7 +388,7 @@ export default function ContactPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      SENT! WE'LL HIT YOU BACK ✅
+                      <CipherText>SENT! WE'LL HIT YOU BACK ✅</CipherText>
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -410,7 +411,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-              <span className="holographic">FAQ</span>
+              <span className="holographic"><CipherText>FAQ</CipherText></span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -425,8 +426,8 @@ export default function ContactPage() {
                   whileHover={{ scale: 1.02, borderColor: 'rgba(255,255,255,0.3)' }}
                 >
                   <span className="text-3xl mb-3 block">{item.emoji}</span>
-                  <h4 className="font-bold mb-2">{item.q}</h4>
-                  <p className="opacity-70">{item.a}</p>
+                  <h4 className="font-bold mb-2"><CipherText>{item.q}</CipherText></h4>
+                  <p className="opacity-70"><CipherText>{item.a}</CipherText></p>
                 </motion.div>
               ))}
             </div>
@@ -442,7 +443,7 @@ export default function ContactPage() {
             animate={{ opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            CINCH LAB × ALWAYS ONLINE × NO SLEEP
+            <CipherText>CINCH LAB × ALWAYS ONLINE × NO SLEEP</CipherText>
           </motion.p>
         </div>
       </footer>

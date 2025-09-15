@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
 import Link from 'next/link'
+import CipherText from '@/components/CipherText'
 
 const experiments = [
   {
@@ -204,8 +205,8 @@ export default function LabPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-hero mb-4">LAB</h2>
-            <p className="text-label">SELECT EXPERIMENT TO BEGIN</p>
+            <h2 className="text-hero mb-4"><CipherText text="LAB" /></h2>
+            <p className="text-label"><CipherText text="SELECT EXPERIMENT TO BEGIN" /></p>
           </motion.div>
 
           {/* Experiments Grid */}
@@ -239,15 +240,15 @@ export default function LabPage() {
                     }}
                     className="relative z-10"
                   >
-                    <span className="text-label marker">{exp.id}</span>
-                    <h3 className="text-4xl font-light mt-6">{exp.title}</h3>
+                    <span className="text-label marker"><CipherText text={exp.id} /></span>
+                    <h3 className="text-4xl font-light mt-6"><CipherText text={exp.title} /></h3>
                     <p className="text-sm text-gray-600 mt-3 leading-relaxed">
-                      {exp.description}
+                      <CipherText text={exp.description} />
                     </p>
                   </motion.div>
 
                   <div className="flex justify-between items-end relative z-10">
-                    <span className="text-label text-xs">{exp.type}</span>
+                    <span className="text-label text-xs"><CipherText text={exp.type} /></span>
                     <motion.div
                       className="w-8 h-8 border border-black/30"
                       animate={hoveredCard === exp.id ? { rotate: 45 } : { rotate: 0 }}
@@ -273,7 +274,7 @@ export default function LabPage() {
                     animate={{ opacity: hoveredCard === exp.id ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <span className="text-white text-2xl font-light">ENTER</span>
+                    <span className="text-white text-2xl font-light"><CipherText text="ENTER" /></span>
                   </motion.div>
                 </motion.button>
               </motion.div>
@@ -292,7 +293,7 @@ export default function LabPage() {
                 className="absolute top-8 right-8 text-4xl hover:rotate-90 transition-transform duration-300"
                 onClick={() => setActiveExperiment(null)}
               >
-                ×
+                <CipherText text="×" />
               </button>
 
               <div className="text-center max-w-4xl mx-auto px-8">
@@ -301,12 +302,14 @@ export default function LabPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <span className="text-label">EXPERIMENT {activeExperiment}</span>
+                  <span className="text-label">
+                    <CipherText text={`EXPERIMENT ${activeExperiment}`} />
+                  </span>
                   <h3 className="text-display mt-4 mb-2">
-                    {experiments.find(e => e.id === activeExperiment)?.title}
+                    <CipherText text={experiments.find(e => e.id === activeExperiment)?.title || ''} />
                   </h3>
                   <p className="text-gray-600 mb-16">
-                    {experiments.find(e => e.id === activeExperiment)?.description}
+                    <CipherText text={experiments.find(e => e.id === activeExperiment)?.description || ''} />
                   </p>
                 </motion.div>
 
@@ -327,8 +330,8 @@ export default function LabPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <button className="btn btn-outline">RANDOMIZE</button>
-                  <button className="btn btn-primary">DOWNLOAD</button>
+                  <button className="btn btn-outline"><CipherText text="RANDOMIZE" /></button>
+                  <button className="btn btn-primary"><CipherText text="DOWNLOAD" /></button>
                 </motion.div>
               </div>
             </motion.div>
@@ -342,32 +345,30 @@ export default function LabPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-8">
               <h3 className="text-display mb-8 leading-tight">
-                Experimental protocols for fashion innovation.
+                <CipherText text="Experimental protocols for fashion innovation." />
               </h3>
               <p className="text-gray-600 text-body-large">
-                The LAB serves as our testing ground for new concepts, materials, and methodologies.
-                Each experiment pushes the boundaries of what fashion can be, exploring the intersection
-                of technology, art, and human experience.
+                <CipherText text="The LAB serves as our testing ground for new concepts, materials, and methodologies. Each experiment pushes the boundaries of what fashion can be, exploring the intersection of technology, art, and human experience." />
               </p>
             </div>
             <div className="md:col-span-4">
-              <p className="text-label mb-6">ACTIVE RESEARCH</p>
+              <p className="text-label mb-6"><CipherText text="ACTIVE RESEARCH" /></p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm">Material synthesis</span>
+                  <span className="text-sm"><CipherText text="Material synthesis" /></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm">Pattern algorithms</span>
+                  <span className="text-sm"><CipherText text="Pattern algorithms" /></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm">Biomimetic structures</span>
+                  <span className="text-sm"><CipherText text="Biomimetic structures" /></span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm">Digital fabrication</span>
+                  <span className="text-sm"><CipherText text="Digital fabrication" /></span>
                 </li>
               </ul>
             </div>
@@ -379,8 +380,8 @@ export default function LabPage() {
       <footer className="border-t border-black/5 py-12">
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <div className="flex justify-between items-center">
-            <p className="text-sm">© 2025 CINCH LAB</p>
-            <p className="text-label">LAB—001</p>
+            <p className="text-sm"><CipherText text="© 2025 CINCH LAB" /></p>
+            <p className="text-label"><CipherText text="LAB—001" /></p>
           </div>
         </div>
       </footer>

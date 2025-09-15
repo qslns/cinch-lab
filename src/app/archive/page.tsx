@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import CipherText from '@/components/CipherText'
 
 // Complete archive data
 const archiveData = [
@@ -45,8 +46,8 @@ export default function ArchivePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-hero mb-4">ARCHIVE</h1>
-          <p className="text-label text-gray-600">COMPLETE CHRONOLOGICAL HISTORY</p>
+          <h1 className="text-hero mb-4"><CipherText text="ARCHIVE" /></h1>
+          <p className="text-label text-gray-600"><CipherText text="COMPLETE CHRONOLOGICAL HISTORY" /></p>
         </motion.div>
 
         {/* View Toggle */}
@@ -57,7 +58,7 @@ export default function ArchivePage() {
               viewMode === 'timeline' ? 'opacity-100' : 'opacity-40'
             }`}
           >
-            TIMELINE
+            <CipherText text="TIMELINE" />
           </button>
           <span className="text-xs opacity-20">/</span>
           <button
@@ -66,7 +67,7 @@ export default function ArchivePage() {
               viewMode === 'grid' ? 'opacity-100' : 'opacity-40'
             }`}
           >
-            GRID VIEW
+            <CipherText text="GRID VIEW" />
           </button>
         </div>
       </section>
@@ -99,7 +100,7 @@ export default function ArchivePage() {
                       selectedYear === data.year ? 'opacity-100' : 'opacity-40'
                     }`}
                   >
-                    {data.year}
+                    <CipherText text={String(data.year)} />
                   </span>
                 </motion.button>
               ))}
@@ -115,16 +116,16 @@ export default function ArchivePage() {
             transition={{ duration: 0.4 }}
           >
             <div className="text-center">
-              <p className="text-5xl font-light">{currentYearData?.collections}</p>
-              <p className="text-xs text-gray-600 mt-2">COLLECTIONS</p>
+              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.collections || 0)} /></p>
+              <p className="text-xs text-gray-600 mt-2"><CipherText text="COLLECTIONS" /></p>
             </div>
             <div className="text-center">
-              <p className="text-5xl font-light">{currentYearData?.experiments}</p>
-              <p className="text-xs text-gray-600 mt-2">EXPERIMENTS</p>
+              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.experiments || 0)} /></p>
+              <p className="text-xs text-gray-600 mt-2"><CipherText text="EXPERIMENTS" /></p>
             </div>
             <div className="text-center">
-              <p className="text-5xl font-light">{currentYearData?.events}</p>
-              <p className="text-xs text-gray-600 mt-2">EVENTS</p>
+              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.events || 0)} /></p>
+              <p className="text-xs text-gray-600 mt-2"><CipherText text="EVENTS" /></p>
             </div>
           </motion.div>
 
@@ -144,10 +145,10 @@ export default function ArchivePage() {
               >
                 <div className="w-full md:w-1/2 px-8">
                   <div className={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
-                    <span className="text-label opacity-60">{event.month} {selectedYear}</span>
-                    <h3 className="text-2xl font-light mt-2">{event.event}</h3>
+                    <span className="text-label opacity-60"><CipherText text={`${event.month} ${selectedYear}`} /></span>
+                    <h3 className="text-2xl font-light mt-2"><CipherText text={event.event} /></h3>
                     <span className="text-xs text-gray-600 uppercase tracking-wider">
-                      {event.type}
+                      <CipherText text={event.type} />
                     </span>
                   </div>
                 </div>
@@ -169,26 +170,26 @@ export default function ArchivePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <h3 className="text-4xl font-light mb-6">{data.year}</h3>
+                <h3 className="text-4xl font-light mb-6"><CipherText text={String(data.year)} /></h3>
                 <div className="space-y-4">
                   <div className="flex justify-between pb-2 border-b border-gray-200">
-                    <span className="text-sm">Collections</span>
-                    <span className="text-sm font-light">{data.collections}</span>
+                    <span className="text-sm"><CipherText text="Collections" /></span>
+                    <span className="text-sm font-light"><CipherText text={String(data.collections)} /></span>
                   </div>
                   <div className="flex justify-between pb-2 border-b border-gray-200">
-                    <span className="text-sm">Experiments</span>
-                    <span className="text-sm font-light">{data.experiments}</span>
+                    <span className="text-sm"><CipherText text="Experiments" /></span>
+                    <span className="text-sm font-light"><CipherText text={String(data.experiments)} /></span>
                   </div>
                   <div className="flex justify-between pb-2 border-b border-gray-200">
-                    <span className="text-sm">Events</span>
-                    <span className="text-sm font-light">{data.events}</span>
+                    <span className="text-sm"><CipherText text="Events" /></span>
+                    <span className="text-sm font-light"><CipherText text={String(data.events)} /></span>
                   </div>
                 </div>
                 <Link
                   href={`/collections?year=${data.year}`}
                   className="text-xs tracking-[0.15em] hover-underline inline-block mt-6"
                 >
-                  VIEW YEAR →
+                  <CipherText text="VIEW YEAR →" />
                 </Link>
               </motion.div>
             ))}
@@ -205,10 +206,10 @@ export default function ArchivePage() {
           viewport={{ once: true }}
         >
           <h3 className="text-display mb-6 leading-tight">
-            "Time is a flat circle."
+            <CipherText text='"Time is a flat circle."' />
           </h3>
           <p className="text-gray-600">
-            Every moment in our archive represents a point in the continuous evolution of fashion and technology.
+            <CipherText text="Every moment in our archive represents a point in the continuous evolution of fashion and technology." />
           </p>
         </motion.div>
       </section>
