@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 interface CipherTextProps {
   text: string
@@ -16,7 +16,7 @@ export default function CipherText({
   className = '',
   as: Component = 'span',
   delay = 0,
-  speed = 15,
+  speed = 8,
   persistOnHover = true
 }: CipherTextProps) {
   const [displayText, setDisplayText] = useState('')
@@ -26,65 +26,33 @@ export default function CipherText({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const elementRef = useRef<HTMLElement>(null)
 
-  // Enhanced cipher characters - more cryptographic feel
-  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789¢£¤¥§©®™°±²³µ¶·¸¹º»¼½¾¿×÷αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ'
+  // Cipher characters
+  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789αβγδεζηθικλμνξοπρστυφχψω'
 
   // Generate random cipher character
   const getRandomCipher = useCallback(() => {
     return cipherChars[Math.floor(Math.random() * cipherChars.length)]
   }, [])
 
-  // Generate cipher text with same length as original
-  const generateCipherText = useCallback((length: number) => {
-    return Array.from({ length }, () => getRandomCipher()).join('')
-  }, [getRandomCipher])
+  // Generate fixed cipher text (only generated once)
+  const fixedCipherText = useMemo(() => {
+    if (!text) return ''
+    return Array.from({ length: text.length }, () => getRandomCipher()).join('')
+  }, [text]) // Only regenerate when text changes
 
-  // Scramble effect while revealing
-  const scrambleText = useCallback((currentIndex: number, targetText: string) => {
-    const chars = targetText.split('')
-    const result = []
-
-    for (let i = 0; i < chars.length; i++) {
-      if (i < currentIndex) {
-        // Already revealed characters
-        result.push(chars[i])
-      } else if (i === currentIndex || i === currentIndex + 1) {
-        // Characters being revealed - show scramble effect for smoother transition
-        result.push(Math.random() > 0.3 ? getRandomCipher() : chars[i])
-      } else {
-        // Not yet revealed
-        result.push(getRandomCipher())
-      }
-    }
-
-    return result.join('')
-  }, [getRandomCipher])
-
-  // Initialize with cipher text
+  // Initialize with fixed cipher text
   useEffect(() => {
     if (!isRevealed && text) {
-      setDisplayText(generateCipherText(text.length))
+      setDisplayText(fixedCipherText)
     } else if (isRevealed) {
       setDisplayText(text)
     }
-  }, [text, isRevealed, generateCipherText])
+  }, [text, isRevealed, fixedCipherText])
 
-  // Continuous cipher animation when not revealed
-  useEffect(() => {
-    if (!isRevealed && !isHovering && text) {
-      const animInterval = setInterval(() => {
-        setDisplayText(generateCipherText(text.length))
-      }, 100) // Faster cipher animation
-
-      return () => clearInterval(animInterval)
-    }
-  }, [text, isRevealed, isHovering, generateCipherText])
-
-  // Handle reveal animation
+  // Optimized reveal animation for long text
   const startReveal = useCallback(() => {
     if (isRevealed || !text) return
 
-    let currentIndex = 0
     setIsHovering(true)
 
     // Clear any existing intervals
@@ -95,39 +63,71 @@ export default function CipherText({
       clearTimeout(timeoutRef.current)
     }
 
+    const textLength = text.length
+
+    // For short text (< 20 chars), reveal character by character
+    // For long text, reveal in chunks
+    const chunkSize = textLength < 20 ? 1 : Math.ceil(textLength / 15)
+    let currentIndex = 0
+
     // Start reveal with delay
     timeoutRef.current = setTimeout(() => {
       intervalRef.current = setInterval(() => {
-        if (currentIndex <= text.length) {
-          setDisplayText(scrambleText(currentIndex, text))
+        if (currentIndex < textLength) {
+          const endIndex = Math.min(currentIndex + chunkSize, textLength)
+          const chars = text.split('')
+          const cipherChars = fixedCipherText.split('')
 
-          if (currentIndex === text.length) {
-            // Fully revealed
-            setDisplayText(text)
-            if (intervalRef.current) {
-              clearInterval(intervalRef.current)
-            }
-            if (persistOnHover) {
-              setIsRevealed(true)
+          // Build the display text
+          const result = []
+          for (let i = 0; i < textLength; i++) {
+            if (i < endIndex) {
+              // Revealed characters
+              result.push(chars[i])
+            } else {
+              // Still cipher
+              result.push(cipherChars[i])
             }
           }
-          currentIndex++
+
+          setDisplayText(result.join(''))
+          currentIndex = endIndex
+        } else {
+          // Fully revealed
+          setDisplayText(text)
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current)
+          }
+          if (persistOnHover) {
+            setIsRevealed(true)
+          }
         }
       }, speed)
     }, delay)
-  }, [text, isRevealed, delay, speed, scrambleText, persistOnHover])
+  }, [text, isRevealed, delay, speed, fixedCipherText, persistOnHover])
 
   // Handle mouse leave
   const handleMouseLeave = useCallback(() => {
     setIsHovering(false)
 
+    // Clear any running animations
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+
     // If not persisting, reset after a delay
     if (!persistOnHover && isRevealed) {
       setTimeout(() => {
         setIsRevealed(false)
-      }, 500)
+        setDisplayText(fixedCipherText)
+      }, 300)
     }
-  }, [persistOnHover, isRevealed])
+  }, [persistOnHover, isRevealed, fixedCipherText])
 
   // Clean up on unmount
   useEffect(() => {
@@ -152,23 +152,20 @@ export default function CipherText({
       className={className}
       onMouseEnter={startReveal}
       onMouseLeave={handleMouseLeave}
-      onPointerEnter={startReveal}
-      onPointerLeave={handleMouseLeave}
       style={{
-        fontFamily: 'monospace',
-        letterSpacing: '0.05em',
+        fontFamily: 'inherit',
+        letterSpacing: 'inherit',
         cursor: 'pointer',
         display: 'inline-block',
         whiteSpace: 'pre-wrap',
-        padding: '2px 4px',
-        margin: '-2px -4px',
         position: 'relative',
         touchAction: 'auto',
-        WebkitTapHighlightColor: 'transparent'
+        WebkitTapHighlightColor: 'transparent',
+        userSelect: 'none'
       }}
       data-cipher-text="true"
     >
-      {displayText || generateCipherText(text.length)}
+      {displayText || fixedCipherText}
     </Component>
   )
 }

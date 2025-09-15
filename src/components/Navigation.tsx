@@ -25,16 +25,16 @@ export default function Navigation() {
         </Link>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-8 md:gap-12">
+        <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
           {navLinks.slice(1).map((link, index) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[10px] md:text-xs tracking-[0.15em] transition-opacity ${
-                pathname === link.href ? 'opacity-100' : 'opacity-60 hover:opacity-100'
+              className={`text-[11px] sm:text-xs md:text-sm tracking-[0.12em] font-light transition-all duration-300 ${
+                pathname === link.href ? 'opacity-100 font-normal' : 'opacity-70 hover:opacity-100'
               }`}
             >
-              <CipherText text={link.label} delay={index * 50} />
+              <CipherText text={link.label} delay={index * 30} />
             </Link>
           ))}
         </div>
