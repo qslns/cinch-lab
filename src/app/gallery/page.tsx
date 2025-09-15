@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { imageDB, ImageMetadata } from '@/lib/imageDatabase'
+import CipherText from '@/components/CipherText'
 
 // Dynamic imports for heavy components
 const Gallery3D = dynamic(() => import('@/components/Gallery3D'), {
@@ -532,7 +533,7 @@ export default function GalleryPage() {
                   onClick={() => handleImageView(image)}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold opacity-30">REC</span>
+                    <span className="text-2xl font-bold opacity-30"><CipherText text="REC" /></span>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/60">
                     <p className="text-xs">{image.category}</p>

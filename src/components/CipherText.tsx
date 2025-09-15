@@ -16,132 +16,119 @@ export default function CipherText({
   className = '',
   as: Component = 'span',
   delay = 0,
-  speed = 6,
+  speed = 5,
   persistOnHover = true
 }: CipherTextProps) {
   const [displayText, setDisplayText] = useState('')
   const [isRevealed, setIsRevealed] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const elementRef = useRef<HTMLElement>(null)
-  const parentHoverRef = useRef<boolean>(false)
 
-  // Cipher characters
-  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789αβγδεζηθικλμνξοπρστυφχψω'
+  // Cipher characters - simplified for better readability
+  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789'
 
   // Generate random cipher character
   const getRandomCipher = useCallback(() => {
     return cipherChars[Math.floor(Math.random() * cipherChars.length)]
   }, [])
 
-  // Generate fixed cipher text (only generated once)
+  // Generate fixed cipher text (only generated once per text change)
   const fixedCipherText = useMemo(() => {
     if (!text) return ''
     return Array.from({ length: text.length }, () => getRandomCipher()).join('')
-  }, [text]) // Only regenerate when text changes
+  }, [text, getRandomCipher])
 
   // Initialize with fixed cipher text
   useEffect(() => {
     if (!isRevealed && text) {
       setDisplayText(fixedCipherText)
-    } else if (isRevealed) {
-      setDisplayText(text)
     }
-  }, [text, isRevealed, fixedCipherText])
+  }, [text, fixedCipherText, isRevealed])
 
   // Optimized reveal animation
   const startReveal = useCallback(() => {
-    if (isRevealed || !text || isHovering) return
+    // Prevent multiple simultaneous animations
+    if (isAnimating || isRevealed || !text) return
 
-    setIsHovering(true)
+    setIsAnimating(true)
 
     // Clear any existing intervals
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
 
     const textLength = text.length
 
-    // Adaptive chunk size based on text length
+    // Adaptive speed based on text length
+    const adjustedSpeed = textLength > 50 ? Math.max(2, speed / 2) : speed
+
+    // Calculate chunk size for smoother animation
     const chunkSize = textLength < 10 ? 1 :
                       textLength < 30 ? 2 :
-                      textLength < 50 ? 3 :
-                      Math.ceil(textLength / 12)
+                      textLength < 60 ? 3 :
+                      Math.ceil(textLength / 15)
 
     let currentIndex = 0
 
-    // Start reveal immediately or with delay
+    // Start reveal animation
     const startAnimation = () => {
       intervalRef.current = setInterval(() => {
         if (currentIndex < textLength) {
           const endIndex = Math.min(currentIndex + chunkSize, textLength)
-          const chars = text.split('')
-          const cipherChars = fixedCipherText.split('')
 
-          // Build the display text
-          const result = []
-          for (let i = 0; i < textLength; i++) {
-            if (i < endIndex) {
-              // Revealed characters
-              result.push(chars[i])
-            } else {
-              // Still cipher
-              result.push(cipherChars[i])
-            }
-          }
+          // Build the display text with partial reveal
+          const result = text.substring(0, endIndex) +
+                        fixedCipherText.substring(endIndex)
 
-          setDisplayText(result.join(''))
+          setDisplayText(result)
           currentIndex = endIndex
         } else {
-          // Fully revealed
+          // Animation complete - ensure full text is displayed
           setDisplayText(text)
+          setIsRevealed(true)
+          setIsAnimating(false)
+
+          // Clear interval
           if (intervalRef.current) {
             clearInterval(intervalRef.current)
             intervalRef.current = null
           }
-          setIsRevealed(true)
         }
-      }, speed)
+      }, adjustedSpeed)
     }
 
+    // Start with delay if specified
     if (delay > 0) {
       timeoutRef.current = setTimeout(startAnimation, delay)
     } else {
       startAnimation()
     }
-  }, [text, isRevealed, isHovering, delay, speed, fixedCipherText])
+  }, [text, isRevealed, isAnimating, delay, speed, fixedCipherText])
+
+  // Handle mouse enter
+  const handleMouseEnter = useCallback(() => {
+    startReveal()
+  }, [startReveal])
 
   // Handle mouse leave
   const handleMouseLeave = useCallback(() => {
-    // Add a small delay to prevent flicker when moving between elements
-    setTimeout(() => {
-      if (!parentHoverRef.current) {
-        setIsHovering(false)
-
-        // Clear any running animations
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current)
-          intervalRef.current = null
-        }
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-          timeoutRef.current = null
-        }
-
-        // If not persisting, reset after a delay
-        if (!persistOnHover) {
-          setTimeout(() => {
-            setIsRevealed(false)
-            setDisplayText(fixedCipherText)
-          }, 200)
-        }
-      }
-    }, 50)
-  }, [persistOnHover, fixedCipherText])
+    // If not persisting, reset after animation completes
+    if (!persistOnHover && isRevealed && !isAnimating) {
+      // Small delay to prevent flicker
+      setTimeout(() => {
+        setIsRevealed(false)
+        setIsAnimating(false)
+        setDisplayText(fixedCipherText)
+      }, 100)
+    }
+  }, [persistOnHover, isRevealed, isAnimating, fixedCipherText])
 
   // Clean up on unmount
   useEffect(() => {
@@ -155,37 +142,6 @@ export default function CipherText({
     }
   }, [])
 
-  // Handle parent hover for better area coverage
-  useEffect(() => {
-    const handleParentHover = (e: MouseEvent) => {
-      if (elementRef.current) {
-        const rect = elementRef.current.getBoundingClientRect()
-        const buffer = 20 // Pixels of buffer around the element
-
-        if (e.clientX >= rect.left - buffer &&
-            e.clientX <= rect.right + buffer &&
-            e.clientY >= rect.top - buffer &&
-            e.clientY <= rect.bottom + buffer) {
-          parentHoverRef.current = true
-          if (!isHovering) {
-            startReveal()
-          }
-        } else {
-          parentHoverRef.current = false
-        }
-      }
-    }
-
-    if (elementRef.current?.parentElement) {
-      elementRef.current.parentElement.addEventListener('mousemove', handleParentHover)
-      return () => {
-        if (elementRef.current?.parentElement) {
-          elementRef.current.parentElement.removeEventListener('mousemove', handleParentHover)
-        }
-      }
-    }
-  }, [startReveal, isHovering])
-
   // Handle empty text
   if (!text) {
     return <Component className={className}>{''}</Component>
@@ -195,9 +151,9 @@ export default function CipherText({
     <Component
       ref={elementRef as any}
       className={className}
-      onMouseEnter={startReveal}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onTouchStart={startReveal}
+      onTouchStart={handleMouseEnter}
       style={{
         fontFamily: 'inherit',
         letterSpacing: 'inherit',
@@ -205,14 +161,16 @@ export default function CipherText({
         display: 'inline-block',
         whiteSpace: 'pre-wrap',
         position: 'relative',
-        padding: '4px 8px',
-        margin: '-4px -8px',
+        padding: '2px 4px',
+        margin: '-2px -4px',
         touchAction: 'auto',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
-        minWidth: 'fit-content'
+        transition: 'none',
+        minHeight: '1em'
       }}
       data-cipher-text="true"
+      data-revealed={isRevealed}
     >
       {displayText || fixedCipherText}
     </Component>

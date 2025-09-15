@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
+import CipherText from '@/components/CipherText'
 
 const ImageDestruction = dynamic(() => import('@/components/ImageDestruction'), {
   ssr: false,
@@ -237,7 +238,7 @@ export default function ExtremePage() {
                 }}
               >
                 <span className={`font-black text-white hover:text-red-500 transition-colors ${glitchActive ? 'glitch-text' : ''}`}>
-                  {item.label}
+                  <CipherText text={item.label} />
                 </span>
               </Link>
             ))}
@@ -269,9 +270,9 @@ export default function ExtremePage() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-radial from-red-900 via-black to-black">
         <div className="relative z-10 text-center">
           <h2 className="text-6xl md:text-9xl font-black mb-8">
-            <span className="block transform rotate-[-5deg] text-red-500">FASHION</span>
-            <span className="block transform rotate-[5deg] text-cyan-500">IS</span>
-            <span className="block transform rotate-[-3deg] text-white">CHAOS</span>
+            <span className="block transform rotate-[-5deg] text-red-500"><CipherText text="FASHION" /></span>
+            <span className="block transform rotate-[5deg] text-cyan-500"><CipherText text="IS" /></span>
+            <span className="block transform rotate-[-3deg] text-white"><CipherText text="CHAOS" /></span>
           </h2>
 
           <Link
@@ -280,7 +281,7 @@ export default function ExtremePage() {
               hover:bg-white hover:text-black transition-all duration-500
               transform hover:scale-150 hover:rotate-180"
           >
-            ESCAPE IF YOU CAN
+            <CipherText text="ESCAPE IF YOU CAN" />
           </Link>
         </div>
 

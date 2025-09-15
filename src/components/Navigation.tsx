@@ -30,7 +30,7 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`px-4 md:px-6 lg:px-8 text-xs md:text-sm tracking-[0.08em] font-light transition-all duration-300 ${
+              className={`ml-6 md:ml-8 lg:ml-10 text-xs md:text-sm tracking-[0.08em] font-light transition-all duration-300 ${
                 pathname === link.href ? 'opacity-100 font-normal' : 'opacity-70 hover:opacity-100'
               }`}
             >
