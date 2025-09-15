@@ -371,3 +371,27 @@
 .z-50 { z-index: 50; }
 .z-modal { z-index: 9999; }
 .z-tooltip { z-index: 10000; }
+
+/* Cipher Text Enhancements */
+[data-cipher-text="true"] {
+  transition: all 0.2s ease;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+[data-cipher-text="true"]:hover {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure cipher text works well in different contexts */
+h1 [data-cipher-text="true"],
+h2 [data-cipher-text="true"],
+h3 [data-cipher-text="true"] {
+  display: inline;
+}
+
+/* Fix for navigation cipher text */
+nav [data-cipher-text="true"] {
+  display: inline-block;
+  white-space: nowrap;
+}
