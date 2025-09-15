@@ -5,14 +5,14 @@ import { useState, useEffect, useRef } from 'react'
 interface CipherTextProps {
   text: string
   className?: string
-  as?: keyof JSX.IntrinsicElements
+  as?: React.ElementType
   delay?: number
 }
 
 export default function CipherText({
   text,
   className = '',
-  as: Component = 'span' as keyof JSX.IntrinsicElements,
+  as: Component = 'span',
   delay = 0
 }: CipherTextProps) {
   const [displayText, setDisplayText] = useState('')

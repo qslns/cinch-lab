@@ -175,9 +175,9 @@ export default function AboutPage() {
         transition={{ duration: 0.5 }}
       >
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-black tracking-widest"><CipherText>ABOUT</CipherText></h1>
+          <h1 className="text-3xl font-black tracking-widest"><CipherText text="ABOUT" /></h1>
           <div className="text-sm tracking-widest opacity-50">
-            <CipherText>CINCH LAB STORY</CipherText>
+            <CipherText text="CINCH LAB STORY" />
           </div>
         </div>
       </motion.header>
@@ -201,7 +201,7 @@ export default function AboutPage() {
                 : 'none'
             }}
           >
-            <CipherText>WE ARE CINCH</CipherText>
+            <CipherText text="WE ARE CINCH" />
           </motion.h2>
 
           <motion.p
@@ -209,7 +209,7 @@ export default function AboutPage() {
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <CipherText>Not a brand. A dimension.</CipherText>
+            <CipherText text="Not a brand. A dimension." />
           </motion.p>
         </motion.div>
 
@@ -252,15 +252,15 @@ export default function AboutPage() {
                 className="text-4xl md:text-6xl font-black mb-2"
                 style={{ color: chapters[activeChapter].color }}
               >
-                <CipherText>{chapters[activeChapter].title}</CipherText>
+                <CipherText text={chapters[activeChapter].title} />
               </h3>
 
               <p className="text-lg opacity-50 mb-2">
-                <CipherText>{chapters[activeChapter].subtitle}</CipherText> • <CipherText>{chapters[activeChapter].year}</CipherText>
+                <CipherText text={chapters[activeChapter].subtitle} /> • <CipherText text={chapters[activeChapter].year} />
               </p>
 
               <p className="text-xl md:text-2xl max-w-3xl mx-auto mt-6 leading-relaxed">
-                <CipherText>{chapters[activeChapter].content}</CipherText>
+                <CipherText text={chapters[activeChapter].content} />
               </p>
             </motion.div>
           </AnimatePresence>
@@ -274,7 +274,7 @@ export default function AboutPage() {
           viewport={{ once: true }}
         >
           <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-            <span className="gradient-text-animated"><CipherText>THE CREATORS</CipherText></span>
+            <span className="gradient-text-animated"><CipherText text="THE CREATORS" /></span>
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
@@ -295,8 +295,8 @@ export default function AboutPage() {
                 >
                   {member.emoji}
                 </motion.div>
-                <h4 className="font-bold text-lg mb-1"><CipherText>{member.name}</CipherText></h4>
-                <p className="text-xs opacity-50"><CipherText>{member.role}</CipherText></p>
+                <h4 className="font-bold text-lg mb-1"><CipherText text={member.name} /></h4>
+                <p className="text-xs opacity-50"><CipherText text={member.role} /></p>
               </motion.div>
             ))}
           </div>
@@ -310,7 +310,7 @@ export default function AboutPage() {
           viewport={{ once: true }}
         >
           <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-            <span className="text-stroke"><CipherText>OUR PHILOSOPHY</CipherText></span>
+            <span className="text-stroke"><CipherText text="OUR PHILOSOPHY" /></span>
           </h3>
 
           <div className="space-y-6">
@@ -327,7 +327,7 @@ export default function AboutPage() {
                   color: chapters[index % chapters.length].color
                 }}
               >
-                <CipherText>{statement}</CipherText>
+                <CipherText text={statement} />
               </motion.div>
             ))}
           </div>
@@ -359,9 +359,9 @@ export default function AboutPage() {
                   className="text-5xl md:text-7xl font-black mb-2"
                   style={{ color: stat.color }}
                 >
-                  <CipherText>{stat.number}</CipherText>
+                  <CipherText text={String(stat.number)} />
                 </h4>
-                <p className="text-sm opacity-50"><CipherText>{stat.label}</CipherText></p>
+                <p className="text-sm opacity-50"><CipherText text={stat.label} /></p>
               </motion.div>
             ))}
           </div>
@@ -391,11 +391,11 @@ export default function AboutPage() {
               WebkitTextFillColor: 'transparent'
             }}
           >
-            <CipherText>JOIN THE REVOLUTION</CipherText>
+            <CipherText text="JOIN THE REVOLUTION" />
           </motion.h3>
 
           <p className="text-xl mb-8 opacity-70">
-            <CipherText>Or don't. We're not your mom.</CipherText>
+            <CipherText text="Or don't. We're not your mom." />
           </p>
 
           <motion.div
@@ -407,7 +407,7 @@ export default function AboutPage() {
               href="/contact"
               className="px-12 py-6 bg-white text-black font-black text-xl rounded-full inline-block"
             >
-              <CipherText>GET WEIRD WITH US →</CipherText>
+              <CipherText text="GET WEIRD WITH US →" />
             </a>
           </motion.div>
         </motion.div>
@@ -417,7 +417,7 @@ export default function AboutPage() {
       <footer className="py-16 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-8 text-center">
           <p className="text-sm tracking-[0.3em] opacity-50">
-            <CipherText>CINCH LAB × BREAKING FASHION SINCE 2020</CipherText>
+            <CipherText text="CINCH LAB × BREAKING FASHION SINCE 2020" />
           </p>
         </div>
       </footer>
