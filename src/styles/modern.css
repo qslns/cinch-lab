@@ -145,7 +145,8 @@ body {
   margin: 0.1em 0;
 }
 
-.text-outline {
+.text-outline,
+.outline-text {
   -webkit-text-stroke: 1px var(--pure-black);
   -webkit-text-fill-color: transparent;
   text-stroke: 1px var(--pure-black);
@@ -303,7 +304,8 @@ body {
 }
 
 /* Text Orientations */
-.text-vertical {
+.text-vertical,
+.writing-vertical {
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
@@ -580,19 +582,19 @@ body {
 }
 
 /* Marquee System */
-.marquee {
+.marquee,
+.marquee-container {
   overflow: hidden;
   white-space: nowrap;
   position: relative;
-  background: var(--pure-black);
-  color: var(--pure-white);
+  background: transparent;
+  color: var(--pure-black);
   padding: var(--space-md) 0;
 }
 
 .marquee-content {
   display: inline-block;
-  padding-left: 100%;
-  animation: marquee 30s linear infinite;
+  white-space: nowrap;
 }
 
 .marquee-content span {
