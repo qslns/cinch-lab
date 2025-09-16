@@ -53,7 +53,11 @@ export default function CipherText({
 
   // Initialize with fixed cipher text
   useEffect(() => {
-    if (!isRevealed && text && !hasInteracted) {
+    if (!text) {
+      setDisplayText('')
+      return
+    }
+    if (!isRevealed && !hasInteracted) {
       setDisplayText(fixedCipherText)
     }
   }, [text, fixedCipherText, isRevealed, hasInteracted])
@@ -61,7 +65,7 @@ export default function CipherText({
   // Smooth reveal animation using requestAnimationFrame
   const startReveal = useCallback(() => {
     // Prevent multiple simultaneous animations
-    if (isAnimating || isRevealed || !text) return
+    if (isAnimating || isRevealed || !text || typeof text !== 'string') return
 
     setIsAnimating(true)
     setHasInteracted(true)
@@ -77,7 +81,7 @@ export default function CipherText({
     }
 
     const textLength = text.length
-    const duration = Math.min(800, textLength * speed * 10) // Dynamic duration based on text length
+    const duration = Math.min(600, Math.max(200, textLength * speed * 8)) // Dynamic duration with bounds
 
     // Start animation
     const startAnimation = () => {
@@ -101,7 +105,7 @@ export default function CipherText({
             result += ' '
           } else {
             // Add occasional random changes for more dynamic effect
-            result += Math.random() > 0.9 ? getRandomCipher() : fixedCipherText[i]
+            result += Math.random() > 0.95 ? getRandomCipher() : (fixedCipherText[i] || getRandomCipher())
           }
         }
 
@@ -170,9 +174,9 @@ export default function CipherText({
     }
   }, [])
 
-  // Handle empty text
-  if (!text) {
-    return <Component className={className}>{''}</Component>
+  // Handle empty text or invalid text
+  if (!text || typeof text !== 'string') {
+    return <Component className={className}>{text || ''}</Component>
   }
 
   return (
@@ -194,9 +198,10 @@ export default function CipherText({
         touchAction: 'auto',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
-        transition: 'opacity 0.2s ease',
+        transition: 'opacity 0.15s ease',
         minHeight: '1em',
-        willChange: 'contents'
+        willChange: 'auto',
+        contain: 'layout style paint'
       }}
       data-cipher-text="true"
       data-revealed={isRevealed}

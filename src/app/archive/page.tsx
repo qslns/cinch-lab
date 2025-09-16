@@ -100,7 +100,7 @@ export default function ArchivePage() {
                       selectedYear === data.year ? 'opacity-100' : 'opacity-40'
                     }`}
                   >
-                    <CipherText text={String(data.year)} />
+                    <CipherText text={`${data.year}`} />
                   </span>
                 </motion.button>
               ))}
@@ -116,15 +116,15 @@ export default function ArchivePage() {
             transition={{ duration: 0.4 }}
           >
             <div className="text-center">
-              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.collections || 0)} /></p>
+              <p className="text-5xl font-light"><CipherText text={`${currentYearData?.collections || 0}`} /></p>
               <p className="text-xs text-gray-600 mt-2"><CipherText text="COLLECTIONS" /></p>
             </div>
             <div className="text-center">
-              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.experiments || 0)} /></p>
+              <p className="text-5xl font-light"><CipherText text={`${currentYearData?.experiments || 0}`} /></p>
               <p className="text-xs text-gray-600 mt-2"><CipherText text="EXPERIMENTS" /></p>
             </div>
             <div className="text-center">
-              <p className="text-5xl font-light"><CipherText text={String(currentYearData?.events || 0)} /></p>
+              <p className="text-5xl font-light"><CipherText text={`${currentYearData?.events || 0}`} /></p>
               <p className="text-xs text-gray-600 mt-2"><CipherText text="EVENTS" /></p>
             </div>
           </motion.div>
@@ -170,19 +170,19 @@ export default function ArchivePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <h3 className="text-4xl font-light mb-6"><CipherText text={String(data.year)} /></h3>
+                <h3 className="text-4xl font-light mb-6"><CipherText text={`${data.year}`} /></h3>
                 <div className="space-y-4">
                   <div className="flex justify-between pb-2 border-b border-gray-200">
                     <span className="text-sm"><CipherText text="Collections" /></span>
-                    <span className="text-sm font-light"><CipherText text={String(data.collections)} /></span>
+                    <span className="text-sm font-light"><CipherText text={`${data.collections}`} /></span>
                   </div>
                   <div className="flex justify-between pb-2 border-b border-gray-200">
                     <span className="text-sm"><CipherText text="Experiments" /></span>
-                    <span className="text-sm font-light"><CipherText text={String(data.experiments)} /></span>
+                    <span className="text-sm font-light"><CipherText text={`${data.experiments}`} /></span>
                   </div>
                   <div className="flex justify-between pb-2 border-b border-gray-200">
                     <span className="text-sm"><CipherText text="Events" /></span>
-                    <span className="text-sm font-light"><CipherText text={String(data.events)} /></span>
+                    <span className="text-sm font-light"><CipherText text={`${data.events}`} /></span>
                   </div>
                 </div>
                 <Link

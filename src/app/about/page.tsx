@@ -60,12 +60,14 @@ export default function AboutPage() {
   const [activeSection, setActiveSection] = useState(0)
   const { scrollYProgress } = useScroll()
 
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1])
-  const scale = useTransform(scrollYProgress, [0, 0.1], [0.95, 1])
+  // Fixed opacity to prevent white screen at top - minimum opacity 0.8
+  const opacity = useTransform(scrollYProgress, [0, 0.1], [0.85, 1])
+  const scale = useTransform(scrollYProgress, [0, 0.1], [0.98, 1])
 
   return (
     <motion.div
       className="min-h-screen bg-white"
+      initial={{ opacity: 1 }}
       style={{ opacity, scale }}
     >
       {/* Subtle grid overlay */}
@@ -244,7 +246,7 @@ export default function AboutPage() {
                 whileHover={{ y: -5 }}
               >
                 <h4 className="text-3xl md:text-4xl font-light mb-2 group-hover:font-normal transition-all">
-                  <CipherText text={String(stat.number)} />
+                  <CipherText text={stat.number} />
                 </h4>
                 <p className="text-xs tracking-[0.15em] text-gray-500">
                   <CipherText text={stat.label.toUpperCase()} />

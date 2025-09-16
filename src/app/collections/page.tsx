@@ -111,7 +111,7 @@ export default function CollectionsPage() {
                   : 'border-transparent opacity-40 hover:opacity-70'
               }`}
             >
-              <CipherText text={String(year)} />
+              <CipherText text={`${year}`} />
             </button>
           ))}
           <Link
@@ -187,12 +187,12 @@ export default function CollectionsPage() {
                         </p>
                         <div className="flex items-center gap-8 mb-12">
                           <div>
-                            <p className="text-3xl font-light"><CipherText text={String(season.looks)} /></p>
+                            <p className="text-3xl font-light"><CipherText text={`${season.looks}`} /></p>
                             <p className="text-xs text-gray-600"><CipherText text="LOOKS" /></p>
                           </div>
                           <div className="w-[1px] h-12 bg-gray-300" />
                           <div>
-                            <p className="text-3xl font-light"><CipherText text={String(selectedYear)} /></p>
+                            <p className="text-3xl font-light"><CipherText text={`${selectedYear}`} /></p>
                             <p className="text-xs text-gray-600"><CipherText text="YEAR" /></p>
                           </div>
                         </div>
@@ -319,7 +319,7 @@ export default function CollectionsPage() {
                       transition={{ delay: i * 0.02 }}
                     >
                       <span className="absolute top-4 left-4 text-label text-white mix-blend-difference">
-                        <CipherText text={`LOOK ${String(i + 1).padStart(3, '0')}`} />
+                        <CipherText text={`LOOK ${(i + 1).toString().padStart(3, '0')}`} />
                       </span>
                     </motion.div>
                   ))}
