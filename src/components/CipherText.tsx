@@ -9,6 +9,7 @@ interface CipherTextProps {
   delay?: number
   speed?: number
   persistOnHover?: boolean
+  autoReveal?: boolean
 }
 
 export default function CipherText({
@@ -16,48 +17,59 @@ export default function CipherText({
   className = '',
   as: Component = 'span',
   delay = 0,
-  speed = 5,
-  persistOnHover = true
+  speed = 3,
+  persistOnHover = true,
+  autoReveal = false
 }: CipherTextProps) {
   const [displayText, setDisplayText] = useState('')
   const [isRevealed, setIsRevealed] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const animationFrameRef = useRef<number | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const elementRef = useRef<HTMLElement>(null)
+  const startTimeRef = useRef<number>(0)
 
-  // Cipher characters - simplified for better readability
-  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789'
+  // Cipher characters - optimized for better visual effect
+  const cipherChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
   // Generate random cipher character
   const getRandomCipher = useCallback(() => {
     return cipherChars[Math.floor(Math.random() * cipherChars.length)]
   }, [])
 
+  // Generate cipher text with spaces preserved
+  const generateCipherText = useCallback((originalText: string) => {
+    return originalText.split('').map(char =>
+      char === ' ' ? ' ' : getRandomCipher()
+    ).join('')
+  }, [getRandomCipher])
+
   // Generate fixed cipher text (only generated once per text change)
   const fixedCipherText = useMemo(() => {
     if (!text) return ''
-    return Array.from({ length: text.length }, () => getRandomCipher()).join('')
-  }, [text, getRandomCipher])
+    return generateCipherText(text)
+  }, [text, generateCipherText])
 
   // Initialize with fixed cipher text
   useEffect(() => {
-    if (!isRevealed && text) {
+    if (!isRevealed && text && !hasInteracted) {
       setDisplayText(fixedCipherText)
     }
-  }, [text, fixedCipherText, isRevealed])
+  }, [text, fixedCipherText, isRevealed, hasInteracted])
 
-  // Optimized reveal animation
+  // Smooth reveal animation using requestAnimationFrame
   const startReveal = useCallback(() => {
     // Prevent multiple simultaneous animations
     if (isAnimating || isRevealed || !text) return
 
     setIsAnimating(true)
+    setHasInteracted(true)
 
-    // Clear any existing intervals
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
+    // Clear any existing animations
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+      animationFrameRef.current = null
     }
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -65,43 +77,48 @@ export default function CipherText({
     }
 
     const textLength = text.length
+    const duration = Math.min(800, textLength * speed * 10) // Dynamic duration based on text length
 
-    // Adaptive speed based on text length
-    const adjustedSpeed = textLength > 50 ? Math.max(2, speed / 2) : speed
-
-    // Calculate chunk size for smoother animation
-    const chunkSize = textLength < 10 ? 1 :
-                      textLength < 30 ? 2 :
-                      textLength < 60 ? 3 :
-                      Math.ceil(textLength / 15)
-
-    let currentIndex = 0
-
-    // Start reveal animation
+    // Start animation
     const startAnimation = () => {
-      intervalRef.current = setInterval(() => {
-        if (currentIndex < textLength) {
-          const endIndex = Math.min(currentIndex + chunkSize, textLength)
+      startTimeRef.current = performance.now()
 
-          // Build the display text with partial reveal
-          const result = text.substring(0, endIndex) +
-                        fixedCipherText.substring(endIndex)
+      const animate = (currentTime: number) => {
+        const elapsed = currentTime - startTimeRef.current
+        const progress = Math.min(elapsed / duration, 1)
 
-          setDisplayText(result)
-          currentIndex = endIndex
+        // Easing function for smooth animation
+        const easedProgress = 1 - Math.pow(1 - progress, 3) // Cubic ease-out
+
+        const revealedLength = Math.floor(textLength * easedProgress)
+
+        // Generate intermediate cipher text with some randomness
+        let result = ''
+        for (let i = 0; i < textLength; i++) {
+          if (i < revealedLength) {
+            result += text[i]
+          } else if (text[i] === ' ') {
+            result += ' '
+          } else {
+            // Add occasional random changes for more dynamic effect
+            result += Math.random() > 0.9 ? getRandomCipher() : fixedCipherText[i]
+          }
+        }
+
+        setDisplayText(result)
+
+        if (progress < 1) {
+          animationFrameRef.current = requestAnimationFrame(animate)
         } else {
-          // Animation complete - ensure full text is displayed
+          // Animation complete
           setDisplayText(text)
           setIsRevealed(true)
           setIsAnimating(false)
-
-          // Clear interval
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current)
-            intervalRef.current = null
-          }
+          animationFrameRef.current = null
         }
-      }, adjustedSpeed)
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate)
     }
 
     // Start with delay if specified
@@ -110,7 +127,7 @@ export default function CipherText({
     } else {
       startAnimation()
     }
-  }, [text, isRevealed, isAnimating, delay, speed, fixedCipherText])
+  }, [text, isRevealed, isAnimating, delay, speed, fixedCipherText, getRandomCipher])
 
   // Handle mouse enter
   const handleMouseEnter = useCallback(() => {
@@ -125,16 +142,27 @@ export default function CipherText({
       setTimeout(() => {
         setIsRevealed(false)
         setIsAnimating(false)
+        setHasInteracted(false)
         setDisplayText(fixedCipherText)
-      }, 100)
+      }, 200)
     }
   }, [persistOnHover, isRevealed, isAnimating, fixedCipherText])
+
+  // Auto-reveal on mount if specified
+  useEffect(() => {
+    if (autoReveal && !hasInteracted) {
+      const timer = setTimeout(() => {
+        startReveal()
+      }, delay + 100)
+      return () => clearTimeout(timer)
+    }
+  }, [autoReveal, delay, startReveal, hasInteracted])
 
   // Clean up on unmount
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
@@ -166,8 +194,9 @@ export default function CipherText({
         touchAction: 'auto',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
-        transition: 'none',
-        minHeight: '1em'
+        transition: 'opacity 0.2s ease',
+        minHeight: '1em',
+        willChange: 'contents'
       }}
       data-cipher-text="true"
       data-revealed={isRevealed}

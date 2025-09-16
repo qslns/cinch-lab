@@ -183,7 +183,7 @@ export default function AboutPage() {
       </motion.header>
 
       {/* Main Content */}
-      <section className="min-h-screen pt-32 px-8">
+      <section className="min-h-screen pt-20 px-8">
         {/* Hero Statement */}
         <motion.div
           className="max-w-6xl mx-auto mb-20"
@@ -369,7 +369,7 @@ export default function AboutPage() {
 
         {/* Call to Action */}
         <motion.div
-          className="max-w-4xl mx-auto text-center pb-20"
+          className="max-w-4xl mx-auto text-center pb-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -414,7 +414,7 @@ export default function AboutPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 border-t border-white/10">
+      <footer className="py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-8 text-center">
           <p className="text-sm tracking-[0.3em] opacity-50">
             <CipherText text="CINCH LAB × BREAKING FASHION SINCE 2020" />

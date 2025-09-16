@@ -29,7 +29,7 @@ export default function RootLayout({
         <SkipToMain />
         <KeyboardNavigationIndicator />
         <Navigation />
-        <main id="main-content" className="pt-14">
+        <main id="main-content" className="min-h-screen">
           {children}
         </main>
       </body>

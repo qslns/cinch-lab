@@ -17,24 +17,29 @@ export default function Navigation() {
   const pathname = usePathname()
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black text-white">
-      <nav className="flex justify-between items-center h-14 px-8 md:px-20">
-        {/* Logo - Left Side */}
-        <Link href="/" className="text-xl font-light tracking-tight hover:opacity-70 transition-opacity">
-          <CipherText text="CINCH LAB" />
+    <header className="fixed top-0 right-0 z-50 w-full md:w-auto">
+      <nav className="flex md:flex-col items-end md:items-start gap-3 md:gap-4 p-4 md:p-6 bg-white/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
+        {/* Logo - Top for desktop, left for mobile */}
+        <Link
+          href="/"
+          className="text-lg md:text-xl font-light tracking-tight hover:opacity-70 transition-opacity mb-0 md:mb-6 mr-auto md:mr-0"
+        >
+          <CipherText text="CINCH LAB" autoReveal={true} />
         </Link>
 
-        {/* Navigation Links - Right Side with proper spacing */}
-        <div className="flex items-center">
+        {/* Navigation Links with improved spacing */}
+        <div className="flex md:flex-col items-center md:items-start gap-4 md:gap-3">
           {navLinks.slice(1).map((link, index) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`ml-6 md:ml-8 lg:ml-10 text-xs md:text-sm tracking-[0.08em] font-light transition-all duration-300 ${
-                pathname === link.href ? 'opacity-100 font-normal' : 'opacity-70 hover:opacity-100'
+              className={`text-[11px] md:text-xs tracking-[0.12em] font-light transition-all duration-300 px-2 md:px-0 ${
+                pathname === link.href
+                  ? 'opacity-100 font-medium text-black'
+                  : 'opacity-60 hover:opacity-100 text-gray-800'
               }`}
             >
-              <CipherText text={link.label} delay={index * 30} />
+              <CipherText text={link.label} delay={index * 50} speed={2} />
             </Link>
           ))}
         </div>

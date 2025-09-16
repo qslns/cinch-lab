@@ -40,7 +40,7 @@ export default function ArchivePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="pt-20 pb-12 px-8 md:px-20 border-b border-black/5">
+      <section className="pt-16 pb-10 px-8 md:px-20 border-b border-black/5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

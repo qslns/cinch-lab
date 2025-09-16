@@ -84,7 +84,7 @@ export default function CollectionsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="pt-20 pb-12 px-8 md:px-20 border-b border-black/5">
+      <section className="pt-16 pb-10 px-8 md:px-20 border-b border-black/5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ export default function CollectionsPage() {
       <AnimatePresence mode="wait">
         <motion.section
           key={selectedYear}
-          className="px-8 md:px-20 py-12"
+          className="px-8 md:px-20 py-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
@@ -179,7 +179,7 @@ export default function CollectionsPage() {
                           }}
                         />
                       </div>
-                      <div className="py-12 md:px-12">
+                      <div className="py-8 md:px-12">
                         <span className="text-label opacity-60"><CipherText text={season.name} /></span>
                         <h2 className="text-display mt-4 mb-6"><CipherText text={season.title} /></h2>
                         <p className="text-gray-600 text-lg leading-relaxed mb-8">
@@ -294,7 +294,7 @@ export default function CollectionsPage() {
                 <CipherText text="×" />
               </button>
 
-              <div className="px-8 md:px-20 py-20">
+              <div className="px-8 md:px-20 py-12">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

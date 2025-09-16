@@ -182,7 +182,7 @@ export default function ContactPage() {
       </motion.header>
 
       {/* Main Content */}
-      <section className="min-h-screen pt-32 px-8 pb-20">
+      <section className="min-h-screen pt-20 px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
           <motion.div
@@ -436,7 +436,7 @@ export default function ContactPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 border-t border-white/10">
+      <footer className="py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-8 text-center">
           <motion.p
             className="text-sm tracking-[0.3em] opacity-50"
