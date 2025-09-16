@@ -28,16 +28,7 @@ html {
   background: var(--black);
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  color: var(--white);
-  background: var(--black);
-  position: relative;
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* body styles moved to modern.css for consistency */
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {

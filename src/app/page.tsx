@@ -68,12 +68,20 @@ export default function HomePage() {
             animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
             transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
           >
-            <h2 className="text-hero text-center leading-[0.85]">
-              <CipherText text="FASHION" as="span" className="block" />
-              <CipherText text="EXTREME" as="span" className="block text-italic font-light opacity-80" delay={100} />
-              <CipherText text="TECHNICAL" as="span" className="block" delay={200} />
-              <CipherText text="LABORATORY" as="span" className="block text-outline" delay={300} />
-            </h2>
+            <div className="text-center space-y-4">
+              <h2 className="text-[clamp(60px,8vw,140px)] font-extralight tracking-tight leading-none">
+                <CipherText text="FASHION" as="div" className="mb-2" />
+                <span className="italic font-thin opacity-70">
+                  <CipherText text="EXTREME" as="div" className="mb-2" delay={100} />
+                </span>
+              </h2>
+              <h2 className="text-[clamp(50px,7vw,120px)] font-light tracking-wide leading-none mt-8">
+                <CipherText text="TECHNICAL" as="div" className="mb-2" delay={200} />
+              </h2>
+              <h2 className="text-[clamp(40px,6vw,100px)] font-normal tracking-wider leading-none mt-8">
+                <CipherText text="LABORATORY" as="div" className="text-outline" delay={300} />
+              </h2>
+            </div>
 
             {/* Floating markers */}
             <motion.span

@@ -196,7 +196,7 @@ export default function LabPage() {
       <div className="grid-overlay" />
 
       {/* Main Content */}
-      <section className="pt-8 pb-8 px-8 md:px-20">
+      <section className="pt-20 pb-8 px-8 md:px-20">
         <div className="max-w-7xl mx-auto">
           {/* Title */}
           <motion.div
@@ -205,8 +205,27 @@ export default function LabPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-hero mb-4"><CipherText text="LAB" /></h2>
-            <p className="text-label"><CipherText text="SELECT EXPERIMENT TO BEGIN" /></p>
+            <div className="flex items-center gap-8 mb-8">
+              <h1 className="text-[clamp(60px,8vw,120px)] font-light tracking-tight"><CipherText text="LAB" /></h1>
+              <div className="flex-1 h-[1px] bg-black/20"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              <div>
+                <p className="text-label mb-4"><CipherText text="AUDIO" /></p>
+                <h3 className="text-4xl font-light mb-4"><CipherText text="P(G*)" /></h3>
+                <h3 className="text-4xl font-light"><CipherText text="PARTICLE" /></h3>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  <CipherText text="Chaos systems and emergent behaviors" />
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <p className="text-label mb-4"><CipherText text="PHYSICS" /></p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Experiments Grid */}
