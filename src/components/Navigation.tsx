@@ -28,7 +28,7 @@ export default function Navigation() {
         </Link>
 
         {/* Navigation Links with improved spacing */}
-        <div className="flex md:flex-col items-center md:items-start gap-6 md:gap-5">
+        <div className="flex md:flex-col items-center md:items-start gap-8 md:gap-6">
           {navLinks.slice(1).map((link, index) => (
             <Link
               key={link.href}

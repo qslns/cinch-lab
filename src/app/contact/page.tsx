@@ -309,7 +309,7 @@ export default function ContactPage() {
               >
                 <input
                   type="text"
-                  placeholder={"YOUR NAME (OR ALIAS)"}
+                  placeholder="YOUR NAME (OR ALIAS)"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all"
@@ -324,7 +324,7 @@ export default function ContactPage() {
               >
                 <input
                   type="email"
-                  placeholder={"YOUR EMAIL (WE WON'T SPAM)"}
+                  placeholder="YOUR EMAIL (WE WON'T SPAM)"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all"
@@ -338,7 +338,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
               >
                 <textarea
-                  placeholder={"YOUR MESSAGE (MAKE IT INTERESTING)"}
+                  placeholder="YOUR MESSAGE (MAKE IT INTERESTING)"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-6 py-4 bg-white/5 border-2 border-white/20 rounded-xl text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-all min-h-[150px] resize-none"
