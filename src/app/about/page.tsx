@@ -1,423 +1,290 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import Link from 'next/link'
 import CipherText from '@/components/CipherText'
 
-// Story chapters
-const chapters = [
+// Timeline
+const timeline = [
   {
-    id: 'genesis',
-    title: 'GENESIS',
-    subtitle: '시작',
+    id: 'origin',
     year: '2020',
-    content: 'Born from chaos, raised in pixels. We didn\'t start a brand, we started a revolution.',
-    emoji: '🌱',
-    color: '#ff006e'
+    title: 'ORIGIN',
+    description: 'Founded with a vision to redefine fashion through minimalist expression and technical innovation.'
   },
   {
     id: 'evolution',
-    title: 'EVOLUTION',
-    subtitle: '진화',
     year: '2021',
-    content: 'Breaking every rule we could find. Fashion became our playground, code became our canvas.',
-    emoji: '🦋',
-    color: '#00f5ff'
+    title: 'EVOLUTION',
+    description: 'Expanded our creative boundaries, merging traditional craftsmanship with digital aesthetics.'
   },
   {
-    id: 'explosion',
-    title: 'EXPLOSION',
-    subtitle: '폭발',
+    id: 'expansion',
     year: '2022',
-    content: '475 visuals later, we realized we weren\'t creating fashion. We were creating futures.',
-    emoji: '💥',
-    color: '#bfff00'
+    title: 'EXPANSION',
+    description: 'Developed 475+ unique visual concepts, establishing our signature aesthetic language.'
   },
   {
-    id: 'dimension',
-    title: 'DIMENSION',
-    subtitle: '차원',
+    id: 'refinement',
     year: '2023',
-    content: 'Reality is overrated. We built our own universe where fashion meets digital dreams.',
-    emoji: '🌌',
-    color: '#8b00ff'
+    title: 'REFINEMENT',
+    description: 'Focused on perfecting our craft, creating timeless pieces that transcend seasonal trends.'
   },
   {
-    id: 'infinity',
-    title: 'INFINITY',
-    subtitle: '무한',
+    id: 'present',
     year: '2024',
-    content: 'No limits, no boundaries, no apologies. This is CINCH LAB.',
-    emoji: '♾️',
-    color: '#ff6b00'
+    title: 'PRESENT',
+    description: 'Continuing to push boundaries while maintaining our commitment to minimalist excellence.'
   }
 ]
 
-// Team members with Gen-Z vibes
+// Team structure
 const team = [
-  { name: 'CHAOS', role: 'Creative Destroyer', emoji: '🎭' },
-  { name: 'PIXEL', role: 'Digital Alchemist', emoji: '🎨' },
-  { name: 'VOID', role: 'Reality Bender', emoji: '🕳️' },
-  { name: 'NEON', role: 'Color Terrorist', emoji: '💡' },
-  { name: 'GLITCH', role: 'System Breaker', emoji: '⚡' },
-  { name: 'WAVE', role: 'Frequency Master', emoji: '🌊' }
+  { name: 'CREATIVE', role: 'Direction & Vision' },
+  { name: 'DESIGN', role: 'Form & Function' },
+  { name: 'TECHNICAL', role: 'Innovation & Craft' },
+  { name: 'DIGITAL', role: 'Experience & Interface' }
 ]
 
-// Philosophy statements
-const philosophy = [
-  'FASHION IS DEAD. LONG LIVE FASHION.',
-  'WE DON\'T FOLLOW TRENDS. WE DELETE THEM.',
-  'YOUR GRANDMA WOULDN\'T UNDERSTAND.',
-  'CTRL+ALT+DELETE THE FASHION INDUSTRY.',
-  'NOT YOUR AVERAGE FASHION LAB.',
-  'WE\'RE NOT SORRY.'
+// Core values
+const values = [
+  'Minimalism as maximum expression',
+  'Quality over quantity',
+  'Innovation through simplicity',
+  'Timeless over trendy',
+  'Craft before commerce'
 ]
 
 export default function AboutPage() {
-  const [activeChapter, setActiveChapter] = useState(0)
-  const [floatingText, setFloatingText] = useState<{text: string, x: number, y: number}[]>([])
-  const [glitchActive, setGlitchActive] = useState(false)
+  const [activeSection, setActiveSection] = useState(0)
   const { scrollYProgress } = useScroll()
 
-  const bgColor = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.4, 0.6, 0.8, 1],
-    ['#000000', '#0a0a0a', '#111111', '#0a0a0a', '#050505', '#000000']
-  )
-
-  // Auto-advance chapters
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!glitchActive) {
-        setActiveChapter(prev => (prev + 1) % chapters.length)
-      }
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [glitchActive])
-
-  // Random glitch effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setGlitchActive(true)
-      setTimeout(() => setGlitchActive(false), 300)
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Generate floating text on mouse move
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (Math.random() > 0.97) {
-        const randomPhilosophy = philosophy[Math.floor(Math.random() * philosophy.length)]
-        setFloatingText(prev => [...prev, {
-          text: randomPhilosophy,
-          x: e.clientX,
-          y: e.clientY
-        }])
-
-        setTimeout(() => {
-          setFloatingText(prev => prev.slice(1))
-        }, 4000)
-      }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1])
+  const scale = useTransform(scrollYProgress, [0, 0.1], [0.95, 1])
 
   return (
     <motion.div
-      className="min-h-screen text-white overflow-hidden"
-      style={{ backgroundColor: bgColor }}
+      className="min-h-screen bg-white"
+      style={{ opacity, scale }}
     >
-      {/* Animated background gradient */}
-      <motion.div
-        className="fixed inset-0 opacity-30"
-        animate={{
-          background: [
-            `radial-gradient(circle at 20% 50%, ${chapters[activeChapter].color}40 0%, transparent 50%)`,
-            `radial-gradient(circle at 80% 50%, ${chapters[activeChapter].color}40 0%, transparent 50%)`,
-            `radial-gradient(circle at 50% 20%, ${chapters[activeChapter].color}40 0%, transparent 50%)`,
-          ]
-        }}
-        transition={{ duration: 5, repeat: Infinity }}
-      />
-
-      {/* Noise overlay */}
-      <div className="noise-overlay" />
-
-      {/* Floating philosophy text */}
-      <AnimatePresence>
-        {floatingText.map((item, index) => (
-          <motion.div
-            key={`${item.x}-${item.y}-${index}`}
-            className="fixed text-xs font-bold tracking-widest pointer-events-none z-20 whitespace-nowrap"
-            style={{ color: chapters[activeChapter].color }}
-            initial={{ x: item.x - 100, y: item.y - 10, opacity: 0, scale: 0 }}
-            animate={{
-              y: item.y - 100,
-              opacity: [0, 1, 1, 0],
-              scale: [0, 1, 1, 0.5],
-              rotate: [0, -5, 5, 0]
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 4 }}
-          >
-            {item.text}
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {/* Subtle grid overlay */}
+      <div className="grid-overlay" />
 
       {/* Header */}
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 p-8"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+      <motion.section
+        className="pt-8 pb-12 px-8 md:px-20 border-b border-black/5"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-black tracking-widest"><CipherText text="ABOUT" /></h1>
-          <div className="text-sm tracking-widest opacity-50">
-            <CipherText text="CINCH LAB STORY" />
-          </div>
-        </div>
-      </motion.header>
+        <h1 className="text-hero mb-4"><CipherText text="ABOUT" /></h1>
+        <p className="text-label text-gray-600"><CipherText text="THE CINCH LAB PHILOSOPHY" /></p>
+      </motion.section>
 
       {/* Main Content */}
-      <section className="min-h-screen pt-8 px-8 pb-8">
+      <section className="px-8 md:px-20 py-20">
         {/* Hero Statement */}
         <motion.div
-          className="max-w-6xl mx-auto mb-20"
+          className="max-w-4xl mx-auto mb-32 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
           <motion.h2
-            className={`text-6xl md:text-9xl font-black text-center mb-8 ${glitchActive ? 'distort-text' : ''}`}
-            data-text="WE ARE CINCH"
-            animate={{
-              color: chapters[activeChapter].color,
-              textShadow: glitchActive
-                ? `0 0 20px ${chapters[activeChapter].color}`
-                : 'none'
-            }}
+            className="text-5xl md:text-6xl font-light mb-8 tracking-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
           >
-            <CipherText text="WE ARE CINCH" />
+            <CipherText text="Fashion's Extreme Limits" />
           </motion.h2>
 
           <motion.p
-            className="text-xl md:text-3xl text-center opacity-70"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
+            className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
           >
-            <CipherText text="Not a brand. A dimension." />
+            <CipherText text="Where minimalism meets maximum expression. A laboratory for pushing boundaries through restraint, precision, and relentless innovation." />
           </motion.p>
         </motion.div>
 
-        {/* Timeline / Chapters */}
-        <div className="max-w-7xl mx-auto mb-20">
-          <div className="flex justify-center gap-4 mb-12">
-            {chapters.map((chapter, index) => (
-              <motion.button
-                key={chapter.id}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeChapter === index ? 'w-12' : ''
-                }`}
-                style={{
-                  backgroundColor: activeChapter === index ? chapter.color : 'rgba(255,255,255,0.3)'
-                }}
-                onClick={() => setActiveChapter(index)}
-                whileHover={{ scale: 1.5 }}
-              />
+        {/* Timeline */}
+        <div className="max-w-5xl mx-auto mb-32">
+          <motion.h3
+            className="text-sm tracking-[0.2em] mb-12 text-center text-gray-500"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <CipherText text="TIMELINE" />
+          </motion.h3>
+
+          <div className="space-y-16">
+            {timeline.map((item, index) => (
+              <motion.div
+                key={item.id}
+                className="grid grid-cols-12 gap-4 md:gap-8 items-start"
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="col-span-3 md:col-span-2 text-right">
+                  <span className="text-sm text-gray-500"><CipherText text={item.year} /></span>
+                </div>
+                <div className="col-span-1 md:col-span-2 flex justify-center">
+                  <div className="w-2 h-2 bg-black rounded-full mt-2" />
+                </div>
+                <div className="col-span-8">
+                  <h4 className="text-xl font-medium mb-2"><CipherText text={item.title} /></h4>
+                  <p className="text-gray-600 text-sm md:text-base"><CipherText text={item.description} /></p>
+                </div>
+              </motion.div>
             ))}
           </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={chapters[activeChapter].id}
-              className="text-center"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.span
-                className="text-6xl mb-4 block"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {chapters[activeChapter].emoji}
-              </motion.span>
-
-              <h3
-                className="text-4xl md:text-6xl font-black mb-2"
-                style={{ color: chapters[activeChapter].color }}
-              >
-                <CipherText text={chapters[activeChapter].title} />
-              </h3>
-
-              <p className="text-lg opacity-50 mb-2">
-                <CipherText text={chapters[activeChapter].subtitle} /> • <CipherText text={chapters[activeChapter].year} />
-              </p>
-
-              <p className="text-xl md:text-2xl max-w-3xl mx-auto mt-6 leading-relaxed">
-                <CipherText text={chapters[activeChapter].content} />
-              </p>
-            </motion.div>
-          </AnimatePresence>
         </div>
 
-        {/* Team Grid */}
+        {/* Team Structure */}
         <motion.div
-          className="max-w-6xl mx-auto mb-20"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-            <span className="gradient-text-animated"><CipherText text="THE CREATORS" /></span>
-          </h3>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {team.map((member, index) => (
-              <motion.div
-                key={member.name}
-                className="text-center group cursor-pointer"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.1, rotate: [-5, 5, -5] }}
-              >
-                <motion.div
-                  className="text-5xl mb-3"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 2, delay: index * 0.2, repeat: Infinity }}
-                >
-                  {member.emoji}
-                </motion.div>
-                <h4 className="font-bold text-lg mb-1"><CipherText text={member.name} /></h4>
-                <p className="text-xs opacity-50"><CipherText text={member.role} /></p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Philosophy Section */}
-        <motion.div
-          className="max-w-6xl mx-auto mb-20"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-3xl md:text-5xl font-black text-center mb-12">
-            <span className="text-stroke"><CipherText text="OUR PHILOSOPHY" /></span>
-          </h3>
-
-          <div className="space-y-6">
-            {philosophy.map((statement, index) => (
-              <motion.div
-                key={statement}
-                className="text-xl md:text-3xl font-bold text-center"
-                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{
-                  scale: 1.05,
-                  color: chapters[index % chapters.length].color
-                }}
-              >
-                <CipherText text={statement} />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Stats/Numbers */}
-        <motion.div
-          className="max-w-6xl mx-auto mb-20"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: '475+', label: 'VISUALS CREATED', color: '#ff006e' },
-              { number: '∞', label: 'RULES BROKEN', color: '#00f5ff' },
-              { number: '0', label: 'APOLOGIES', color: '#bfff00' },
-              { number: '24/7', label: 'CREATING CHAOS', color: '#8b00ff' }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-              >
-                <h4
-                  className="text-5xl md:text-7xl font-black mb-2"
-                  style={{ color: stat.color }}
-                >
-                  <CipherText text={String(stat.number)} />
-                </h4>
-                <p className="text-sm opacity-50"><CipherText text={stat.label} /></p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Call to Action */}
-        <motion.div
-          className="max-w-4xl mx-auto text-center pb-8"
+          className="max-w-5xl mx-auto mb-32"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
           <motion.h3
-            className="text-4xl md:text-6xl font-black mb-8"
-            animate={{
-              backgroundImage: [
-                'linear-gradient(45deg, #ff006e, #00f5ff)',
-                'linear-gradient(90deg, #00f5ff, #bfff00)',
-                'linear-gradient(135deg, #bfff00, #8b00ff)',
-                'linear-gradient(180deg, #8b00ff, #ff006e)'
-              ]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
-            style={{
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}
+            className="text-sm tracking-[0.2em] mb-12 text-center text-gray-500"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
           >
-            <CipherText text="JOIN THE REVOLUTION" />
+            <CipherText text="STRUCTURE" />
           </motion.h3>
 
-          <p className="text-xl mb-8 opacity-70">
-            <CipherText text="Or don't. We're not your mom." />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {team.map((dept, index) => (
+              <motion.div
+                key={dept.name}
+                className="text-center group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <h4 className="text-2xl font-light mb-2 group-hover:tracking-wider transition-all duration-300">
+                  <CipherText text={dept.name} />
+                </h4>
+                <p className="text-sm text-gray-600"><CipherText text={dept.role} /></p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Values */}
+        <motion.div
+          className="max-w-4xl mx-auto mb-32"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <motion.h3
+            className="text-sm tracking-[0.2em] mb-12 text-center text-gray-500"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <CipherText text="VALUES" />
+          </motion.h3>
+
+          <div className="space-y-8">
+            {values.map((value, index) => (
+              <motion.div
+                key={value}
+                className="text-lg md:text-xl text-center relative group cursor-default"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <CipherText text={value} />
+                <motion.div
+                  className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-2 h-[1px] bg-black opacity-0 group-hover:opacity-100 group-hover:-left-8 transition-all duration-300"
+                />
+                <motion.div
+                  className="absolute -right-4 top-1/2 transform -translate-y-1/2 w-2 h-[1px] bg-black opacity-0 group-hover:opacity-100 group-hover:-right-8 transition-all duration-300"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Statistics */}
+        <motion.div
+          className="max-w-5xl mx-auto mb-32"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            {[
+              { number: '475+', label: 'Visuals Created' },
+              { number: '5', label: 'Years of Innovation' },
+              { number: '100%', label: 'Commitment' },
+              { number: '1', label: 'Vision' }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                className="group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+              >
+                <h4 className="text-3xl md:text-4xl font-light mb-2 group-hover:font-normal transition-all">
+                  <CipherText text={String(stat.number)} />
+                </h4>
+                <p className="text-xs tracking-[0.15em] text-gray-500">
+                  <CipherText text={stat.label.toUpperCase()} />
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Contact */}
+        <motion.div
+          className="max-w-3xl mx-auto text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-lg md:text-xl mb-8 text-gray-600">
+            <CipherText text="Interested in our vision?" />
           </p>
 
           <motion.div
             className="inline-block"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <a
+            <Link
               href="/contact"
-              className="px-12 py-6 bg-white text-black font-black text-xl rounded-full inline-block"
+              className="inline-block px-8 py-3 border border-black text-sm tracking-[0.15em] hover:bg-black hover:text-white transition-colors duration-300"
             >
-              <CipherText text="GET WEIRD WITH US →" />
-            </a>
+              <CipherText text="GET IN TOUCH" />
+            </Link>
           </motion.div>
         </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 border-t border-white/10">
+      <footer className="py-8 border-t border-black/5 mt-32">
         <div className="max-w-7xl mx-auto px-8 text-center">
-          <p className="text-sm tracking-[0.3em] opacity-50">
-            <CipherText text="CINCH LAB × BREAKING FASHION SINCE 2020" />
+          <p className="text-xs tracking-[0.2em] text-gray-500">
+            <CipherText text="CINCH LAB © 2020-2024" />
           </p>
         </div>
       </footer>
