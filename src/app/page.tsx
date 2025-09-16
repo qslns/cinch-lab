@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import CipherText from '@/components/CipherText'
@@ -11,12 +11,7 @@ export default function HomePage() {
   const { scrollYProgress } = useScroll()
   const [currentTime, setCurrentTime] = useState('')
   const [isLoaded, setIsLoaded] = useState(false)
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  // Smooth mouse tracking
-  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 })
-  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 })
+  // Removed 3D mouse tracking for cleaner interaction
 
   // Parallax transforms
   const heroY = useTransform(scrollYProgress, [0, 0.5], ['0%', '15%'])
@@ -37,14 +32,29 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [])
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set((e.clientX / window.innerWidth - 0.5) * 20)
-      mouseY.set((e.clientY / window.innerHeight - 0.5) * 20)
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
+  // Decorative elements for aesthetic enhancement
+  const decorativeElements = [
+    // Top section elements
+    { type: 'line', position: 'top-24 left-16', width: '60px', angle: -30 },
+    { type: 'dot', position: 'top-32 right-24', size: 3 },
+    { type: 'circle', position: 'top-48 left-32', size: 8 },
+
+    // Hero section accents
+    { type: 'square', position: 'top-[20vh] right-20', size: 6 },
+    { type: 'line', position: 'top-[25vh] left-12', width: '40px', angle: 90 },
+    { type: 'cross', position: 'top-[30vh] right-32', size: 10 },
+
+    // Mid section elements
+    { type: 'dot', position: 'top-[45vh] left-20', size: 2 },
+    { type: 'line', position: 'top-[50vh] right-16', width: '80px', angle: 0 },
+    { type: 'circle', position: 'top-[55vh] left-40', size: 12 },
+
+    // Bottom section accents
+    { type: 'square', position: 'bottom-48 right-28', size: 8 },
+    { type: 'cross', position: 'bottom-32 left-24', size: 8 },
+    { type: 'line', position: 'bottom-24 right-40', width: '50px', angle: 45 },
+    { type: 'dot', position: 'bottom-20 left-36', size: 4 },
+  ]
 
   // Generate floating particles for background
   const particles = Array.from({ length: 12 }, (_, i) => ({
@@ -56,9 +66,64 @@ export default function HomePage() {
   }))
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white">
+    <div ref={containerRef} className="min-h-screen bg-white relative">
       {/* Subtle grid overlay */}
       <div className="grid-overlay" />
+
+      {/* Decorative Elements */}
+      {decorativeElements.map((element, index) => (
+        <motion.div
+          key={index}
+          className={`absolute ${element.position} pointer-events-none z-0`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.15 }}
+          transition={{ delay: index * 0.05, duration: 1 }}
+        >
+          {element.type === 'line' && (
+            <div
+              className="bg-black"
+              style={{
+                width: element.width,
+                height: '1px',
+                transform: `rotate(${element.angle}deg)`,
+              }}
+            />
+          )}
+          {element.type === 'circle' && (
+            <div
+              className="border border-black rounded-full"
+              style={{
+                width: `${element.size}px`,
+                height: `${element.size}px`,
+              }}
+            />
+          )}
+          {element.type === 'square' && (
+            <div
+              className="border border-black"
+              style={{
+                width: `${element.size}px`,
+                height: `${element.size}px`,
+              }}
+            />
+          )}
+          {element.type === 'dot' && (
+            <div
+              className="bg-black rounded-full"
+              style={{
+                width: `${element.size}px`,
+                height: `${element.size}px`,
+              }}
+            />
+          )}
+          {element.type === 'cross' && (
+            <div className="relative" style={{ width: `${element.size}px`, height: `${element.size}px` }}>
+              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black -translate-y-1/2" />
+              <div className="absolute top-0 left-1/2 w-[1px] h-full bg-black -translate-x-1/2" />
+            </div>
+          )}
+        </motion.div>
+      ))}
 
       {/* Floating particles */}
       <div className="fixed inset-0 pointer-events-none">
@@ -93,9 +158,7 @@ export default function HomePage() {
           style={{
             y: heroY,
             opacity: heroOpacity,
-            scale: heroScale,
-            x: springX,
-            rotateX: springY
+            scale: heroScale
           }}
         >
           <motion.div

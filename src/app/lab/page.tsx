@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import CipherText from '@/components/CipherText'
 
@@ -53,28 +53,6 @@ const experiments = [
 export default function LabPage() {
   const [activeExperiment, setActiveExperiment] = useState<string | null>(null)
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  // Smooth spring animation for mouse tracking
-  const springConfig = { stiffness: 150, damping: 15 }
-  const rotateX = useSpring(useTransform(mouseY, [0, 1], [-8, 8]), springConfig)
-  const rotateY = useSpring(useTransform(mouseX, [0, 1], [8, -8]), springConfig)
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width
-      const y = (e.clientY - rect.top) / rect.height
-      mouseX.set(x)
-      mouseY.set(y)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
 
   const renderExperimentVisual = (exp: typeof experiments[0]) => {
     switch (exp.id) {
@@ -222,16 +200,79 @@ export default function LabPage() {
     }
   }
 
+  // Decorative elements for empty spaces
+  const decorativeElements = [
+    { type: 'line', position: 'top-20 left-10', width: '100px', angle: 45 },
+    { type: 'circle', position: 'top-40 right-20', size: 12 },
+    { type: 'square', position: 'bottom-32 left-32', size: 8 },
+    { type: 'line', position: 'bottom-20 right-10', width: '80px', angle: -30 },
+    { type: 'dots', position: 'top-1/3 left-16' },
+    { type: 'cross', position: 'top-2/3 right-24' }
+  ]
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
       <div className="grid-overlay" />
 
+      {/* Decorative Elements */}
+      {decorativeElements.map((element, index) => (
+        <motion.div
+          key={index}
+          className={`absolute ${element.position} pointer-events-none`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.1 }}
+          transition={{ delay: 0.5 + index * 0.1 }}
+        >
+          {element.type === 'line' && (
+            <div
+              className="h-[1px] bg-black"
+              style={{
+                width: element.width,
+                transform: `rotate(${element.angle}deg)`
+              }}
+            />
+          )}
+          {element.type === 'circle' && (
+            <div
+              className="border border-black rounded-full"
+              style={{
+                width: element.size,
+                height: element.size
+              }}
+            />
+          )}
+          {element.type === 'square' && (
+            <div
+              className="border border-black"
+              style={{
+                width: element.size,
+                height: element.size,
+                transform: 'rotate(45deg)'
+              }}
+            />
+          )}
+          {element.type === 'dots' && (
+            <div className="grid grid-cols-3 gap-2">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="w-1 h-1 bg-black rounded-full" />
+              ))}
+            </div>
+          )}
+          {element.type === 'cross' && (
+            <div className="relative w-4 h-4">
+              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black -translate-y-1/2" />
+              <div className="absolute left-1/2 top-0 h-full w-[1px] bg-black -translate-x-1/2" />
+            </div>
+          )}
+        </motion.div>
+      ))}
+
       {/* Main Content */}
-      <section className="pt-20 pb-8 px-8 md:px-20">
+      <section className="pt-20 pb-8 px-8 md:px-20 relative z-10">
         <div className="max-w-7xl mx-auto">
-          {/* Title */}
+          {/* Title with decorative element */}
           <motion.div
-            className="mb-20"
+            className="mb-20 relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -242,13 +283,18 @@ export default function LabPage() {
             <p className="text-[10px] tracking-widest opacity-40 uppercase">
               <CipherText text="SELECT EXPERIMENT TO BEGIN" />
             </p>
+
+            {/* Decorative line after title */}
+            <motion.div
+              className="absolute -right-8 top-1/2 w-32 h-[1px] bg-black/10"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            />
           </motion.div>
 
           {/* Experiments Grid */}
-          <div
-            ref={containerRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {experiments.map((exp, index) => (
               <motion.div
                 key={exp.id}
@@ -263,18 +309,8 @@ export default function LabPage() {
                   className="w-full text-left h-[400px] p-12 border border-black/10 hover:border-black/30 transition-all duration-300 relative overflow-hidden bg-white"
                   onClick={() => setActiveExperiment(exp.id)}
                   whileHover={{ scale: 1.02 }}
-                  style={{
-                    perspective: 1000,
-                    transformStyle: 'preserve-3d'
-                  }}
                 >
-                  <motion.div
-                    style={{
-                      rotateX: hoveredCard === exp.id ? rotateX : 0,
-                      rotateY: hoveredCard === exp.id ? rotateY : 0
-                    }}
-                    className="relative z-10 h-full flex flex-col justify-between"
-                  >
+                  <div className="relative z-10 h-full flex flex-col justify-between">
                     <div>
                       <span className="text-[10px] tracking-widest opacity-40">
                         <CipherText text={exp.id} />
@@ -297,7 +333,7 @@ export default function LabPage() {
                         transition={{ duration: 0.3 }}
                       />
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Background Pattern */}
                   <div className="absolute inset-0 opacity-10">
@@ -311,10 +347,36 @@ export default function LabPage() {
                     animate={{ opacity: hoveredCard === exp.id ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   />
+
+                  {/* Corner decoration on hover */}
+                  <motion.div
+                    className="absolute top-0 right-0 w-8 h-8"
+                    animate={{
+                      opacity: hoveredCard === exp.id ? 0.3 : 0
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="absolute top-2 right-2 w-4 h-[1px] bg-black" />
+                    <div className="absolute top-2 right-2 h-4 w-[1px] bg-black" />
+                  </motion.div>
                 </motion.button>
               </motion.div>
             ))}
           </div>
+
+          {/* Decorative grid pattern */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.02 }}
+            transition={{ delay: 1 }}
+          >
+            <div className="grid grid-cols-8 gap-8">
+              {[...Array(64)].map((_, i) => (
+                <div key={i} className="w-1 h-1 bg-black rounded-full" />
+              ))}
+            </div>
+          </motion.div>
 
           {/* Active Experiment Display */}
           {activeExperiment && (
@@ -378,9 +440,34 @@ export default function LabPage() {
         </div>
       </section>
 
-      {/* Info Section */}
-      <section className="py-20 border-t border-black/5">
-        <div className="max-w-7xl mx-auto px-8 md:px-20">
+      {/* Info Section with decorative elements */}
+      <section className="py-20 border-t border-black/5 relative">
+        {/* Floating decorative shapes */}
+        <motion.div
+          className="absolute top-10 left-20 w-16 h-16 border border-black/5 rounded-full"
+          animate={{
+            y: [0, -10, 0],
+            rotate: [0, 180, 360]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-20 w-12 h-12 border border-black/5"
+          animate={{
+            rotate: [0, 90, 180, 270, 360]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto px-8 md:px-20 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-8">
               <h3 className="text-[clamp(32px,4vw,64px)] font-thin mb-8 leading-tight tracking-tight">
@@ -418,7 +505,7 @@ export default function LabPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 py-12">
+      <footer className="border-t border-black/5 py-12 relative">
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <div className="flex justify-between items-center">
             <p className="text-sm font-thin">
