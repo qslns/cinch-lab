@@ -196,7 +196,7 @@ export default function LabPage() {
       <div className="grid-overlay" />
 
       {/* Main Content */}
-      <section className="pt-16 pb-16 px-8 md:px-20">
+      <section className="pt-8 pb-8 px-8 md:px-20">
         <div className="max-w-7xl mx-auto">
           {/* Title */}
           <motion.div

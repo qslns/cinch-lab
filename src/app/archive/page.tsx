@@ -40,7 +40,7 @@ export default function ArchivePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="pt-16 pb-10 px-8 md:px-20 border-b border-black/5">
+      <section className="pt-8 pb-6 px-8 md:px-20 border-b border-black/5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,7 +74,7 @@ export default function ArchivePage() {
 
       {/* Timeline Visualization */}
       {viewMode === 'timeline' ? (
-        <section className="px-8 md:px-20 py-16">
+        <section className="px-8 md:px-20 py-8">
           {/* Year Selector Timeline */}
           <div className="relative mb-20">
             <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gray-200" />
@@ -160,7 +160,7 @@ export default function ArchivePage() {
         </section>
       ) : (
         /* Grid View */
-        <section className="px-8 md:px-20 py-16">
+        <section className="px-8 md:px-20 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {archiveData.map((data, index) => (
               <motion.div
@@ -198,7 +198,7 @@ export default function ArchivePage() {
       )}
 
       {/* Quote Section */}
-      <section className="border-t border-black/5 py-16 px-8 md:px-20">
+      <section className="border-t border-black/5 py-8 px-8 md:px-20">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0 }}
