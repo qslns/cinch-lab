@@ -1,191 +1,140 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
-import CipherText from '@/components/CipherText'
 
 const experiments = [
   {
-    id: '001',
-    title: 'DISTORTION',
-    description: 'Spatial manipulation through warped perspectives',
-    type: 'VISUAL',
-    color: '#0038ff'
-  },
-  {
-    id: '002',
-    title: 'FREQUENCY',
-    description: 'Wave dynamics and resonance patterns',
-    type: 'AUDIO',
+    id: 'FABRIC',
+    title: 'FABRIC',
+    description: 'Wave patterns',
     color: '#000000'
   },
   {
-    id: '003',
-    title: 'PARTICLE',
-    description: 'Chaos systems and emergent behaviors',
-    type: 'PHYSICS',
+    id: 'FORM',
+    title: 'FORM',
+    description: 'Rotating geometric shapes',
     color: '#333333'
   },
   {
-    id: '004',
-    title: 'MORPH',
-    description: 'Shape evolution and transformation',
-    type: 'GEOMETRY',
+    id: 'VOID',
+    title: 'VOID',
+    description: 'Expanding circles',
     color: '#666666'
   },
   {
-    id: '005',
-    title: 'NEURAL',
-    description: 'Pattern recognition and AI aesthetics',
-    type: 'AI',
+    id: 'TIME',
+    title: 'TIME',
+    description: 'Clock-like animations',
     color: '#999999'
-  },
-  {
-    id: '006',
-    title: 'VOID',
-    description: 'Negative space as primary element',
-    type: 'CONCEPT',
-    color: '#ffffff'
   }
 ]
 
 export default function LabPage() {
-  const [activeExperiment, setActiveExperiment] = useState<string | null>(null)
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  // Smooth spring animation for mouse tracking
-  const springConfig = { stiffness: 150, damping: 15 }
-  const rotateX = useSpring(useTransform(mouseY, [0, 1], [-8, 8]), springConfig)
-  const rotateY = useSpring(useTransform(mouseX, [0, 1], [8, -8]), springConfig)
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width
-      const y = (e.clientY - rect.top) / rect.height
-      mouseX.set(x)
-      mouseY.set(y)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
 
   const renderExperimentVisual = (exp: typeof experiments[0]) => {
     switch (exp.id) {
-      case '001':
+      case 'FABRIC':
         return (
-          <motion.div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              className="w-32 h-32 border-2 border-black"
-              animate={{
-                rotate: [0, 45, 90, 135, 180, 225, 270, 315, 360],
-                borderRadius: ['0%', '50%', '0%', '50%', '0%']
-              }}
-              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-            />
-          </motion.div>
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-full h-[2px] bg-black/20"
+                style={{
+                  top: `${20 + i * 15}%`,
+                  animation: `wave ${3 + i * 0.5}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.2}s`
+                }}
+              />
+            ))}
+            <style jsx>{`
+              @keyframes wave {
+                0%, 100% { transform: translateX(0) scaleY(1); }
+                50% { transform: translateX(10px) scaleY(2); }
+              }
+            `}</style>
+          </div>
         )
-      case '002':
+
+      case 'FORM':
         return (
           <div className="absolute inset-0 flex items-center justify-center">
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-full h-[1px] bg-black"
-                style={{ top: `${50 + i * 10}%` }}
-                animate={{
-                  scaleX: [0, 1, 0],
-                  opacity: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 2,
-                  delay: i * 0.2,
-                  repeat: Infinity
-                }}
-              />
-            ))}
+            <div
+              className="w-24 h-24 border-2 border-black/20"
+              style={{
+                animation: 'rotateShape 8s linear infinite'
+              }}
+            />
+            <style jsx>{`
+              @keyframes rotateShape {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}</style>
           </div>
         )
-      case '003':
+
+      case 'VOID':
         return (
-          <div className="absolute inset-0">
-            {[...Array(8)].map((_, i) => (
-              <motion.div
+          <div className="absolute inset-0 flex items-center justify-center">
+            {[...Array(3)].map((_, i) => (
+              <div
                 key={i}
-                className="absolute w-2 h-2 bg-black rounded-full"
+                className="absolute w-32 h-32 border border-black/10 rounded-full"
                 style={{
-                  left: `${30 + Math.random() * 40}%`,
-                  top: `${30 + Math.random() * 40}%`
-                }}
-                animate={{
-                  x: [0, Math.random() * 100 - 50, 0],
-                  y: [0, Math.random() * 100 - 50, 0],
-                  scale: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  delay: i * 0.1,
-                  repeat: Infinity
+                  animation: `expand ${4 + i}s ease-in-out infinite`,
+                  animationDelay: `${i * 1}s`
                 }}
               />
             ))}
+            <style jsx>{`
+              @keyframes expand {
+                0%, 100% { transform: scale(0); opacity: 0; }
+                50% { transform: scale(1); opacity: 0.3; }
+              }
+            `}</style>
           </div>
         )
-      case '004':
+
+      case 'TIME':
         return (
-          <motion.div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              className="w-32 h-32 bg-black"
-              animate={{
-                clipPath: [
-                  'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-                  'polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)',
-                  'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-                  'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                ]
-              }}
-              transition={{ duration: 4, repeat: Infinity }}
-            />
-          </motion.div>
-        )
-      case '005':
-        return (
-          <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-2 p-12">
-            {[...Array(16)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="bg-black"
-                animate={{
-                  opacity: [0, Math.random(), 0]
-                }}
-                transition={{
-                  duration: 2,
-                  delay: i * 0.1,
-                  repeat: Infinity
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative w-32 h-32">
+              {/* Hour hand */}
+              <div
+                className="absolute left-1/2 top-1/2 w-[2px] h-10 bg-black/40 origin-bottom"
+                style={{
+                  transform: 'translate(-50%, -100%)',
+                  animation: 'clockHour 120s linear infinite'
                 }}
               />
-            ))}
+              {/* Minute hand */}
+              <div
+                className="absolute left-1/2 top-1/2 w-[1px] h-12 bg-black/60 origin-bottom"
+                style={{
+                  transform: 'translate(-50%, -100%)',
+                  animation: 'clockMinute 10s linear infinite'
+                }}
+              />
+              {/* Center dot */}
+              <div className="absolute left-1/2 top-1/2 w-2 h-2 bg-black/80 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
+            <style jsx>{`
+              @keyframes clockHour {
+                0% { transform: translate(-50%, -100%) rotate(0deg); }
+                100% { transform: translate(-50%, -100%) rotate(360deg); }
+              }
+              @keyframes clockMinute {
+                0% { transform: translate(-50%, -100%) rotate(0deg); }
+                100% { transform: translate(-50%, -100%) rotate(360deg); }
+              }
+            `}</style>
           </div>
         )
-      case '006':
-        return (
-          <motion.div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              className="w-32 h-32 border-2 border-black rounded-full"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [1, 0.3, 1]
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            />
-          </motion.div>
-        )
+
       default:
         return null
     }
@@ -193,217 +142,93 @@ export default function LabPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="grid-overlay" />
+      {/* Header */}
+      <div className="pt-24 pb-16 px-8 md:px-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-[clamp(48px,8vw,120px)] font-thin tracking-tight mb-4">
+            LAB
+          </h1>
+          <p className="text-[11px] tracking-[0.3em] text-black/40 uppercase">
+            Experimental Zone
+          </p>
+        </motion.div>
+      </div>
 
-      {/* Main Content */}
-      <section className="pt-20 pb-8 px-8 md:px-20">
-        <div className="max-w-7xl mx-auto">
-          {/* Title */}
-          <motion.div
-            className="mb-20"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="flex items-center gap-8 mb-8">
-              <h1 className="text-[clamp(60px,8vw,120px)] font-light tracking-tight"><CipherText text="LAB" /></h1>
-              <div className="flex-1 h-[1px] bg-black/20"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              <div>
-                <p className="text-label mb-4"><CipherText text="AUDIO" /></p>
-                <h3 className="text-4xl font-light mb-4"><CipherText text="P(G*)" /></h3>
-                <h3 className="text-4xl font-light"><CipherText text="PARTICLE" /></h3>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <CipherText text="Chaos systems and emergent behaviors" />
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <p className="text-label mb-4"><CipherText text="PHYSICS" /></p>
-              </div>
-            </div>
-          </motion.div>
+      {/* Experiments Grid - Clean 2x2 Layout */}
+      <div className="px-8 md:px-20 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-6xl mx-auto">
+          {experiments.map((exp, index) => (
+            <motion.div
+              key={exp.id}
+              className="relative group"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              onMouseEnter={() => setHoveredCard(exp.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <div className="relative h-[400px] border border-black/10 overflow-hidden bg-white hover:border-black/30 transition-all duration-300">
+                {/* Background Animation */}
+                <div className="absolute inset-0">
+                  {renderExperimentVisual(exp)}
+                </div>
 
-          {/* Experiments Grid */}
-          <div
-            ref={containerRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {experiments.map((exp, index) => (
-              <motion.div
-                key={exp.id}
-                className="relative"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.6 }}
-                onMouseEnter={() => setHoveredCard(exp.id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <motion.button
-                  className="w-full text-left card card-minimal h-[400px] flex flex-col justify-between p-12 relative overflow-hidden"
-                  onClick={() => setActiveExperiment(exp.id)}
-                  whileHover={{ scale: 1.02 }}
-                  style={{
-                    perspective: 1000,
-                    transformStyle: 'preserve-3d'
-                  }}
-                >
-                  <motion.div
-                    style={{
-                      rotateX: hoveredCard === exp.id ? rotateX : 0,
-                      rotateY: hoveredCard === exp.id ? rotateY : 0
-                    }}
-                    className="relative z-10"
-                  >
-                    <span className="text-label marker"><CipherText text={exp.id} /></span>
-                    <h3 className="text-4xl font-light mt-6"><CipherText text={exp.title} /></h3>
-                    <p className="text-sm text-gray-600 mt-3 leading-relaxed">
-                      <CipherText text={exp.description} />
+                {/* Content */}
+                <div className="relative z-10 p-12 h-full flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-4xl font-thin tracking-tight mb-2">
+                      {exp.title}
+                    </h3>
+                    <p className="text-xs text-black/50 uppercase tracking-wider">
+                      {exp.description}
                     </p>
-                  </motion.div>
-
-                  <div className="flex justify-between items-end relative z-10">
-                    <span className="text-label text-xs"><CipherText text={exp.type} /></span>
-                    <motion.div
-                      className="w-8 h-8 border border-black/30"
-                      animate={hoveredCard === exp.id ? { rotate: 45 } : { rotate: 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
                   </div>
 
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 opacity-5">
-                    {renderExperimentVisual(exp)}
-                  </div>
-
-                  {/* Hover Overlay */}
+                  {/* Hover indicator */}
                   <motion.div
-                    className="absolute inset-0 bg-black"
-                    initial={{ y: '100%' }}
-                    animate={{ y: hoveredCard === exp.id ? '0%' : '100%' }}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                  />
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredCard === exp.id ? 1 : 0 }}
+                    className="text-xs text-black/30 uppercase tracking-wider"
+                    animate={{
+                      opacity: hoveredCard === exp.id ? 1 : 0,
+                      x: hoveredCard === exp.id ? 0 : -10
+                    }}
                     transition={{ duration: 0.3 }}
                   >
-                    <span className="text-white text-2xl font-light"><CipherText text="ENTER" /></span>
+                    Click to explore →
                   </motion.div>
-                </motion.button>
-              </motion.div>
-            ))}
-          </div>
+                </div>
 
-          {/* Active Experiment Display */}
-          {activeExperiment && (
-            <motion.div
-              className="fixed inset-0 bg-white z-[60] flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <button
-                className="absolute top-8 right-8 text-4xl hover:rotate-90 transition-transform duration-300"
-                onClick={() => setActiveExperiment(null)}
-              >
-                <CipherText text="×" />
-              </button>
-
-              <div className="text-center max-w-4xl mx-auto px-8">
+                {/* Subtle hover overlay */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <span className="text-label">
-                    <CipherText text={`EXPERIMENT ${activeExperiment}`} />
-                  </span>
-                  <h3 className="text-display mt-4 mb-2">
-                    <CipherText text={experiments.find(e => e.id === activeExperiment)?.title || ''} />
-                  </h3>
-                  <p className="text-gray-600 mb-16">
-                    <CipherText text={experiments.find(e => e.id === activeExperiment)?.description || ''} />
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  className="w-full max-w-2xl h-[400px] mx-auto relative border border-black/10"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  {renderExperimentVisual(
-                    experiments.find(e => e.id === activeExperiment)!
-                  )}
-                </motion.div>
-
-                <motion.div
-                  className="mt-16 flex justify-center gap-8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <button className="btn btn-outline"><CipherText text="RANDOMIZE" /></button>
-                  <button className="btn btn-primary"><CipherText text="DOWNLOAD" /></button>
-                </motion.div>
+                  className="absolute inset-0 bg-black/5 pointer-events-none"
+                  animate={{
+                    opacity: hoveredCard === exp.id ? 1 : 0
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
               </div>
             </motion.div>
-          )}
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Info Section */}
-      <section className="py-20 border-t border-black/5">
-        <div className="max-w-7xl mx-auto px-8 md:px-20">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            <div className="md:col-span-8">
-              <h3 className="text-display mb-8 leading-tight">
-                <CipherText text="Experimental protocols for fashion innovation." />
-              </h3>
-              <p className="text-gray-600 text-body-large">
-                <CipherText text="The LAB serves as our testing ground for new concepts, materials, and methodologies. Each experiment pushes the boundaries of what fashion can be, exploring the intersection of technology, art, and human experience." />
-              </p>
-            </div>
-            <div className="md:col-span-4">
-              <p className="text-label mb-6"><CipherText text="ACTIVE RESEARCH" /></p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm"><CipherText text="Material synthesis" /></span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm"><CipherText text="Pattern algorithms" /></span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm"><CipherText text="Biomimetic structures" /></span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-black rounded-full"></span>
-                  <span className="text-sm"><CipherText text="Digital fabrication" /></span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-black/5 py-12">
-        <div className="max-w-7xl mx-auto px-8 md:px-20">
-          <div className="flex justify-between items-center">
-            <p className="text-sm"><CipherText text="© 2025 CINCH LAB" /></p>
-            <p className="text-label"><CipherText text="LAB—001" /></p>
-          </div>
-        </div>
-      </footer>
+      {/* Back to home link */}
+      <motion.div
+        className="fixed bottom-8 left-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <Link
+          href="/"
+          className="text-[11px] tracking-[0.2em] text-black/40 uppercase hover:text-black/70 transition-colors"
+        >
+          ← Home
+        </Link>
+      </motion.div>
     </div>
   )
 }
