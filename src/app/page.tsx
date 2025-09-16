@@ -114,7 +114,7 @@ export default function HomePage() {
       </section>
 
       {/* Navigation Cards */}
-      <section className="py-12 px-8 md:px-20">
+      <section className="py-8 px-8 md:px-20">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* Statement Section */}
-      <section className="py-12 border-t border-black/5">
+      <section className="py-8 border-t border-black/5">
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <motion.div
             className="grid grid-cols-1 md:grid-cols-12 gap-8"
@@ -297,7 +297,7 @@ export default function HomePage() {
       </section>
 
       {/* Visual Gallery */}
-      <section className="py-12">
+      <section className="py-8">
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <motion.p
             className="text-label mb-12"
@@ -357,7 +357,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 py-8">
+      <footer className="border-t border-black/5 py-6">
         <div className="max-w-7xl mx-auto px-8 md:px-20">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
             <div>
