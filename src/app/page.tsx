@@ -20,25 +20,7 @@ const InteractiveCanvas = dynamic(() => import('@/components/InteractiveCanvas')
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Gallery images data
-const galleryImages = [
-  { id: '1', src: '/gallery/img1.png', alt: 'Abandoned Subway', title: 'VOID TUNNEL', category: 'experimental' },
-  { id: '2', src: '/gallery/img2.png', alt: 'Abstract Composition', title: 'GRAIN STUDY', category: 'abstract' },
-  { id: '3', src: '/gallery/img3.png', alt: 'Arctic Melt', title: 'ICE FORMATION', category: 'nature' },
-  { id: '4', src: '/gallery/img4.png', alt: 'Airport Terminal', title: 'LIMINAL SPACE', category: 'architecture' },
-  { id: '5', src: '/gallery/img5.png', alt: 'Body Horror', title: 'METAMORPHOSIS', category: 'surreal' },
-  { id: '6', src: '/gallery/img6.png', alt: 'Botanical Study', title: 'ORGANIC RENDER', category: 'nature' },
-]
-
-// Asymmetric grid items
-const gridItems = [
-  { id: '1', image: '/gallery/img1.png', title: 'VOID', size: 'large' as const },
-  { id: '2', image: '/gallery/img2.png', title: 'GRAIN', size: 'medium' as const },
-  { id: '3', image: '/gallery/img3.png', title: 'ICE', size: 'tall' as const },
-  { id: '4', image: '/gallery/img4.png', title: 'LIMINAL', size: 'wide' as const },
-  { id: '5', image: '/gallery/img5.png', title: 'MORPH', size: 'medium' as const },
-  { id: '6', image: '/gallery/img6.png', title: 'ORGANIC', size: 'small' as const },
-]
+import { galleryImages, gridItems } from '@/data/images'
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
