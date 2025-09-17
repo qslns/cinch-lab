@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import CipherText from '@/components/CipherText'
 import AsymmetricGrid from '@/components/AsymmetricGrid'
 import ImageGallery from '@/components/ImageGallery'
-import FracturedGallery from '@/components/FracturedGallery'
+import OptimizedFracturedGallery from '@/components/OptimizedFracturedGallery'
 import CrackedBackground from '@/components/CrackedBackground'
 import SideImages from '@/components/SideImages'
 import { useMagneticCursor, useParallax, use3DTilt, useStaggerReveal } from '@/hooks/useGsap'
@@ -504,7 +504,7 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <FracturedGallery />
+        <OptimizedFracturedGallery />
       </section>
 
       {/* Statement Section with Parallax */}

@@ -140,15 +140,18 @@ export default function CipherText({
 
   // Handle mouse leave
   const handleMouseLeave = useCallback(() => {
-    // If not persisting, reset after animation completes
+    // Only reset if not persisting and after a longer delay to prevent accidental resets
     if (!persistOnHover && isRevealed && !isAnimating) {
-      // Small delay to prevent flicker
+      // Longer delay to prevent flicker and ensure user intended to leave
       setTimeout(() => {
-        setIsRevealed(false)
-        setIsAnimating(false)
-        setHasInteracted(false)
-        setDisplayText(fixedCipherText)
-      }, 200)
+        // Double check mouse is still not over the element
+        if (!elementRef.current?.matches(':hover')) {
+          setIsRevealed(false)
+          setIsAnimating(false)
+          setHasInteracted(false)
+          setDisplayText(fixedCipherText)
+        }
+      }, 500)
     }
   }, [persistOnHover, isRevealed, isAnimating, fixedCipherText])
 
@@ -195,16 +198,12 @@ export default function CipherText({
         cursor: 'pointer',
         display: 'inline-block',
         whiteSpace: 'pre-wrap',
-        position: 'relative',
-        padding: '2px 4px',
-        margin: '-2px -4px',
         touchAction: 'auto',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
         transition: 'opacity 0.15s ease',
         minHeight: '1em',
-        willChange: 'auto',
-        contain: 'layout style paint'
+        isolation: 'isolate'
       }}
       data-cipher-text="true"
       data-revealed={isRevealed}

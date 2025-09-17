@@ -131,8 +131,8 @@ export default function CrackedBackground() {
 
         newCracks.push({
           path,
-          opacity: 0.15 + seededRandom(seed++) * 0.1,
-          strokeWidth: 0.8 + seededRandom(seed++) * 0.7,
+          opacity: 0.25 + seededRandom(seed++) * 0.15,
+          strokeWidth: 1.5 + seededRandom(seed++) * 1.0,
           type: 'major' as const
         });
       }
@@ -148,7 +148,7 @@ export default function CrackedBackground() {
 
         newCracks.push({
           path,
-          opacity: 0.08 + seededRandom(seed++) * 0.05,
+          opacity: 0.15 + seededRandom(seed++) * 0.1,
           strokeWidth: 0.3 + seededRandom(seed++) * 0.3,
           type: 'minor' as const
         });
@@ -165,7 +165,7 @@ export default function CrackedBackground() {
 
         newCracks.push({
           path,
-          opacity: 0.03 + seededRandom(seed++) * 0.03,
+          opacity: 0.08 + seededRandom(seed++) * 0.05,
           strokeWidth: 0.1 + seededRandom(seed++) * 0.2,
           type: 'micro' as const
         });
@@ -178,7 +178,7 @@ export default function CrackedBackground() {
   }, [pathname]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0">
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 100 100"
@@ -237,7 +237,7 @@ export default function CrackedBackground() {
 
       {/* Grain texture */}
       <div
-        className="absolute inset-0 opacity-[0.015]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' /%3E%3C/svg%3E")`,
           mixBlendMode: 'multiply'

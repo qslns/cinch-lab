@@ -165,10 +165,10 @@ export default function AsymmetricGrid({ items, className = '', animated = true 
           </div>
 
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-90 transition-opacity duration-500 flex items-center justify-center">
+          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-90 transition-opacity duration-500 flex items-center justify-center pointer-events-none group-hover:pointer-events-auto">
             <div className="text-center">
               <p className="text-xs tracking-widest mb-2">
-                <CipherText text="EXPLORE" />
+                <CipherText text="EXPLORE" persistOnHover={true} autoReveal={true} delay={index * 30} />
               </p>
               <div className="w-8 h-[1px] bg-black mx-auto" />
             </div>
