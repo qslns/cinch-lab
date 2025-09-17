@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import Navigation from '@/components/Navigation'
+import LenisProvider from '@/hooks/useLenis'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/modern.css'
@@ -26,12 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SkipToMain />
-        <KeyboardNavigationIndicator />
-        <Navigation />
-        <main id="main-content" className="pt-14">
-          {children}
-        </main>
+        <LenisProvider>
+          <SkipToMain />
+          <KeyboardNavigationIndicator />
+          <Navigation />
+          <main id="main-content" className="pt-14">
+            {children}
+          </main>
+        </LenisProvider>
       </body>
     </html>
   )

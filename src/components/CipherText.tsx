@@ -176,12 +176,15 @@ export default function CipherText({
 
   // Handle empty text or invalid text
   if (!text || typeof text !== 'string') {
-    return <Component className={className}>{text || ''}</Component>
+    const EmptyComponent = Component as any
+    return <EmptyComponent className={className}>{text || ''}</EmptyComponent>
   }
 
+  const DynamicComponent = Component as any
+
   return (
-    <Component
-      ref={elementRef as any}
+    <DynamicComponent
+      ref={elementRef}
       className={className}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -207,6 +210,6 @@ export default function CipherText({
       data-revealed={isRevealed}
     >
       {displayText || fixedCipherText}
-    </Component>
+    </DynamicComponent>
   )
 }
