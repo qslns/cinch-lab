@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import CipherText from '@/components/CipherText'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 
 const experiments = [
   {
@@ -212,6 +214,12 @@ export default function LabPage() {
 
   return (
     <div className="min-h-screen bg-white relative">
+      {/* Cracked Background */}
+      <CrackedBackground />
+
+      {/* Side Images */}
+      <SideImages page="lab" />
+
       <div className="grid-overlay" />
 
       {/* Decorative Elements */}

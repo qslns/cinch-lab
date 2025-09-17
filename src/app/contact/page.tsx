@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import CipherText from '@/components/CipherText'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 
 // Contact information
 const contactInfo = [
@@ -76,6 +78,8 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <CrackedBackground />
+      <SideImages page="contact" />
       {/* Subtle grid overlay */}
       <div className="grid-overlay" />
 

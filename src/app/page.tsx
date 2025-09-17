@@ -8,6 +8,9 @@ import dynamic from 'next/dynamic'
 import CipherText from '@/components/CipherText'
 import AsymmetricGrid from '@/components/AsymmetricGrid'
 import ImageGallery from '@/components/ImageGallery'
+import FracturedGallery from '@/components/FracturedGallery'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 import { useMagneticCursor, useParallax, use3DTilt, useStaggerReveal } from '@/hooks/useGsap'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -172,6 +175,12 @@ export default function HomePage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-white relative overflow-hidden">
+      {/* Cracked Background Effect */}
+      <CrackedBackground />
+
+      {/* Side Images */}
+      <SideImages page="home" />
+
       {/* Advanced background layers */}
       <div className="fixed inset-0 pointer-events-none">
         <motion.div
@@ -477,9 +486,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Image Gallery Section */}
-      <section id="gallery" className="py-24 bg-gray-50">
-        <div className="max-w-8xl mx-auto px-8 md:px-20">
+      {/* Fractured Gallery Section */}
+      <section id="gallery" className="py-24 relative">
+        <div className="max-w-full px-8 md:px-20">
           <motion.div
             className="mb-16"
             initial={{ opacity: 0, y: 30 }}
@@ -487,15 +496,15 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <h2 className="text-[clamp(32px,4vw,64px)] font-thin tracking-tight mb-4">
-              <CipherText text="Visual Archives" />
+              <CipherText text="Fractured Archives" />
             </h2>
             <p className="text-sm text-gray-600">
-              <CipherText text="Curated experiments in fashion and form" />
+              <CipherText text="Experimental visual fragments" />
             </p>
           </motion.div>
-
-          <ImageGallery images={galleryImages} layout="masonry" />
         </div>
+
+        <FracturedGallery />
       </section>
 
       {/* Statement Section with Parallax */}

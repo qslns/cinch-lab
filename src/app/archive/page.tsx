@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import CipherText from '@/components/CipherText'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 
 // Complete archive data
 const archiveData = [
@@ -39,6 +41,8 @@ export default function ArchivePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <CrackedBackground />
+      <SideImages page="archive" />
       {/* Header */}
       <section className="pt-8 pb-6 px-8 md:px-20 border-b border-black/5">
         <motion.div

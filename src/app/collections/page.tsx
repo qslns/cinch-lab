@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import CipherText from '@/components/CipherText'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 
 const collections = [
   {
@@ -83,6 +85,8 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <CrackedBackground />
+      <SideImages page="collections" />
       {/* Header */}
       <section className="pt-8 pb-6 px-8 md:px-20 border-b border-black/5">
         <motion.div

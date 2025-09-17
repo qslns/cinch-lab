@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import CipherText from '@/components/CipherText'
+import CrackedBackground from '@/components/CrackedBackground'
+import SideImages from '@/components/SideImages'
 
 // Timeline
 const timeline = [
@@ -70,6 +72,8 @@ export default function AboutPage() {
       initial={{ opacity: 1 }}
       style={{ opacity, scale }}
     >
+      <CrackedBackground />
+      <SideImages page="about" />
       {/* Subtle grid overlay */}
       <div className="grid-overlay" />
 

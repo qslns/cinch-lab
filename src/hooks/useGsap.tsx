@@ -18,8 +18,8 @@ if (typeof window !== 'undefined') {
   CustomEase.create("cinchBounce", "M0,0 C0.68,-0.55 0.27,1.55 1,1")
 }
 
-// Magnetic cursor effect
-export function useMagneticCursor(strength = 0.3) {
+// Magnetic cursor effect - reduced 3D effect for better character hover visibility
+export function useMagneticCursor(strength = 0.15) {
   const elementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -39,14 +39,14 @@ export function useMagneticCursor(strength = 0.3) {
       const distanceY = e.clientY - centerY
       const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
 
-      const maxDistance = 200
+      const maxDistance = 150
 
       if (distance < maxDistance) {
         const power = (maxDistance - distance) / maxDistance
         gsap.to(element, {
-          x: distanceX * strength * power,
-          y: distanceY * strength * power,
-          duration: 0.3,
+          x: distanceX * strength * power * 0.5,
+          y: distanceY * strength * power * 0.5,
+          duration: 0.2,
           ease: "power2.out"
         })
       }
@@ -57,8 +57,8 @@ export function useMagneticCursor(strength = 0.3) {
       gsap.to(element, {
         x: 0,
         y: 0,
-        duration: 0.5,
-        ease: "elastic.out(1, 0.3)",
+        duration: 0.3,
+        ease: "power2.out",
         onComplete: () => { animating = false }
       })
     }
@@ -143,8 +143,8 @@ export function useTextScramble(text: string, duration = 1) {
   return elementRef
 }
 
-// 3D tilt effect
-export function use3DTilt(perspective = 1000) {
+// 3D tilt effect - reduced for better readability
+export function use3DTilt(perspective = 1500) {
   const elementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -159,13 +159,13 @@ export function use3DTilt(perspective = 1000) {
       const x = (e.clientX - rect.left) / rect.width
       const y = (e.clientY - rect.top) / rect.height
 
-      const tiltX = (y - 0.5) * 20
-      const tiltY = (x - 0.5) * -20
+      const tiltX = (y - 0.5) * 8
+      const tiltY = (x - 0.5) * -8
 
       gsap.to(element, {
         rotationX: tiltX,
         rotationY: tiltY,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out",
         transformPerspective: perspective
       })
@@ -175,7 +175,7 @@ export function use3DTilt(perspective = 1000) {
       gsap.to(element, {
         rotationX: 0,
         rotationY: 0,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.out"
       })
     }
