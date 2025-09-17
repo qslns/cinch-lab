@@ -10,95 +10,84 @@ interface SideImagesProps {
 
 export default function SideImages({ page }: SideImagesProps) {
   const [sideImages, setSideImages] = useState<{
-    left: string[];
-    right: string[];
-  }>({ left: [], right: [] });
+    images: Array<{
+      src: string;
+      position: { x: number; y: number };
+      side: 'left' | 'right';
+      size: 'xs' | 'sm';
+      rotation: number;
+      cracks: number;
+    }>;
+  }>({ images: [] });
 
   useEffect(() => {
     const pageImageMap: { [key: string]: { start: number; count: number } } = {
-      home: { start: 400, count: 8 },
-      lab: { start: 408, count: 6 },
-      collections: { start: 414, count: 6 },
-      archive: { start: 420, count: 6 },
-      about: { start: 426, count: 6 },
-      contact: { start: 432, count: 6 },
+      home: { start: 400, count: 12 },
+      lab: { start: 412, count: 10 },
+      collections: { start: 422, count: 10 },
+      archive: { start: 432, count: 10 },
+      about: { start: 442, count: 10 },
+      contact: { start: 452, count: 10 },
     };
 
-    const config = pageImageMap[page] || { start: 400, count: 6 };
+    const config = pageImageMap[page] || { start: 400, count: 10 };
     const selectedImages = imagesData.slice(config.start, config.start + config.count);
 
-    const shuffled = [...selectedImages].sort(() => Math.random() - 0.5);
-    const midpoint = Math.ceil(shuffled.length / 2);
+    const processedImages = selectedImages.map((src, index) => {
+      const isLeft = Math.random() > 0.5;
+      const sizes: ('xs' | 'sm')[] = ['xs', 'xs', 'sm']; // More xs than sm
 
-    setSideImages({
-      left: shuffled.slice(0, midpoint) as string[],
-      right: shuffled.slice(midpoint) as string[],
+      // Different position ranges for each page
+      const pageOffsets: { [key: string]: number } = {
+        home: 0,
+        lab: 100,
+        collections: 200,
+        archive: 50,
+        about: 150,
+        contact: 250,
+      };
+
+      const baseOffset = pageOffsets[page] || 0;
+
+      return {
+        src: src as string,
+        position: {
+          x: isLeft
+            ? 20 + Math.random() * 100
+            : window.innerWidth - 120 - Math.random() * 100,
+          y: 100 + baseOffset + index * 150 + (Math.random() - 0.5) * 100,
+        },
+        side: isLeft ? 'left' : 'right' as 'left' | 'right',
+        size: sizes[Math.floor(Math.random() * sizes.length)],
+        rotation: (Math.random() - 0.5) * 45,
+        cracks: Math.floor(Math.random() * 4) + 2,
+      };
     });
+
+    setSideImages({ images: processedImages });
   }, [page]);
 
-  const sizes: ('xs' | 'sm' | 'md')[] = ['xs', 'sm', 'md'];
-
   return (
-    <>
-      <div className="fixed left-0 top-0 h-full pointer-events-none z-10">
-        <div className="relative h-full">
-          {sideImages.left.map((src, index) => {
-            const size = sizes[Math.floor(Math.random() * sizes.length)];
-            const yPosition = 150 + index * 180 + (Math.random() - 0.5) * 60;
-            const xPosition = -20 + (Math.random() * 40);
-
-            return (
-              <div
-                key={src}
-                className="absolute pointer-events-auto"
-                style={{
-                  top: `${yPosition}px`,
-                  left: `${xPosition}px`,
-                }}
-              >
-                <FracturedFrame
-                  src={src}
-                  size={size}
-                  rotation={(Math.random() - 0.5) * 30}
-                  cracks={Math.floor(Math.random() * 3) + 2}
-                  delay={index * 0.1}
-                  className="opacity-90 hover:opacity-100 transition-opacity"
-                />
-              </div>
-            );
-          })}
+    <div className="absolute inset-0 pointer-events-none z-10">
+      {sideImages.images.map((img, index) => (
+        <div
+          key={`${img.src}-${index}`}
+          className="absolute pointer-events-auto"
+          style={{
+            left: `${img.position.x}px`,
+            top: `${img.position.y}px`,
+          }}
+        >
+          <FracturedFrame
+            src={img.src}
+            size={img.size}
+            rotation={img.rotation}
+            cracks={img.cracks}
+            delay={index * 0.05}
+            className="opacity-80 hover:opacity-100 transition-opacity"
+          />
         </div>
-      </div>
-
-      <div className="fixed right-0 top-0 h-full pointer-events-none z-10">
-        <div className="relative h-full">
-          {sideImages.right.map((src, index) => {
-            const size = sizes[Math.floor(Math.random() * sizes.length)];
-            const yPosition = 200 + index * 190 + (Math.random() - 0.5) * 50;
-            const xPosition = -60 + (Math.random() * 40);
-
-            return (
-              <div
-                key={src}
-                className="absolute pointer-events-auto"
-                style={{
-                  top: `${yPosition}px`,
-                  right: `${xPosition}px`,
-                }}
-              >
-                <FracturedFrame
-                  src={src}
-                  size={size}
-                  rotation={(Math.random() - 0.5) * 30}
-                  cracks={Math.floor(Math.random() * 3) + 2}
-                  delay={index * 0.1 + 0.5}
-                  className="opacity-90 hover:opacity-100 transition-opacity"
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
 }

@@ -16,11 +16,11 @@ interface FracturedFrameProps {
 }
 
 const sizeMap = {
-  xs: { width: 80, height: 100 },
-  sm: { width: 120, height: 150 },
-  md: { width: 180, height: 220 },
-  lg: { width: 240, height: 300 },
-  xl: { width: 320, height: 400 },
+  xs: { width: 60, height: 75 },
+  sm: { width: 80, height: 100 },
+  md: { width: 120, height: 150 },
+  lg: { width: 180, height: 220 },
+  xl: { width: 240, height: 300 },
 };
 
 export default function FracturedFrame({
@@ -69,7 +69,7 @@ export default function FracturedFrame({
           top: position.y,
         }),
       }}
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{
         opacity: 1,
         scale: 1,
@@ -77,8 +77,8 @@ export default function FracturedFrame({
       }}
       transition={{
         delay,
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96],
+        duration: 0.5,
+        ease: "easeOut",
       }}
       whileHover={{
         scale: 1.05,
@@ -107,8 +107,10 @@ export default function FracturedFrame({
           sizes={`${dimensions.width}px`}
           className="object-cover"
           onLoad={() => setIsLoaded(true)}
-          quality={85}
+          quality={75}
           loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJalmRldltLj1DaC4MZx/3wABk="
         />
 
         {isLoaded && (

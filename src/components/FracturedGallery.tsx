@@ -14,7 +14,7 @@ interface GalleryImage {
 
 export default function FracturedGallery() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
-  const [visibleCount, setVisibleCount] = useState(50);
+  const [visibleCount, setVisibleCount] = useState(20); // Start with fewer images
 
   useEffect(() => {
     const sizes: ('xs' | 'sm' | 'md' | 'lg' | 'xl')[] = ['xs', 'sm', 'md', 'lg', 'xl'];
@@ -24,7 +24,9 @@ export default function FracturedGallery() {
     const rowHeight = 250;
     const padding = 20;
 
-    imagesData.forEach((src, index) => {
+    // Use only first 300 images for better performance
+    const limitedImages = imagesData.slice(0, 300);
+    limitedImages.forEach((src, index) => {
       const size = sizes[Math.floor(Math.random() * sizes.length)];
       const column = index % columns;
       const row = Math.floor(index / columns);
@@ -56,8 +58,8 @@ export default function FracturedGallery() {
       const scrollPercentage =
         (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
 
-      if (scrollPercentage > 0.8 && visibleCount < galleryImages.length) {
-        setVisibleCount(prev => Math.min(prev + 30, galleryImages.length));
+      if (scrollPercentage > 0.7 && visibleCount < galleryImages.length) {
+        setVisibleCount(prev => Math.min(prev + 15, galleryImages.length));
       }
     };
 
@@ -116,7 +118,7 @@ export default function FracturedGallery() {
             rotation={img.rotation}
             cracks={img.cracks}
             position={img.position}
-            delay={index * 0.02}
+            delay={Math.min(index * 0.01, 1)} // Cap delay at 1 second
           />
         ))}
       </div>
