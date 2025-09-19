@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import Navigation from '@/components/Navigation'
 import LenisProvider from '@/hooks/useLenis'
+import { CipherProvider } from '@/contexts/CipherContext'
+import CipherToggle from '@/components/CipherToggle'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/modern.css'
@@ -27,14 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LenisProvider>
-          <SkipToMain />
-          <KeyboardNavigationIndicator />
-          <Navigation />
-          <main id="main-content" className="pt-14">
-            {children}
-          </main>
-        </LenisProvider>
+        <CipherProvider>
+          <LenisProvider>
+            <SkipToMain />
+            <KeyboardNavigationIndicator />
+            <Navigation />
+            <CipherToggle />
+            <main id="main-content" className="pt-14">
+              {children}
+            </main>
+          </LenisProvider>
+        </CipherProvider>
       </body>
     </html>
   )
