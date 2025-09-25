@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import CipherText from '@/components/CipherText'
 
 // Brutalist Collections Data
 const collections = [
@@ -99,9 +100,9 @@ export default function BrutalistCollectionsPage() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className="text-[clamp(60px,8vw,140px)] font-black brutalist-heading leading-[0.7]">
-                COLL<br />
-                <span className="text-safety-orange">ECT</span><br />
-                IONS
+                <CipherText text="COLL" /><br />
+                <span className="text-safety-orange"><CipherText text="ECT" /></span><br />
+                <CipherText text="IONS" />
               </h1>
             </div>
             <div className="text-right">

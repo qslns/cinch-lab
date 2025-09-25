@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import gsap from 'gsap'
+import CipherText from '@/components/CipherText'
 
 // Communication Channels
 const channels = [
@@ -228,8 +229,8 @@ export default function BrutalistContactPage() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8]">
-                COMM<br />
-                <span className="text-safety-orange">LINK</span>
+                <CipherText text="COMM" /><br />
+                <span className="text-safety-orange"><CipherText text="LINK" /></span>
               </h1>
               <p className="text-xs font-mono mt-4 opacity-60">
                 SECURE_TRANSMISSION_PROTOCOLS_ENGAGED

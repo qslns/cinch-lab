@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import CipherText from '@/components/CipherText'
 
 // Archive Database Structure
 const archiveDatabase = [
@@ -171,9 +172,9 @@ export default function BrutalistArchivePage() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className="text-[clamp(50px,7vw,100px)] font-black brutalist-heading leading-[0.8]">
-                ARCHIVE
+                <CipherText text="ARCHIVE" />
                 <br />
-                <span className="text-safety-orange">DATABASE</span>
+                <span className="text-safety-orange"><CipherText text="DATABASE" /></span>
               </h1>
               <p className="text-xs font-mono mt-4 opacity-60">
                 COMPLETE_EXPERIMENTAL_RECORDS // {archiveDatabase.length} ENTRIES

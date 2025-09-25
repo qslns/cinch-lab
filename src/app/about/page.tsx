@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import CipherText from '@/components/CipherText'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -256,9 +257,9 @@ export default function BrutalistAboutPage() {
         <div className="max-w-7xl mx-auto">
           <motion.div style={{ y: textY }}>
             <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8]">
-              ABOUT
+              <CipherText text="ABOUT" />
               <br />
-              <span className="text-safety-orange">THE LAB</span>
+              <span className="text-safety-orange"><CipherText text="THE LAB" /></span>
             </h1>
             <p className="text-xs font-mono mt-4 opacity-60">
               CINCH_LABORATORY // EXPERIMENTAL_FASHION_RESEARCH_FACILITY

@@ -7,6 +7,7 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import CipherText from '@/components/CipherText'
 
 // Dynamic imports
 const InteractiveCanvas = dynamic(() => import('@/components/InteractiveCanvas'), {
@@ -142,12 +143,12 @@ export default function BrutalistHomePage() {
           className="p-12 flex flex-col justify-center bg-white relative overflow-hidden"
           style={{ scale: scaleParallax }}
         >
-          <div className={glitchMode ? 'glitch-text' : ''} data-text="CINCH LAB">
+          <div>
             <h1 className="brutal-text text-[clamp(60px,10vw,180px)] font-black leading-[0.8] tracking-tighter">
-              CINCH
+              <CipherText text="CINCH" />
             </h1>
             <h1 className="brutal-text text-[clamp(60px,10vw,180px)] font-black leading-[0.8] tracking-tighter text-safety-orange">
-              LAB
+              <CipherText text="LAB" />
             </h1>
           </div>
           <div className="mt-8">
@@ -227,7 +228,7 @@ export default function BrutalistHomePage() {
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-[clamp(40px,6vw,80px)] font-black brutalist-heading">
-                  LABORATORY
+                  <CipherText text="LABORATORY" />
                 </h2>
                 <p className="text-xs font-mono mt-2 opacity-60">
                   EXPERIMENTAL_FASHION_RESEARCH_FACILITY
@@ -316,7 +317,7 @@ export default function BrutalistHomePage() {
         <div className="px-8">
           <div className="mb-16">
             <h2 className="text-[clamp(40px,6vw,80px)] font-black text-white brutalist-heading">
-              COLLECTIONS
+              <CipherText text="COLLECTIONS" />
             </h2>
             <div className="flex items-center gap-4 mt-4">
               <div className="h-1 bg-safety-orange flex-grow" />
@@ -349,11 +350,11 @@ export default function BrutalistHomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="lab-border p-12 bg-paper-white">
             <h2 className="text-[clamp(40px,6vw,100px)] font-black brutalist-heading leading-[0.8]">
-              FASHION
+              <CipherText text="FASHION" />
               <br />
-              <span className="text-safety-orange">EXCEEDS</span>
+              <span className="text-safety-orange"><CipherText text="EXCEEDS" /></span>
               <br />
-              LIMITS
+              <CipherText text="LIMITS" />
             </h2>
             <div className="mt-8 border-t-3 border-carbon-black pt-8">
               <p className="text-sm font-mono leading-relaxed">

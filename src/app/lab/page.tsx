@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import gsap from 'gsap'
+import CipherText from '@/components/CipherText'
 
 // Dynamic imports for 3D
 const InteractiveCanvas = dynamic(() => import('@/components/InteractiveCanvas'), {
@@ -244,8 +245,8 @@ export default function BrutalistLabPage() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8]">
-                THE<br />
-                <span className="text-safety-orange">LAB</span>
+                <CipherText text="THE" /><br />
+                <span className="text-safety-orange"><CipherText text="LAB" /></span>
               </h1>
               <p className="text-xs font-mono mt-4 opacity-60">
                 EXPERIMENTAL_FASHION_RESEARCH_FACILITY

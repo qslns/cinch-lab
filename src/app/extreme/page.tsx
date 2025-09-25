@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import gsap from 'gsap'
+import CipherText from '@/components/CipherText'
 
 // Type definitions
 interface ExtremeTest {
@@ -262,8 +263,8 @@ export default function BrutalistExtremePage() {
           <div className="flex items-end justify-between">
             <div>
               <h1 className={`text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8] text-white ${breakingPoint ? 'glitch-text' : ''}`}>
-                EXTREME<br />
-                <span className="text-glitch-red">LIMITS</span>
+                <CipherText text="EXTREME" /><br />
+                <span className="text-glitch-red"><CipherText text="LIMITS" /></span>
               </h1>
               <p className="text-xs font-mono mt-4 opacity-60 text-white">
                 MATERIAL_STRESS_TESTING_FACILITY
