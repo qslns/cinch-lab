@@ -1,280 +1,476 @@
 'use client'
 
-import { useEffect, useState, useRef, useCallback } from 'react'
-import Image from 'next/image'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
+import gsap from 'gsap'
 
-// Custom hook for performance monitoring
-const usePerformance = () => {
-  const [fps, setFps] = useState(60)
-  const frameCount = useRef(0)
-  const lastTime = useRef(performance.now())
+// Waveform Types
+const waveforms = [
+  { id: 'SINE', frequency: 440, amplitude: 1, phase: 0 },
+  { id: 'SQUARE', frequency: 220, amplitude: 1, phase: 0 },
+  { id: 'SAWTOOTH', frequency: 880, amplitude: 1, phase: 0 },
+  { id: 'TRIANGLE', frequency: 110, amplitude: 1, phase: 0 },
+  { id: 'NOISE', frequency: 0, amplitude: 1, phase: 0 }
+]
 
+// Distortion Algorithms
+const distortionModes = [
+  {
+    id: 'DST_001',
+    name: 'HARMONIC_SATURATION',
+    formula: 'f(x) = tanh(g·x)',
+    intensity: 0,
+    harmonics: 8,
+    status: 'STABLE'
+  },
+  {
+    id: 'DST_002',
+    name: 'BITCRUSHER',
+    formula: 'f(x) = floor(x·2^b)/2^b',
+    intensity: 0,
+    bitDepth: 16,
+    status: 'PROCESSING'
+  },
+  {
+    id: 'DST_003',
+    name: 'WAVESHAPER',
+    formula: 'f(x) = x/|x|·(1-e^(-|x|))',
+    intensity: 0,
+    curve: 'EXPONENTIAL',
+    status: 'EXPERIMENTAL'
+  },
+  {
+    id: 'DST_004',
+    name: 'FREQUENCY_SHIFT',
+    formula: 'f(x) = x·e^(2πi·Δf·t)',
+    intensity: 0,
+    shift: 0,
+    status: 'UNSTABLE'
+  }
+]
+
+export default function BrutalistDistortionPage() {
+  const [activeWaveform, setActiveWaveform] = useState('SINE')
+  const [distortionLevel, setDistortionLevel] = useState(0)
+  const [selectedMode, setSelectedMode] = useState<string | null>(null)
+  const [algorithms, setAlgorithms] = useState(distortionModes)
+  const [signalStrength, setSignalStrength] = useState(100)
+  const [noiseLevel, setNoiseLevel] = useState(0)
+  const [systemAlert, setSystemAlert] = useState<string | null>(null)
+  const [oscilloscopeData, setOscilloscopeData] = useState<number[]>([])
+  const [spectrumData, setSpectrumData] = useState<number[]>([])
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const oscillatorRef = useRef<OscillatorNode | null>(null)
+
+  // Generate oscilloscope data
   useEffect(() => {
-    let animationId: number
+    const generateWaveform = () => {
+      const samples = 256
+      const data = new Array(samples)
+      const waveform = waveforms.find(w => w.id === activeWaveform)
+      if (!waveform) return
 
-    const measureFPS = () => {
-      frameCount.current++
-      const currentTime = performance.now()
+      for (let i = 0; i < samples; i++) {
+        const t = i / samples
+        let value = 0
 
-      if (currentTime >= lastTime.current + 1000) {
-        setFps(Math.round((frameCount.current * 1000) / (currentTime - lastTime.current)))
-        frameCount.current = 0
-        lastTime.current = currentTime
+        switch (activeWaveform) {
+          case 'SINE':
+            value = Math.sin(2 * Math.PI * t * 4)
+            break
+          case 'SQUARE':
+            value = Math.sin(2 * Math.PI * t * 4) > 0 ? 1 : -1
+            break
+          case 'SAWTOOTH':
+            value = 2 * (t * 4 - Math.floor(t * 4 + 0.5))
+            break
+          case 'TRIANGLE':
+            value = 2 * Math.abs(2 * (t * 4 - Math.floor(t * 4 + 0.5))) - 1
+            break
+          case 'NOISE':
+            value = Math.random() * 2 - 1
+            break
+        }
+
+        // Apply distortion
+        if (distortionLevel > 0) {
+          const gain = 1 + distortionLevel / 10
+          value = Math.tanh(value * gain)
+
+          // Add harmonics
+          if (distortionLevel > 50) {
+            value += Math.sin(4 * Math.PI * t * 4) * 0.2 * (distortionLevel / 100)
+            value += Math.sin(8 * Math.PI * t * 4) * 0.1 * (distortionLevel / 100)
+          }
+        }
+
+        // Add noise
+        if (noiseLevel > 0) {
+          value += (Math.random() - 0.5) * noiseLevel / 100
+        }
+
+        data[i] = value * (signalStrength / 100)
       }
 
-      animationId = requestAnimationFrame(measureFPS)
+      setOscilloscopeData(data)
     }
 
-    animationId = requestAnimationFrame(measureFPS)
-    return () => cancelAnimationFrame(animationId)
-  }, [])
+    const interval = setInterval(generateWaveform, 50)
+    return () => clearInterval(interval)
+  }, [activeWaveform, distortionLevel, signalStrength, noiseLevel])
 
-  return fps
-}
+  // Generate spectrum data
+  useEffect(() => {
+    const generateSpectrum = () => {
+      const bins = 32
+      const data = new Array(bins)
 
-// Optimized Image Section with lazy loading
-const DistortedImageSection = ({ src, index }: { src: string; index: number }) => {
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: false,
-  })
+      for (let i = 0; i < bins; i++) {
+        let magnitude = 0
 
-  const [isLoaded, setIsLoaded] = useState(false)
+        // Primary frequency
+        if (i === Math.floor(bins / 8)) {
+          magnitude = 1 * (signalStrength / 100)
+        }
 
-  return (
-    <div
-      ref={ref}
-      className="relative w-full h-screen overflow-hidden"
-      style={{
-        transform: inView ? 'scale(1)' : 'scale(0.8)',
-        opacity: inView ? 1 : 0,
-        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
-    >
-      {inView && (
-        <div className="absolute inset-0">
-          <Image
-            src={`/웹 꾸미기 사진/${src}`}
-            alt=""
-            fill
-            className="object-cover"
-            quality={60}
-            onLoad={() => setIsLoaded(true)}
-            style={{
-              filter: `
-                contrast(${1.5 + Math.sin(index) * 0.5})
-                saturate(${2 + Math.cos(index) * 0.5})
-                hue-rotate(${index * 72}deg)
-              `,
-              transform: isLoaded ? 'scale(1)' : 'scale(1.1)',
-              opacity: isLoaded ? 1 : 0,
-              transition: 'all 0.5s ease-out',
-            }}
-          />
+        // Harmonics from distortion
+        if (distortionLevel > 0) {
+          const harmonicIndex = Math.floor(bins / 4) * (i + 1)
+          if (harmonicIndex < bins) {
+            magnitude += (distortionLevel / 100) * Math.exp(-i / 10)
+          }
+        }
 
-          {/* Performance-optimized overlay */}
-          <div
-            className="absolute inset-0 mix-blend-multiply"
-            style={{
-              background: `linear-gradient(${index * 45}deg,
-                rgba(255,0,255,0.2) 0%,
-                transparent 50%,
-                rgba(0,255,255,0.2) 100%)`,
-              willChange: 'auto',
-            }}
-          />
-        </div>
-      )}
+        // Noise floor
+        magnitude += Math.random() * 0.1 * (noiseLevel / 100)
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h3 className="text-6xl md:text-9xl font-black text-white mix-blend-difference">
-          DISTORT {index}
-        </h3>
-      </div>
-    </div>
-  )
-}
+        data[i] = Math.min(1, magnitude)
+      }
 
-export default function DistortionPage() {
-  const fps = usePerformance()
-  const [qualityMode, setQualityMode] = useState<'extreme' | 'balanced' | 'performance'>('balanced')
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const [touchActive, setTouchActive] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+      setSpectrumData(data)
+    }
 
-  // Throttled scroll handler for performance
-  const handleScroll = useCallback(() => {
-    requestAnimationFrame(() => {
-      const scrolled = window.scrollY
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      setScrollProgress((scrolled / maxScroll) * 100)
+    const interval = setInterval(generateSpectrum, 100)
+    return () => clearInterval(interval)
+  }, [distortionLevel, signalStrength, noiseLevel])
+
+  // Draw oscilloscope
+  useEffect(() => {
+    if (!canvasRef.current) return
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+
+    const draw = () => {
+      // Clear canvas
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Draw grid
+      ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)'
+      ctx.lineWidth = 1
+      for (let i = 0; i <= 10; i++) {
+        ctx.beginPath()
+        ctx.moveTo(0, (canvas.height / 10) * i)
+        ctx.lineTo(canvas.width, (canvas.height / 10) * i)
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.moveTo((canvas.width / 10) * i, 0)
+        ctx.lineTo((canvas.width / 10) * i, canvas.height)
+        ctx.stroke()
+      }
+
+      // Draw waveform
+      if (oscilloscopeData.length > 0) {
+        ctx.strokeStyle = distortionLevel > 75 ? '#FF0000' : distortionLevel > 50 ? '#FF6B35' : '#00FF00'
+        ctx.lineWidth = 2
+        ctx.beginPath()
+
+        oscilloscopeData.forEach((value, i) => {
+          const x = (i / oscilloscopeData.length) * canvas.width
+          const y = canvas.height / 2 - value * (canvas.height / 3)
+
+          if (i === 0) {
+            ctx.moveTo(x, y)
+          } else {
+            ctx.lineTo(x, y)
+          }
+        })
+
+        ctx.stroke()
+      }
+
+      requestAnimationFrame(draw)
+    }
+
+    draw()
+  }, [oscilloscopeData, distortionLevel])
+
+  // System warnings
+  useEffect(() => {
+    if (distortionLevel > 80) {
+      setSystemAlert('SIGNAL_CLIPPING_DETECTED')
+      setTimeout(() => setSystemAlert(null), 3000)
+    } else if (noiseLevel > 70) {
+      setSystemAlert('EXCESSIVE_NOISE_FLOOR')
+      setTimeout(() => setSystemAlert(null), 3000)
+    }
+  }, [distortionLevel, noiseLevel])
+
+  // GSAP animations
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('.distortion-card', {
+        y: 100,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 1,
+        ease: 'power4.out'
+      })
     })
+    return () => ctx.revert()
   }, [])
 
-  // Auto-adjust quality based on FPS
-  useEffect(() => {
-    if (fps < 30 && qualityMode !== 'performance') {
-      setQualityMode('performance')
-    } else if (fps > 50 && qualityMode === 'performance') {
-      setQualityMode('balanced')
-    } else if (fps > 55 && qualityMode === 'balanced') {
-      setQualityMode('extreme')
-    }
-  }, [fps, qualityMode])
-
-  useEffect(() => {
-    // Optimized event listeners
-    let scrollTimeout: NodeJS.Timeout
-    const optimizedScroll = () => {
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout(handleScroll, 10)
-    }
-
-    window.addEventListener('scroll', optimizedScroll, { passive: true })
-    window.addEventListener('touchstart', () => setTouchActive(true), { passive: true })
-    window.addEventListener('touchend', () => setTouchActive(false), { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', optimizedScroll)
-      window.removeEventListener('touchstart', () => setTouchActive(true))
-      window.removeEventListener('touchend', () => setTouchActive(false))
-    }
-  }, [handleScroll])
-
-  const images = [
-    'qslna_Abandoned_subway_tunnels_growing_organic_matter_rails_t_e5995bce-2b4a-4611-84c2-40f5d580a07e_0.png',
-    'qslna_Abstract_composition_where_film_grain_has_become_three-_34a13c6e-864b-44dc-a756-61074c024369_1.png',
-    'qslna_Abstract_macro_composition_exploring_texture_contrasts__226a24e1-97fd-4787-a32e-7caf625d2549_1.png',
-    'qslna_Airport_terminal_where_planes_never_land_gates_opening__5cc8aa22-c8bd-412c-9744-51aed62ce1f4_0.png',
-    'qslna_Arctic_ice_melting_upward_into_sky_glaciers_growing_bac_7c61370c-b0e7-488c-9202-c0e96d306bbd_0.png',
-  ]
+  const toggleAlgorithm = (id: string) => {
+    setAlgorithms(prev => prev.map(alg => {
+      if (alg.id === id) {
+        const newIntensity = alg.intensity === 0 ? Math.random() * 100 : 0
+        setDistortionLevel(current => Math.min(100, current + (newIntensity > 0 ? 20 : -20)))
+        return { ...alg, intensity: newIntensity }
+      }
+      return alg
+    }))
+    setSelectedMode(id)
+  }
 
   return (
-    <div ref={containerRef} className="relative bg-black">
-      {/* Performance Monitor */}
-      <div className="fixed top-20 right-4 z-50 text-xs font-mono space-y-1 text-cyan-500">
-        <div>FPS: {fps}</div>
-        <div>MODE: {qualityMode.toUpperCase()}</div>
-        <div>SCROLL: {scrollProgress.toFixed(0)}%</div>
-      </div>
+    <div className="min-h-screen bg-carbon-black relative">
+      {/* Background Grid */}
+      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
 
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-black/50 z-50">
-        <div
-          className="h-full bg-gradient-to-r from-cyan-500 to-magenta-500 transition-transform duration-100"
-          style={{
-            transform: `translateX(${scrollProgress - 100}%)`,
-            willChange: 'transform'
-          }}
-        />
-      </div>
+      {/* System Alert */}
+      <AnimatePresence>
+        {systemAlert && (
+          <motion.div
+            className="fixed top-20 left-0 right-0 z-50 bg-warning-yellow text-carbon-black py-2 px-8"
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            exit={{ y: -100 }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold">⚠ {systemAlert}</span>
+              <span className="text-[10px] opacity-60">DISTORTION: {distortionLevel.toFixed(0)}%</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Hero Section with Optimized Animation */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          {/* Reduced particle count for performance */}
-          {qualityMode !== 'performance' && [...Array(qualityMode === 'extreme' ? 100 : 50)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `float ${10 + Math.random() * 20}s linear infinite`,
-                animationDelay: `${Math.random() * 10}s`,
-                opacity: 0.3,
-                willChange: 'auto',
-              }}
-            />
-          ))}
+      {/* Header */}
+      <section className="pt-24 pb-12 px-8 border-b-3 border-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between">
+            <div>
+              <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8] text-white">
+                WAVE<br />
+                <span className="text-safety-orange">FORM</span>
+              </h1>
+              <p className="text-xs font-mono mt-4 opacity-60 text-white">
+                SIGNAL_DISTORTION_LABORATORY
+              </p>
+            </div>
+            <div className="text-right text-white">
+              <div className="text-[10px] font-mono space-y-1">
+                <div>DISTORTION: {distortionLevel.toFixed(0)}%</div>
+                <div>SIGNAL: {signalStrength.toFixed(0)}%</div>
+                <div>NOISE: {noiseLevel.toFixed(0)}dB</div>
+                <div className={`${distortionLevel > 75 ? 'text-glitch-red flicker' : 'text-hazmat-green'}`}>
+                  STATUS: {distortionLevel > 75 ? 'CLIPPING' : 'CLEAN'}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <h1 className="text-8xl md:text-[15rem] font-black text-center relative z-10">
-          <span className="block" style={{
-            background: 'linear-gradient(45deg, #FF0000, #00FFFF, #FF00FF)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            transform: `perspective(1000px) rotateX(${scrollProgress * 0.5}deg)`,
-            willChange: 'transform',
-          }}>
-            DISTORTION
-          </span>
-          <span className="block text-2xl md:text-4xl tracking-[0.5em] text-white/50 mt-4">
-            OPTIMIZED CHAOS
-          </span>
-        </h1>
       </section>
 
-      {/* Lazy-loaded Image Sections */}
-      {images.map((img, index) => (
-        <DistortedImageSection key={img} src={img} index={index} />
-      ))}
-
-      {/* Final CTA Section */}
-      <section className="relative h-screen flex items-center justify-center">
-        <div className="text-center space-y-8">
-          <h2 className="text-6xl md:text-9xl font-black">
-            <span className={qualityMode === 'extreme' ? 'glitch-text' : ''}>
-              MAXIMUM
-            </span>
-            <span className="block text-cyan-500">
-              PERFORMANCE
-            </span>
-          </h2>
-
-          {/* Quality Mode Selector */}
-          <div className="flex justify-center gap-4 mt-8">
-            {(['performance', 'balanced', 'extreme'] as const).map((mode) => (
+      {/* Waveform Selector */}
+      <section className="py-8 px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            <span className="text-xs font-mono font-bold">WAVEFORM:</span>
+            {waveforms.map(wave => (
               <button
-                key={mode}
-                onClick={() => setQualityMode(mode)}
-                className={`px-6 py-3 border-2 ${
-                  qualityMode === mode ? 'border-cyan-500 bg-cyan-500/20' : 'border-white/20'
-                } hover:border-magenta-500 transition-all duration-300`}
+                key={wave.id}
+                onClick={() => setActiveWaveform(wave.id)}
+                className={`px-4 py-2 text-xs font-mono transition-all ${
+                  activeWaveform === wave.id
+                    ? 'bg-carbon-black text-white'
+                    : 'bg-white border border-carbon-black hover:bg-gray-100'
+                }`}
               >
-                <span className="font-bold uppercase">{mode}</span>
+                {wave.id}
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <style jsx>{`
-        @keyframes float {
-          from {
-            transform: translateY(0) translateX(0);
-          }
-          to {
-            transform: translateY(-100vh) translateX(50px);
-          }
-        }
-      `}</style>
+      {/* Main Control Panel */}
+      <section className="py-16 px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          {/* Oscilloscope */}
+          <div className="bg-black p-6 border-3 border-hazmat-green">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xs font-mono text-hazmat-green">OSCILLOSCOPE</h3>
+              <div className="flex gap-2">
+                <div className="w-2 h-2 bg-hazmat-green rounded-full animate-pulse" />
+                <span className="text-[10px] font-mono text-hazmat-green">MONITORING</span>
+              </div>
+            </div>
+            <canvas
+              ref={canvasRef}
+              className="w-full h-64 bg-black"
+            />
+            <div className="mt-4 grid grid-cols-2 gap-4 text-[10px] font-mono text-hazmat-green">
+              <div>TIME/DIV: 1ms</div>
+              <div>VOLT/DIV: 500mV</div>
+              <div>TRIGGER: AUTO</div>
+              <div>COUPLING: AC</div>
+            </div>
+          </div>
+
+          {/* Spectrum Analyzer */}
+          <div className="bg-white p-6 border-3 border-carbon-black">
+            <h3 className="text-xs font-mono mb-4">FREQUENCY_SPECTRUM</h3>
+            <div className="h-64 flex items-end justify-between gap-1">
+              {spectrumData.map((magnitude, i) => (
+                <motion.div
+                  key={i}
+                  className="flex-1 bg-gradient-to-t from-safety-orange to-glitch-red"
+                  animate={{ height: `${magnitude * 100}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              ))}
+            </div>
+            <div className="mt-4 flex justify-between text-[10px] font-mono opacity-60">
+              <span>20Hz</span>
+              <span>200Hz</span>
+              <span>2kHz</span>
+              <span>20kHz</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Distortion Algorithms */}
+      <section className="py-16 px-8 bg-concrete-gray">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-black text-white mb-8">DISTORTION_ALGORITHMS</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {algorithms.map(alg => (
+              <motion.div
+                key={alg.id}
+                className="distortion-card bg-white p-6 cursor-pointer"
+                onClick={() => toggleAlgorithm(alg.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className="text-[10px] font-mono opacity-60">{alg.id}</span>
+                    <h3 className="text-sm font-black mt-1">{alg.name}</h3>
+                  </div>
+                  <div className={`w-2 h-2 rounded-full ${
+                    alg.intensity > 0 ? 'bg-glitch-red animate-pulse' : 'bg-gray-300'
+                  }`} />
+                </div>
+
+                <div className="text-[10px] font-mono space-y-2">
+                  <div className="chemical-formula">{alg.formula}</div>
+                  <div className="flex justify-between">
+                    <span className="opacity-60">INTENSITY:</span>
+                    <span>{alg.intensity.toFixed(0)}%</span>
+                  </div>
+                  <div className="h-1 bg-carbon-black/20 relative">
+                    <motion.div
+                      className="absolute top-0 left-0 h-full bg-safety-orange"
+                      animate={{ width: `${alg.intensity}%` }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Control Sliders */}
+      <section className="py-16 px-8 bg-carbon-black">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div>
+            <label className="text-xs font-mono text-white block mb-2">
+              MASTER_DISTORTION: {distortionLevel.toFixed(0)}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={distortionLevel}
+              onChange={(e) => setDistortionLevel(parseInt(e.target.value))}
+              className="w-full"
+              style={{
+                background: `linear-gradient(to right, #00FF00 0%, #FF6B35 50%, #FF0000 100%)`
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-mono text-white block mb-2">
+              SIGNAL_STRENGTH: {signalStrength.toFixed(0)}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={signalStrength}
+              onChange={(e) => setSignalStrength(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-mono text-white block mb-2">
+              NOISE_FLOOR: {noiseLevel.toFixed(0)}dB
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={noiseLevel}
+              onChange={(e) => setNoiseLevel(parseInt(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-8 border-t-3 border-white bg-carbon-black">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <p className="text-[10px] font-mono opacity-60 text-white">
+            CINCH_LAB © 2025 — WAVEFORM_DIVISION
+          </p>
+          <Link href="/lab" className="text-xs font-mono text-white hover:text-safety-orange transition-colors">
+            RETURN_TO_LAB →
+          </Link>
+        </div>
+      </footer>
     </div>
   )
-}
-
-// Hook for intersection observer
-function useInView(options: { threshold: number; triggerOnce: boolean }) {
-  const [ref, setRef] = useState<HTMLElement | null>(null)
-  const [inView, setInView] = useState(false)
-
-  useEffect(() => {
-    if (!ref) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting)
-        if (entry.isIntersecting && options.triggerOnce) {
-          observer.disconnect()
-        }
-      },
-      { threshold: options.threshold }
-    )
-
-    observer.observe(ref)
-    return () => observer.disconnect()
-  }, [ref, options.threshold, options.triggerOnce])
-
-  return [setRef, inView] as const
 }
