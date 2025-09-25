@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import BrutalistNavigation from '@/components/BrutalistNavigation'
+import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
 import LenisProvider from '@/hooks/useLenis'
 import { CipherProvider } from '@/contexts/CipherContext'
 import CipherToggle from '@/components/CipherToggle'
@@ -76,6 +77,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="CINCH LAB" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
+      </head>
       <body>
         <CipherProvider>
           <LenisProvider>
@@ -86,6 +97,8 @@ export default function RootLayout({
             <main id="main-content" className="pt-20">
               {children}
             </main>
+            <PWAInstaller />
+            <PWAUpdateNotification />
           </LenisProvider>
         </CipherProvider>
       </body>
