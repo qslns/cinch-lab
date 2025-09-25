@@ -1,338 +1,457 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import CipherText from '@/components/CipherText'
-import CrackedBackground from '@/components/CrackedBackground'
-import SideImages from '@/components/SideImages'
 
+// Brutalist Collections Data
 const collections = [
   {
+    id: 'COL_001',
+    code: 'SS25',
+    title: 'MOLECULAR_DISRUPTION',
+    status: 'ACTIVE',
+    pieces: 47,
+    material: 'SYNTHETIC_ORGANIC',
+    danger: 4,
     year: 2025,
-    seasons: [
-      {
-        id: 'ss25',
-        name: 'SPRING/SUMMER 2025',
-        title: 'VOID THEORY',
-        description: 'Exploring negative space as the primary design element.',
-        looks: 24,
-        hero: true
-      },
-      {
-        id: 'fw25',
-        name: 'FALL/WINTER 2025',
-        title: 'BRUTAL ELEGANCE',
-        description: 'Raw materials meet refined silhouettes.',
-        looks: 32,
-        hero: false
-      }
-    ]
+    season: 'SPRING',
+    description: 'Fabric decomposition at atomic level. Exploring the boundaries between structure and chaos.',
+    formula: 'C₁₀H₁₄N₂O',
+    temperature: '1200°C'
   },
   {
+    id: 'COL_002',
+    code: 'FW24',
+    title: 'STRUCTURAL_COLLAPSE',
+    status: 'ARCHIVED',
+    pieces: 39,
+    material: 'CARBON_FIBER',
+    danger: 3,
     year: 2024,
-    seasons: [
-      {
-        id: 'ss24',
-        name: 'SPRING/SUMMER 2024',
-        title: 'DIGITAL DECAY',
-        description: 'The intersection of technology and deterioration.',
-        looks: 28,
-        hero: false
-      },
-      {
-        id: 'fw24',
-        name: 'FALL/WINTER 2024',
-        title: 'MONOCHROME',
-        description: 'A study in black, white, and the spaces between.',
-        looks: 30,
-        hero: false
-      }
-    ]
+    season: 'FALL',
+    description: 'Controlled demolition of traditional form. Architecture meets entropy.',
+    formula: 'SiO₂ + Fe₂O₃',
+    temperature: '800°C'
   },
   {
+    id: 'COL_003',
+    code: 'SS24',
+    title: 'TEMPORAL_ANOMALY',
+    status: 'ARCHIVED',
+    pieces: 43,
+    material: 'QUANTUM_MESH',
+    danger: 5,
+    year: 2024,
+    season: 'SPRING',
+    description: 'Time-shifting garments that exist in multiple dimensions simultaneously.',
+    formula: 't → ∞',
+    temperature: 'VARIABLE'
+  },
+  {
+    id: 'COL_004',
+    code: 'FW23',
+    title: 'ENTROPY_MAXIMUM',
+    status: 'ARCHIVED',
+    pieces: 41,
+    material: 'CHAOS_WEAVE',
+    danger: 5,
     year: 2023,
-    seasons: [
-      {
-        id: 'ss23',
-        name: 'SPRING/SUMMER 2023',
-        title: 'STRUCTURAL',
-        description: 'Architecture as wearable form.',
-        looks: 26,
-        hero: false
-      },
-      {
-        id: 'fw23',
-        name: 'FALL/WINTER 2023',
-        title: 'EROSION',
-        description: 'Time as a design process.',
-        looks: 29,
-        hero: false
-      }
-    ]
+    season: 'FALL',
+    description: 'Order emerging from absolute disorder. Pattern recognition in noise.',
+    formula: 'ΔS > 0',
+    temperature: '2000°C'
   }
 ]
 
-const years = [...new Set(collections.map(c => c.year))].sort((a, b) => b - a)
+export default function BrutalistCollectionsPage() {
+  const [viewMode, setViewMode] = useState<'MATRIX' | 'TIMELINE' | 'ARCHIVE'>('MATRIX')
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null)
+  const [systemStatus, setSystemStatus] = useState('SCANNING')
+  const [glitchActive, setGlitchActive] = useState(false)
 
-export default function CollectionsPage() {
-  const [selectedYear, setSelectedYear] = useState(2025)
-  const [selectedSeason, setSelectedSeason] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<'editorial' | 'grid'>('editorial')
+  // System status updates
+  useEffect(() => {
+    const statusTimer = setInterval(() => {
+      const statuses = ['SCANNING', 'ANALYZING', 'PROCESSING', 'ARCHIVING']
+      setSystemStatus(statuses[Math.floor(Math.random() * statuses.length)])
 
-  const currentCollections = collections.find(c => c.year === selectedYear)
+      if (Math.random() > 0.9) {
+        setGlitchActive(true)
+        setTimeout(() => setGlitchActive(false), 200)
+      }
+    }, 3000)
+    return () => clearInterval(statusTimer)
+  }, [])
+
+  const selectedCol = collections.find(c => c.id === selectedCollection)
 
   return (
-    <div className="min-h-screen bg-white">
-      <CrackedBackground />
-      <SideImages page="collections" />
-      {/* Header */}
-      <section className="pt-8 pb-6 px-8 md:px-20 border-b border-black/5">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="text-hero mb-4"><CipherText text="COLLECTIONS" /></h1>
-          <p className="text-label text-gray-600"><CipherText text="COMPLETE ARCHIVE OF SEASONAL RELEASES" /></p>
-        </motion.div>
+    <div className="min-h-screen bg-paper-white relative">
+      {/* Background Effects */}
+      <div className="fixed inset-0 scientific-grid opacity-20 pointer-events-none" />
+      {glitchActive && <div className="fixed inset-0 noise-overlay" />}
 
-        {/* Year Navigation */}
-        <motion.div
-          className="mt-12 flex gap-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {years.map((year) => (
+      {/* Header Section */}
+      <section className="pt-24 pb-8 px-8 border-b-3 border-carbon-black bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between">
+            <div>
+              <h1 className="text-[clamp(60px,8vw,140px)] font-black brutalist-heading leading-[0.7]">
+                COLL<br />
+                <span className="text-safety-orange">ECT</span><br />
+                IONS
+              </h1>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] font-mono space-y-1">
+                <div>TOTAL_PIECES: {collections.reduce((acc, c) => acc + c.pieces, 0)}</div>
+                <div>COLLECTIONS: {collections.length}</div>
+                <div>YEARS: 2022-2025</div>
+                <div className={`${glitchActive ? 'text-glitch-red' : 'text-hazmat-green'}`}>
+                  STATUS: {systemStatus}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* View Mode Selector */}
+      <section className="py-4 px-8 bg-carbon-black">
+        <div className="max-w-7xl mx-auto flex items-center gap-6">
+          {(['MATRIX', 'TIMELINE', 'ARCHIVE'] as const).map(mode => (
             <button
-              key={year}
-              onClick={() => setSelectedYear(year)}
-              className={`text-sm tracking-[0.1em] pb-2 border-b-2 transition-all duration-300 ${
-                selectedYear === year
-                  ? 'border-black opacity-100'
-                  : 'border-transparent opacity-40 hover:opacity-70'
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              className={`px-4 py-2 text-xs font-mono font-bold transition-all ${
+                viewMode === mode
+                  ? 'bg-white text-carbon-black'
+                  : 'text-white opacity-60 hover:opacity-100'
               }`}
             >
-              <CipherText text={`${year}`} />
+              {mode}_VIEW
             </button>
           ))}
-          <Link
-            href="/archive"
-            className="text-sm tracking-[0.1em] pb-2 opacity-40 hover:opacity-70 transition-opacity"
-          >
-            <CipherText text="FULL ARCHIVE →" />
-          </Link>
-        </motion.div>
-
-        {/* View Mode Toggle */}
-        <div className="mt-8 flex gap-4">
-          <button
-            onClick={() => setViewMode('editorial')}
-            className={`text-xs tracking-[0.15em] ${
-              viewMode === 'editorial' ? 'opacity-100' : 'opacity-40'
-            }`}
-          >
-            <CipherText text="EDITORIAL" />
-          </button>
-          <span className="text-xs opacity-20">/</span>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`text-xs tracking-[0.15em] ${
-              viewMode === 'grid' ? 'opacity-100' : 'opacity-40'
-            }`}
-          >
-            <CipherText text="GRID" />
-          </button>
+          <div className="ml-auto text-white text-[10px] font-mono opacity-60">
+            LAST_UPDATE: {new Date().toISOString().split('T')[0]}
+          </div>
         </div>
       </section>
 
       {/* Collections Display */}
-      <AnimatePresence mode="wait">
-        <motion.section
-          key={selectedYear}
-          className="px-8 md:px-20 py-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4 }}
-        >
-          {viewMode === 'editorial' ? (
-            /* Editorial Layout */
-            <div className="space-y-20">
-              {currentCollections?.seasons.map((season, index) => (
+      <section className="py-16 px-8">
+        <div className="max-w-7xl mx-auto">
+          {viewMode === 'MATRIX' && (
+            <div className="brutalist-grid-asymmetric">
+              {collections.map((col, index) => (
                 <motion.div
-                  key={season.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  key={col.id}
+                  className={`relative group cursor-pointer ${
+                    index % 3 === 0 ? 'col-span-2 row-span-2' : ''
+                  }`}
+                  style={{
+                    gridColumn: index === 1 ? 'span 3' : undefined,
+                    gridRow: index === 2 ? 'span 2' : undefined
+                  }}
+                  whileHover={{ scale: 0.98 }}
+                  onClick={() => setSelectedCollection(col.id)}
                 >
-                  {season.hero ? (
-                    /* Hero Collection */
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                      <div className="aspect-[3/4] bg-gradient-to-b from-gray-100 to-gray-200 relative overflow-hidden">
-                        <Image
-                          src={`/collection-${season.id}.jpg`}
-                          alt={season.title}
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.style.display = 'none'
-                          }}
-                        />
+                  <div className={`h-full p-6 ${
+                    col.status === 'ACTIVE' ? 'bg-white' : 'bg-concrete-gray text-white'
+                  } border-3 border-carbon-black hover:border-safety-orange transition-colors`}>
+                    {/* Collection Header */}
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <span className="text-[10px] font-mono opacity-60">{col.id}</span>
+                        <h3 className="text-2xl font-black mt-1">{col.code}</h3>
                       </div>
-                      <div className="py-6 md:px-12">
-                        <span className="text-label opacity-60"><CipherText text={season.name} /></span>
-                        <h2 className="text-display mt-4 mb-6"><CipherText text={season.title} /></h2>
-                        <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                          <CipherText text={season.description} />
-                        </p>
-                        <div className="flex items-center gap-8 mb-12">
-                          <div>
-                            <p className="text-3xl font-light"><CipherText text={`${season.looks}`} /></p>
-                            <p className="text-xs text-gray-600"><CipherText text="LOOKS" /></p>
-                          </div>
-                          <div className="w-[1px] h-12 bg-gray-300" />
-                          <div>
-                            <p className="text-3xl font-light"><CipherText text={`${selectedYear}`} /></p>
-                            <p className="text-xs text-gray-600"><CipherText text="YEAR" /></p>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => setSelectedSeason(season.id)}
-                          className="btn btn-outline"
-                        >
-                          <CipherText text="VIEW COLLECTION" />
-                        </button>
+                      <div className={`px-2 py-1 text-[10px] font-mono ${
+                        col.status === 'ACTIVE'
+                          ? 'bg-hazmat-green text-black'
+                          : 'bg-carbon-black text-white'
+                      }`}>
+                        {col.status}
                       </div>
                     </div>
-                  ) : (
-                    /* Regular Collection */
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                      <div className="md:col-span-5">
-                        <div className="aspect-[3/4] bg-gradient-to-b from-gray-100 to-gray-200 relative overflow-hidden">
-                          <Image
-                            src={`/collection-${season.id}.jpg`}
-                            alt={season.title}
-                            fill
-                            className="object-cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement
-                              target.style.display = 'none'
-                            }}
-                          />
-                        </div>
+
+                    {/* Collection Title */}
+                    <h4 className="text-lg font-bold mb-4 break-all">
+                      {col.title}
+                    </h4>
+
+                    {/* Collection Stats */}
+                    <div className="space-y-2 text-[10px] font-mono">
+                      <div className="flex justify-between">
+                        <span className="opacity-60">PIECES:</span>
+                        <span>{col.pieces}</span>
                       </div>
-                      <div className="md:col-span-7 flex flex-col justify-center">
-                        <span className="text-label opacity-60"><CipherText text={season.name} /></span>
-                        <h2 className="text-5xl font-light mt-4 mb-4"><CipherText text={season.title} /></h2>
-                        <p className="text-gray-600 mb-8"><CipherText text={season.description} /></p>
-                        <div className="flex items-center gap-6">
-                          <span className="text-sm"><CipherText text={`${season.looks} LOOKS`} /></span>
-                          <button
-                            onClick={() => setSelectedSeason(season.id)}
-                            className="text-sm tracking-[0.15em] hover-underline"
-                          >
-                            <CipherText text="VIEW COLLECTION →" />
-                          </button>
+                      <div className="flex justify-between">
+                        <span className="opacity-60">MATERIAL:</span>
+                        <span>{col.material}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="opacity-60">FORMULA:</span>
+                        <span className="chemical-formula">{col.formula}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="opacity-60">DANGER:</span>
+                        <div className="flex gap-[2px]">
+                          {[...Array(5)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 ${
+                                i < col.danger
+                                  ? col.danger > 3 ? 'bg-glitch-red' : 'bg-warning-yellow'
+                                  : 'bg-gray-400'
+                              }`}
+                            />
+                          ))}
                         </div>
                       </div>
                     </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            /* Grid Layout */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentCollections?.seasons.map((season, index) => (
-                <motion.div
-                  key={season.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  onClick={() => setSelectedSeason(season.id)}
-                  className="group cursor-pointer"
-                >
-                  <div className="aspect-[3/4] bg-gradient-to-b from-gray-100 to-gray-200 relative overflow-hidden">
-                    <Image
-                      src={`/collection-${season.id}.jpg`}
-                      alt={season.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.style.display = 'none'
-                      }}
+
+                    {/* Hover Overlay */}
+                    <motion.div
+                      className="absolute inset-0 bg-safety-orange pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 0.1 }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                  <div className="mt-4">
-                    <p className="text-xs tracking-[0.15em] opacity-60"><CipherText text={season.name} /></p>
-                    <h3 className="text-2xl font-light mt-2"><CipherText text={season.title} /></h3>
-                    <p className="text-sm text-gray-600 mt-1"><CipherText text={`${season.looks} looks`} /></p>
                   </div>
                 </motion.div>
               ))}
             </div>
           )}
-        </motion.section>
-      </AnimatePresence>
+
+          {viewMode === 'TIMELINE' && (
+            <div className="relative">
+              {/* Timeline Line */}
+              <div className="absolute left-8 top-0 bottom-0 w-[2px] bg-carbon-black" />
+
+              {/* Timeline Items */}
+              <div className="space-y-12">
+                {collections.map((col, index) => (
+                  <motion.div
+                    key={col.id}
+                    className="relative pl-20"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {/* Timeline Node */}
+                    <div className={`absolute left-6 w-4 h-4 ${
+                      col.status === 'ACTIVE' ? 'bg-safety-orange' : 'bg-carbon-black'
+                    } border-2 border-white`} />
+
+                    {/* Content */}
+                    <div
+                      className="lab-border p-6 bg-white cursor-pointer hover:bg-paper-white transition-colors"
+                      onClick={() => setSelectedCollection(col.id)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-4 mb-2">
+                            <span className="text-3xl font-black">{col.code}</span>
+                            <span className="text-xs font-mono opacity-60">
+                              {col.season} {col.year}
+                            </span>
+                          </div>
+                          <h4 className="text-xl font-bold mb-2">{col.title}</h4>
+                          <p className="text-sm opacity-80 max-w-2xl">{col.description}</p>
+                        </div>
+                        <div className="text-right space-y-1 text-[10px] font-mono">
+                          <div>{col.pieces} PIECES</div>
+                          <div className="chemical-formula">{col.formula}</div>
+                          <div>TEMP: {col.temperature}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {viewMode === 'ARCHIVE' && (
+            <div className="bg-carbon-black p-[2px]">
+              <table className="w-full bg-white">
+                <thead>
+                  <tr className="border-b-2 border-carbon-black">
+                    <th className="p-4 text-left text-xs font-mono">ID</th>
+                    <th className="p-4 text-left text-xs font-mono">CODE</th>
+                    <th className="p-4 text-left text-xs font-mono">TITLE</th>
+                    <th className="p-4 text-left text-xs font-mono">YEAR</th>
+                    <th className="p-4 text-left text-xs font-mono">PIECES</th>
+                    <th className="p-4 text-left text-xs font-mono">STATUS</th>
+                    <th className="p-4 text-left text-xs font-mono">DANGER</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {collections.map((col) => (
+                    <tr
+                      key={col.id}
+                      className="border-b border-carbon-black/20 hover:bg-paper-white cursor-pointer transition-colors"
+                      onClick={() => setSelectedCollection(col.id)}
+                    >
+                      <td className="p-4 text-xs font-mono">{col.id}</td>
+                      <td className="p-4 text-sm font-bold">{col.code}</td>
+                      <td className="p-4 text-xs">{col.title}</td>
+                      <td className="p-4 text-xs">{col.year}</td>
+                      <td className="p-4 text-xs">{col.pieces}</td>
+                      <td className="p-4">
+                        <span className={`text-[10px] font-mono ${
+                          col.status === 'ACTIVE' ? 'text-hazmat-green' : 'text-gray-600'
+                        }`}>
+                          {col.status}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex gap-[2px]">
+                          {[...Array(5)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 ${
+                                i < col.danger
+                                  ? 'bg-glitch-red'
+                                  : 'bg-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Collection Detail Modal */}
       <AnimatePresence>
-        {selectedSeason && (
+        {selectedCollection && selectedCol && (
           <motion.div
             className="fixed inset-0 bg-white z-50 overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ type: 'spring', damping: 30 }}
           >
-            <div className="min-h-screen">
-              <button
-                className="fixed top-8 right-8 z-10 text-3xl hover:rotate-90 transition-transform duration-300"
-                onClick={() => setSelectedSeason(null)}
-              >
-                <CipherText text="×" />
-              </button>
+            <div className="min-h-screen bg-paper-white">
+              {/* Modal Header */}
+              <div className="sticky top-0 z-10 bg-carbon-black text-white p-8">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                  <div>
+                    <h2 className="text-4xl font-black">{selectedCol.code}</h2>
+                    <p className="text-xs font-mono mt-1 opacity-60">{selectedCol.id}</p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedCollection(null)}
+                    className="text-2xl hover:rotate-90 transition-transform duration-300"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
 
-              <div className="px-8 md:px-20 py-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <h2 className="text-hero mb-4">
-                    <CipherText text={currentCollections?.seasons.find(s => s.id === selectedSeason)?.title || ''} />
-                  </h2>
-                  <p className="text-label mb-12">
-                    <CipherText text={currentCollections?.seasons.find(s => s.id === selectedSeason)?.name || ''} />
-                  </p>
-                </motion.div>
+              {/* Modal Content */}
+              <div className="p-8 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  {/* Left Column */}
+                  <div>
+                    <h3 className="text-5xl font-black mb-6 break-all">{selectedCol.title}</h3>
+                    <p className="text-lg mb-8">{selectedCol.description}</p>
 
-                {/* Lookbook Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {[...Array(currentCollections?.seasons.find(s => s.id === selectedSeason)?.looks || 0)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="aspect-[3/4] bg-gradient-to-b from-gray-100 to-gray-200 relative"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.02 }}
-                    >
-                      <span className="absolute top-4 left-4 text-label text-white mix-blend-difference">
-                        <CipherText text={`LOOK ${(i + 1).toString().padStart(3, '0')}`} />
-                      </span>
-                    </motion.div>
-                  ))}
+                    <div className="space-y-4 p-6 bg-white lab-border">
+                      <h4 className="text-xs font-mono font-bold mb-4">TECHNICAL_SPECIFICATIONS</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="opacity-60">MATERIAL:</span>
+                          <span className="font-mono">{selectedCol.material}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-60">FORMULA:</span>
+                          <span className="chemical-formula">{selectedCol.formula}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-60">TEMPERATURE:</span>
+                          <span className="font-mono">{selectedCol.temperature}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-60">PIECES:</span>
+                          <span className="font-mono">{selectedCol.pieces}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-60">DANGER_LEVEL:</span>
+                          <div className="flex gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className={`w-3 h-3 ${
+                                  i < selectedCol.danger
+                                    ? 'bg-glitch-red'
+                                    : 'bg-gray-300'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column - Lookbook Grid */}
+                  <div>
+                    <h4 className="text-xs font-mono font-bold mb-4">COLLECTION_ARCHIVE</h4>
+                    <div className="grid grid-cols-3 gap-[2px] bg-carbon-black p-[2px]">
+                      {[...Array(9)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="aspect-square bg-gradient-to-br from-concrete-gray to-carbon-black relative group overflow-hidden"
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-white/20 text-4xl font-black">
+                              {String(i + 1).padStart(2, '0')}
+                            </span>
+                          </div>
+                          <div className="absolute inset-0 bg-safety-orange opacity-0 group-hover:opacity-20 transition-opacity" />
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] font-mono opacity-60 mt-4">
+                      FULL_LOOKBOOK_ACCESS_RESTRICTED
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 mt-12">
+                  <button className="brutalist-btn">
+                    ACCESS_LOOKBOOK
+                  </button>
+                  <button className="brutalist-btn">
+                    DOWNLOAD_SPECS
+                  </button>
+                  <Link href="/archive" className="brutalist-btn">
+                    VIEW_ARCHIVE
+                  </Link>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Footer Status Bar */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-carbon-black text-white p-2 z-40">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] font-mono">
+          <span>COLLECTIONS_DATABASE_V2.0</span>
+          <span>{systemStatus}...</span>
+          <span>{new Date().toLocaleTimeString()}</span>
+        </div>
+      </footer>
     </div>
   )
 }

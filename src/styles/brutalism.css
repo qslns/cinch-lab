@@ -1,0 +1,453 @@
+/* Laboratory Brutalism Styles */
+
+/* Glitch Effect for Header/Navigation */
+@keyframes glitch {
+  0%, 100% {
+    text-shadow:
+      0.02em 0 var(--glitch-red),
+      -0.02em -0 var(--glitch-cyan),
+      0 -0.02em var(--glitch-magenta);
+  }
+  14% {
+    text-shadow:
+      0.02em 0 var(--glitch-red),
+      -0.02em -0 var(--glitch-cyan),
+      0 -0.02em var(--glitch-magenta);
+  }
+  15% {
+    text-shadow:
+      -0.02em -0.025em var(--glitch-red),
+      0.025em 0.025em var(--glitch-cyan),
+      -0.05em -0.05em var(--glitch-magenta);
+  }
+  49% {
+    text-shadow:
+      -0.02em -0.025em var(--glitch-red),
+      0.025em 0.025em var(--glitch-cyan),
+      -0.05em -0.05em var(--glitch-magenta);
+  }
+  50% {
+    text-shadow:
+      0.025em 0.05em var(--glitch-red),
+      0.05em 0 var(--glitch-cyan),
+      0 -0.05em var(--glitch-magenta);
+  }
+  99% {
+    text-shadow:
+      0.025em 0.05em var(--glitch-red),
+      0.05em 0 var(--glitch-cyan),
+      0 -0.05em var(--glitch-magenta);
+  }
+}
+
+@keyframes glitch-skew {
+  0%, 100% {
+    transform: skew(0deg);
+  }
+  20% {
+    transform: skew(-2deg);
+  }
+  40% {
+    transform: skew(1deg);
+  }
+  60% {
+    transform: skew(-1deg);
+  }
+  80% {
+    transform: skew(0.5deg);
+  }
+}
+
+@keyframes noise {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  10% {
+    background-position: -5% -10%;
+  }
+  20% {
+    background-position: -15% 5%;
+  }
+  30% {
+    background-position: 7% -25%;
+  }
+  40% {
+    background-position: 20% 25%;
+  }
+  50% {
+    background-position: -25% 10%;
+  }
+  60% {
+    background-position: 15% 5%;
+  }
+  70% {
+    background-position: 0% 15%;
+  }
+  80% {
+    background-position: 25% 35%;
+  }
+  90% {
+    background-position: -10% 10%;
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 1;
+  }
+  33.1% {
+    opacity: 0;
+  }
+  34% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 1;
+  }
+  66.1% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 1;
+  }
+  94.1% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 1;
+  }
+}
+
+/* Glitch Text Class */
+.glitch-text {
+  position: relative;
+  animation: glitch 2.5s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  animation: glitch-skew 0.5s infinite;
+  left: 2px;
+  text-shadow: -2px 0 var(--glitch-red);
+  clip: rect(44px, 450px, 56px, 0);
+  animation-delay: 0.1s;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--glitch-cyan);
+  animation: glitch-skew 0.5s infinite;
+  clip: rect(24px, 450px, 80px, 0);
+  animation-delay: 0.15s;
+}
+
+/* Subtle Glitch for Headers */
+.subtle-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.subtle-glitch:hover {
+  animation: glitch 0.3s infinite;
+  animation-timing-function: steps(2, end);
+}
+
+/* Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  z-index: 100;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  animation: noise 0.2s infinite;
+}
+
+/* Brutalist Grid */
+.brutalist-grid {
+  display: grid;
+  grid-template-columns: var(--grid-column-1) var(--grid-column-2) var(--grid-column-3) var(--grid-column-4);
+  gap: 0;
+}
+
+.brutalist-grid-asymmetric {
+  display: grid;
+  grid-template-columns: 3fr 6fr 2fr 4fr;
+  grid-auto-rows: minmax(200px, auto);
+  gap: 2px;
+  background: var(--carbon-black);
+}
+
+.brutalist-grid-asymmetric > * {
+  background: var(--white);
+}
+
+/* Brutalist Typography */
+.brutalist-heading {
+  font-weight: var(--font-black);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.brutalist-mono {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.1em;
+  font-weight: var(--font-bold);
+}
+
+/* Laboratory Elements */
+.lab-border {
+  border: 3px solid var(--carbon-black);
+  box-shadow: 5px 5px 0 var(--carbon-black);
+}
+
+.lab-border-thin {
+  border: 1px solid var(--carbon-black);
+}
+
+.lab-warning {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warning-yellow),
+    var(--warning-yellow) 10px,
+    var(--carbon-black) 10px,
+    var(--carbon-black) 20px
+  );
+}
+
+/* Morphing Text */
+@keyframes morph {
+  0%, 100% {
+    font-variation-settings: "wght" 100;
+  }
+  50% {
+    font-variation-settings: "wght" 900;
+  }
+}
+
+.morph-text {
+  animation: morph var(--transition-morph) ease-in-out infinite;
+}
+
+/* Brutalist Buttons */
+.brutalist-btn {
+  background: var(--white);
+  border: 3px solid var(--carbon-black);
+  padding: 1rem 2rem;
+  font-weight: var(--font-black);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 0 var(--carbon-black);
+}
+
+.brutalist-btn:hover {
+  transform: translate(-5px, -5px);
+  box-shadow: 5px 5px 0 var(--carbon-black);
+}
+
+.brutalist-btn:active {
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 var(--carbon-black);
+}
+
+/* Error Aesthetic */
+.error-box {
+  background: var(--glitch-red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-family: monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+.error-box::before {
+  content: "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  opacity: 0.1;
+  font-size: 0.8rem;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scientific Grid Overlay */
+.scientific-grid {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Scan Lines */
+.scan-lines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+/* Flicker Effect */
+.flicker {
+  animation: flicker 0.5s infinite;
+}
+
+/* Chemical Formula Style */
+.chemical-formula {
+  font-family: 'Courier New', monospace;
+  background: var(--paper-white);
+  border: 1px solid var(--carbon-black);
+  padding: 0.25rem 0.5rem;
+  display: inline-block;
+  position: relative;
+}
+
+.chemical-formula sub,
+.chemical-formula sup {
+  font-size: 0.7em;
+  position: relative;
+  top: 0.3em;
+}
+
+/* Experimental Navigation */
+.experimental-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--white);
+  border-bottom: 3px solid var(--carbon-black);
+  overflow: hidden;
+}
+
+.experimental-nav::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--safety-orange),
+    var(--safety-orange) 20px,
+    var(--carbon-black) 20px,
+    var(--carbon-black) 40px
+  );
+  animation: marquee 2s linear infinite;
+}
+
+/* Distortion Effects */
+@keyframes distort {
+  0%, 100% {
+    transform: skew(0deg, 0deg);
+  }
+  25% {
+    transform: skew(0.5deg, 0.5deg);
+  }
+  50% {
+    transform: skew(-0.5deg, -0.5deg);
+  }
+  75% {
+    transform: skew(0.3deg, -0.3deg);
+  }
+}
+
+.distort-hover:hover {
+  animation: distort 0.3s infinite;
+}
+
+/* Writing Modes */
+.writing-vertical-rl {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.writing-vertical-lr {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+}
+
+.writing-sideways {
+  writing-mode: sideways-rl;
+}
+
+/* Circular Text */
+.circular-text {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.circular-text span {
+  position: absolute;
+  left: 50%;
+  transform-origin: 0 100px;
+  font-size: 14px;
+  font-weight: bold;
+}

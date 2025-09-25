@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
-import Navigation from '@/components/Navigation'
+import BrutalistNavigation from '@/components/BrutalistNavigation'
 import LenisProvider from '@/hooks/useLenis'
 import { CipherProvider } from '@/contexts/CipherContext'
 import CipherToggle from '@/components/CipherToggle'
 import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/modern.css'
+import '@/styles/brutalism.css'
 
 export const metadata: Metadata = {
   title: 'CINCH LAB — Experimental Fashion Technical Laboratory',
@@ -33,9 +34,9 @@ export default function RootLayout({
           <LenisProvider>
             <SkipToMain />
             <KeyboardNavigationIndicator />
-            <Navigation />
+            <BrutalistNavigation />
             <CipherToggle />
-            <main id="main-content" className="pt-14">
+            <main id="main-content" className="pt-20">
               {children}
             </main>
           </LenisProvider>
