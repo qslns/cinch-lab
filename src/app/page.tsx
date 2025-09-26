@@ -7,6 +7,9 @@ import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CipherText from '@/components/CipherText'
+import KineticText, { KineticDisplay, WaveText } from '@/components/KineticText'
+import DeconstructedHover, { ExposedStructure } from '@/components/DeconstructedHover'
+import AsymmetricGrid, { BrokenContainer, ShiftedLayers, DiagonalFlow } from '@/components/AsymmetricLayout'
 
 const InteractiveCanvas = dynamic(() => import('@/components/InteractiveCanvas'), {
   ssr: false,
@@ -91,26 +94,26 @@ export default function HomePage() {
           className="text-center relative z-10"
           style={{ y: yParallax }}
         >
-          {/* Main Slogan */}
+          {/* Main Slogan with Kinetic Typography */}
           <div className="mb-12">
             <motion.h1
               className="text-[clamp(50px,8vw,150px)] font-black tracking-tighter leading-[0.9]"
               style={{ scale: scaleParallax }}
             >
-              <span className="slogan-word block">
-                <CipherText text="CINCH" />
+              <span className="slogan-word block kinetic-morph">
+                <KineticText text="CINCH" mode="morph" className="variable-weight" />
               </span>
               <span className="slogan-word block text-safety-orange">
-                •
+                <KineticText text="•" mode="glitch" />
               </span>
               <span className="slogan-word block">
-                <CipherText text="RELEASE" />
+                <KineticText text="RELEASE" mode="deconstruct" className="hover-explode" />
               </span>
               <span className="slogan-word block text-safety-orange">
-                •
+                <KineticText text="•" mode="glitch" />
               </span>
               <span className="slogan-word block">
-                <CipherText text="REPEAT" />
+                <KineticText text="REPEAT" mode="elastic" />
               </span>
             </motion.h1>
           </div>
@@ -130,28 +133,19 @@ export default function HomePage() {
             <div className="h-px w-20 bg-white/30" />
           </motion.div>
 
-          {/* Laboratory Name */}
+          {/* Laboratory Name with Exposed Structure */}
           <div className="mb-12">
-            <h2 className="text-2xl font-black tracking-[0.3em] opacity-60">
-              CINCH LAB
-            </h2>
-            <p className="text-xs font-mono mt-2 opacity-40">
-              EXPERIMENTAL FASHION LABORATORY
-            </p>
+            <ExposedStructure>
+              <h2 className="text-2xl font-black tracking-[0.3em] opacity-60 exposed-seams">
+                <KineticDisplay text="CINCH LAB" className="text-outline" />
+              </h2>
+              <p className="text-xs font-mono mt-2 opacity-40 pattern-marks">
+                EXPERIMENTAL FASHION LABORATORY
+              </p>
+            </ExposedStructure>
           </div>
 
-          {/* Genius Declaration */}
-          <motion.div
-            className="genius-text mb-12 p-8 border border-white/20"
-            whileHover={{ borderColor: 'rgba(255, 107, 53, 0.5)' }}
-          >
-            <p className="text-lg font-bold mb-2">
-              "CINCH LAB은 최고이자 난 천재야"
-            </p>
-            <p className="text-xs font-mono opacity-60">
-              GENIUS AT WORK • NO COMPROMISE • PURE CREATION
-            </p>
-          </motion.div>
+          {/* Genius Declaration - Removed */}
 
           {/* Navigation Hint */}
           <motion.div
@@ -188,93 +182,105 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Laboratory Sections Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Laboratory Sections - Asymmetric Grid */}
+          <AsymmetricGrid mode="scattered" className="max-w-7xl mx-auto">
             {/* LAB */}
-            <Link href="/lab" className="group" aria-label="Explore the LAB - Experimental techniques and processes">
-              <motion.div
-                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
-                whileHover={{ y: -5 }}
-              >
-                <h3 className="text-2xl font-black mb-4">LAB</h3>
-                <p className="text-xs opacity-60 mb-4">
-                  Experimental techniques and processes.
-                  Where genius manifests in form.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono">EXPERIMENTS_ACTIVE</span>
-                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </span>
-                </div>
-              </motion.div>
-            </Link>
+            <DeconstructedHover mode="layer" intensity={1.5}>
+              <Link href="/lab" className="group block" aria-label="Explore the LAB - Experimental techniques and processes">
+                <BrokenContainer className="p-8 border-decon bg-white hover:bg-raw-linen transition-all">
+                  <h3 className="text-2xl font-black mb-4 text-outline">
+                    <KineticText text="LAB" mode="distort" />
+                  </h3>
+                  <p className="text-xs opacity-60 mb-4 pattern-marks">
+                    Experimental techniques and processes.
+                    Where creation happens.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono kinetic-stretch">EXPERIMENTS_ACTIVE</span>
+                    <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </div>
+                </BrokenContainer>
+              </Link>
+            </DeconstructedHover>
 
             {/* COLLECTIONS */}
-            <Link href="/collections" className="group" aria-label="View COLLECTIONS - Visual documentation of creations">
-              <motion.div
-                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
-                whileHover={{ y: -5 }}
-              >
-                <h3 className="text-2xl font-black mb-4">COLLECTIONS</h3>
-                <p className="text-xs opacity-60 mb-4">
-                  Visual documentation of creations.
-                  No prices, only visions.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono">LOOKBOOKS_AVAILABLE</span>
-                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </span>
+            <DeconstructedHover mode="slice" intensity={1.2}>
+              <Link href="/collections" className="group block" aria-label="View COLLECTIONS - Visual documentation of creations">
+                <div className="p-8 border-fragment bg-white hover:bg-muslin transition-all hybrid-layer">
+                  <h3 className="text-2xl font-black mb-4 text-shadow-brutal">
+                    <KineticText text="COLLECTIONS" mode="split" />
+                  </h3>
+                  <p className="text-xs opacity-60 mb-4">
+                    Visual documentation.
+                    No prices, only visions.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono">LOOKBOOKS_AVAILABLE</span>
+                    <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </div>
                 </div>
-              </motion.div>
-            </Link>
+              </Link>
+            </DeconstructedHover>
 
             {/* ARCHIVE */}
-            <Link href="/archive" className="group" aria-label="Browse ARCHIVE - Philosophy and process documentation">
-              <motion.div
-                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
-                whileHover={{ y: -5 }}
-              >
-                <h3 className="text-2xl font-black mb-4">ARCHIVE</h3>
-                <p className="text-xs opacity-60 mb-4">
-                  The mind behind the laboratory.
-                  Philosophy and process.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono">THOUGHTS_DOCUMENTED</span>
-                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </span>
-                </div>
-              </motion.div>
-            </Link>
+            <DeconstructedHover mode="fragment" intensity={1}>
+              <Link href="/archive" className="group block" aria-label="Browse ARCHIVE - Philosophy and process documentation">
+                <ExposedStructure className="p-8 shadow-layer-3 bg-white hover:bg-tyvek-white transition-all">
+                  <h3 className="text-2xl font-black mb-4">
+                    <WaveText text="ARCHIVE" />
+                  </h3>
+                  <p className="text-xs opacity-60 mb-4 distressed">
+                    The mind behind.
+                    Philosophy and process.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono">THOUGHTS_DOCUMENTED</span>
+                    <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </div>
+                </ExposedStructure>
+              </Link>
+            </DeconstructedHover>
+          </AsymmetricGrid>
+        </div>
+      </section>
+
+      {/* PHILOSOPHY SECTION - Deconstructed */}
+      <section className="py-24 px-8 bg-white text-carbon-black texture-raw-canvas">
+        <DiagonalFlow angle={-3}>
+          <div className="max-w-4xl mx-auto">
+            <ShiftedLayers
+              layers={[
+                <h2 key="1" className="text-[clamp(40px,6vw,80px)] font-black mb-8 leading-[0.8] text-outline">
+                  <KineticDisplay text="FASHION WITHOUT" />
+                </h2>,
+                <h2 key="2" className="text-[clamp(40px,6vw,80px)] font-black mb-8 leading-[0.8] text-medical-red">
+                  <KineticText text="COMMERCE" mode="glitch" />
+                </h2>
+              ]}
+            />
+            <div className="mt-16">
+              <p className="text-sm leading-relaxed opacity-80 max-w-2xl mx-auto exposed-seams p-4">
+                We don't sell. We create.
+                After exhibitions, maybe one piece finds an owner.
+                Not through carts, through understanding.
+                This is not a store. This is a laboratory.
+              </p>
+            </div>
           </div>
-        </div>
+        </DiagonalFlow>
       </section>
 
-      {/* PHILOSOPHY SECTION */}
-      <section className="py-24 px-8 bg-white text-carbon-black">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-[clamp(40px,6vw,80px)] font-black mb-8 leading-[0.9]">
-            FASHION WITHOUT
-            <br />
-            <span className="text-safety-orange">COMMERCE</span>
-          </h2>
-          <p className="text-sm leading-relaxed opacity-80 max-w-2xl mx-auto">
-            We don't sell clothes. We create experiments.
-            After exhibitions, after documentation, maybe one piece finds an owner.
-            Not through shopping carts, but through understanding.
-            This is not a store. This is a laboratory.
-          </p>
-        </div>
-      </section>
-
-      {/* BOTTOM STATUS BAR */}
-      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4">
+      {/* BOTTOM STATUS BAR - Laboratory Style */}
+      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/90 backdrop-blur-sm border-t-3 border-medical-red p-4 lab-warning">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB_V.2025 • GENIUS_MODE_ACTIVE
+          <p className="text-[10px] font-mono opacity-80 flicker">
+            CINCH_LAB_V.2025 • EXPERIMENTAL_MODE
           </p>
           <div className="flex items-center gap-6">
             <span className="text-[10px] font-mono opacity-60">
@@ -283,7 +289,7 @@ export default function HomePage() {
             <span className="text-[10px] font-mono opacity-60">
               NO_PRICES
             </span>
-            <span className="text-[10px] font-mono text-safety-orange">
+            <span className="text-[10px] font-mono text-acid-yellow kinetic-morph">
               ONLY_CREATION
             </span>
           </div>

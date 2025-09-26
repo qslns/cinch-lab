@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import KineticText from '@/components/KineticText'
+import { ExposedStructure } from '@/components/DeconstructedHover'
 
 const navLinks = [
   { href: '/', label: 'HOME', code: '001' },
@@ -43,9 +45,9 @@ export default function BrutalistNavigation() {
       {/* Noise Overlay */}
       <div className="noise-overlay" />
 
-      {/* Main Navigation Header */}
-      <header className="experimental-nav" role="banner">
-        <div className="brutalist-grid h-16 items-center px-8">
+      {/* Main Navigation Header - Deconstructed */}
+      <header className="experimental-nav border-decon shadow-layer-2" role="banner">
+        <div className="asymmetric-container h-20 items-center px-8 texture-raw-canvas">
           {/* System Status */}
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 ${systemStatus === 'OPERATIONAL' ? 'bg-green-500' : 'bg-red-500'} ${isGlitching ? 'flicker' : ''}`} />
@@ -54,13 +56,17 @@ export default function BrutalistNavigation() {
             </span>
           </div>
 
-          {/* Logo with Glitch */}
-          <Link href="/" className="flex items-center gap-4" aria-label="CINCH LAB Home">
-            <div className={`text-2xl font-black tracking-tighter ${isGlitching ? 'glitch-text' : 'subtle-glitch'}`} data-text="CINCH//LAB">
-              CINCH<span className="text-safety-orange">{'//'}</span>LAB
-            </div>
-            <div className="text-[10px] font-mono opacity-60 chemical-formula">
-              C₆H₅NO₂ <span className="text-safety-orange">→</span> FASHION
+          {/* Logo with Kinetic Typography */}
+          <Link href="/" className="flex items-center gap-4 group" aria-label="CINCH LAB Home">
+            <ExposedStructure className="inline-block">
+              <div className="text-2xl font-black tracking-tighter">
+                <KineticText text="CINCH" mode="morph" className="inline" />
+                <span className="text-medical-red mx-1">{'//'}</span>
+                <KineticText text="LAB" mode="distort" className="inline" />
+              </div>
+            </ExposedStructure>
+            <div className="text-[10px] font-mono opacity-60 chemical-formula group-hover:text-acid-yellow transition-colors">
+              C₆H₅NO₂ <span className="text-medical-red">→</span> FASHION
             </div>
           </Link>
 
@@ -91,14 +97,18 @@ export default function BrutalistNavigation() {
                     )}
                   </AnimatePresence>
 
-                  {/* Link Content */}
-                  <div className={`relative z-10 flex items-center gap-2 ${isActive || hoveredLink === link.href ? 'text-white' : 'text-carbon-black'} transition-colors`}>
-                    <span className="text-[10px] font-mono opacity-60">{link.code}</span>
-                    <span className={`text-xs font-bold tracking-wider ${hoveredLink === link.href ? 'distort-hover' : ''}`}>
-                      {link.label}
+                  {/* Link Content with Deconstrueted Typography */}
+                  <div className={`relative z-10 flex items-center gap-2 ${isActive || hoveredLink === link.href ? 'text-white' : 'text-charcoal'} transition-all`}>
+                    <span className="text-[10px] font-mono opacity-60 pattern-marks">{link.code}</span>
+                    <span className={`text-xs font-bold tracking-wider ${hoveredLink === link.href ? 'kinetic-morph' : ''}`}>
+                      {hoveredLink === link.href ? (
+                        <KineticText text={link.label} mode="split" />
+                      ) : (
+                        link.label
+                      )}
                     </span>
                     {isActive && (
-                      <div className="w-1 h-1 bg-current rounded-full animate-pulse" />
+                      <div className="absolute -bottom-1 left-0 right-0 h-px bg-medical-red" />
                     )}
                   </div>
                 </Link>
@@ -122,11 +132,11 @@ export default function BrutalistNavigation() {
           </div>
         </div>
 
-        {/* Error Bar (appears randomly) */}
+        {/* Error Bar - Laboratory Warning */}
         {isGlitching && (
-          <div className="error-box absolute bottom-0 left-0 right-0 h-6 flex items-center px-8">
-            <span className="text-[10px] font-mono">
-              SYSTEM CORRUPTION DETECTED // ATTEMPTING RECOVERY...
+          <div className="lab-warning absolute bottom-0 left-0 right-0 h-6 flex items-center px-8">
+            <span className="text-[10px] font-mono text-charcoal flicker">
+              DECONSTRUCTION IN PROGRESS // REASSEMBLY IMMINENT...
             </span>
           </div>
         )}
@@ -181,10 +191,10 @@ export default function BrutalistNavigation() {
         </div>
       </div>
 
-      {/* Experimental Circular Menu (Desktop Only) */}
-      <div className="fixed bottom-8 left-8 hidden lg:block">
-        <div className="relative w-32 h-32">
-          <svg className="w-full h-full animate-spin-slow" style={{ animationDuration: '30s' }}>
+      {/* Experimental Circular Menu - Margiela Inspired */}
+      <div className="fixed bottom-8 left-8 hidden lg:block hover-explode">
+        <div className="relative w-32 h-32 pattern-marks">
+          <svg className="w-full h-full animate-spin-slow" style={{ animationDuration: '60s' }}>
             <circle
               cx="64"
               cy="64"
@@ -193,15 +203,16 @@ export default function BrutalistNavigation() {
               stroke="currentColor"
               strokeWidth="1"
               className="opacity-20"
+              strokeDasharray="5 10"
             />
             <text
               fill="currentColor"
               fontSize="8"
               fontFamily="monospace"
-              className="opacity-40"
+              className="opacity-40 text-vertical"
             >
               <textPath href="#circle-path">
-                EXPERIMENTAL • LABORATORY • CINCH • FASHION • TECHNICAL •
+                DECONSTRUCT • RECONSTRUCT • CINCH • RELEASE • REPEAT •
               </textPath>
             </text>
             <defs>
@@ -212,7 +223,7 @@ export default function BrutalistNavigation() {
             </defs>
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-2xl font-black opacity-20">∞</div>
+            <div className="text-2xl font-black opacity-20 kinetic-morph">∞</div>
           </div>
         </div>
       </div>
