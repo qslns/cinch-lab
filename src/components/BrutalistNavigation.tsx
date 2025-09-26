@@ -10,8 +10,9 @@ const navLinks = [
   { href: '/lab', label: 'LAB', code: '002' },
   { href: '/collections', label: 'COLLECTIONS', code: '003' },
   { href: '/archive', label: 'ARCHIVE', code: '004' },
-  { href: '/about', label: 'ABOUT', code: '005' },
-  { href: '/contact', label: 'CONTACT', code: '006' },
+  { href: '/analysis', label: 'ANALYSIS', code: '005' },
+  { href: '/about', label: 'ABOUT', code: '006' },
+  { href: '/contact', label: 'CONTACT', code: '007' },
 ]
 
 export default function BrutalistNavigation() {
@@ -19,6 +20,7 @@ export default function BrutalistNavigation() {
   const [isGlitching, setIsGlitching] = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const [systemStatus, setSystemStatus] = useState('OPERATIONAL')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Random glitch effect
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function BrutalistNavigation() {
       <div className="noise-overlay" />
 
       {/* Main Navigation Header */}
-      <header className="experimental-nav">
+      <header className="experimental-nav" role="banner">
         <div className="brutalist-grid h-16 items-center px-8">
           {/* System Status */}
           <div className="flex items-center gap-2">
@@ -53,7 +55,7 @@ export default function BrutalistNavigation() {
           </div>
 
           {/* Logo with Glitch */}
-          <Link href="/" className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-4" aria-label="CINCH LAB Home">
             <div className={`text-2xl font-black tracking-tighter ${isGlitching ? 'glitch-text' : 'subtle-glitch'}`} data-text="CINCH//LAB">
               CINCH<span className="text-safety-orange">{'//'}</span>LAB
             </div>
@@ -63,16 +65,17 @@ export default function BrutalistNavigation() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative group px-4 py-2"
+                  className="relative group px-4 py-2 focus:outline-none focus:ring-2 focus:ring-safety-orange focus:ring-offset-2 focus:ring-offset-white"
                   onMouseEnter={() => setHoveredLink(link.href)}
                   onMouseLeave={() => setHoveredLink(null)}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   {/* Background Animation */}
                   <AnimatePresence>
@@ -104,7 +107,7 @@ export default function BrutalistNavigation() {
           </nav>
 
           {/* Time/Date Display */}
-          <div className="text-right">
+          <div className="text-right hidden sm:block" aria-live="polite" aria-atomic="true">
             <div className="text-[10px] font-mono tracking-wider opacity-60">
               {new Date().toLocaleTimeString('en-US', {
                 hour12: false,
@@ -131,26 +134,26 @@ export default function BrutalistNavigation() {
 
       {/* Mobile Menu Button */}
       <button
-        className="fixed top-4 right-4 z-[1001] md:hidden brutalist-btn p-2"
-        onClick={() => {
-          // Toggle mobile menu
-          const menu = document.getElementById('mobile-menu')
-          if (menu) {
-            menu.classList.toggle('translate-x-full')
-          }
-        }}
+        className="fixed top-4 right-4 z-[1001] md:hidden brutalist-btn p-2 focus:outline-none focus:ring-2 focus:ring-safety-orange"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={isMobileMenuOpen}
+        aria-controls="mobile-menu"
       >
         <div className="w-6 h-4 flex flex-col justify-between">
-          <span className="w-full h-0.5 bg-carbon-black"></span>
-          <span className="w-full h-0.5 bg-carbon-black"></span>
-          <span className="w-full h-0.5 bg-carbon-black"></span>
+          <span className={`w-full h-0.5 bg-carbon-black transition-transform ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+          <span className={`w-full h-0.5 bg-carbon-black transition-opacity ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`w-full h-0.5 bg-carbon-black transition-transform ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
         </div>
       </button>
 
       {/* Mobile Menu */}
       <div
         id="mobile-menu"
-        className="fixed top-0 right-0 h-full w-64 bg-white border-l-3 border-carbon-black z-[1000] transform translate-x-full transition-transform duration-300 md:hidden"
+        className={`fixed top-0 right-0 h-full w-64 bg-white border-l-3 border-carbon-black z-[1000] transform transition-transform duration-300 md:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        aria-hidden={!isMobileMenuOpen}
       >
         <div className="p-8 pt-20">
           <div className="space-y-6">
@@ -160,13 +163,9 @@ export default function BrutalistNavigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block ${isActive ? 'font-black' : 'font-bold'}`}
-                  onClick={() => {
-                    const menu = document.getElementById('mobile-menu')
-                    if (menu) {
-                      menu.classList.add('translate-x-full')
-                    }
-                  }}
+                  className={`block ${isActive ? 'font-black' : 'font-bold'} focus:outline-none focus:ring-2 focus:ring-safety-orange focus:ring-inset p-2 -m-2`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] font-mono opacity-60">{link.code}</span>

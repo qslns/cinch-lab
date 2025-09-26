@@ -3,402 +3,291 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CipherText from '@/components/CipherText'
 
-// Dynamic imports
 const InteractiveCanvas = dynamic(() => import('@/components/InteractiveCanvas'), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-concrete-gray animate-pulse" />
+  loading: () => <div className="w-full h-full bg-carbon-black animate-pulse" />
 })
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function BrutalistHomePage() {
+export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
   const [currentTime, setCurrentTime] = useState('')
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [experimentStatus, setExperimentStatus] = useState('IDLE')
   const [glitchMode, setGlitchMode] = useState(false)
-  const [systemErrors, setSystemErrors] = useState<string[]>([])
 
   // Parallax transforms
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
-  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1])
-  const rotateParallax = useTransform(scrollYProgress, [0, 1], [0, 5])
+  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
-  // Initialize
   useEffect(() => {
-    setIsLoaded(true)
-
-    // Time update with glitches
+    // Time display with Cinch•Release•Repeat cycle
     const timer = setInterval(() => {
       const now = new Date()
-      const timeStr = now.toLocaleTimeString('en-US', {
+      setCurrentTime(now.toLocaleTimeString('en-US', {
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
-      })
+      }))
 
-      // Random time glitch
-      if (Math.random() > 0.95) {
-        setCurrentTime('##:##:##')
-        setTimeout(() => setCurrentTime(timeStr), 100)
+      // Cycle through slogan states
+      const seconds = now.getSeconds()
+      if (seconds % 20 < 7) {
+        setExperimentStatus('CINCH')
+      } else if (seconds % 20 < 14) {
+        setExperimentStatus('RELEASE')
       } else {
-        setCurrentTime(timeStr)
+        setExperimentStatus('REPEAT')
+      }
+
+      // Random glitch
+      if (Math.random() > 0.97) {
+        setGlitchMode(true)
+        setTimeout(() => setGlitchMode(false), 150)
       }
     }, 1000)
 
-    // Random system errors
-    const errorTimer = setInterval(() => {
-      if (Math.random() > 0.9) {
-        const errors = [
-          'MEMORY_OVERFLOW',
-          'AESTHETIC_BREACH',
-          'STYLE_CORRUPTION',
-          'GRID_MALFUNCTION',
-          'FASHION_EXCEPTION'
-        ]
-        const error = errors[Math.floor(Math.random() * errors.length)]
-        setSystemErrors(prev => [...prev, error])
-        setTimeout(() => {
-          setSystemErrors(prev => prev.filter(e => e !== error))
-        }, 3000)
-      }
-    }, 5000)
-
     // GSAP Animations
     const ctx = gsap.context(() => {
-      // Brutalist text reveal
-      gsap.from('.brutal-text', {
+      gsap.from('.slogan-word', {
         y: 100,
         opacity: 0,
-        skewY: 10,
-        duration: 1,
-        stagger: 0.1,
+        duration: 1.2,
+        stagger: 0.3,
         ease: 'power4.out'
       })
 
-      // Glitch effect on scroll
-      ScrollTrigger.create({
-        trigger: '#laboratory',
-        start: 'top 80%',
-        onEnter: () => setGlitchMode(true),
-        onLeaveBack: () => setGlitchMode(false)
+      gsap.from('.genius-text', {
+        opacity: 0,
+        scale: 0.9,
+        duration: 2,
+        delay: 1.5,
+        ease: 'power2.out'
       })
     })
 
     return () => {
       clearInterval(timer)
-      clearInterval(errorTimer)
       ctx.revert()
     }
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-paper-white relative overflow-hidden">
-      {/* Scientific Grid Background */}
-      <div className="fixed inset-0 scientific-grid opacity-30 pointer-events-none" />
+    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
+      {glitchMode && <div className="fixed inset-0 noise-overlay" />}
 
-      {/* Scan Lines */}
-      <div className="fixed inset-0 scan-lines pointer-events-none" />
-
-      {/* System Errors Display */}
-      <AnimatePresence>
-        {systemErrors.map((error, index) => (
-          <motion.div
-            key={error + index}
-            className="fixed z-[999] error-box"
-            style={{ top: `${80 + index * 40}px`, right: '20px' }}
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 300, opacity: 0 }}
-          >
-            ERROR: {error}
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {/* HERO SECTION - Brutalist Layout */}
-      <section className="min-h-screen relative brutalist-grid-asymmetric">
-        {/* Cell 1: System Info */}
-        <div className="p-8 border-r-3 border-carbon-black bg-white">
-          <div className="text-[10px] font-mono space-y-2">
-            <div>SYSTEM_BOOT</div>
-            <div>VERSION_2025.1.0</div>
-            <div>MODE: EXPERIMENTAL</div>
-            <div className="mt-4">
-              <div className={`inline-block w-2 h-2 ${glitchMode ? 'bg-red-500' : 'bg-green-500'} animate-pulse`} />
-              <span className="ml-2">{glitchMode ? 'UNSTABLE' : 'STABLE'}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Cell 2: Main Title */}
+      {/* HERO SECTION - SLOGAN FOCUSED */}
+      <section className="min-h-screen relative flex items-center justify-center" aria-label="Hero section">
         <motion.div
-          className="p-12 flex flex-col justify-center bg-white relative overflow-hidden"
-          style={{ scale: scaleParallax }}
+          className="text-center relative z-10"
+          style={{ y: yParallax }}
         >
-          <div>
-            <h1 className="brutal-text text-[clamp(60px,10vw,180px)] font-black leading-[0.8] tracking-tighter">
-              <CipherText text="CINCH" />
-            </h1>
-            <h1 className="brutal-text text-[clamp(60px,10vw,180px)] font-black leading-[0.8] tracking-tighter text-safety-orange">
-              <CipherText text="LAB" />
-            </h1>
+          {/* Main Slogan */}
+          <div className="mb-12">
+            <motion.h1
+              className="text-[clamp(50px,8vw,150px)] font-black tracking-tighter leading-[0.9]"
+              style={{ scale: scaleParallax }}
+            >
+              <span className="slogan-word block">
+                <CipherText text="CINCH" />
+              </span>
+              <span className="slogan-word block text-safety-orange">
+                •
+              </span>
+              <span className="slogan-word block">
+                <CipherText text="RELEASE" />
+              </span>
+              <span className="slogan-word block text-safety-orange">
+                •
+              </span>
+              <span className="slogan-word block">
+                <CipherText text="REPEAT" />
+              </span>
+            </motion.h1>
           </div>
-          <div className="mt-8">
-            <p className="text-sm font-mono tracking-wider">
-              LABORATORY <span className="text-safety-orange">∴</span> BRUTALISM
-            </p>
-            <p className="text-xs font-mono opacity-60 mt-2">
-              WHERE FASHION MEETS CONTROLLED CHAOS
+
+          {/* Status Indicator */}
+          <motion.div
+            className="mb-8 flex items-center justify-center gap-4"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            role="status"
+            aria-live="polite"
+          >
+            <div className="h-px w-20 bg-white/30" />
+            <span className="text-xs font-mono tracking-wider">
+              STATUS: {experimentStatus}
+            </span>
+            <div className="h-px w-20 bg-white/30" />
+          </motion.div>
+
+          {/* Laboratory Name */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-black tracking-[0.3em] opacity-60">
+              CINCH LAB
+            </h2>
+            <p className="text-xs font-mono mt-2 opacity-40">
+              EXPERIMENTAL FASHION LABORATORY
             </p>
           </div>
 
-          {/* Rotating element */}
+          {/* Genius Declaration */}
           <motion.div
-            className="absolute -bottom-10 -right-10 w-40 h-40 border-3 border-carbon-black"
-            style={{ rotate: rotateParallax }}
-          />
+            className="genius-text mb-12 p-8 border border-white/20"
+            whileHover={{ borderColor: 'rgba(255, 107, 53, 0.5)' }}
+          >
+            <p className="text-lg font-bold mb-2">
+              "CINCH LAB은 최고이자 난 천재야"
+            </p>
+            <p className="text-xs font-mono opacity-60">
+              GENIUS AT WORK • NO COMPROMISE • PURE CREATION
+            </p>
+          </motion.div>
+
+          {/* Navigation Hint */}
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-xs font-mono opacity-40"
+          >
+            EXPLORE THE LABORATORY ↓
+          </motion.div>
         </motion.div>
 
-        {/* Cell 3: Navigation Grid */}
-        <div className="p-6 bg-concrete-gray text-white">
-          <div className="h-full flex flex-col justify-between">
-            <div className="text-[10px] font-mono">
-              NAV_MATRIX
-            </div>
-            <div className="space-y-4">
-              {['LAB', 'ARCHIVE', 'CONTACT'].map((item, i) => (
-                <div key={item} className="border-t border-white/30 pt-2">
-                  <span className="text-[10px] opacity-60">00{i + 1}</span>
-                  <div className="text-sm font-bold">{item}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Corner Time Display */}
+        <div className="fixed top-8 right-8 text-[10px] font-mono opacity-60" aria-live="polite" aria-atomic="true" aria-label="Current time">
+          <span className="sr-only">Current time: </span>{currentTime}
         </div>
 
-        {/* Cell 4: Time Display */}
-        <div className="p-8 bg-carbon-black text-white flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-3xl font-mono font-bold">
-              {currentTime}
-            </div>
-            <div className="text-[10px] opacity-60 mt-2">
-              TEMPORAL_COORDINATE
-            </div>
-          </div>
-        </div>
-
-        {/* Additional cells for asymmetric layout */}
-        <div className="col-span-2 p-8 bg-white border-t-3 border-carbon-black">
-          <div className="flex items-center gap-4">
-            <div className="lab-warning w-20 h-20" />
-            <div>
-              <p className="text-xs font-mono">CAUTION</p>
-              <p className="text-[10px] opacity-60">EXPERIMENTAL ZONE AHEAD</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-8 bg-safety-orange text-white">
-          <p className="text-xs font-mono">CURRENT_EXPERIMENT</p>
-          <p className="text-2xl font-black mt-2">CHAOS</p>
-        </div>
-
-        <div className="p-8 bg-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <InteractiveCanvas type="particles" interactive={false} />
-          </div>
-          <p className="relative z-10 text-xs font-mono">PARTICLE_SYSTEM</p>
-        </div>
+        {/* Rotating Element */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/5"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+        />
       </section>
 
-      {/* LABORATORY SECTION */}
-      <section id="laboratory" className="py-24 px-8 bg-white relative">
+      {/* LABORATORY PREVIEW */}
+      <section className="py-24 px-8 relative" aria-labelledby="lab-preview-title">
         <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="mb-16 lab-border p-8 bg-paper-white">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-[clamp(40px,6vw,80px)] font-black brutalist-heading">
-                  <CipherText text="LABORATORY" />
-                </h2>
-                <p className="text-xs font-mono mt-2 opacity-60">
-                  EXPERIMENTAL_FASHION_RESEARCH_FACILITY
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="chemical-formula">
-                  C₈H₁₀N₄O₂
-                </div>
-                <p className="text-[10px] mt-2 opacity-60">CAFFEINE</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Experiment Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-carbon-black p-2">
-            {/* Card 1: FABRIC */}
-            <Link href="/lab">
-              <motion.div
-                className="bg-white p-8 h-96 relative overflow-hidden group cursor-pointer"
-                whileHover={{ y: -5 }}
-              >
-                <div className="absolute top-4 right-4 text-[10px] font-mono opacity-60">
-                  EXP_001
-                </div>
-                <h3 className="text-4xl font-black mb-4">FABRIC</h3>
-                <div className="h-48 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 border-3 border-carbon-black transform rotate-45 group-hover:rotate-90 transition-transform duration-500" />
-                  </div>
-                </div>
-                <p className="text-xs font-mono opacity-60">
-                  MATERIAL_DECOMPOSITION
-                </p>
-              </motion.div>
-            </Link>
-
-            {/* Card 2: FORM */}
-            <Link href="/lab">
-              <motion.div
-                className="bg-concrete-gray text-white p-8 h-96 relative overflow-hidden group cursor-pointer"
-                whileHover={{ y: -5 }}
-              >
-                <div className="absolute top-4 right-4 text-[10px] font-mono opacity-60">
-                  EXP_002
-                </div>
-                <h3 className="text-4xl font-black mb-4">FORM</h3>
-                <div className="h-48 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-1 bg-white group-hover:h-32 transition-all duration-500" />
-                    <div className="w-1 h-32 bg-white absolute group-hover:w-32 transition-all duration-500" />
-                  </div>
-                </div>
-                <p className="text-xs font-mono opacity-60">
-                  STRUCTURAL_ANALYSIS
-                </p>
-              </motion.div>
-            </Link>
-
-            {/* Card 3: VOID */}
-            <Link href="/lab">
-              <motion.div
-                className="bg-carbon-black text-white p-8 h-96 relative overflow-hidden group cursor-pointer"
-                whileHover={{ y: -5 }}
-              >
-                <div className="absolute top-4 right-4 text-[10px] font-mono opacity-60">
-                  EXP_003
-                </div>
-                <h3 className="text-4xl font-black mb-4 text-safety-orange">VOID</h3>
-                <div className="h-48 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 rounded-full border-3 border-safety-orange group-hover:scale-150 transition-transform duration-500" />
-                  </div>
-                </div>
-                <p className="text-xs font-mono opacity-60">
-                  NEGATIVE_SPACE_THEORY
-                </p>
-              </motion.div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* COLLECTIONS GRID */}
-      <section className="py-24 bg-concrete-gray">
-        <div className="px-8">
-          <div className="mb-16">
-            <h2 className="text-[clamp(40px,6vw,80px)] font-black text-white brutalist-heading">
-              <CipherText text="COLLECTIONS" />
+          <div className="text-center mb-16">
+            <h2 id="lab-preview-title" className="text-4xl font-black mb-4">
+              <CipherText text="NO SALES" />
             </h2>
-            <div className="flex items-center gap-4 mt-4">
-              <div className="h-1 bg-safety-orange flex-grow" />
-              <span className="text-xs font-mono text-white">2020—2025</span>
-            </div>
-          </div>
-
-          {/* Asymmetric Collection Grid */}
-          <div className="brutalist-grid-asymmetric max-w-7xl mx-auto">
-            {['SS25', 'FW24', 'SS24', 'FW23', 'ARCHIVE'].map((collection, i) => (
-              <Link key={collection} href="/collections">
-                <motion.div
-                  className={`p-8 ${i % 2 === 0 ? 'bg-white text-carbon-black' : 'bg-carbon-black text-white'} cursor-pointer relative overflow-hidden group`}
-                  whileHover={{ scale: 0.98 }}
-                  style={{ gridRow: `span ${i === 0 ? 2 : 1}` }}
-                >
-                  <h3 className="text-2xl font-black">{collection}</h3>
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-4xl">→</span>
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PHILOSOPHY */}
-      <section className="py-24 px-8 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="lab-border p-12 bg-paper-white">
-            <h2 className="text-[clamp(40px,6vw,100px)] font-black brutalist-heading leading-[0.8]">
-              <CipherText text="FASHION" />
-              <br />
-              <span className="text-safety-orange"><CipherText text="EXCEEDS" /></span>
-              <br />
-              <CipherText text="LIMITS" />
-            </h2>
-            <div className="mt-8 border-t-3 border-carbon-black pt-8">
-              <p className="text-sm font-mono leading-relaxed">
-                In this laboratory, we deconstruct fashion to its molecular level.
-                Every thread is an experiment. Every seam, a hypothesis.
-                We don't follow trends—we engineer mutations.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-12 bg-carbon-black text-white">
-        <div className="px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            <div>
-              <p className="text-xs font-mono opacity-60">LOCATION</p>
-              <p className="text-sm font-bold mt-2">SEOUL</p>
-            </div>
-            <div>
-              <p className="text-xs font-mono opacity-60">CONTACT</p>
-              <p className="text-sm font-bold mt-2">LAB@CINCH.COM</p>
-            </div>
-            <div>
-              <p className="text-xs font-mono opacity-60">STATUS</p>
-              <p className="text-sm font-bold mt-2">OPERATIONAL</p>
-            </div>
-            <div>
-              <p className="text-xs font-mono opacity-60">VERSION</p>
-              <p className="text-sm font-bold mt-2">2025.1.0</p>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <p className="text-[10px] font-mono opacity-40 text-center">
-              © 2025 CINCH LAB — EXPERIMENTAL FASHION LABORATORY
+            <p className="text-sm font-mono opacity-60">
+              ONLY EXPERIMENTS • ONLY CREATION • ONLY GENIUS
             </p>
           </div>
-        </div>
-      </footer>
 
-      {/* Fixed Position Elements */}
-      <div className="fixed bottom-8 right-8 text-[10px] font-mono opacity-40 z-50">
-        SCROLL: {Math.round(scrollYProgress.get() * 100)}%
+          {/* Laboratory Sections Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* LAB */}
+            <Link href="/lab" className="group" aria-label="Explore the LAB - Experimental techniques and processes">
+              <motion.div
+                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
+                whileHover={{ y: -5 }}
+              >
+                <h3 className="text-2xl font-black mb-4">LAB</h3>
+                <p className="text-xs opacity-60 mb-4">
+                  Experimental techniques and processes.
+                  Where genius manifests in form.
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono">EXPERIMENTS_ACTIVE</span>
+                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
+                </div>
+              </motion.div>
+            </Link>
+
+            {/* COLLECTIONS */}
+            <Link href="/collections" className="group" aria-label="View COLLECTIONS - Visual documentation of creations">
+              <motion.div
+                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
+                whileHover={{ y: -5 }}
+              >
+                <h3 className="text-2xl font-black mb-4">COLLECTIONS</h3>
+                <p className="text-xs opacity-60 mb-4">
+                  Visual documentation of creations.
+                  No prices, only visions.
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono">LOOKBOOKS_AVAILABLE</span>
+                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
+                </div>
+              </motion.div>
+            </Link>
+
+            {/* ARCHIVE */}
+            <Link href="/archive" className="group" aria-label="Browse ARCHIVE - Philosophy and process documentation">
+              <motion.div
+                className="p-8 border border-white/20 hover:border-safety-orange transition-all"
+                whileHover={{ y: -5 }}
+              >
+                <h3 className="text-2xl font-black mb-4">ARCHIVE</h3>
+                <p className="text-xs opacity-60 mb-4">
+                  The mind behind the laboratory.
+                  Philosophy and process.
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono">THOUGHTS_DOCUMENTED</span>
+                  <span className="text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
+                </div>
+              </motion.div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* PHILOSOPHY SECTION */}
+      <section className="py-24 px-8 bg-white text-carbon-black">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-[clamp(40px,6vw,80px)] font-black mb-8 leading-[0.9]">
+            FASHION WITHOUT
+            <br />
+            <span className="text-safety-orange">COMMERCE</span>
+          </h2>
+          <p className="text-sm leading-relaxed opacity-80 max-w-2xl mx-auto">
+            We don't sell clothes. We create experiments.
+            After exhibitions, after documentation, maybe one piece finds an owner.
+            Not through shopping carts, but through understanding.
+            This is not a store. This is a laboratory.
+          </p>
+        </div>
+      </section>
+
+      {/* BOTTOM STATUS BAR */}
+      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <p className="text-[10px] font-mono opacity-60">
+            CINCH_LAB_V.2025 • GENIUS_MODE_ACTIVE
+          </p>
+          <div className="flex items-center gap-6">
+            <span className="text-[10px] font-mono opacity-60">
+              NO_PRODUCTS
+            </span>
+            <span className="text-[10px] font-mono opacity-60">
+              NO_PRICES
+            </span>
+            <span className="text-[10px] font-mono text-safety-orange">
+              ONLY_CREATION
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

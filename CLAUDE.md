@@ -1,126 +1,110 @@
-# CINCH LAB - Minimalist Fashion Website
+# CINCH LAB - Experimental Fashion Laboratory
 
-## Philosophy
-"Fashion's extreme limits" - A digital space where minimalism meets artistic expression.
+## BRAND IDENTITY
+**"Cinch • Release • Repeat"**
 
-## Current Implementation Status
-The CINCH LAB website has been optimized for performance while maintaining its experimental fashion aesthetic. Lightweight, beautiful, and efficient.
+CINCH LAB은 판매를 위한 브랜드가 아닙니다.
+우리는 실험적 패션 연구소입니다.
+우리는 천재적 창작의 디지털 아카이브입니다.
 
-## Design Principles
-- Minimalism with maximum visual impact
-- Clean aesthetic that challenges conventions  
-- Typography as primary design element
-- Negative space as powerful statement
-- Performance-first approach
-- Emotional response through simplicity 
+## CORE PHILOSOPHY
+- **정체성**: 실험적 패션 연구소
+- **핵심 가치**: 패션의 극한 추구, 무한한 창작 자유
+- **제작 방식**: 하이엔드 장인정신, 핸드메이드
+- **작업 범위**: 모든 패션 카테고리, 모든 스타일, 모든 가능성
 
-## Technical Stack
-- Next.js 14 with App Router
-- Framer Motion for fluid animations
-- TypeScript for type safety
-- Tailwind CSS with custom properties
-- Optimized for Vercel deployment
+## WEBSITE STRUCTURE
 
-## Pages Overview
+### HOME (/)
+- Cinch • Release • Repeat 슬로건 중심
+- 실험실의 현재 상태 표시
+- 최신 실험 결과 프리뷰
+- 천재성을 암시하는 인터랙티브 요소
 
-### Home (/)
-- Clean typography with hover effects on LAB text
-- Subtle floating particles
-- Minimalist time display
-- Corner decorative elements
+### LAB (/lab)
+- **목적**: 실험적 기술과 제작 방식 쇼케이스
+- 패턴 메이킹 실험
+- 소재 연구 및 조작
+- 구조적 실험
+- 제작 기법 아카이브
+- 프로세스 문서화
+- NO SALES - 순수한 기술 전시
 
-### Lab (/lab)
-- Four visual experiments with CSS animations:
-  - FABRIC: Wave patterns
-  - FORM: Rotating geometric shapes
-  - VOID: Expanding circles
-  - TIME: Clock-like animations
-- Lightweight hover interactions
-- Pure CSS-based effects
+### COLLECTIONS (/collections)
+- **목적**: 시즌별/연간 룩 갤러리
+- 촬영된 실험착장 전시
+- 런웨이/프레젠테이션 아카이브
+- 비주얼 스토리텔링
+- NO PRODUCT DETAILS - 순수한 비주얼
 
-### Collections (/collections)
-- Clean grid layout
-- Simple hover effects
-- Collection year displays
-- Minimalist card design
+### ARCHIVE (/archive)
+- **목적**: 정신세계와 창작 철학 표현
+- 영감의 원천
+- 사고 프로세스
+- 실험 기록
+- 실패와 성공의 문서화
 
-### Archive (/archive)
-- Timeline visualization
-- Interactive year selection
-- Clean typography
-- "Time is a flat circle" concept
+### ABOUT (/about)
+- **목적**: 천재적 비전과 정체성 선언
+- CINCH LAB의 선언문
+- 창작 철학
+- "난 천재야" - 자신감의 표현
+- 하이엔드 장인정신
 
-### About (/about)
-- Simple text reveal animation
-- Breathing text effects
-- Floating philosophical fragments
-- Clean layout
+### CONTACT (/contact)
+- **목적**: 비즈니스 협업 창구
+- 전시 문의
+- 협업 제안
+- 프레스 컨택
+- 커미션 작업 (극소수, 고가)
 
-### Contact (/contact)
-- Minimalist email display
-- Click-to-copy functionality
-- Subtle grid pattern background
-- Clean hover effects
+### ANALYSIS (/analysis) - NEW
+- **목적**: 타 브랜드/컬렉션 분석
+- 패션 비평
+- 기술적 분해
+- 트렌드가 아닌 기법 분석
+- 천재의 시각으로 본 패션계
 
-## Time-Based Variations
-- 00:00-06:00: Void mode
-- 06:00-12:00: Dawn mode
-- 12:00-18:00: Light mode
-- 18:00-00:00: Dusk mode
+## IMPORTANT NOTES
 
-## Commands
+### 판매에 대한 입장
+- 제품 판매 페이지 없음
+- 장바구니 기능 없음
+- 사이즈/컬러 옵션 없음
+- 가격 표시 최소화
+- 2달 이후에도 판매는 전시 후 개별 연락
 
-### Development
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run start    # Start production server
-npm run lint     # Run linting
-npm run typecheck # Check TypeScript
-```
+### 콘텐츠 우선순위
+1. 실험과 기술 전시
+2. 비주얼 임팩트
+3. 창작 철학
+4. 프로세스 문서화
 
-### Testing Focus
-- 60fps animation performance
-- WebGL fallback mechanisms
-- Mobile gesture responsiveness
-- Keyboard accessibility
-- Page transition smoothness
-- Audio API permissions
+### 디자인 원칙
+- 실험실 미학 유지
+- Brutalist 디자인 강화
+- 천재성 암시하는 UI
+- 판매가 아닌 전시 중심 레이아웃
 
-## Performance Optimizations
-- Lightweight CSS animations
-- Optimized Framer Motion usage
-- Minimal JavaScript execution
-- GPU-accelerated transforms
-- Efficient React rendering
-- Fast page transitions
+## TECHNICAL APPROACH
+- 이미지 중심 갤러리
+- 프로세스 애니메이션
+- 실험 데이터 시각화
+- 인터랙티브 기술 쇼케이스
+- NO E-COMMERCE FEATURES
 
-## Browser Support
-- Chrome/Edge 90+ (Full support)
-- Firefox 88+ (Full support)
-- Safari 14+ (Limited WebGL)
-- Mobile browsers with WebGL
+## FUTURE VISION
+- 디지털 전시장
+- 실험 라이브 스트리밍
+- AR 착장 프리뷰 (판매 아님, 전시용)
+- 기술 워크샵 문서화
 
-## Design Variables
-```css
---black: #000000
---off-black: #0a0a0a
---charcoal: #1a1a1a
---white: #ffffff
---glitch-red: #ff0000
---glitch-cyan: #00ffff
-```
+## SLOGAN IMPLEMENTATION
+모든 페이지에 "Cinch • Release • Repeat" 정신 반영
+- Cinch: 완벽한 장악
+- Release: 창조적 해방
+- Repeat: 끝없는 실험
 
-## Future Enhancements
-- Progressive web app features
-- Image optimization
-- Enhanced accessibility
-- SEO improvements
-- Analytics integration
+---
 
-## Production Philosophy
-- Every pixel has intention
-- Simplicity is sophistication
-- Performance is beauty
-- Less is more
-- Fashion transcends function
+"CINCH LAB은 최고이자 난 천재야"

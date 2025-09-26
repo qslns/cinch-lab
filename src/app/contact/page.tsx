@@ -1,661 +1,606 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CipherText from '@/components/CipherText'
 
-// Communication Channels
-const channels = [
+gsap.registerPlugin(ScrollTrigger)
+
+// Collaboration Types
+const collaborationTypes = [
   {
-    id: 'CH_001',
-    protocol: 'ENCRYPTED_EMAIL',
-    frequency: '256-BIT',
-    address: 'lab@cinch.secure',
-    status: 'SECURE',
-    encryption: 'AES-256',
-    responseTime: '&lt; 24H'
+    id: 'COLLAB_001',
+    type: 'EXHIBITION',
+    title: 'GALLERY & MUSEUM EXHIBITIONS',
+    description: 'Showcase our experimental pieces in your space. No sales, pure art.',
+    requirements: [
+      'Minimum 200m² exhibition space',
+      'Climate controlled environment',
+      'Security protocols for experimental pieces',
+      'No commercial sales during exhibition'
+    ],
+    timeline: '3-6 months planning',
+    status: 'ACCEPTING'
   },
   {
-    id: 'CH_002',
-    protocol: 'QUANTUM_RELAY',
-    frequency: 'Q-BAND',
-    address: '@cinch.quantum',
-    status: 'EXPERIMENTAL',
-    encryption: 'QUANTUM',
-    responseTime: 'INSTANT'
+    id: 'COLLAB_002',
+    type: 'RESEARCH',
+    title: 'ACADEMIC & RESEARCH PARTNERSHIPS',
+    description: 'Collaborate on pushing the boundaries of fashion and material science.',
+    requirements: [
+      'Research institution or university affiliation',
+      'Shared research findings',
+      'Co-authored publications',
+      'Access to specialized equipment'
+    ],
+    timeline: '6-12 months minimum',
+    status: 'SELECTIVE'
   },
   {
-    id: 'CH_003',
-    protocol: 'NEURAL_LINK',
-    frequency: 'SYNAPTIC',
-    address: 'mind.cinch.lab',
-    status: 'BETA',
-    encryption: 'NEURAL',
-    responseTime: 'VARIABLE'
+    id: 'COLLAB_003',
+    type: 'MEDIA',
+    title: 'EDITORIAL & DOCUMENTATION',
+    description: 'Document our experiments and philosophy through your lens.',
+    requirements: [
+      'Portfolio of experimental work',
+      'Understanding of our no-commerce philosophy',
+      'Creative vision alignment',
+      'High-quality documentation capabilities'
+    ],
+    timeline: 'Project based',
+    status: 'OPEN'
+  },
+  {
+    id: 'COLLAB_004',
+    type: 'CREATIVE',
+    title: 'ARTISTIC COLLABORATIONS',
+    description: 'Cross-disciplinary projects with artists, musicians, architects.',
+    requirements: [
+      'Established body of work',
+      'Experimental approach',
+      'Non-commercial focus',
+      'Willingness to fail'
+    ],
+    timeline: 'Variable',
+    status: 'BY_INVITATION'
+  },
+  {
+    id: 'COLLAB_005',
+    type: 'ACQUISITION',
+    title: 'PRIVATE COLLECTION ACQUISITION',
+    description: 'After exhibition, select pieces may find homes with serious collectors.',
+    requirements: [
+      'Understanding of experimental fashion',
+      'Commitment to preservation',
+      'No resale for profit',
+      'Private collection only'
+    ],
+    timeline: 'Post-exhibition only',
+    status: 'RARE'
   }
 ]
 
-// Laboratory Locations
-const facilities = [
+// Contact Channels
+const contactChannels = [
   {
-    designation: 'SITE_ALPHA',
-    location: 'NEW YORK',
-    coordinates: '40.7128°N, 74.0060°W',
-    clearance: 'LEVEL_5',
-    status: 'OPERATIONAL',
-    hazardLevel: 3,
-    specialization: 'FABRIC_RESEARCH'
+    id: 'CHANNEL_001',
+    purpose: 'EXHIBITIONS',
+    email: 'exhibitions@cinchlab.com',
+    response: '48-72 hours',
+    priority: 'HIGH'
   },
   {
-    designation: 'SITE_BETA',
-    location: 'TOKYO',
-    coordinates: '35.6762°N, 139.6503°E',
-    clearance: 'LEVEL_4',
-    status: 'RESTRICTED',
-    hazardLevel: 4,
-    specialization: 'TEMPORAL_STUDIES'
+    id: 'CHANNEL_002',
+    purpose: 'COLLABORATIONS',
+    email: 'collab@cinchlab.com',
+    response: '1 week',
+    priority: 'MEDIUM'
   },
   {
-    designation: 'SITE_GAMMA',
-    location: 'LONDON',
-    coordinates: '51.5074°N, 0.1278°W',
-    clearance: 'LEVEL_3',
-    status: 'MAINTENANCE',
-    hazardLevel: 2,
-    specialization: 'PATTERN_ANALYSIS'
+    id: 'CHANNEL_003',
+    purpose: 'PRESS & MEDIA',
+    email: 'press@cinchlab.com',
+    response: '24-48 hours',
+    priority: 'HIGH'
   },
   {
-    designation: 'SITE_DELTA',
-    location: '[CLASSIFIED]',
-    coordinates: '[REDACTED]',
-    clearance: 'LEVEL_10',
-    status: 'UNKNOWN',
-    hazardLevel: 5,
-    specialization: '[DATA_EXPUNGED]'
+    id: 'CHANNEL_004',
+    purpose: 'RESEARCH',
+    email: 'research@cinchlab.com',
+    response: '2 weeks',
+    priority: 'LOW'
+  },
+  {
+    id: 'CHANNEL_005',
+    purpose: 'GENERAL',
+    email: 'hello@cinchlab.com',
+    response: '1-2 weeks',
+    priority: 'LOW'
   }
 ]
 
-// Message Types
-const messageTypes = [
-  { code: 'INQ_001', type: 'GENERAL_INQUIRY', priority: 'LOW', processing: 'AUTOMATED' },
-  { code: 'COL_002', type: 'COLLABORATION', priority: 'MEDIUM', processing: 'MANUAL' },
-  { code: 'URG_003', type: 'URGENT_MATTER', priority: 'HIGH', processing: 'IMMEDIATE' },
-  { code: 'EXP_004', type: 'EXPERIMENT_ACCESS', priority: 'CRITICAL', processing: 'CLEARANCE_REQUIRED' },
-  { code: 'BUG_005', type: 'ANOMALY_REPORT', priority: 'VARIABLE', processing: 'INVESTIGATION' }
+// Collaboration Process
+const processSteps = [
+  {
+    step: 1,
+    phase: 'INITIAL CONTACT',
+    description: 'Send detailed proposal with portfolio',
+    duration: '1-2 weeks',
+    status: 'REQUIRED'
+  },
+  {
+    step: 2,
+    phase: 'REVIEW & EVALUATION',
+    description: 'Our team reviews alignment with CINCH LAB philosophy',
+    duration: '2-4 weeks',
+    status: 'INTERNAL'
+  },
+  {
+    step: 3,
+    phase: 'DIALOGUE',
+    description: 'Discussion of vision, expectations, and boundaries',
+    duration: '2-3 weeks',
+    status: 'COLLABORATIVE'
+  },
+  {
+    step: 4,
+    phase: 'AGREEMENT',
+    description: 'Formal agreement with clear non-commercial terms',
+    duration: '1 week',
+    status: 'LEGAL'
+  },
+  {
+    step: 5,
+    phase: 'EXECUTION',
+    description: 'Project implementation with regular check-ins',
+    duration: 'Variable',
+    status: 'ACTIVE'
+  },
+  {
+    step: 6,
+    phase: 'DOCUMENTATION',
+    description: 'Archive and document the collaboration',
+    duration: 'Ongoing',
+    status: 'PERMANENT'
+  }
 ]
 
-export default function BrutalistContactPage() {
+export default function ContactPage() {
+  const [selectedCollabType, setSelectedCollabType] = useState<string | null>(null)
   const [activeChannel, setActiveChannel] = useState<string | null>(null)
-  const [selectedFacility, setSelectedFacility] = useState<string | null>(null)
-  const [terminalInput, setTerminalInput] = useState('')
-  const [terminalHistory, setTerminalHistory] = useState<string[]>([
-    'COMMUNICATION_TERMINAL_V3.2.1',
-    'INITIALIZING_SECURE_CHANNELS...',
-    'ENCRYPTION_PROTOCOLS_LOADED',
-    'READY_FOR_TRANSMISSION'
-  ])
-  const [messageType, setMessageType] = useState('INQ_001')
-  const [securityLevel, setSecurityLevel] = useState(1)
-  const [transmitting, setTransmitting] = useState(false)
-  const [scanlines, setScanlines] = useState(true)
-  const [glitchActive, setGlitchActive] = useState(false)
-  const [systemWarning, setSystemWarning] = useState<string | null>(null)
-  const terminalRef = useRef<HTMLDivElement>(null)
+  const [formData, setFormData] = useState({
+    name: '',
+    organization: '',
+    email: '',
+    type: '',
+    message: ''
+  })
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [connectionStatus, setConnectionStatus] = useState('SECURE')
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll()
 
-  // Random system warnings
+  // Parallax effects
+  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
+  const opacityParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0.6])
+
   useEffect(() => {
-    const warningTimer = setInterval(() => {
-      if (Math.random() > 0.85) {
-        const warnings = [
-          'SIGNAL_INTERFERENCE_DETECTED',
-          'RECALIBRATING_ANTENNA_ARRAY',
-          'QUANTUM_ENTANGLEMENT_UNSTABLE',
-          'FIREWALL_BREACH_ATTEMPT_BLOCKED',
-          'TEMPORAL_DELAY_IN_SECTOR_7'
-        ]
-        const warning = warnings[Math.floor(Math.random() * warnings.length)]
-        setSystemWarning(warning)
-        setGlitchActive(true)
-        setTimeout(() => {
-          setSystemWarning(null)
-          setGlitchActive(false)
-        }, 2000)
-      }
-    }, 4000)
+    // Connection status updates
+    const statusInterval = setInterval(() => {
+      const statuses = ['SECURE', 'ENCRYPTED', 'VERIFIED', 'PROTECTED']
+      setConnectionStatus(statuses[Math.floor(Math.random() * statuses.length)])
+    }, 3000)
 
-    return () => clearInterval(warningTimer)
-  }, [])
+    // Process step animation
+    const stepInterval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % processSteps.length)
+    }, 2000)
 
-  // Terminal command processing
-  const processCommand = (command: string) => {
-    const cmd = command.toUpperCase()
-    let response = ''
-
-    if (cmd === 'HELP') {
-      response = 'AVAILABLE_COMMANDS: HELP, STATUS, CHANNELS, FACILITIES, SEND, CLEAR, ENCRYPT'
-    } else if (cmd === 'STATUS') {
-      response = `SYSTEM_STATUS: OPERATIONAL | UPTIME: ${Math.floor(Math.random() * 9999)}H | PACKETS_SENT: ${Math.floor(Math.random() * 999999)}`
-    } else if (cmd === 'CHANNELS') {
-      response = 'LISTING_COMMUNICATION_CHANNELS...\n' + channels.map(ch => `${ch.id}: ${ch.protocol} [${ch.status}]`).join('\n')
-    } else if (cmd === 'FACILITIES') {
-      response = 'ACCESSING_FACILITY_DATABASE...\n' + facilities.map(f => `${f.designation}: ${f.location} [CLEARANCE: ${f.clearance}]`).join('\n')
-    } else if (cmd === 'CLEAR') {
-      setTerminalHistory(['TERMINAL_CLEARED', 'READY_FOR_INPUT'])
-      return
-    } else if (cmd.startsWith('SEND')) {
-      response = 'INITIATING_TRANSMISSION_PROTOCOL...'
-      setTransmitting(true)
-      setTimeout(() => {
-        setTerminalHistory(prev => [...prev, 'TRANSMISSION_COMPLETE', 'MESSAGE_ID: ' + Math.random().toString(36).substr(2, 9).toUpperCase()])
-        setTransmitting(false)
-      }, 2000)
-    } else if (cmd === 'ENCRYPT') {
-      response = `ENCRYPTION_KEY_GENERATED: ${Math.random().toString(36).substr(2, 16).toUpperCase()}`
-    } else {
-      response = `COMMAND_NOT_RECOGNIZED: ${cmd}`
-    }
-
-    if (response) {
-      setTerminalHistory(prev => [...prev, `> ${command}`, response])
-    }
-  }
-
-  const handleTerminalSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (terminalInput.trim()) {
-      processCommand(terminalInput)
-      setTerminalInput('')
-    }
-  }
-
-  // GSAP animations
-  useEffect(() => {
+    // GSAP animations
     const ctx = gsap.context(() => {
-      gsap.from('.channel-card', {
-        x: -100,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 1,
-        ease: 'power4.out'
-      })
-      gsap.from('.facility-card', {
+      gsap.from('.collab-card', {
         y: 100,
         opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out'
+      })
+
+      gsap.from('.channel-item', {
+        x: -50,
+        opacity: 0,
+        duration: 0.6,
         stagger: 0.1,
-        duration: 1,
-        ease: 'power4.out',
-        delay: 0.3
+        ease: 'power2.out'
+      })
+
+      gsap.from('.process-step', {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'back.out'
       })
     })
-    return () => ctx.revert()
+
+    return () => {
+      clearInterval(statusInterval)
+      clearInterval(stepInterval)
+      ctx.revert()
+    }
   }, [])
 
-  // Auto-scroll terminal
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight
-    }
-  }, [terminalHistory])
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitting(true)
+
+    // Simulate submission
+    await new Promise(resolve => setTimeout(resolve, 2000))
+
+    setSubmitted(true)
+    setSubmitting(false)
+
+    // Reset after 5 seconds
+    setTimeout(() => {
+      setSubmitted(false)
+      setFormData({
+        name: '',
+        organization: '',
+        email: '',
+        type: '',
+        message: ''
+      })
+    }, 5000)
+  }
 
   return (
-    <div className="min-h-screen bg-paper-white relative">
+    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white relative">
       {/* Background Effects */}
       <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
-      {glitchActive && <div className="fixed inset-0 noise-overlay" />}
-      {scanlines && <div className="fixed inset-0 scan-lines pointer-events-none" />}
-
-      {/* System Warning */}
-      <AnimatePresence>
-        {systemWarning && (
-          <motion.div
-            className="fixed top-20 left-0 right-0 z-50 bg-warning-yellow text-carbon-black py-2 px-8"
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            exit={{ y: -100 }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold">⚠ {systemWarning}</span>
-              <span className="text-[10px] opacity-60">CODE: {Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <motion.div
+        className="fixed inset-0 pointer-events-none"
+        style={{ opacity: opacityParallax }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-safety-orange/5 to-transparent" />
+      </motion.div>
 
       {/* Header */}
-      <section className="pt-24 pb-12 px-8 border-b-3 border-carbon-black">
+      <section className="relative py-24 px-8">
+        <motion.div
+          className="max-w-7xl mx-auto text-center"
+          style={{ y: yParallax }}
+        >
+          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
+            <CipherText text="CONTACT" />
+          </h1>
+          <p className="text-sm font-mono opacity-60 mb-4">
+            COLLABORATIONS • EXHIBITIONS • RESEARCH • NO SALES
+          </p>
+          <p className="text-lg italic opacity-80 max-w-2xl mx-auto">
+            "We don't sell clothes. We create experiences. Contact us for exhibitions, collaborations, and research partnerships."
+          </p>
+
+          {/* Connection Status */}
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <div className="text-xs font-mono">
+              <span className="opacity-60">CONNECTION:</span>
+              <span className="ml-2 text-hazmat-green">{connectionStatus}</span>
+            </div>
+            <div className="w-2 h-2 bg-hazmat-green animate-pulse" />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Collaboration Types */}
+      <section className="py-16 px-8 bg-white text-carbon-black">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between">
-            <div>
-              <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8]">
-                <CipherText text="COMM" /><br />
-                <span className="text-safety-orange"><CipherText text="LINK" /></span>
-              </h1>
-              <p className="text-xs font-mono mt-4 opacity-60">
-                SECURE_TRANSMISSION_PROTOCOLS_ENGAGED
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-[10px] font-mono space-y-1">
-                <div>SIGNAL: {Math.floor(Math.random() * 30 + 70)}%</div>
-                <div>LATENCY: {Math.floor(Math.random() * 50 + 10)}ms</div>
-                <div>ENCRYPTION: AES-256</div>
-                <div className={`${glitchActive ? 'text-glitch-red flicker' : 'text-hazmat-green'}`}>
-                  STATUS: {glitchActive ? 'INTERFERENCE' : 'CLEAR'}
+          <h2 className="text-3xl font-black mb-12 text-center">COLLABORATION OPPORTUNITIES</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {collaborationTypes.map((collab) => (
+              <motion.div
+                key={collab.id}
+                className="collab-card bg-paper-white border-3 border-carbon-black p-6 cursor-pointer hover:border-safety-orange transition-all"
+                onClick={() => setSelectedCollabType(collab.id)}
+                whileHover={{ y: -10 }}
+              >
+                {/* Status Badge */}
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-xs font-mono opacity-60">{collab.type}</span>
+                  <span className={`px-2 py-1 text-xs font-mono font-bold ${
+                    collab.status === 'ACCEPTING' ? 'bg-hazmat-green text-carbon-black' :
+                    collab.status === 'OPEN' ? 'bg-safety-orange text-white' :
+                    collab.status === 'SELECTIVE' ? 'bg-glitch-cyan text-carbon-black' :
+                    collab.status === 'BY_INVITATION' ? 'bg-glitch-red text-white' :
+                    'bg-carbon-black text-white'
+                  }`}>
+                    {collab.status}
+                  </span>
                 </div>
-              </div>
-            </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-black mb-3">{collab.title}</h3>
+                <p className="text-sm mb-4 opacity-80">{collab.description}</p>
+
+                {/* Requirements */}
+                <div className="mb-4">
+                  <p className="text-xs font-mono opacity-60 mb-2">REQUIREMENTS:</p>
+                  <ul className="space-y-1">
+                    {collab.requirements.slice(0, 2).map((req, i) => (
+                      <li key={i} className="text-xs flex items-start">
+                        <span className="text-safety-orange mr-2">•</span>
+                        <span className="opacity-80">{req}</span>
+                      </li>
+                    ))}
+                    {collab.requirements.length > 2 && (
+                      <li className="text-xs opacity-60">
+                        +{collab.requirements.length - 2} more requirements
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+                {/* Timeline */}
+                <div className="text-xs font-mono opacity-60">
+                  TIMELINE: {collab.timeline}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Communication Channels */}
+      {/* Contact Channels */}
       <section className="py-16 px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-8">COMMUNICATION_CHANNELS</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-carbon-black p-2">
+          <h2 className="text-3xl font-black mb-12 text-center">DIRECT CHANNELS</h2>
 
-            {channels.map((channel) => (
+          <div className="max-w-3xl mx-auto space-y-4">
+            {contactChannels.map((channel) => (
               <motion.div
                 key={channel.id}
-                className="channel-card bg-white relative overflow-hidden group cursor-pointer"
+                className="channel-item bg-white text-carbon-black p-6 border-2 border-white hover:border-safety-orange transition-all cursor-pointer"
                 onMouseEnter={() => setActiveChannel(channel.id)}
                 onMouseLeave={() => setActiveChannel(null)}
-                whileHover={{ y: -8 }}
+                whileHover={{ x: 10 }}
               >
-                {/* Card Header */}
-                <div className="p-6 border-b-3 border-carbon-black">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-[10px] font-mono opacity-60">{channel.id}</span>
-                      <h3 className="text-2xl font-black mt-1">{channel.protocol}</h3>
-                    </div>
-                    <div className={`px-2 py-1 text-[10px] font-mono ${
-                      channel.status === 'SECURE' ? 'bg-hazmat-green' :
-                      channel.status === 'EXPERIMENTAL' ? 'bg-warning-yellow' :
-                      'bg-centrifuge-blue'
-                    } text-white`}>
-                      {channel.status}
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-black mb-1">{channel.purpose}</h3>
+                    <p className="text-sm font-mono text-safety-orange">{channel.email}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-mono opacity-60">RESPONSE TIME</p>
+                    <p className="text-sm font-bold">{channel.response}</p>
+                  </div>
+                  <div className="ml-8">
+                    <div className={`w-3 h-3 ${
+                      channel.priority === 'HIGH' ? 'bg-glitch-red' :
+                      channel.priority === 'MEDIUM' ? 'bg-safety-orange' :
+                      'bg-hazmat-green'
+                    }`} />
                   </div>
                 </div>
-
-                {/* Card Body */}
-                <div className="p-6">
-                  <div className="space-y-3 text-xs font-mono">
-                    <div className="flex justify-between">
-                      <span className="opacity-60">FREQUENCY:</span>
-                      <span>{channel.frequency}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="opacity-60">ENCRYPTION:</span>
-                      <span>{channel.encryption}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="opacity-60">RESPONSE:</span>
-                      <span>{channel.responseTime}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="opacity-60">ADDRESS:</span>
-                      <span className="text-safety-orange">{channel.address}</span>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    className="w-full mt-6 py-2 bg-carbon-black text-white text-xs font-mono hover:bg-safety-orange transition-colors"
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setTerminalHistory(prev => [...prev, `CONNECTING_TO_${channel.id}...`, `CONNECTION_ESTABLISHED`])
-                    }}
-                  >
-                    CONNECT →
-                  </motion.button>
-                </div>
-
-                {/* Hover Effect */}
-                <motion.div
-                  className="absolute inset-0 bg-safety-orange pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: activeChannel === channel.id ? 0.05 : 0 }}
-                />
               </motion.div>
             ))}
+          </div>
 
+          <div className="mt-8 text-center">
+            <p className="text-xs font-mono opacity-60">
+              ALL COMMUNICATIONS ENCRYPTED • NO SALES INQUIRIES • SERIOUS PROPOSALS ONLY
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Laboratory Facilities */}
+      {/* Collaboration Process */}
       <section className="py-16 px-8 bg-concrete-gray">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black text-white mb-8">FACILITY_LOCATIONS</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {facilities.map((facility) => (
+          <h2 className="text-3xl font-black mb-12 text-center text-white">COLLABORATION PROCESS</h2>
+
+          <div className="relative">
+            {/* Process Line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20" />
+
+            {/* Process Steps */}
+            {processSteps.map((step, index) => (
               <motion.div
-                key={facility.designation}
-                className="facility-card bg-white p-6 relative cursor-pointer group"
-                onMouseEnter={() => setSelectedFacility(facility.designation)}
-                onMouseLeave={() => setSelectedFacility(null)}
-                whileHover={{ scale: 1.02 }}
+                key={step.step}
+                className={`process-step relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'} mb-12`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: currentStep >= index ? 1 : 0.3 }}
+                transition={{ duration: 0.5 }}
               >
-                {/* Clearance Badge */}
-                <div className="absolute top-2 right-2">
-                  <div className={`text-[10px] font-mono px-2 py-1 ${
-                    facility.clearance === 'LEVEL_10' ? 'bg-carbon-black text-white' :
-                    facility.clearance === 'LEVEL_5' ? 'bg-glitch-red text-white' :
-                    'bg-concrete-gray text-white'
-                  }`}>
-                    {facility.clearance}
-                  </div>
+                {/* Step Node */}
+                <div className={`absolute left-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center ${
+                  currentStep >= index ? 'bg-safety-orange' : 'bg-carbon-black'
+                } text-white font-black`}>
+                  {step.step}
                 </div>
 
-                <h3 className="text-xs font-mono opacity-60 mb-2">{facility.designation}</h3>
-                <p className="text-xl font-black mb-4">{facility.location}</p>
-
-                <div className="space-y-2 text-[10px] font-mono">
-                  <div className="flex justify-between">
-                    <span className="opacity-60">COORDS:</span>
-                    <span className="text-right">{facility.coordinates}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="opacity-60">STATUS:</span>
-                    <span className={`${
-                      facility.status === 'OPERATIONAL' ? 'text-hazmat-green' :
-                      facility.status === 'RESTRICTED' ? 'text-safety-orange' :
-                      facility.status === 'UNKNOWN' ? 'text-glitch-red' :
-                      'text-warning-yellow'
+                {/* Step Content */}
+                <div className={`w-5/12 p-6 bg-white text-carbon-black ${
+                  index % 2 === 0 ? 'mr-auto' : 'ml-auto'
+                }`}>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-black">{step.phase}</h3>
+                    <span className={`px-2 py-1 text-xs font-mono ${
+                      step.status === 'REQUIRED' ? 'bg-glitch-red text-white' :
+                      step.status === 'INTERNAL' ? 'bg-carbon-black text-white' :
+                      step.status === 'COLLABORATIVE' ? 'bg-safety-orange text-white' :
+                      step.status === 'LEGAL' ? 'bg-glitch-cyan text-carbon-black' :
+                      step.status === 'ACTIVE' ? 'bg-hazmat-green text-carbon-black' :
+                      'bg-concrete-gray text-white'
                     }`}>
-                      {facility.status}
+                      {step.status}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="opacity-60">HAZARD:</span>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`w-1.5 h-1.5 ${
-                            i < facility.hazardLevel
-                              ? facility.hazardLevel > 3 ? 'bg-glitch-red' : 'bg-warning-yellow'
-                              : 'bg-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="opacity-60">RESEARCH:</span>
-                    <span className="text-right text-[9px]">{facility.specialization}</span>
-                  </div>
+                  <p className="text-sm mb-2 opacity-80">{step.description}</p>
+                  <p className="text-xs font-mono opacity-60">DURATION: {step.duration}</p>
                 </div>
-
-                {/* Hover overlay */}
-                <motion.div
-                  className="absolute inset-0 bg-carbon-black pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: selectedFacility === facility.designation ? 0.05 : 0 }}
-                />
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Message Transmission Interface */}
-      <section className="py-16 px-8 bg-carbon-black">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black text-white mb-8">MESSAGE_TRANSMISSION</h2>
+      {/* Contact Form */}
+      <section className="py-16 px-8 bg-white text-carbon-black">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-black mb-12 text-center">INITIATE CONTACT</h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Message Configuration */}
-            <div className="bg-white p-8">
-              <h3 className="text-xs font-mono mb-6">CONFIGURE_MESSAGE</h3>
-
-              {/* Message Type Selector */}
-              <div className="mb-8">
-                <label className="text-[10px] font-mono opacity-60 block mb-2">MESSAGE_TYPE</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {messageTypes.map(type => (
-                    <button
-                      key={type.code}
-                      onClick={() => setMessageType(type.code)}
-                      className={`p-3 text-[10px] font-mono border-2 transition-all ${
-                        messageType === type.code
-                          ? 'border-safety-orange bg-safety-orange text-white'
-                          : 'border-carbon-black/20 hover:border-carbon-black'
-                      }`}
-                    >
-                      <div>{type.code}</div>
-                      <div className="text-[9px] mt-1 opacity-80">{type.type}</div>
-                      <div className={`text-[8px] mt-1 ${
-                        type.priority === 'CRITICAL' ? 'text-glitch-red' :
-                        type.priority === 'HIGH' ? 'text-safety-orange' :
-                        type.priority === 'MEDIUM' ? 'text-warning-yellow' :
-                        'text-current opacity-60'
-                      }`}>
-                        PRIORITY: {type.priority}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Security Level */}
-              <div className="mb-8">
-                <label className="text-[10px] font-mono opacity-60 block mb-2">
-                  SECURITY_CLEARANCE_LEVEL: {securityLevel}
-                </label>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={securityLevel}
-                    onChange={(e) => setSecurityLevel(parseInt(e.target.value))}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between mt-2">
-                    <span className="text-[10px] font-mono opacity-40">PUBLIC</span>
-                    <span className="text-[10px] font-mono opacity-40">CLASSIFIED</span>
-                    <span className="text-[10px] font-mono opacity-40">TOP_SECRET</span>
+          <AnimatePresence mode="wait">
+            {!submitted ? (
+              <motion.form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-mono opacity-60 mb-2">NAME / 이름</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-carbon-black focus:border-safety-orange outline-none transition-colors"
+                      disabled={submitting}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono opacity-60 mb-2">ORGANIZATION / 조직</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.organization}
+                      onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-carbon-black focus:border-safety-orange outline-none transition-colors"
+                      disabled={submitting}
+                    />
                   </div>
                 </div>
-              </div>
 
-              {/* Transmission Options */}
-              <div className="space-y-4">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <div>
+                  <label className="block text-xs font-mono opacity-60 mb-2">EMAIL / 이메일</label>
                   <input
-                    type="checkbox"
-                    checked={scanlines}
-                    onChange={(e) => setScanlines(e.target.checked)}
-                    className="sr-only"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-carbon-black focus:border-safety-orange outline-none transition-colors"
+                    disabled={submitting}
                   />
-                  <div className={`w-4 h-4 border-2 border-carbon-black ${
-                    scanlines ? 'bg-safety-orange' : 'bg-white'
-                  }`} />
-                  <span className="text-[10px] font-mono">ENABLE_SCAN_LINES</span>
-                </label>
-
-                <div className="text-[10px] font-mono space-y-2 opacity-60">
-                  <div>BANDWIDTH: {Math.floor(Math.random() * 500 + 500)} MB/s</div>
-                  <div>PACKET_LOSS: {Math.random().toFixed(3)}%</div>
-                  <div>ENCRYPTION: {securityLevel > 5 ? 'QUANTUM' : 'AES-256'}</div>
                 </div>
-              </div>
 
-              <motion.button
-                className="w-full mt-6 py-3 bg-carbon-black text-white text-xs font-mono hover:bg-glitch-red transition-colors"
-                whileTap={{ scale: 0.98 }}
-                onClick={() => {
-                  setTransmitting(true)
-                  setTerminalHistory(prev => [...prev,
-                    'INITIATING_TRANSMISSION...',
-                    `MESSAGE_TYPE: ${messageType}`,
-                    `SECURITY_LEVEL: ${securityLevel}`,
-                    'ESTABLISHING_SECURE_CHANNEL...',
-                    'TRANSMITTING_DATA_PACKETS...'
-                  ])
-                  setTimeout(() => {
-                    setTransmitting(false)
-                    setTerminalHistory(prev => [...prev,
-                      'TRANSMISSION_COMPLETE',
-                      `MESSAGE_ID: ${Math.random().toString(36).substr(2, 12).toUpperCase()}`,
-                      'AWAITING_RESPONSE...'
-                    ])
-                  }, 3000)
-                }}
-                disabled={transmitting}
-              >
-                {transmitting ? 'TRANSMITTING...' : 'INITIATE_TRANSMISSION'}
-              </motion.button>
-            </div>
-
-            {/* Terminal Interface */}
-            <div className="bg-black p-6 font-mono text-green-500">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs">TERMINAL_V3.2.1</span>
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full" />
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-                  <div className="w-3 h-3 bg-green-500 rounded-full" />
+                <div>
+                  <label className="block text-xs font-mono opacity-60 mb-2">COLLABORATION TYPE / 협업 유형</label>
+                  <select
+                    required
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-carbon-black focus:border-safety-orange outline-none transition-colors"
+                    disabled={submitting}
+                  >
+                    <option value="">Select Type...</option>
+                    <option value="EXHIBITION">Exhibition</option>
+                    <option value="RESEARCH">Research Partnership</option>
+                    <option value="MEDIA">Media & Editorial</option>
+                    <option value="CREATIVE">Creative Collaboration</option>
+                    <option value="ACQUISITION">Private Acquisition</option>
+                  </select>
                 </div>
-              </div>
 
-              <div
-                ref={terminalRef}
-                className="h-64 overflow-y-auto mb-4 text-xs space-y-1"
+                <div>
+                  <label className="block text-xs font-mono opacity-60 mb-2">PROPOSAL / 제안</label>
+                  <textarea
+                    required
+                    rows={6}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-carbon-black focus:border-safety-orange outline-none transition-colors resize-none"
+                    placeholder="Describe your vision and how it aligns with CINCH LAB's philosophy..."
+                    disabled={submitting}
+                  />
+                </div>
+
+                <div className="text-xs font-mono opacity-60 p-4 bg-carbon-black/5">
+                  <p className="mb-2">IMPORTANT NOTICE:</p>
+                  <ul className="space-y-1">
+                    <li>• We do not accept commercial sales inquiries</li>
+                    <li>• All collaborations must align with our no-commerce philosophy</li>
+                    <li>• Serious proposals only - we value quality over quantity</li>
+                    <li>• Response time varies based on proposal complexity</li>
+                  </ul>
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="w-full py-4 bg-carbon-black text-white font-mono text-sm hover:bg-safety-orange transition-colors disabled:opacity-50"
+                  whileTap={{ scale: 0.98 }}
+                  disabled={submitting}
+                >
+                  {submitting ? 'TRANSMITTING...' : 'SEND PROPOSAL'}
+                </motion.button>
+              </motion.form>
+            ) : (
+              <motion.div
+                className="text-center py-12"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
               >
-                {terminalHistory.map((line, index) => (
-                  <div key={index} className="opacity-80">
-                    {line.startsWith('>') ? (
-                      <span className="text-white">{line}</span>
-                    ) : line.includes('ERROR') || line.includes('FAILED') ? (
-                      <span className="text-red-500">{line}</span>
-                    ) : line.includes('SUCCESS') || line.includes('COMPLETE') ? (
-                      <span className="text-green-400">{line}</span>
-                    ) : (
-                      <span>{line}</span>
-                    )}
-                  </div>
-                ))}
-                {transmitting && (
-                  <div className="animate-pulse">TRANSMITTING{'.'.repeat((Date.now() / 500) % 4)}</div>
-                )}
-              </div>
-
-              <form onSubmit={handleTerminalSubmit} className="flex gap-2">
-                <span className="text-green-500">&gt;</span>
-                <input
-                  type="text"
-                  value={terminalInput}
-                  onChange={(e) => setTerminalInput(e.target.value)}
-                  className="flex-1 bg-transparent outline-none text-white"
-                  placeholder="ENTER_COMMAND"
-                  disabled={transmitting}
-                />
-              </form>
-            </div>
-          </div>
+                <div className="w-20 h-20 mx-auto mb-6 bg-hazmat-green flex items-center justify-center">
+                  <span className="text-3xl text-white">✓</span>
+                </div>
+                <h3 className="text-2xl font-black mb-4">PROPOSAL RECEIVED</h3>
+                <p className="text-sm font-mono opacity-60">
+                  MESSAGE ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}
+                </p>
+                <p className="mt-4">
+                  We will review your proposal and respond within the appropriate timeframe.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
-      {/* Emergency Protocols */}
-      <section className="py-16 px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-8">EMERGENCY_PROTOCOLS</h2>
-
-          <div className="bg-glitch-red text-white p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="text-xs font-mono mb-4">CODE_RED</h3>
-                <p className="text-[10px] font-mono opacity-80">
-                  SYSTEM_BREACH_DETECTED<br />
-                  CONTACT: emergency@cinch.lab<br />
-                  RESPONSE_TIME: IMMEDIATE
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xs font-mono mb-4">CODE_YELLOW</h3>
-                <p className="text-[10px] font-mono opacity-80">
-                  ANOMALY_DETECTED<br />
-                  CONTACT: support@cinch.lab<br />
-                  RESPONSE_TIME: &lt; 1H
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xs font-mono mb-4">CODE_GREEN</h3>
-                <p className="text-[10px] font-mono opacity-80">
-                  ROUTINE_MAINTENANCE<br />
-                  CONTACT: info@cinch.lab<br />
-                  RESPONSE_TIME: &lt; 24H
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-white/20">
-              <p className="text-[10px] font-mono opacity-60">
-                EMERGENCY_HOTLINE: +1-800-CINCH-911 | AVAILABLE_24/7 | QUANTUM_ENCRYPTION_ENABLED
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Communication Statistics */}
-      <section className="py-16 px-8 bg-paper-white border-t-3 border-carbon-black">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-8">TRANSMISSION_ANALYTICS</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-6 border-2 border-carbon-black">
-              <div className="text-3xl font-black mb-2">{Math.floor(Math.random() * 9000 + 1000)}</div>
-              <div className="text-[10px] font-mono opacity-60">MESSAGES_TRANSMITTED</div>
-            </div>
-            <div className="bg-white p-6 border-2 border-carbon-black">
-              <div className="text-3xl font-black mb-2">99.97%</div>
-              <div className="text-[10px] font-mono opacity-60">DELIVERY_RATE</div>
-            </div>
-            <div className="bg-white p-6 border-2 border-carbon-black">
-              <div className="text-3xl font-black mb-2">{Math.floor(Math.random() * 50 + 10)}ms</div>
-              <div className="text-[10px] font-mono opacity-60">AVG_LATENCY</div>
-            </div>
-            <div className="bg-white p-6 border-2 border-carbon-black">
-              <div className="text-3xl font-black mb-2">{Math.floor(Math.random() * 200 + 50)}</div>
-              <div className="text-[10px] font-mono opacity-60">ACTIVE_CONNECTIONS</div>
-            </div>
-          </div>
-
-          <div className="mt-8 p-4 bg-carbon-black text-white">
-            <div className="text-xs font-mono space-y-1">
-              <div className="opacity-60">NETWORK_STATUS: OPERATIONAL</div>
-              <div className="opacity-60">LAST_MAINTENANCE: {new Date(Date.now() - Math.random() * 86400000).toISOString()}</div>
-              <div className="opacity-60">NEXT_SCHEDULED_UPDATE: {new Date(Date.now() + Math.random() * 864000000).toISOString()}</div>
-            </div>
-          </div>
+      {/* Final Statement */}
+      <section className="py-24 px-8 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-black mb-8">
+            NO SALES. ONLY CREATION.
+          </h2>
+          <p className="text-lg opacity-80 leading-relaxed">
+            CINCH LAB exists beyond commerce. We seek partners who understand that fashion
+            is art, experiment, and philosophy. If you share our vision of fashion without
+            compromise, we want to hear from you.
+          </p>
+          <p className="mt-8 text-2xl font-black text-safety-orange">
+            "CINCH LAB은 최고이자 난 천재야"
+          </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-8 border-t-3 border-carbon-black bg-white">
+      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB © 2025 — COMMUNICATION_DIVISION
+            CINCH_LAB_CONTACT • COLLABORATIONS_ONLY • NO_SALES
           </p>
-          <div className="flex gap-4 text-[10px] font-mono">
-            <button
-              onClick={() => setTerminalHistory(prev => [...prev, 'PING_SENT', `PONG_RECEIVED: ${Math.floor(Math.random() * 50 + 10)}ms`])}
-              className="hover:text-safety-orange transition-colors"
-            >
-              PING_SERVER
-            </button>
-            <Link href="/" className="hover:text-safety-orange transition-colors">
-              RETURN_HOME →
-            </Link>
+          <div className="flex gap-4">
+            <span className="text-[10px] font-mono opacity-60">
+              SEOUL • NEW YORK • PARIS
+            </span>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
   )
 }

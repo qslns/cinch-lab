@@ -1,116 +1,295 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import { collections, type Collection, type Look } from '@/data/collections'
+import CipherText from '@/components/CipherText'
 
-const collectionsData: { [key: string]: any } = {
-  'ss25': {
-    title: 'SS25',
-    subtitle: 'SPRING SUMMER 2025',
-    description: 'Architectural minimalism meets fluid forms.',
-    lookbook: [1, 2, 3, 4, 5, 6],
-    products: [
-      { id: 1, name: 'STRUCTURED BLAZER', price: '$2,450' },
-      { id: 2, name: 'WIDE LEG TROUSER', price: '$1,280' },
-      { id: 3, name: 'ASYMMETRIC DRESS', price: '$3,200' },
-      { id: 4, name: 'OVERSIZED COAT', price: '$4,500' },
-      { id: 5, name: 'MINIMAL SHIRT', price: '$980' },
-      { id: 6, name: 'LAYERED SKIRT', price: '$1,650' },
-    ]
-  },
-  'fw24': {
-    title: 'FW24',
-    subtitle: 'FALL WINTER 2024',
-    description: 'Embracing the void through monochromatic palettes.',
-    lookbook: [1, 2, 3, 4, 5, 6],
-    products: [
-      { id: 1, name: 'DECONSTRUCTED JACKET', price: '$3,200' },
-      { id: 2, name: 'LAYERED KNIT', price: '$1,450' },
-      { id: 3, name: 'DRAPED COAT', price: '$5,800' },
-      { id: 4, name: 'WIDE PANTS', price: '$1,680' },
-      { id: 5, name: 'STRUCTURED TOP', price: '$1,200' },
-      { id: 6, name: 'LONG DRESS', price: '$3,900' },
-    ]
-  },
-}
-
-export default function CollectionDetailPage() {
+export default function BrutalistCollectionDetailPage() {
   const params = useParams()
-  const [view, setView] = useState<'lookbook' | 'products'>('lookbook')
-  const collection = collectionsData[params.id as string] || collectionsData['ss25']
+  const router = useRouter()
+  const [view, setView] = useState<'LOOKBOOK' | 'RESEARCH' | 'MATERIALS'>('LOOKBOOK')
+  const [selectedLook, setSelectedLook] = useState(0)
+  const [systemAlert, setSystemAlert] = useState<string | null>(null)
+  const [glitchActive, setGlitchActive] = useState(false)
+
+  // Get collection data
+  const collectionData = collections.find(c => c.id === params.id)
+
+  // Random system alerts
+  useEffect(() => {
+    if (!collectionData) return
+    const alertTimer = setInterval(() => {
+      if (Math.random() > 0.9) {
+        const alerts = [
+          `LOADING_${collectionData.code}_DATA`,
+          'ANALYZING_PATTERNS',
+          'EXPERIMENT_IN_PROGRESS',
+          'TEMPORAL_DISTORTION_DETECTED'
+        ]
+        const alert = alerts[Math.floor(Math.random() * alerts.length)]
+        setSystemAlert(alert)
+        setGlitchActive(true)
+        setTimeout(() => {
+          setSystemAlert(null)
+          setGlitchActive(false)
+        }, 2000)
+      }
+    }, 10000)
+
+    return () => clearInterval(alertTimer)
+  }, [collectionData?.code])
+
+  // Collection not found
+  if (!collectionData) {
+    return (
+      <div className="min-h-screen bg-carbon-black flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-6xl font-black text-glitch-red mb-4">404</h1>
+          <p className="text-xl text-white mb-8">COLLECTION_NOT_FOUND</p>
+          <Link href="/collections" className="text-safety-orange font-mono text-sm hover:underline">
+            RETURN_TO_ARCHIVE →
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <main className="min-h-screen py-20">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="mb-16">
-          <Link href="/collections" className="text-xs tracking-[0.2em] opacity-50 hover:opacity-100 mb-6 inline-block transition-opacity">
-            ← BACK TO COLLECTIONS
-          </Link>
-          <h1 className="text-5xl md:text-7xl mb-4 tracking-wider">{collection.title}</h1>
-          <p className="text-sm tracking-[0.2em] opacity-70 mb-4">{collection.subtitle}</p>
-          <p className="text-sm max-w-2xl opacity-70">{collection.description}</p>
+    <div className="min-h-screen bg-paper-white">
+      {/* Noise Overlay */}
+      <div className="noise-overlay" />
+
+      {/* System Alert Bar */}
+      <AnimatePresence>
+        {systemAlert && (
+          <motion.div
+            className="fixed top-20 left-0 right-0 z-50 bg-warning-yellow text-black p-2 text-center"
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            exit={{ y: -100 }}
+          >
+            <p className="text-xs font-mono">[SYSTEM] {systemAlert}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Header */}
+      <div className="lab-border bg-carbon-black text-white p-8">
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <h1 className={`text-6xl font-black mb-2 ${glitchActive ? 'glitch-text' : ''}`}>
+              <CipherText text={collectionData.title} />
+            </h1>
+            <p className="text-sm font-mono opacity-60">{collectionData.subtitle}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs font-mono opacity-60">COLLECTION_CODE</p>
+            <p className="text-2xl font-black">{collectionData.code}</p>
+          </div>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex gap-6 mb-12 border-b border-white/20">
-          <button
-            onClick={() => setView('lookbook')}
-            className={`pb-2 text-sm tracking-[0.2em] transition-colors ${
-              view === 'lookbook' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white'
-            }`}
-          >
-            LOOKBOOK
-          </button>
-          <button
-            onClick={() => setView('products')}
-            className={`pb-2 text-sm tracking-[0.2em] transition-colors ${
-              view === 'products' ? 'border-b-2 border-white text-white' : 'text-white/50 hover:text-white'
-            }`}
-          >
-            PRODUCTS
-          </button>
-        </div>
+        <p className="text-sm leading-relaxed mb-6 max-w-3xl">
+          {collectionData.description}
+        </p>
 
-        {/* Content */}
-        {view === 'lookbook' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {collection.lookbook.map((item: number, index: number) => (
-              <div
-                key={item}
-                className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-6xl opacity-10">{String(index + 1).padStart(2, '0')}</span>
+        {/* Status Indicators */}
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 ${collectionData.status === 'CURRENT' ? 'bg-hazmat-green animate-pulse' : 'bg-concrete-gray'}`} />
+            <span className="text-[10px] font-mono">STATUS_{collectionData.status}</span>
+          </div>
+          <div className="text-[10px] font-mono opacity-60">
+            RELEASE_DATE_{collectionData.releaseDate}
+          </div>
+          <div className="text-[10px] font-mono opacity-60">
+            SEASON_{collectionData.season}_{collectionData.year}
+          </div>
+        </div>
+      </div>
+
+      {/* View Selector */}
+      <div className="bg-white border-y-3 border-carbon-black">
+        <div className="flex divide-x-3 divide-carbon-black">
+          {(['LOOKBOOK', 'RESEARCH', 'MATERIALS'] as const).map((v) => (
+            <button
+              key={v}
+              onClick={() => setView(v)}
+              className={`flex-1 p-4 text-xs font-mono tracking-wider transition-all ${
+                view === v
+                  ? 'bg-carbon-black text-white'
+                  : 'hover:bg-paper-white'
+              }`}
+            >
+              VIEW_{v}
+              {view === v && <span className="ml-2">●</span>}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="p-8">
+        {view === 'LOOKBOOK' && (
+          <div className="space-y-8">
+            <div className="brutalist-grid-asymmetric gap-8">
+              {/* Main Look Display */}
+              <div className="col-span-2">
+                <div className="aspect-[3/4] bg-concrete-gray relative overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedLook}
+                      className="absolute inset-0 flex items-center justify-center"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {collectionData.lookbook[selectedLook]?.imageUrl ? (
+                        <img
+                          src={collectionData.lookbook[selectedLook].imageUrl}
+                          alt={collectionData.lookbook[selectedLook].title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <p className="text-6xl font-black text-white/20 mb-4">
+                            LOOK_{String(selectedLook + 1).padStart(2, '0')}
+                          </p>
+                          <p className="text-xs font-mono text-white/40">
+                            NO_VISUAL_DATA
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
+                        <h3 className="text-2xl font-bold mb-2">
+                          {collectionData.lookbook[selectedLook]?.title}
+                        </h3>
+                        <p className="text-xs opacity-80">
+                          {collectionData.lookbook[selectedLook]?.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
-            ))}
+
+              {/* Look Selector Grid */}
+              <div className="space-y-2">
+                {collectionData.lookbook.map((look: Look, index: number) => (
+                  <button
+                    key={look.id}
+                    onClick={() => setSelectedLook(index)}
+                    className={`w-full p-4 text-left transition-all ${
+                      selectedLook === index
+                        ? 'bg-safety-orange text-black'
+                        : 'bg-white hover:bg-paper-white lab-border'
+                    }`}
+                  >
+                    <p className="text-[10px] font-mono mb-1">{look.id}</p>
+                    <p className="text-sm font-bold">LOOK_{String(index + 1).padStart(2, '0')}</p>
+                    <p className="text-xs opacity-60 mt-1">{look.title}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Philosophy Section */}
+            <div className="lab-border p-8 bg-paper-white">
+              <h3 className="text-xs font-mono mb-4">COLLECTION_PHILOSOPHY</h3>
+              <p className="text-lg font-bold">{collectionData.philosophy}</p>
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {collection.products.map((product: any, index: number) => (
-              <Link
-                key={product.id}
-                href={`/product/${product.id}`}
-                className="group block fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="aspect-[3/4] bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-white/30 transition-colors duration-500 mb-4">
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-6xl opacity-10">{String(product.id).padStart(2, '0')}</span>
+        )}
+
+        {view === 'RESEARCH' && (
+          <div className="space-y-8">
+            {/* Research Data */}
+            <div className="brutalist-grid-asymmetric gap-2 bg-carbon-black p-2">
+              {/* Techniques */}
+              <div className="bg-paper-white p-6">
+                <h3 className="text-xs font-mono mb-4">TECHNIQUES_APPLIED</h3>
+                <ul className="space-y-2">
+                  {collectionData.techniques.map((technique: string, i: number) => (
+                    <li key={i} className="text-sm flex items-start gap-2">
+                      <span className="text-glitch-red">▪</span>
+                      <span>{technique}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Experimental Status */}
+              <div className="bg-carbon-black text-white p-6 col-span-2">
+                <h3 className="text-xs font-mono mb-4">EXPERIMENTAL_STATUS</h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-[10px] font-mono opacity-60 mb-1">GENIUS_LEVEL</p>
+                    <div className="h-2 bg-white/20">
+                      <div className="h-full bg-hazmat-green" style={{ width: '95%' }} />
+                    </div>
                   </div>
+                  <div>
+                    <p className="text-[10px] font-mono opacity-60 mb-1">COMMERCIAL_COMPROMISE</p>
+                    <div className="h-2 bg-white/20">
+                      <div className="h-full bg-glitch-red" style={{ width: '0%' }} />
+                    </div>
+                  </div>
+                  <p className="text-xs mt-4 opacity-60">
+                    NO SALES. ONLY CREATION.
+                  </p>
                 </div>
-                <h3 className="text-sm tracking-wider mb-1 group-hover:translate-x-2 transition-transform duration-300">
-                  {product.name}
-                </h3>
-                <p className="text-sm opacity-50">{product.price}</p>
-              </Link>
-            ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {view === 'MATERIALS' && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {collectionData.materials.map((material: string, i: number) => (
+                <motion.div
+                  key={i}
+                  className="bg-white lab-border p-6"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl text-safety-orange">◆</span>
+                    <div>
+                      <h4 className="text-sm font-bold mb-2">{material}</h4>
+                      <p className="text-[10px] font-mono opacity-60">
+                        MATERIAL_{String(i + 1).padStart(3, '0')}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Material Philosophy */}
+            <div className="lab-border p-8 bg-carbon-black text-white">
+              <h3 className="text-xs font-mono mb-4">MATERIAL_PHILOSOPHY</h3>
+              <p className="text-sm leading-relaxed">
+                Each material selected not for market appeal but for experimental potential.
+                We work with substances that challenge conventional fashion construction.
+              </p>
+            </div>
           </div>
         )}
       </div>
-    </main>
+
+      {/* Back Button */}
+      <div className="p-8">
+        <Link
+          href="/collections"
+          className="inline-flex items-center gap-2 text-sm font-mono hover:text-safety-orange transition-colors"
+        >
+          ← RETURN_TO_COLLECTIONS
+        </Link>
+      </div>
+    </div>
   )
 }

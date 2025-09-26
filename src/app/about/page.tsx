@@ -9,556 +9,590 @@ import CipherText from '@/components/CipherText'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Laboratory Personnel Database
-const personnel = [
+// Genius Declarations
+const geniusStatements = [
   {
-    id: 'DIR_001',
-    name: 'DR. K. CHEN',
-    role: 'LABORATORY_DIRECTOR',
-    clearance: 'LEVEL_5',
-    specialization: 'QUANTUM_FASHION_THEORY',
-    publications: 47,
-    experiments: 312,
-    status: 'ACTIVE'
+    id: 'GENIUS_001',
+    statement: 'CINCH LAB은 최고이자 난 천재야',
+    translation: 'CINCH LAB is the best and I am a genius',
+    emphasis: 'ABSOLUTE'
   },
   {
-    id: 'RES_001',
-    name: 'J. YAMAMOTO',
-    role: 'LEAD_RESEARCHER',
-    clearance: 'LEVEL_4',
-    specialization: 'MATERIAL_DECOMPOSITION',
-    publications: 23,
-    experiments: 189,
-    status: 'ACTIVE'
+    id: 'GENIUS_002',
+    statement: 'Fashion is not commerce, it is genius manifested',
+    translation: '패션은 상업이 아니라 천재성의 발현이다',
+    emphasis: 'TRUTH'
   },
   {
-    id: 'RES_002',
-    name: 'M. LAURENT',
-    role: 'SENIOR_SCIENTIST',
-    clearance: 'LEVEL_4',
-    specialization: 'TEMPORAL_DISTORTION',
-    publications: 31,
-    experiments: 156,
-    status: 'ACTIVE'
+    id: 'GENIUS_003',
+    statement: 'We don\'t follow trends, we create realities',
+    translation: '우리는 트렌드를 따르지 않는다, 현실을 창조한다',
+    emphasis: 'POWER'
   },
   {
-    id: 'TEC_001',
-    name: 'A. PETROV',
-    role: 'TECHNICAL_SPECIALIST',
-    clearance: 'LEVEL_3',
-    specialization: 'CHAOS_ENGINEERING',
-    publications: 12,
-    experiments: 89,
-    status: 'ACTIVE'
+    id: 'GENIUS_004',
+    statement: 'Every failure is proof of our ambition',
+    translation: '모든 실패는 우리 야망의 증거다',
+    emphasis: 'COURAGE'
+  },
+  {
+    id: 'GENIUS_005',
+    statement: 'Genius recognizes itself without apology',
+    translation: '천재는 사과 없이 스스로를 인식한다',
+    emphasis: 'CONFIDENCE'
   }
 ]
 
-// Laboratory Milestones
-const milestones = [
+// Laboratory Achievements
+const achievements = [
   {
-    year: 2020,
-    code: 'GENESIS',
-    event: 'LABORATORY_ESTABLISHED',
-    description: 'Initial facility construction. First experiments in fashion deconstruction.',
-    danger: 1,
-    success: true
-  },
-  {
-    year: 2021,
-    code: 'BREAKTHROUGH',
-    event: 'MOLECULAR_FABRIC_SYNTHESIS',
-    description: 'Successfully synthesized first quantum-stable fashion material.',
-    danger: 3,
-    success: true
-  },
-  {
-    year: 2022,
-    code: 'INCIDENT_ALPHA',
-    event: 'CONTAINMENT_BREACH',
-    description: 'Experimental overflow. 475 unique patterns generated spontaneously.',
-    danger: 5,
-    success: false
-  },
-  {
+    id: 'ACH_001',
+    title: 'PATTERN REVOLUTION',
     year: 2023,
-    code: 'EVOLUTION',
-    event: 'TEMPORAL_FASHION_ACHIEVED',
-    description: 'Garments existing in multiple time states simultaneously.',
-    danger: 4,
-    success: true
+    description: 'Deconstructed traditional pattern making into chaos theory',
+    impact: 'PARADIGM_SHIFT',
+    significance: 5
   },
   {
+    id: 'ACH_002',
+    title: 'MATERIAL TRANSCENDENCE',
     year: 2024,
-    code: 'STABILIZATION',
-    event: 'CHAOS_CONTROLLED',
-    description: 'Entropy maximization protocols established. Fashion-chaos equilibrium achieved.',
-    danger: 3,
-    success: true
+    description: 'Created fabrics that exist in multiple states simultaneously',
+    impact: 'REALITY_BREAK',
+    significance: 5
   },
   {
+    id: 'ACH_003',
+    title: 'TIME MANIPULATION',
+    year: 2024,
+    description: 'Garments that evolve and change over time',
+    impact: 'TEMPORAL_INNOVATION',
+    significance: 5
+  },
+  {
+    id: 'ACH_004',
+    title: 'ZERO COMMERCE',
     year: 2025,
-    code: 'CURRENT',
-    event: 'ONGOING_EXPERIMENTS',
-    description: 'Multiple parallel experiments. Reality fabric manipulation in progress.',
-    danger: 5,
-    success: null
+    description: 'Eliminated sales while maximizing creative output',
+    impact: 'ECONOMIC_REBELLION',
+    significance: 5
+  },
+  {
+    id: 'ACH_005',
+    title: 'FAILURE CELEBRATION',
+    year: 2025,
+    description: 'Turned every failure into a stepping stone for genius',
+    impact: 'MINDSET_REVOLUTION',
+    significance: 5
   }
 ]
 
-// Laboratory Departments
-const departments = [
+// Core Principles
+const principles = [
   {
-    code: 'QFD',
-    name: 'QUANTUM_FASHION_DIVISION',
-    experiments: 147,
-    personnel: 12,
-    hazard: 'EXTREME'
+    number: '001',
+    title: 'NO COMPROMISE',
+    content: 'We never compromise our vision for commercial success. Every piece is pure expression.'
   },
   {
-    code: 'MRL',
-    name: 'MATERIAL_RESEARCH_LAB',
-    experiments: 89,
-    personnel: 8,
-    hazard: 'HIGH'
+    number: '002',
+    title: 'DESTRUCTION AS CREATION',
+    content: 'To create something truly new, we must first destroy what exists.'
   },
   {
-    code: 'TDE',
-    name: 'TEMPORAL_DISTORTION_ENGINE',
-    experiments: 56,
-    personnel: 6,
-    hazard: 'CRITICAL'
+    number: '003',
+    title: 'FAILURE AS DATA',
+    content: 'Every failed experiment brings us closer to breakthrough. We embrace failure.'
   },
   {
-    code: 'CEU',
-    name: 'CHAOS_ENGINEERING_UNIT',
-    experiments: 234,
-    personnel: 15,
-    hazard: 'MAXIMUM'
+    number: '004',
+    title: 'TIME AS MATERIAL',
+    content: 'Time is not linear in fashion. We design for past, present, and future simultaneously.'
+  },
+  {
+    number: '005',
+    title: 'GENIUS WITHOUT APOLOGY',
+    content: 'We declare our genius without humility. Excellence needs no permission.'
   }
 ]
 
-export default function BrutalistAboutPage() {
-  const [activeSection, setActiveSection] = useState<'PERSONNEL' | 'HISTORY' | 'DEPARTMENTS' | 'MISSION'>('MISSION')
-  const [selectedPersonnel, setSelectedPersonnel] = useState<string | null>(null)
-  const [systemWarning, setSystemWarning] = useState<string | null>(null)
-  const [accessGranted, setAccessGranted] = useState(false)
+// Creator Profile
+const creator = {
+  title: 'THE MIND BEHIND THE LABORATORY',
+  declaration: 'I am not a designer. I am not an artist. I am a genius working in the medium of fashion.',
+  vision: 'To push fashion beyond its physical limits into realms of pure concept and chaos.',
+  method: 'Systematic destruction and reconstruction of everything fashion believes itself to be.',
+  philosophy: 'Fashion dies when it becomes product. We keep it alive through constant experimentation.',
+  manifesto: `CINCH LAB is not a brand. It is a state of mind.
+
+  We exist in the space between creation and destruction, between genius and madness, between success and failure.
+
+  Every experiment is a declaration of independence from the tyranny of commerce.
+
+  We don't sell clothes. We create moments of transformation that happen to take physical form.
+
+  This is not arrogance. This is fact. CINCH LAB은 최고이자 난 천재야.`
+}
+
+export default function AboutPage() {
+  const [activeView, setActiveView] = useState<'GENIUS' | 'ACHIEVEMENTS' | 'PRINCIPLES' | 'CREATOR'>('GENIUS')
+  const [geniusLevel, setGeniusLevel] = useState(0)
+  const [selectedAchievement, setSelectedAchievement] = useState<string | null>(null)
+  const [mindState, setMindState] = useState('CREATING')
+  const [glitchActive, setGlitchActive] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
 
   // Parallax transforms
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const textY = useTransform(scrollYProgress, [0, 0.5], ['0%', '-10%'])
+  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
+  const rotateParallax = useTransform(scrollYProgress, [0, 1], [0, 360])
 
-  // System warnings
   useEffect(() => {
-    const warningTimer = setInterval(() => {
-      if (Math.random() > 0.85) {
-        const warnings = [
-          'RADIATION_LEVELS_NOMINAL',
-          'EXPERIMENT_47_IN_PROGRESS',
-          'TEMPORAL_FLUX_DETECTED',
-          'PATTERN_RECOGNITION_ACTIVE',
-          'QUANTUM_COHERENCE_STABLE'
-        ]
-        const warning = warnings[Math.floor(Math.random() * warnings.length)]
-        setSystemWarning(warning)
-        setTimeout(() => setSystemWarning(null), 3000)
+    // Genius level animation
+    const geniusInterval = setInterval(() => {
+      setGeniusLevel(prev => (prev + 1) % 101)
+    }, 50)
+
+    // Mind state changes
+    const mindInterval = setInterval(() => {
+      const states = ['CREATING', 'DESTROYING', 'TRANSFORMING', 'MANIFESTING', 'TRANSCENDING']
+      setMindState(states[Math.floor(Math.random() * states.length)])
+    }, 3000)
+
+    // Random glitch
+    const glitchInterval = setInterval(() => {
+      if (Math.random() > 0.9) {
+        setGlitchActive(true)
+        setTimeout(() => setGlitchActive(false), 150)
       }
-    }, 5000)
-    return () => clearInterval(warningTimer)
-  }, [])
+    }, 2000)
 
-  // Access sequence
-  useEffect(() => {
-    setTimeout(() => setAccessGranted(true), 1500)
-  }, [])
-
-  // GSAP animations
-  useEffect(() => {
-    if (!accessGranted) return
-
+    // GSAP animations
     const ctx = gsap.context(() => {
-      gsap.from('.personnel-card', {
-        x: -100,
+      gsap.from('.genius-statement', {
+        y: 100,
         opacity: 0,
-        stagger: 0.1,
         duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.personnel-grid',
-          start: 'top 80%'
-        }
+        stagger: 0.2,
+        ease: 'power4.out'
       })
 
-      gsap.from('.milestone-entry', {
-        y: 50,
+      gsap.from('.achievement-card', {
+        scale: 0.8,
         opacity: 0,
+        duration: 0.8,
         stagger: 0.15,
+        ease: 'power3.out'
+      })
+
+      gsap.from('.principle-card', {
+        x: -100,
+        opacity: 0,
         duration: 1,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.timeline-container',
-          start: 'top 70%'
+        stagger: 0.1,
+        ease: 'power3.out'
+      })
+
+      // Floating animation for genius text
+      gsap.to('.floating-genius', {
+        y: 'random(-20, 20)',
+        x: 'random(-10, 10)',
+        rotation: 'random(-5, 5)',
+        duration: 'random(3, 5)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: {
+          amount: 1,
+          from: 'random'
         }
       })
     })
 
-    return () => ctx.revert()
-  }, [accessGranted])
+    return () => {
+      clearInterval(geniusInterval)
+      clearInterval(mindInterval)
+      clearInterval(glitchInterval)
+      ctx.revert()
+    }
+  }, [])
+
+  const renderGeniusView = () => (
+    <div className="space-y-16">
+      {/* Main Genius Declaration */}
+      <motion.div
+        className="text-center"
+        style={{ scale: scaleParallax }}
+      >
+        <h2 className="text-[clamp(40px,6vw,100px)] font-black mb-8 leading-[0.9]">
+          <span className="floating-genius inline-block">CINCH</span>{' '}
+          <span className="floating-genius inline-block text-safety-orange">LAB</span>
+          <br />
+          <span className="floating-genius inline-block">은</span>{' '}
+          <span className="floating-genius inline-block">최고이자</span>
+          <br />
+          <span className="floating-genius inline-block text-glitch-red">난</span>{' '}
+          <span className="floating-genius inline-block text-glitch-red">천재야</span>
+        </h2>
+        <p className="text-xl italic opacity-80">
+          "CINCH LAB is the best and I am a genius"
+        </p>
+      </motion.div>
+
+      {/* Genius Level Meter */}
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-4 flex justify-between items-center">
+          <span className="text-xs font-mono opacity-60">GENIUS_LEVEL</span>
+          <span className="text-2xl font-black text-safety-orange">{geniusLevel}%</span>
+        </div>
+        <div className="h-8 bg-carbon-black/20 border-2 border-white relative overflow-hidden">
+          <motion.div
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-safety-orange via-glitch-red to-hazmat-green"
+            style={{ width: `${geniusLevel}%` }}
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-xs font-mono font-black">
+              {geniusLevel > 80 ? 'MAXIMUM_GENIUS' :
+               geniusLevel > 60 ? 'ELEVATED_GENIUS' :
+               geniusLevel > 40 ? 'ACTIVE_GENIUS' :
+               geniusLevel > 20 ? 'EMERGING_GENIUS' :
+               'INITIALIZING_GENIUS'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Genius Statements */}
+      <div className="space-y-8">
+        {geniusStatements.map((statement, index) => (
+          <motion.div
+            key={statement.id}
+            className="genius-statement p-8 bg-white border-4 border-carbon-black hover:border-safety-orange transition-all"
+            whileHover={{ x: -10 }}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-xs font-mono opacity-60">{statement.id}</span>
+              <span className={`px-3 py-1 text-xs font-mono font-bold ${
+                statement.emphasis === 'ABSOLUTE' ? 'bg-glitch-red text-white' :
+                statement.emphasis === 'TRUTH' ? 'bg-safety-orange text-white' :
+                statement.emphasis === 'POWER' ? 'bg-hazmat-green text-carbon-black' :
+                statement.emphasis === 'COURAGE' ? 'bg-glitch-cyan text-carbon-black' :
+                'bg-carbon-black text-white'
+              }`}>
+                {statement.emphasis}
+              </span>
+            </div>
+            <h3 className="text-2xl font-black mb-2">{statement.statement}</h3>
+            <p className="text-sm italic opacity-60">{statement.translation}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const renderAchievementsView = () => (
+    <div className="space-y-12">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-black mb-4">DOCUMENTED GENIUS</h2>
+        <p className="text-sm font-mono opacity-60">
+          EVERY ACHIEVEMENT IS PROOF OF OUR SUPERIORITY
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {achievements.map((achievement, index) => (
+          <motion.div
+            key={achievement.id}
+            className="achievement-card bg-white border-3 border-carbon-black p-6 cursor-pointer hover:border-safety-orange transition-all"
+            onClick={() => setSelectedAchievement(achievement.id)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {/* Year Badge */}
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-3xl font-black">{achievement.year}</span>
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2 h-2 ${
+                      i < achievement.significance ? 'bg-safety-orange' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Content */}
+            <h3 className="text-xl font-black mb-2">{achievement.title}</h3>
+            <p className="text-sm mb-4 opacity-80">{achievement.description}</p>
+
+            {/* Impact */}
+            <div className="text-xs font-mono">
+              <span className="opacity-60">IMPACT:</span>
+              <span className="ml-2 font-bold text-glitch-red">{achievement.impact}</span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Statistics */}
+      <div className="grid grid-cols-3 gap-4 mt-12">
+        <div className="bg-carbon-black text-white p-6 text-center">
+          <div className="text-4xl font-black mb-2">100%</div>
+          <div className="text-xs font-mono opacity-60">GENIUS_RATE</div>
+        </div>
+        <div className="bg-safety-orange text-white p-6 text-center">
+          <div className="text-4xl font-black mb-2">∞</div>
+          <div className="text-xs font-mono opacity-60">CREATIVE_LIMIT</div>
+        </div>
+        <div className="bg-glitch-red text-white p-6 text-center">
+          <div className="text-4xl font-black mb-2">0</div>
+          <div className="text-xs font-mono opacity-60">COMPROMISES</div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderPrinciplesView = () => (
+    <div className="space-y-8">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-black mb-4">CORE PRINCIPLES</h2>
+        <p className="text-sm font-mono opacity-60">
+          THE UNBREAKABLE LAWS OF CINCH LAB
+        </p>
+      </div>
+
+      {principles.map((principle, index) => (
+        <motion.div
+          key={principle.number}
+          className="principle-card"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          <div className="flex gap-8 items-start">
+            {/* Number */}
+            <div className="flex-shrink-0">
+              <div className="w-20 h-20 bg-carbon-black text-white flex items-center justify-center">
+                <span className="text-2xl font-black">{principle.number}</span>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 p-6 bg-white border-3 border-carbon-black">
+              <h3 className="text-2xl font-black mb-3">{principle.title}</h3>
+              <p className="leading-relaxed">{principle.content}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  )
+
+  const renderCreatorView = () => (
+    <div className="space-y-12">
+      <div className="text-center">
+        <h2 className="text-4xl font-black mb-8">{creator.title}</h2>
+      </div>
+
+      {/* Main Declaration */}
+      <div className="p-12 bg-white border-4 border-carbon-black">
+        <p className="text-2xl font-black mb-8 text-center">
+          "{creator.declaration}"
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 className="text-lg font-black mb-3">VISION</h3>
+            <p className="leading-relaxed">{creator.vision}</p>
+          </div>
+          <div>
+            <h3 className="text-lg font-black mb-3">METHOD</h3>
+            <p className="leading-relaxed">{creator.method}</p>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h3 className="text-lg font-black mb-3">PHILOSOPHY</h3>
+          <p className="leading-relaxed">{creator.philosophy}</p>
+        </div>
+
+        {/* Manifesto */}
+        <div className="p-8 bg-carbon-black text-white">
+          <h3 className="text-lg font-black mb-4 text-safety-orange">MANIFESTO</h3>
+          <div className="font-mono text-sm leading-loose whitespace-pre-line">
+            {creator.manifesto}
+          </div>
+        </div>
+      </div>
+
+      {/* Final Statement */}
+      <motion.div
+        className="text-center py-12"
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      >
+        <p className="text-3xl font-black">
+          THIS IS NOT FASHION.
+        </p>
+        <p className="text-3xl font-black text-safety-orange">
+          THIS IS GENIUS.
+        </p>
+        <p className="text-3xl font-black text-glitch-red">
+          THIS IS CINCH LAB.
+        </p>
+      </motion.div>
+    </div>
+  )
 
   return (
     <div ref={containerRef} className="min-h-screen bg-carbon-black text-white relative overflow-hidden">
       {/* Background Effects */}
-      <div className="fixed inset-0 scientific-grid opacity-5 pointer-events-none" />
+      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
+      {glitchActive && <div className="fixed inset-0 noise-overlay pointer-events-none" />}
+
+      {/* Rotating Background Element */}
       <motion.div
         className="fixed inset-0 pointer-events-none"
-        style={{ y: bgY }}
+        style={{ rotate: rotateParallax }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-safety-orange/5 to-transparent" />
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 border border-white/5" />
+        <div className="absolute bottom-1/3 right-1/3 w-64 h-64 border border-white/5 rotate-45" />
       </motion.div>
 
-      {/* Access Sequence */}
-      <AnimatePresence>
-        {!accessGranted && (
-          <motion.div
-            className="fixed inset-0 bg-black z-50 flex items-center justify-center"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="text-center">
-              <div className="text-hazmat-green font-mono text-xs mb-4">
-                ACCESSING_PERSONNEL_DATABASE...
-              </div>
-              <div className="text-2xl font-mono animate-pulse">
-                AUTHORIZATION_REQUIRED
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* System Warning */}
-      <AnimatePresence>
-        {systemWarning && (
-          <motion.div
-            className="fixed top-20 right-0 z-50 bg-warning-yellow text-black px-6 py-2"
-            initial={{ x: 300 }}
-            animate={{ x: 0 }}
-            exit={{ x: 300 }}
-          >
-            <span className="text-xs font-mono font-bold">{systemWarning}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Header */}
-      <header className="pt-24 pb-12 px-8 border-b-3 border-safety-orange">
-        <div className="max-w-7xl mx-auto">
-          <motion.div style={{ y: textY }}>
-            <h1 className="text-[clamp(60px,8vw,120px)] font-black brutalist-heading leading-[0.8]">
-              <CipherText text="ABOUT" />
-              <br />
-              <span className="text-safety-orange"><CipherText text="THE LAB" /></span>
-            </h1>
-            <p className="text-xs font-mono mt-4 opacity-60">
-              CINCH_LABORATORY // EXPERIMENTAL_FASHION_RESEARCH_FACILITY
-            </p>
-          </motion.div>
-        </div>
-      </header>
+      <section className="relative py-24 px-8">
+        <motion.div
+          className="max-w-7xl mx-auto text-center"
+          style={{ y: yParallax }}
+        >
+          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
+            <CipherText text="ABOUT" />
+          </h1>
+          <p className="text-sm font-mono opacity-60 mb-4">
+            THE GENIUS • THE LABORATORY • THE REVOLUTION
+          </p>
 
-      {/* Navigation Tabs */}
-      <section className="py-4 px-8 bg-concrete-gray">
-        <div className="max-w-7xl mx-auto flex gap-4">
-          {(['MISSION', 'PERSONNEL', 'HISTORY', 'DEPARTMENTS'] as const).map(section => (
-            <button
-              key={section}
-              onClick={() => setActiveSection(section)}
-              className={`px-6 py-3 text-xs font-mono font-bold transition-all ${
-                activeSection === section
-                  ? 'bg-white text-carbon-black'
-                  : 'text-white hover:bg-white/10'
-              }`}
-            >
-              {section}
-            </button>
-          ))}
+          {/* Mind State Display */}
+          <div className="flex items-center justify-center gap-8 mb-12">
+            <div className="text-xs font-mono">
+              <span className="opacity-60">MIND_STATE:</span>
+              <span className={`ml-2 ${
+                mindState === 'CREATING' ? 'text-hazmat-green' :
+                mindState === 'DESTROYING' ? 'text-glitch-red' :
+                mindState === 'TRANSFORMING' ? 'text-safety-orange' :
+                mindState === 'MANIFESTING' ? 'text-glitch-cyan' :
+                'text-hazmat-yellow'
+              }`}>
+                {mindState}
+              </span>
+            </div>
+            <div className="text-xs font-mono">
+              <span className="opacity-60">GENIUS_STATUS:</span>
+              <span className="ml-2 text-hazmat-green">CONFIRMED</span>
+            </div>
+          </div>
+
+          {/* View Controls */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {(['GENIUS', 'ACHIEVEMENTS', 'PRINCIPLES', 'CREATOR'] as const).map(view => (
+              <button
+                key={view}
+                onClick={() => setActiveView(view)}
+                className={`px-4 py-2 text-xs font-mono transition-all ${
+                  activeView === view
+                    ? 'bg-white text-carbon-black'
+                    : 'bg-transparent text-white/60 hover:text-white border border-white/20'
+                }`}
+              >
+                {view}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Main Content */}
+      <section className="px-8 pb-24">
+        <div className="max-w-5xl mx-auto">
+          {activeView === 'GENIUS' && renderGeniusView()}
+          {activeView === 'ACHIEVEMENTS' && renderAchievementsView()}
+          {activeView === 'PRINCIPLES' && renderPrinciplesView()}
+          {activeView === 'CREATOR' && renderCreatorView()}
         </div>
       </section>
 
-      {/* Content Sections */}
-      <section className="py-16 px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* MISSION STATEMENT */}
-          {activeSection === 'MISSION' && (
+      {/* Achievement Detail Modal */}
+      <AnimatePresence>
+        {selectedAchievement && (
+          <>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedAchievement(null)}
+              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 flex items-center justify-center p-8 z-50"
             >
-              <div className="lab-border p-12 bg-paper-white text-carbon-black">
-                <h2 className="text-5xl font-black mb-8 brutalist-heading">
-                  MISSION_PROTOCOL
-                </h2>
-                <div className="space-y-6 text-lg leading-relaxed">
-                  <p>
-                    The CINCH Laboratory operates at the intersection of fashion and chaos theory,
-                    conducting high-risk experiments in material decomposition, temporal distortion,
-                    and quantum fashion synthesis.
+              <div className="bg-white text-carbon-black max-w-2xl w-full p-12">
+                <div className="text-center">
+                  <h2 className="text-3xl font-black mb-4">ACHIEVEMENT UNLOCKED</h2>
+                  <p className="text-lg mb-8">
+                    {achievements.find(a => a.id === selectedAchievement)?.title}
                   </p>
-                  <p>
-                    Our primary objective: To push fashion beyond its molecular limits,
-                    exploring territories where traditional design collapses and new forms emerge
-                    from controlled chaos.
-                  </p>
-                  <div className="mt-8 p-6 bg-black text-hazmat-green font-mono text-sm">
-                    &gt; DIRECTIVE_001: FASHION_EXCEEDS_REALITY
-                    <br />
-                    &gt; DIRECTIVE_002: CHAOS_CREATES_ORDER
-                    <br />
-                    &gt; DIRECTIVE_003: LIMITS_EXIST_TO_BE_BROKEN
-                    <br />
-                    &gt; DIRECTIVE_004: FAILURE_IS_DATA
+                  <div className="flex justify-center gap-2 mb-8">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-8 h-8 bg-safety-orange"
+                      />
+                    ))}
                   </div>
+                  <p className="text-sm font-mono opacity-60">
+                    GENIUS LEVEL: MAXIMUM
+                  </p>
+                  <button
+                    onClick={() => setSelectedAchievement(null)}
+                    className="mt-8 px-6 py-3 bg-carbon-black text-white font-mono text-xs hover:bg-glitch-red transition-colors"
+                  >
+                    CLOSE
+                  </button>
                 </div>
               </div>
-
-              {/* Core Values Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-[2px] bg-carbon-black p-[2px]">
-                {[
-                  { label: 'EXPERIMENTS', value: '526', unit: 'TOTAL' },
-                  { label: 'BREAKTHROUGHS', value: '47', unit: 'MAJOR' },
-                  { label: 'INCIDENTS', value: '13', unit: 'CONTAINED' },
-                  { label: 'SUCCESS_RATE', value: '87%', unit: 'OPTIMAL' }
-                ].map((stat) => (
-                  <div key={stat.label} className="bg-white text-carbon-black p-8 text-center">
-                    <div className="text-4xl font-black mb-2">{stat.value}</div>
-                    <div className="text-[10px] font-mono opacity-60">{stat.label}</div>
-                    <div className="text-[9px] font-mono opacity-40">{stat.unit}</div>
-                  </div>
-                ))}
-              </div>
             </motion.div>
-          )}
-
-          {/* PERSONNEL DATABASE */}
-          {activeSection === 'PERSONNEL' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="personnel-grid space-y-4"
-            >
-              {personnel.map((person) => (
-                <motion.div
-                  key={person.id}
-                  className="personnel-card bg-white text-carbon-black p-6 lab-border cursor-pointer hover:bg-paper-white transition-colors"
-                  onClick={() => setSelectedPersonnel(person.id)}
-                  whileHover={{ x: -8 }}
-                >
-                  <div className="grid grid-cols-12 items-center gap-4">
-                    <div className="col-span-1">
-                      <div className={`w-3 h-3 ${
-                        person.clearance === 'LEVEL_5' ? 'bg-glitch-red' :
-                        person.clearance === 'LEVEL_4' ? 'bg-safety-orange' :
-                        'bg-hazmat-green'
-                      }`} />
-                    </div>
-                    <div className="col-span-3">
-                      <div className="text-xs font-mono opacity-60">{person.id}</div>
-                      <div className="font-black text-lg">{person.name}</div>
-                    </div>
-                    <div className="col-span-3">
-                      <div className="text-xs font-mono opacity-60">ROLE</div>
-                      <div className="text-sm font-bold">{person.role}</div>
-                    </div>
-                    <div className="col-span-3">
-                      <div className="text-xs font-mono opacity-60">SPECIALIZATION</div>
-                      <div className="text-sm">{person.specialization}</div>
-                    </div>
-                    <div className="col-span-2 text-right">
-                      <div className="text-xs font-mono">
-                        <div>PUB: {person.publications}</div>
-                        <div>EXP: {person.experiments}</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-
-          {/* HISTORY/TIMELINE */}
-          {activeSection === 'HISTORY' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="timeline-container"
-            >
-              <div className="relative">
-                {/* Timeline Line */}
-                <div className="absolute left-24 top-0 bottom-0 w-[2px] bg-safety-orange" />
-
-                {/* Milestones */}
-                {milestones.map((milestone, index) => (
-                  <motion.div
-                    key={milestone.code}
-                    className="milestone-entry relative mb-12 pl-32"
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {/* Year Node */}
-                    <div className="absolute left-20 w-8 h-8 bg-carbon-black border-3 border-white flex items-center justify-center">
-                      <span className="text-[10px] font-mono text-white">{milestone.year}</span>
-                    </div>
-
-                    {/* Content */}
-                    <div className={`p-6 ${
-                      milestone.success === false ? 'bg-glitch-red/10 border-3 border-glitch-red' :
-                      milestone.success === true ? 'bg-white' :
-                      'bg-warning-yellow/20 border-3 border-warning-yellow'
-                    } lab-border`}>
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-2xl font-black">{milestone.code}</h3>
-                          <p className="text-xs font-mono opacity-60 mt-1">{milestone.event}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono">DANGER:</span>
-                          <div className="flex gap-[2px]">
-                            {[...Array(5)].map((_, i) => (
-                              <div
-                                key={i}
-                                className={`w-2 h-2 ${
-                                  i < milestone.danger ? 'bg-glitch-red' : 'bg-gray-400'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-sm">{milestone.description}</p>
-                      {milestone.success !== null && (
-                        <div className="mt-4 text-[10px] font-mono">
-                          STATUS: {milestone.success ? 'SUCCESS' : 'FAILURE'}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* DEPARTMENTS */}
-          {activeSection === 'DEPARTMENTS' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              {departments.map((dept) => (
-                <motion.div
-                  key={dept.code}
-                  className="bg-white text-carbon-black p-8 lab-border"
-                  whileHover={{ scale: 0.98 }}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-3xl font-black">{dept.code}</h3>
-                      <p className="text-xs font-mono mt-2">{dept.name}</p>
-                    </div>
-                    <div className={`px-3 py-1 text-[10px] font-mono font-bold ${
-                      dept.hazard === 'MAXIMUM' ? 'bg-glitch-red text-white' :
-                      dept.hazard === 'CRITICAL' ? 'bg-safety-orange text-black' :
-                      dept.hazard === 'EXTREME' ? 'bg-warning-yellow text-black' :
-                      'bg-hazmat-green text-black'
-                    }`}>
-                      {dept.hazard}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div>
-                      <p className="text-2xl font-bold">{dept.experiments}</p>
-                      <p className="text-[10px] font-mono opacity-60">EXPERIMENTS</p>
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{dept.personnel}</p>
-                      <p className="text-[10px] font-mono opacity-60">PERSONNEL</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-      </section>
-
-      {/* Personnel Detail Modal */}
-      <AnimatePresence>
-        {selectedPersonnel && (
-          <motion.div
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedPersonnel(null)}
-          >
-            <motion.div
-              className="bg-paper-white text-carbon-black max-w-2xl w-full p-8 lab-border"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-3xl font-black">PERSONNEL_FILE</h2>
-                <button
-                  onClick={() => setSelectedPersonnel(null)}
-                  className="text-2xl hover:rotate-90 transition-transform"
-                >
-                  ×
-                </button>
-              </div>
-              <div className="bg-black text-hazmat-green p-6 font-mono text-xs">
-                <div>&gt; ACCESSING_CLASSIFIED_RECORDS...</div>
-                <div>&gt; CLEARANCE_VERIFIED</div>
-                <div>&gt; FILE_LOADED</div>
-                <br />
-                <div>ID: {selectedPersonnel}</div>
-                <div>STATUS: ACTIVE</div>
-                <div>LAST_ACCESS: {new Date().toISOString()}</div>
-                <br />
-                <div className="text-glitch-red">[ADDITIONAL_DATA_CLASSIFIED]</div>
-              </div>
-            </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
 
       {/* Footer */}
-      <footer className="py-8 px-8 bg-black border-t-3 border-safety-orange">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs font-mono">
-            <div>
-              <p className="text-safety-orange mb-2">LOCATION</p>
-              <p>CLASSIFIED_COORDINATES</p>
-              <p className="opacity-60">SEOUL_SECTOR_7</p>
-            </div>
-            <div>
-              <p className="text-safety-orange mb-2">CONTACT</p>
-              <p>LAB@CINCH.COM</p>
-              <p className="opacity-60">SECURITY_CLEARANCE_REQUIRED</p>
-            </div>
-            <div>
-              <p className="text-safety-orange mb-2">STATUS</p>
-              <p className="text-hazmat-green">OPERATIONAL</p>
-              <p className="opacity-60">24/7_MONITORING</p>
-            </div>
+      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <p className="text-[10px] font-mono opacity-60">
+            CINCH_LAB • GENIUS_CONFIRMED • NO_APOLOGIES
+          </p>
+          <div className="flex gap-4">
+            <span className="text-[10px] font-mono opacity-60">
+              EXPERIMENTS: ∞
+            </span>
+            <span className="text-[10px] font-mono opacity-60">
+              FAILURES: FUEL
+            </span>
+            <span className="text-[10px] font-mono opacity-60">
+              SUCCESS: INEVITABLE
+            </span>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
   )
 }

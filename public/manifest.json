@@ -1,18 +1,59 @@
 {
-  "name": "CINCH LAB - Extreme Fashion Laboratory",
+  "name": "CINCH LAB — Experimental Fashion Technical Laboratory",
   "short_name": "CINCH LAB",
-  "description": "Experimental fashion laboratory with 475 curated images and advanced gallery features",
+  "description": "Where asymmetrical chaos meets scientific precision. Experimental fashion research facility exploring the boundaries between order and entropy.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#000000",
-  "orientation": "portrait-primary",
+  "theme_color": "#FF6B35",
+  "orientation": "any",
+  "id": "cinch-lab-pwa",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["fashion", "lifestyle", "shopping"],
   "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
@@ -21,43 +62,70 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["lifestyle", "photo", "entertainment"],
   "screenshots": [
     {
-      "src": "/screenshot-1.png",
-      "sizes": "1280x720",
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1920x1080",
       "type": "image/png",
-      "label": "3D Gallery View"
+      "platform": "wide",
+      "label": "CINCH LAB Homepage - Brutalist Design"
     },
     {
-      "src": "/screenshot-2.png",
-      "sizes": "1280x720",
+      "src": "/screenshots/desktop-lab.png",
+      "sizes": "1920x1080",
       "type": "image/png",
-      "label": "Image Processing"
+      "platform": "wide",
+      "label": "Laboratory Experiments"
+    },
+    {
+      "src": "/screenshots/mobile-home.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mobile Experience"
     }
   ],
   "shortcuts": [
     {
-      "name": "Gallery",
-      "url": "/gallery",
-      "description": "View the complete image gallery"
+      "name": "LAB",
+      "short_name": "Lab",
+      "url": "/lab",
+      "description": "Enter the experimental laboratory",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
     },
     {
-      "name": "3D Experience",
-      "url": "/gallery?view=3d",
-      "description": "Experience the 3D gallery"
-    },
-    {
-      "name": "Collections",
+      "name": "COLLECTIONS",
+      "short_name": "Collections",
       "url": "/collections",
-      "description": "Browse curated collections"
+      "description": "Browse experimental fashion collections",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "ARCHIVE",
+      "short_name": "Archive",
+      "url": "/archive",
+      "description": "Explore the temporal archive",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
     }
   ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "protocol_handlers": [],
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "scope_extensions": [],
+  "iarc_rating_id": "",
   "features": [
     "Cross Platform",
+    "Fast Loading",
     "Offline Capable",
-    "Install",
-    "WebGL",
-    "WebWorkers"
+    "WebGL Support",
+    "Experimental Design",
+    "Brutalist Aesthetic"
   ]
 }

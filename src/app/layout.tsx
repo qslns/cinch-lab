@@ -11,9 +11,9 @@ import '@/styles/modern.css'
 import '@/styles/brutalism.css'
 
 export const metadata: Metadata = {
-  title: 'CINCH LAB — Experimental Fashion Technical Laboratory',
-  description: 'Where asymmetrical chaos meets scientific precision. Experimental fashion research facility exploring the boundaries between order and entropy.',
-  keywords: 'experimental fashion, brutalist design, fashion laboratory, cinch lab, avant-garde clothing, fashion research, technical design',
+  title: 'CINCH LAB — 최고이자 난 천재야',
+  description: 'NO SALES. ONLY CREATION. Experimental fashion laboratory where genius manifests without commerce. CINCH•RELEASE•REPEAT.',
+  keywords: 'experimental fashion, no commerce, fashion laboratory, cinch lab, avant-garde, pure creation, fashion experiment, genius',
   authors: [{ name: 'CINCH LAB' }],
   creator: 'CINCH LAB',
   publisher: 'CINCH LAB',
