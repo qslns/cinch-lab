@@ -101,14 +101,8 @@ export default function DeconstructedHover({
         }
 
       case 'fragment':
-        return {
-          fragment: (i: number) => ({
-            x: isHovered ? Math.sin(i) * 20 * intensity : 0,
-            y: isHovered ? Math.cos(i) * 20 * intensity : 0,
-            rotate: isHovered ? Math.sin(i) * 10 : 0,
-            scale: isHovered ? 0.95 : 1
-          })
-        }
+        // Fragment animations are handled inline in the component
+        return {}
 
       default:
         return {}
@@ -208,8 +202,12 @@ export default function DeconstructedHover({
             <motion.div
               key={i}
               className="overflow-hidden"
-              custom={i}
-              animate={variants.fragment(i)}
+              animate={{
+                x: isHovered ? Math.sin(i) * 20 * intensity : 0,
+                y: isHovered ? Math.cos(i) * 20 * intensity : 0,
+                rotate: isHovered ? Math.sin(i) * 10 : 0,
+                scale: isHovered ? 0.95 : 1
+              }}
               transition={{ duration: 0.3 }}
             >
               <div
