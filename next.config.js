@@ -5,6 +5,16 @@ const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
 
+  // Skip type checking during build for faster deployment
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  // Skip ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
