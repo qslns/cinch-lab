@@ -31,41 +31,41 @@ export default function AsymmetricGrid({
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 5])
 
   // Generate grid template based on mode
-  const getGridTemplate = () => {
+  const getGridStyle = () => {
     switch (mode) {
       case 'broken':
-        return `
-          grid-template-columns: var(--grid-1) var(--grid-3) var(--grid-2) var(--grid-5);
-          grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
-          grid-auto-flow: dense;
-        `
+        return {
+          gridTemplateColumns: 'var(--grid-1) var(--grid-3) var(--grid-2) var(--grid-5)',
+          gridTemplateRows: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridAutoFlow: 'dense' as const
+        }
 
       case 'shifted':
-        return `
-          grid-template-columns: var(--grid-2) var(--grid-6) var(--grid-4);
-          grid-auto-rows: minmax(150px, auto);
-        `
+        return {
+          gridTemplateColumns: 'var(--grid-2) var(--grid-6) var(--grid-4)',
+          gridAutoRows: 'minmax(150px, auto)'
+        }
 
       case 'overlapped':
-        return `
-          display: block;
-          position: relative;
-        `
+        return {
+          display: 'block',
+          position: 'relative' as const
+        }
 
       case 'scattered':
-        return `
-          grid-template-columns: repeat(5, 1fr);
-          grid-template-rows: repeat(5, minmax(100px, 1fr));
-        `
+        return {
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gridTemplateRows: 'repeat(5, minmax(100px, 1fr))'
+        }
 
       case 'diagonal':
-        return `
-          grid-template-columns: repeat(4, 1fr);
-          transform: skewY(-3deg);
-        `
+        return {
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          transform: 'skewY(-3deg)'
+        }
 
       default:
-        return ''
+        return {}
     }
   }
 
@@ -183,9 +183,7 @@ export default function AsymmetricGrid({
     <div
       ref={containerRef}
       className={`grid gap-2 ${className}`}
-      style={{
-        cssText: getGridTemplate()
-      }}
+      style={getGridStyle()}
     >
       {children.map((child, index) => {
         const spans = [
