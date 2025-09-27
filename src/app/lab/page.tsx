@@ -2,572 +2,394 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import Link from 'next/link'
-import { experiments, getActiveExperiments, getTechniques, type Experiment, type Technique } from '@/data/experiments'
-import CipherText from '@/components/CipherText'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import {
+  DeconstructedHover,
+  SacaiLayer,
+  FragmentMosaic,
+  ExposedStructure,
+  AsymmetricTransform
+} from '@/components/HybridLayerEffects'
 
-gsap.registerPlugin(ScrollTrigger)
+// Experiment categories
+const experiments = [
+  {
+    line: '001',
+    title: 'PATTERN DECONSTRUCTION',
+    status: 'IN_PROGRESS',
+    techniques: ['Draping', 'Flat Pattern', 'Digital Morphing'],
+    materials: ['Muslin', 'Canvas', 'Synthetic Mesh'],
+    phase: 'PROTOTYPE'
+  },
+  {
+    line: '002',
+    title: 'MATERIAL MANIPULATION',
+    status: 'COMPLETED',
+    techniques: ['Heat Press', 'Chemical Treatment', 'Laser Cutting'],
+    materials: ['Neoprene', 'PVC', 'Metallic Fiber'],
+    phase: 'ARCHIVE'
+  },
+  {
+    line: '003',
+    title: 'STRUCTURAL ENGINEERING',
+    status: 'TESTING',
+    techniques: ['3D Printing', 'Wire Framework', 'Vacuum Forming'],
+    materials: ['TPU', 'Carbon Fiber', 'Memory Foam'],
+    phase: 'EXPERIMENT'
+  },
+  {
+    line: '004',
+    title: 'HYBRID LAYERING',
+    status: 'IN_PROGRESS',
+    techniques: ['Splicing', 'Overlay', 'Asymmetric Assembly'],
+    materials: ['Wool', 'Silk', 'Technical Jersey'],
+    phase: 'REFINEMENT'
+  }
+]
+
+// Process stages
+const processStages = [
+  { id: 'IDEATION', label: 'Conceptual Framework', duration: '∞' },
+  { id: 'PATTERN', label: 'Pattern Engineering', duration: '72hrs' },
+  { id: 'TOILE', label: 'Toile Construction', duration: '48hrs' },
+  { id: 'FITTING', label: 'Form Analysis', duration: '24hrs' },
+  { id: 'CONSTRUCTION', label: 'Final Assembly', duration: '96hrs' },
+  { id: 'DESTRUCTION', label: 'Deconstruction', duration: '12hrs' }
+]
 
 export default function LabPage() {
-  const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null)
-  const [activeFilter, setActiveFilter] = useState<'ALL' | 'ACTIVE' | 'COMPLETED' | 'FAILED'>('ALL')
-  const [viewMode, setViewMode] = useState<'GRID' | 'TIMELINE' | 'CHAOS'>('GRID')
-  const [techniqueDetail, setTechniqueDetail] = useState<Technique | null>(null)
-  const [labStatus, setLabStatus] = useState('EXPERIMENTING')
-  const [dangerLevel, setDangerLevel] = useState(0)
+  const [activeExperiment, setActiveExperiment] = useState<number | null>(null)
+  const [currentStage, setCurrentStage] = useState(0)
+  const [isDeconstructed, setIsDeconstructed] = useState(false)
+  const [labStatus, setLabStatus] = useState<'OPERATIONAL' | 'EXPERIMENTING' | 'CRITICAL'>('OPERATIONAL')
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
 
-  // Parallax effects
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
-  const rotateParallax = useTransform(scrollYProgress, [0, 1], [0, 360])
-
-  useEffect(() => {
-    // Laboratory status updates
-    const statusInterval = setInterval(() => {
-      const statuses = ['EXPERIMENTING', 'ANALYZING', 'CREATING', 'DESTROYING', 'RECONSTRUCTING']
-      setLabStatus(statuses[Math.floor(Math.random() * statuses.length)])
-      setDangerLevel(Math.random() * 100)
-    }, 3000)
-
-    // GSAP animations
-    const ctx = gsap.context(() => {
-      gsap.from('.experiment-card', {
-        y: 100,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power4.out'
-      })
-
-      gsap.from('.technique-badge', {
-        scale: 0,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.05,
-        delay: 0.5,
-        ease: 'back.out'
-      })
-    })
-
-    return () => {
-      clearInterval(statusInterval)
-      ctx.revert()
-    }
-  }, [])
-
-  const filteredExperiments = experiments.filter(exp => {
-    if (activeFilter === 'ALL') return true
-    if (activeFilter === 'ACTIVE') return exp.status === 'ACTIVE' || exp.status === 'ONGOING'
-    if (activeFilter === 'COMPLETED') return exp.status === 'COMPLETED'
-    if (activeFilter === 'FAILED') return exp.status === 'FAILED'
-    return true
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
   })
 
-  const renderGridView = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {filteredExperiments.map((exp, index) => (
-        <motion.div
-          key={exp.id}
-          className="experiment-card relative group cursor-pointer"
-          onClick={() => setSelectedExperiment(exp)}
-          whileHover={{ y: -10, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <div className="p-8 bg-white border-4 border-carbon-black hover:border-safety-orange transition-all">
-            {/* Status Badge */}
-            <div className="absolute -top-3 -right-3">
-              <span className={`px-3 py-1 text-xs font-mono font-bold ${
-                exp.status === 'ACTIVE' ? 'bg-hazmat-green text-carbon-black' :
-                exp.status === 'COMPLETED' ? 'bg-safety-orange text-white' :
-                exp.status === 'ONGOING' ? 'bg-glitch-cyan text-carbon-black' :
-                'bg-glitch-red text-white'
-              }`}>
-                {exp.status}
-              </span>
+  // Transform scroll to experimental values
+  const experimentProgress = useTransform(scrollYProgress, [0, 1], [0, 100])
+  const distortionLevel = useTransform(scrollYProgress, [0, 0.5, 1], [0, 10, 0])
+
+  // Cycle through process stages
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStage((prev) => (prev + 1) % processStages.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Random deconstruction events
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.95) {
+        setIsDeconstructed(true)
+        setLabStatus('CRITICAL')
+        setTimeout(() => {
+          setIsDeconstructed(false)
+          setLabStatus('OPERATIONAL')
+        }, 2000)
+      }
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
+      {/* Laboratory Grid Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 overlay-grid opacity-30" />
+        <div className="absolute inset-0 overlay-muslin opacity-20" />
+      </div>
+
+      {/* Laboratory Status Bar */}
+      <motion.div
+        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-2"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        <div className="container-wide">
+          <div className="flex items-center justify-between text-micro font-mono">
+            <div className="flex items-center gap-6">
+              <span>LAB_STATUS: {labStatus}</span>
+              <span className="opacity-60">|</span>
+              <span>EXPERIMENT_COUNT: {experiments.length}</span>
+              <span className="opacity-60">|</span>
+              <span>ACTIVE_PROCESS: {processStages[currentStage].label}</span>
             </div>
-
-            {/* Experiment Header */}
-            <div className="mb-6">
-              <h3 className="text-2xl font-black mb-2">
-                <CipherText text={exp.title} />
-              </h3>
-              <p className="text-sm opacity-60">{exp.subtitle}</p>
-            </div>
-
-            {/* Category */}
-            <div className="mb-4">
-              <span className="text-xs font-mono opacity-40">CATEGORY:</span>
-              <span className="ml-2 text-sm font-bold">{exp.category}</span>
-            </div>
-
-            {/* Technique Count */}
-            <div className="mb-4 flex items-center gap-4">
-              <div>
-                <span className="text-xs font-mono opacity-40">TECHNIQUES:</span>
-                <span className="ml-2 text-sm font-bold">{exp.techniques.length}</span>
-              </div>
-              <div>
-                <span className="text-xs font-mono opacity-40">DIFFICULTY:</span>
-                <div className="inline-flex ml-2">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className={`text-xs ${
-                        i < Math.max(...exp.techniques.map(t => t.difficulty))
-                          ? 'text-glitch-red'
-                          : 'text-gray-300'
-                      }`}
-                    >
-                      ■
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <p className="text-xs leading-relaxed mb-6 opacity-80">
-              {exp.description}
-            </p>
-
-            {/* Dates */}
-            <div className="text-[10px] font-mono opacity-40 flex justify-between">
-              <span>STARTED: {exp.dateStarted}</span>
-              <span>MODIFIED: {exp.lastModified}</span>
-            </div>
-
-            {/* Hover Effect */}
-            <div className="absolute inset-0 bg-safety-orange opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none" />
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )
-
-  const renderTimelineView = () => (
-    <div className="relative">
-      {/* Timeline Line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20" />
-
-      {filteredExperiments.map((exp, index) => (
-        <motion.div
-          key={exp.id}
-          className={`relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'} mb-16`}
-          initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.1 }}
-        >
-          {/* Timeline Node */}
-          <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-safety-orange" />
-
-          {/* Content Card */}
-          <div
-            className={`w-5/12 p-6 bg-white border-2 border-carbon-black cursor-pointer ${
-              index % 2 === 0 ? 'mr-auto' : 'ml-auto'
-            }`}
-            onClick={() => setSelectedExperiment(exp)}
-          >
-            <h3 className="text-xl font-black mb-2">{exp.title}</h3>
-            <p className="text-xs opacity-60 mb-2">{exp.subtitle}</p>
-            <p className="text-xs mb-4">{exp.description}</p>
-            <div className="text-[10px] font-mono opacity-40">
-              {exp.dateStarted} → {exp.status}
+            <div className="flex items-center gap-4">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-hybrid-red"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <span>NO SALES • ONLY CREATION</span>
             </div>
           </div>
-        </motion.div>
-      ))}
-    </div>
-  )
+        </div>
+      </motion.div>
 
-  const renderChaosView = () => (
-    <div className="relative h-[800px] overflow-hidden">
-      {filteredExperiments.map((exp, index) => {
-        const randomX = Math.random() * 80
-        const randomY = Math.random() * 80
-        const randomRotate = Math.random() * 30 - 15
+      {/* Main Content */}
+      <div className="pt-32 pb-20">
+        <div className="container-wide">
+          {/* Page Title - Deconstructed */}
+          <ExposedStructure showMeasurements className="mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="text-micro font-mono text-hybrid-red mb-2">
+                SECTION_001 / EXPERIMENTAL_TECHNIQUES
+              </div>
+              <h1 className="text-display font-black tracking-tightest uppercase">
+                <SacaiLayer layers={2} color1="hybrid-blue" color2="hybrid-red">
+                  <span className={isDeconstructed ? 'text-deconstructed' : ''}>
+                    LABORATORY
+                  </span>
+                </SacaiLayer>
+              </h1>
+              <div className="text-lg text-gray-steel mt-4 max-w-2xl">
+                Experimental fashion techniques, material research, and structural engineering.
+                Every creation begins with destruction.
+              </div>
+            </motion.div>
+          </ExposedStructure>
 
-        return (
+          {/* Process Timeline */}
           <motion.div
-            key={exp.id}
-            className="absolute experiment-chaos-card"
-            style={{
-              left: `${randomX}%`,
-              top: `${randomY}%`,
-              transform: `rotate(${randomRotate}deg)`
-            }}
-            drag
-            dragMomentum={false}
-            whileHover={{ scale: 1.1, zIndex: 10 }}
-            onClick={() => setSelectedExperiment(exp)}
+            className="mb-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
           >
-            <div className="p-4 bg-white border-3 border-carbon-black w-64">
-              <h3 className="text-lg font-black mb-2">{exp.title}</h3>
-              <p className="text-xs opacity-60">{exp.category}</p>
-              <div className={`mt-2 text-xs font-mono ${
-                exp.status === 'ACTIVE' ? 'text-hazmat-green' :
-                exp.status === 'COMPLETED' ? 'text-safety-orange' :
-                exp.status === 'ONGOING' ? 'text-glitch-cyan' :
-                'text-glitch-red'
-              }`}>
-                {exp.status}
+            <div className="border-t border-b border-gray-plaster py-8">
+              <div className="relative h-2 bg-gray-plaster mb-8">
+                <motion.div
+                  className="absolute left-0 top-0 h-full bg-black-100"
+                  style={{ width: `${(currentStage + 1) / processStages.length * 100}%` }}
+                  transition={{ duration: 0.8 }}
+                />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {processStages.map((stage, index) => (
+                  <motion.div
+                    key={stage.id}
+                    className={`text-center ${index === currentStage ? 'text-black-100' : 'text-gray-steel'}`}
+                    animate={{
+                      scale: index === currentStage ? 1.05 : 1,
+                      opacity: index === currentStage ? 1 : 0.5
+                    }}
+                  >
+                    <div className="text-micro font-mono mb-1">STAGE_{(index + 1).toString().padStart(2, '0')}</div>
+                    <div className="text-xs font-medium uppercase">{stage.label}</div>
+                    <div className="text-micro mt-1">{stage.duration}</div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.div>
-        )
-      })}
-    </div>
-  )
 
-  return (
-    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white">
-      {/* Background Effects */}
-      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
-      <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{ rotate: rotateParallax }}
-      >
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-white/5" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 border border-white/5" />
-      </motion.div>
-
-      {/* Header */}
-      <section className="relative py-24 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto text-center"
-          style={{ y: yParallax }}
-        >
-          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
-            <CipherText text="LABORATORY" />
-          </h1>
-          <p className="text-sm font-mono opacity-60 mb-8">
-            EXPERIMENTAL TECHNIQUES • NO COMMERCE • PURE CREATION
-          </p>
-
-          {/* Status Display */}
-          <div className="flex items-center justify-center gap-8 mb-12">
-            <div className="text-xs font-mono">
-              <span className="opacity-60">STATUS:</span>
-              <span className="ml-2 text-hazmat-green">{labStatus}</span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">DANGER_LEVEL:</span>
-              <span className={`ml-2 ${
-                dangerLevel > 75 ? 'text-glitch-red' :
-                dangerLevel > 50 ? 'text-safety-orange' :
-                dangerLevel > 25 ? 'text-hazmat-yellow' :
-                'text-hazmat-green'
-              }`}>
-                {dangerLevel.toFixed(0)}%
-              </span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">EXPERIMENTS:</span>
-              <span className="ml-2">{experiments.length}</span>
-            </div>
-          </div>
-
-          {/* View Controls */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* View Mode */}
-            <div className="flex gap-2">
-              {(['GRID', 'TIMELINE', 'CHAOS'] as const).map(mode => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode)}
-                  className={`px-4 py-2 text-xs font-mono transition-all ${
-                    viewMode === mode
-                      ? 'bg-white text-carbon-black'
-                      : 'bg-transparent text-white/60 hover:text-white border border-white/20'
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
-            </div>
-
-            {/* Filter */}
-            <div className="flex gap-2">
-              {(['ALL', 'ACTIVE', 'COMPLETED', 'FAILED'] as const).map(filter => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 text-xs font-mono transition-all ${
-                    activeFilter === filter
-                      ? 'bg-safety-orange text-carbon-black'
-                      : 'bg-transparent text-white/60 hover:text-white border border-white/20'
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Experiments Display */}
-      <section className="px-8 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {viewMode === 'GRID' && renderGridView()}
-          {viewMode === 'TIMELINE' && renderTimelineView()}
-          {viewMode === 'CHAOS' && renderChaosView()}
-        </div>
-      </section>
-
-      {/* Experiment Detail Modal */}
-      <AnimatePresence>
-        {selectedExperiment && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedExperiment(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed inset-8 md:inset-16 bg-white text-carbon-black z-50 overflow-auto"
-            >
-              <div className="p-8 md:p-12">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-8">
-                  <div>
-                    <h2 className="text-4xl font-black mb-2">
-                      {selectedExperiment.title}
-                    </h2>
-                    <p className="text-sm opacity-60">{selectedExperiment.subtitle}</p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedExperiment(null)}
-                    className="w-10 h-10 flex items-center justify-center bg-carbon-black text-white hover:bg-glitch-red transition-colors"
-                  >
-                    <span className="text-2xl">×</span>
-                  </button>
-                </div>
-
-                {/* Status and Category */}
-                <div className="flex gap-4 mb-8">
-                  <span className={`px-3 py-1 text-xs font-mono font-bold ${
-                    selectedExperiment.status === 'ACTIVE' ? 'bg-hazmat-green text-carbon-black' :
-                    selectedExperiment.status === 'COMPLETED' ? 'bg-safety-orange text-white' :
-                    selectedExperiment.status === 'ONGOING' ? 'bg-glitch-cyan text-carbon-black' :
-                    'bg-glitch-red text-white'
-                  }`}>
-                    {selectedExperiment.status}
-                  </span>
-                  <span className="px-3 py-1 text-xs font-mono bg-carbon-black text-white">
-                    {selectedExperiment.category}
-                  </span>
-                </div>
-
-                {/* Description */}
-                <div className="mb-12">
-                  <h3 className="text-lg font-black mb-4">EXPERIMENT_OVERVIEW</h3>
-                  <p className="leading-relaxed">{selectedExperiment.description}</p>
-                </div>
-
-                {/* Techniques */}
-                <div className="mb-12">
-                  <h3 className="text-lg font-black mb-4">TECHNIQUES_EMPLOYED</h3>
-                  <div className="space-y-6">
-                    {selectedExperiment.techniques.map(tech => (
-                      <div
-                        key={tech.id}
-                        className="p-6 border-2 border-carbon-black hover:border-safety-orange transition-colors cursor-pointer"
-                        onClick={() => setTechniqueDetail(tech)}
-                      >
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="text-xl font-bold">{tech.name}</h4>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono opacity-60">DIFFICULTY:</span>
-                            <div className="flex">
-                              {[...Array(5)].map((_, i) => (
-                                <span
-                                  key={i}
-                                  className={`text-xs ${
-                                    i < tech.difficulty
-                                      ? 'text-glitch-red'
-                                      : 'text-gray-300'
-                                  }`}
-                                >
-                                  ■
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-sm mb-4 opacity-80">{tech.description}</p>
-                        <div className="text-xs font-mono opacity-60">
-                          {tech.materials.length} MATERIALS • {tech.process.length} STEPS
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Discoveries & Failures */}
-                <div className="grid md:grid-cols-2 gap-8 mb-12">
-                  {/* Discoveries */}
-                  <div>
-                    <h3 className="text-lg font-black mb-4 text-hazmat-green">DISCOVERIES</h3>
-                    <ul className="space-y-2">
-                      {selectedExperiment.discoveries.map((discovery, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-hazmat-green mr-2">+</span>
-                          <span className="text-sm">{discovery}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Failures */}
-                  <div>
-                    <h3 className="text-lg font-black mb-4 text-glitch-red">FAILURES</h3>
-                    <ul className="space-y-2">
-                      {selectedExperiment.failures.map((failure, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-glitch-red mr-2">×</span>
-                          <span className="text-sm">{failure}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Timeline */}
-                <div className="border-t-2 border-carbon-black pt-6">
-                  <div className="flex justify-between text-xs font-mono opacity-60">
-                    <span>INITIATED: {selectedExperiment.dateStarted}</span>
-                    <span>LAST_MODIFIED: {selectedExperiment.lastModified}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Technique Detail Modal */}
-      <AnimatePresence>
-        {techniqueDetail && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setTechniqueDetail(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-[60] backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              className="fixed bottom-0 left-0 right-0 z-[60] bg-white text-carbon-black max-h-[80vh] overflow-auto"
-            >
-              <div className="p-8">
-                <div className="max-w-4xl mx-auto">
-                  {/* Header */}
-                  <div className="flex justify-between items-start mb-8">
-                    <h2 className="text-3xl font-black">{techniqueDetail.name}</h2>
-                    <button
-                      onClick={() => setTechniqueDetail(null)}
-                      className="w-8 h-8 flex items-center justify-center bg-carbon-black text-white hover:bg-glitch-red transition-colors"
-                    >
-                      <span className="text-xl">×</span>
-                    </button>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-lg mb-8">{techniqueDetail.description}</p>
-
-                  <div className="grid md:grid-cols-2 gap-8">
-                    {/* Process */}
-                    <div>
-                      <h3 className="text-lg font-black mb-4">PROCESS</h3>
-                      <ol className="space-y-3">
-                        {techniqueDetail.process.map((step, index) => (
-                          <li key={index} className="flex items-start">
-                            <span className="font-mono text-sm mr-3 text-safety-orange">
-                              {String(index + 1).padStart(2, '0')}
-                            </span>
-                            <span className="text-sm">{step}</span>
-                          </li>
-                        ))}
-                      </ol>
+          {/* Experiments Grid - Asymmetric */}
+          <div className="grid-margiela gap-8 mb-20">
+            {experiments.map((exp, index) => (
+              <motion.div
+                key={exp.line}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                style={{
+                  gridColumn: index % 3 === 0 ? 'span 2' : index % 3 === 1 ? 'span 3' : 'span 1'
+                }}
+                onMouseEnter={() => setActiveExperiment(index)}
+                onMouseLeave={() => setActiveExperiment(null)}
+              >
+                <AsymmetricTransform intensity={2}>
+                  <div className={`
+                    relative bg-white-1 p-8
+                    border-2 ${activeExperiment === index ? 'border-black-100' : 'border-gray-plaster'}
+                    transition-all duration-300
+                    ${activeExperiment === index ? 'shadow-fabric-3' : 'shadow-fabric-1'}
+                  `}>
+                    {/* Pattern Mark */}
+                    <div className="absolute -top-3 -left-3 bg-white-0 px-2 text-micro font-mono text-hybrid-red">
+                      LINE_{exp.line}
                     </div>
 
-                    {/* Materials */}
-                    <div>
-                      <h3 className="text-lg font-black mb-4">MATERIALS</h3>
-                      <ul className="space-y-2">
-                        {techniqueDetail.materials.map((material, index) => (
-                          <li key={index} className="flex items-center">
-                            <span className="w-2 h-2 bg-carbon-black mr-3" />
-                            <span className="text-sm">{material}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    {/* Status Indicator */}
+                    <div className="absolute top-4 right-4">
+                      <div className={`
+                        w-2 h-2 rounded-full
+                        ${exp.status === 'COMPLETED' ? 'bg-black-100' :
+                          exp.status === 'IN_PROGRESS' ? 'bg-hybrid-blue animate-pulse' :
+                          'bg-gray-steel'}
+                      `} />
+                    </div>
 
-                      {/* Difficulty */}
-                      <div className="mt-8 p-4 bg-carbon-black text-white">
-                        <div className="text-xs font-mono mb-2">DIFFICULTY_LEVEL</div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <span
-                                key={i}
-                                className={`text-lg ${
-                                  i < techniqueDetail.difficulty
-                                    ? 'text-safety-orange'
-                                    : 'text-white/20'
-                                }`}
-                              >
-                                ■
+                    {/* Content */}
+                    <DeconstructedHover intensity={1}>
+                      <h3 className="text-xl font-bold mb-4 tracking-wider">
+                        {exp.title}
+                      </h3>
+
+                      <div className="space-y-4">
+                        {/* Techniques */}
+                        <div>
+                          <div className="text-micro font-mono text-gray-steel mb-2">
+                            TECHNIQUES:
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.techniques.map(tech => (
+                              <span key={tech} className="text-xs px-2 py-1 bg-gray-plaster/30">
+                                {tech}
                               </span>
                             ))}
                           </div>
-                          <span className="text-xs font-mono opacity-60 ml-2">
-                            {techniqueDetail.difficulty === 5 ? 'EXTREME' :
-                             techniqueDetail.difficulty === 4 ? 'HARD' :
-                             techniqueDetail.difficulty === 3 ? 'MEDIUM' :
-                             techniqueDetail.difficulty === 2 ? 'EASY' :
-                             'BEGINNER'}
-                          </span>
+                        </div>
+
+                        {/* Materials */}
+                        <div>
+                          <div className="text-micro font-mono text-gray-steel mb-2">
+                            MATERIALS:
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.materials.map(mat => (
+                              <span key={mat} className="text-xs px-2 py-1 border border-gray-plaster">
+                                {mat}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Phase */}
+                        <div className="pt-4 border-t border-gray-plaster">
+                          <div className="flex items-center justify-between">
+                            <span className="text-micro font-mono">PHASE:</span>
+                            <span className="text-sm font-medium">{exp.phase}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                    </DeconstructedHover>
 
-      {/* Footer Status */}
-      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB_EXPERIMENTS • NO_SALES • PURE_RESEARCH
-          </p>
-          <div className="flex gap-4">
-            <span className="text-[10px] font-mono opacity-60">
-              ACTIVE: {getActiveExperiments().length}
-            </span>
-            <span className="text-[10px] font-mono opacity-60">
-              TECHNIQUES: {getTechniques().length}
-            </span>
+                    {/* Hover Reveal - Technical Drawing */}
+                    <AnimatePresence>
+                      {activeExperiment === index && (
+                        <motion.div
+                          className="absolute inset-0 bg-white-0/95 flex items-center justify-center pointer-events-none"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <div className="text-center">
+                            <div className="text-4xl font-mono mb-2">⊗</div>
+                            <div className="text-micro font-mono uppercase">
+                              Technical Documentation<br />
+                              Access Restricted
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </AsymmetricTransform>
+              </motion.div>
+            ))}
           </div>
+
+          {/* Laboratory Equipment Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mb-20"
+          >
+            <ExposedStructure showGrid className="p-12 bg-gray-plaster/10">
+              <h2 className="text-3xl font-bold mb-8 text-center">EQUIPMENT & TOOLS</h2>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {[
+                  { tool: 'INDUSTRIAL SEWING', model: 'JUKI DDL-9000C', status: 'ACTIVE' },
+                  { tool: 'PATTERN PLOTTER', model: 'GERBER P2C', status: 'ACTIVE' },
+                  { tool: 'LASER CUTTER', model: 'EPILOG FUSION', status: 'MAINTENANCE' },
+                  { tool: 'ULTRASONIC WELDER', model: 'SONIC-X1', status: 'ACTIVE' },
+                  { tool: '3D BODY SCANNER', model: 'SIZE STREAM', status: 'ACTIVE' },
+                  { tool: 'HEAT PRESS', model: 'STAHLS 15x15', status: 'ACTIVE' },
+                  { tool: 'VACUUM FORMER', model: 'FORMECH 508', status: 'TESTING' },
+                  { tool: 'FABRIC PRINTER', model: 'EPSON F2100', status: 'ACTIVE' }
+                ].map((equip, i) => (
+                  <motion.div
+                    key={equip.tool}
+                    className="text-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <div className="text-4xl mb-2">⚙</div>
+                    <div className="text-xs font-bold uppercase">{equip.tool}</div>
+                    <div className="text-micro text-gray-steel">{equip.model}</div>
+                    <div className={`text-micro mt-1 ${
+                      equip.status === 'ACTIVE' ? 'text-hybrid-blue' :
+                      equip.status === 'MAINTENANCE' ? 'text-hybrid-red' :
+                      'text-gray-steel'
+                    }`}>
+                      {equip.status}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </ExposedStructure>
+          </motion.div>
+
+          {/* Live Experiment Monitor */}
+          <FragmentMosaic fragments={4} className="mb-20">
+            <div className="bg-black-100 text-white-0 p-16 text-center">
+              <h3 className="text-2xl font-bold mb-4">LIVE EXPERIMENT FEED</h3>
+              <div className="text-mono text-sm opacity-60">
+                <motion.div
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  MONITORING ACTIVE PROCESSES...<br/>
+                  DECONSTRUCTION IN PROGRESS...<br/>
+                  PATTERN ANALYSIS: 87% COMPLETE
+                </motion.div>
+              </div>
+            </div>
+          </FragmentMosaic>
+
+          {/* Laboratory Philosophy */}
+          <motion.div
+            className="text-center py-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <div className="text-micro font-mono text-gray-steel mb-4">
+              LABORATORY MANIFESTO
+            </div>
+            <h2 className="text-4xl font-black mb-8">
+              EVERY SEAM TELLS A STORY<br/>
+              EVERY CUT IS DELIBERATE<br/>
+              EVERY LAYER HAS PURPOSE
+            </h2>
+            <div className="text-lg text-gray-steel max-w-2xl mx-auto">
+              In this laboratory, fashion is dissected, reconstructed, and reimagined.
+              We don't follow trends—we deconstruct them.
+            </div>
+          </motion.div>
         </div>
       </div>
+
+      {/* Progress Indicator */}
+      <motion.div
+        className="fixed bottom-8 right-8 text-micro font-mono"
+        style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [0, 1]) }}
+      >
+        <div className="bg-white-0 border border-black-100 p-4">
+          SCROLL_PROGRESS: {Math.round(experimentProgress.get())}%
+        </div>
+      </motion.div>
     </div>
   )
 }

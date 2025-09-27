@@ -1,0 +1,441 @@
+/* ==========================================================================
+   CINCH LAB Design System v3.0
+   Maison Margiela × Sacai Digital Laboratory
+
+   Philosophy:
+   - Margiela: Deconstruction, exposed structures, anonymity, transformation
+   - Sacai: Hybrid layering, garment splicing, volume manipulation
+   - CINCH LAB: Pure creation without commerce, experimental fashion laboratory
+   ========================================================================== */
+
+/* ==========================================================================
+   1. COLOR SYSTEM - Margiela Monochrome + Sacai Hybrid Accents
+   ========================================================================== */
+
+:root {
+  /* Primary: Margiela's White Label System (0-23) */
+  --white-0: #FFFFFF;        /* Artisanal line */
+  --white-1: #FAFAFA;        /* Women's RTW */
+  --white-4: #F5F5F5;        /* Fragrances */
+  --white-6: #F0F0F0;        /* MM6 diffusion */
+  --white-10: #E8E8E8;       /* Men's line */
+  --white-11: #E0E0E0;       /* Accessories */
+  --white-13: #D8D8D8;       /* Objects */
+  --white-22: #D0D0D0;       /* Shoes */
+
+  /* Grays: Construction and Structure */
+  --gray-plaster: #C5C5C0;   /* Raw plaster texture */
+  --gray-concrete: #999994;   /* Unfinished concrete */
+  --gray-steel: #6B6B66;     /* Industrial steel */
+  --gray-charcoal: #3A3A36;  /* Deep charcoal */
+
+  /* Blacks: Depth and Shadow */
+  --black-100: #000000;      /* Pure black */
+  --black-90: #1A1A1A;       /* Near black */
+  --black-80: #2A2A2A;       /* Dark shadow */
+  --black-70: #3A3A3A;       /* Medium shadow */
+
+  /* Sacai Hybrid Accents (Minimal Use) */
+  --hybrid-red: #C41E3A;     /* Thread marking red */
+  --hybrid-blue: #1E3A8A;    /* Pattern marking blue */
+  --hybrid-yellow: #F5E6D3;  /* Muslin beige */
+
+  /* System Colors */
+  --color-primary: var(--black-100);
+  --color-background: var(--white-0);
+  --color-surface: var(--white-1);
+  --color-border: var(--gray-plaster);
+  --color-text: var(--black-90);
+  --color-text-muted: var(--gray-steel);
+
+  /* Inverted Mode */
+  --color-inverted-bg: var(--black-100);
+  --color-inverted-text: var(--white-0);
+}
+
+/* ==========================================================================
+   2. TYPOGRAPHY - Variable Font System with Deconstruction
+   ========================================================================== */
+
+:root {
+  /* Font Families */
+  --font-primary: 'Helvetica Neue', 'Arial', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-display: system-ui, -apple-system, sans-serif;
+
+  /* Variable Font Settings */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Type Scale - Golden Ratio Based */
+  --text-micro: clamp(0.625rem, 0.5vw + 0.5rem, 0.75rem);    /* 10-12px */
+  --text-tiny: clamp(0.75rem, 0.6vw + 0.6rem, 0.875rem);     /* 12-14px */
+  --text-small: clamp(0.875rem, 0.8vw + 0.7rem, 1rem);       /* 14-16px */
+  --text-base: clamp(1rem, 1vw + 0.8rem, 1.125rem);          /* 16-18px */
+  --text-lg: clamp(1.125rem, 1.2vw + 0.9rem, 1.25rem);       /* 18-20px */
+  --text-xl: clamp(1.25rem, 1.5vw + 1rem, 1.5rem);           /* 20-24px */
+  --text-2xl: clamp(1.5rem, 2vw + 1.2rem, 2rem);             /* 24-32px */
+  --text-3xl: clamp(2rem, 3vw + 1.5rem, 3rem);               /* 32-48px */
+  --text-4xl: clamp(3rem, 4vw + 2rem, 4.5rem);               /* 48-72px */
+  --text-5xl: clamp(4rem, 5vw + 3rem, 6rem);                 /* 64-96px */
+  --text-display: clamp(6rem, 8vw + 4rem, 10rem);            /* 96-160px */
+
+  /* Letter Spacing */
+  --tracking-tightest: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+  --tracking-extreme: 0.2em;
+
+  /* Line Height */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+}
+
+/* ==========================================================================
+   3. SPACING SYSTEM - Asymmetric Grid with Golden Ratio
+   ========================================================================== */
+
+:root {
+  /* Base Unit */
+  --space-unit: 0.5rem; /* 8px */
+
+  /* Spacing Scale */
+  --space-0: 0;
+  --space-1: calc(var(--space-unit) * 0.5);    /* 4px */
+  --space-2: var(--space-unit);                /* 8px */
+  --space-3: calc(var(--space-unit) * 1.5);    /* 12px */
+  --space-4: calc(var(--space-unit) * 2);      /* 16px */
+  --space-5: calc(var(--space-unit) * 3);      /* 24px */
+  --space-6: calc(var(--space-unit) * 4);      /* 32px */
+  --space-8: calc(var(--space-unit) * 6);      /* 48px */
+  --space-10: calc(var(--space-unit) * 8);     /* 64px */
+  --space-12: calc(var(--space-unit) * 10);    /* 80px */
+  --space-16: calc(var(--space-unit) * 12);    /* 96px */
+  --space-20: calc(var(--space-unit) * 16);    /* 128px */
+  --space-24: calc(var(--space-unit) * 20);    /* 160px */
+
+  /* Grid System - Asymmetric */
+  --grid-golden: 1.618;
+  --grid-1: 0.382fr;  /* Golden ratio small */
+  --grid-2: 0.618fr;  /* Golden ratio medium */
+  --grid-3: 1fr;      /* Base unit */
+  --grid-4: 1.618fr;  /* Golden ratio large */
+  --grid-5: 2.618fr;  /* Golden ratio extra large */
+
+  /* Container Widths */
+  --container-narrow: 48rem;    /* 768px */
+  --container-normal: 64rem;    /* 1024px */
+  --container-wide: 80rem;      /* 1280px */
+  --container-full: 96rem;      /* 1536px */
+}
+
+/* ==========================================================================
+   4. ANIMATION SYSTEM - Deconstruction and Reconstruction
+   ========================================================================== */
+
+:root {
+  /* Timing Functions */
+  --ease-deconstructed: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-reconstructed: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+  /* Durations */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 800ms;
+  --duration-slowest: 1200ms;
+
+  /* Transitions */
+  --transition-base: all var(--duration-normal) var(--ease-deconstructed);
+  --transition-opacity: opacity var(--duration-fast) var(--ease-sharp);
+  --transition-transform: transform var(--duration-normal) var(--ease-reconstructed);
+  --transition-color: color var(--duration-fast) var(--ease-sharp);
+}
+
+/* ==========================================================================
+   5. LAYER SYSTEM - Sacai-inspired Z-index Management
+   ========================================================================== */
+
+:root {
+  --layer-below: -1;
+  --layer-base: 0;
+  --layer-float: 10;
+  --layer-overlay: 100;
+  --layer-modal: 1000;
+  --layer-popover: 10000;
+  --layer-tooltip: 100000;
+  --layer-notification: 1000000;
+  --layer-critical: 10000000;
+}
+
+/* ==========================================================================
+   6. EFFECTS - Material and Texture
+   ========================================================================== */
+
+:root {
+  /* Shadows - Layered like fabric */
+  --shadow-fabric-1: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-fabric-2: 0 2px 4px rgba(0,0,0,0.06), 0 3px 8px rgba(0,0,0,0.08);
+  --shadow-fabric-3: 0 4px 8px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.10);
+  --shadow-fabric-4: 0 8px 16px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.12);
+  --shadow-fabric-5: 0 16px 32px rgba(0,0,0,0.12), 0 24px 64px rgba(0,0,0,0.14);
+
+  /* Borders - Deconstructed */
+  --border-raw: 1px solid var(--gray-plaster);
+  --border-stitched: 2px dashed var(--gray-steel);
+  --border-exposed: 3px solid var(--black-100);
+  --border-fragment: 1px solid transparent;
+
+  /* Blur Effects */
+  --blur-subtle: blur(2px);
+  --blur-medium: blur(8px);
+  --blur-heavy: blur(20px);
+}
+
+/* ==========================================================================
+   7. UTILITY CLASSES - Margiela Philosophy
+   ========================================================================== */
+
+/* Text Deconstruction */
+.text-deconstructed {
+  font-variation-settings: 'wght' var(--font-weight-thin);
+  letter-spacing: var(--tracking-extreme);
+  text-transform: uppercase;
+}
+
+.text-reconstructed {
+  font-variation-settings: 'wght' var(--font-weight-black);
+  letter-spacing: var(--tracking-tightest);
+}
+
+/* Layering Effects */
+.layer-hybrid {
+  position: relative;
+}
+
+.layer-hybrid::before,
+.layer-hybrid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.layer-hybrid::before {
+  transform: translate(2px, -2px);
+  background: var(--color-background);
+  mix-blend-mode: multiply;
+  opacity: 0.1;
+}
+
+.layer-hybrid::after {
+  transform: translate(-2px, 2px);
+  border: var(--border-raw);
+  opacity: 0.5;
+}
+
+/* Material Textures */
+.texture-muslin {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      var(--white-4) 2px,
+      var(--white-4) 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      var(--white-4) 2px,
+      var(--white-4) 4px
+    );
+}
+
+.texture-canvas {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      var(--white-0),
+      var(--white-0) 10px,
+      var(--white-1) 10px,
+      var(--white-1) 20px
+    );
+}
+
+/* Exposed Seams */
+.seam-exposed {
+  position: relative;
+  overflow: visible;
+}
+
+.seam-exposed::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px dashed var(--hybrid-red);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Pattern Marks */
+.pattern-mark {
+  position: relative;
+}
+
+.pattern-mark::after {
+  content: attr(data-mark);
+  position: absolute;
+  top: -1rem;
+  left: 0;
+  font-size: var(--text-micro);
+  font-family: var(--font-mono);
+  color: var(--hybrid-red);
+  opacity: 0.6;
+  letter-spacing: var(--tracking-wider);
+}
+
+/* ==========================================================================
+   8. LAYOUT PATTERNS - Asymmetric Grids
+   ========================================================================== */
+
+.grid-margiela {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: var(--grid-1) var(--grid-3) var(--grid-2) var(--grid-4);
+  grid-auto-flow: dense;
+}
+
+.grid-sacai {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.grid-sacai > * {
+  grid-column: span 3;
+}
+
+.grid-sacai > *:nth-child(3n + 1) {
+  transform: translateX(-10px);
+  z-index: var(--layer-float);
+}
+
+.grid-sacai > *:nth-child(3n + 2) {
+  transform: translateY(20px);
+  z-index: var(--layer-overlay);
+}
+
+.grid-sacai > *:nth-child(3n) {
+  transform: translate(10px, -10px);
+  z-index: var(--layer-modal);
+}
+
+/* ==========================================================================
+   9. INTERACTIVE STATES - Hybrid Philosophy
+   ========================================================================== */
+
+.interactive-deconstruct {
+  transition: var(--transition-base);
+  cursor: pointer;
+}
+
+.interactive-deconstruct:hover {
+  transform: scale(0.98) rotate(-0.5deg);
+  filter: contrast(1.1);
+}
+
+.interactive-deconstruct:active {
+  transform: scale(0.96) rotate(-1deg);
+}
+
+.interactive-layer {
+  position: relative;
+  transition: var(--transition-transform);
+}
+
+.interactive-layer:hover {
+  transform: translate3d(0, 0, 0);
+}
+
+.interactive-layer:hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translate(4px, -4px);
+  background: currentColor;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+}
+
+.interactive-layer:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translate(-4px, 4px);
+  border: 1px solid currentColor;
+  opacity: 0.1;
+}
+
+/* ==========================================================================
+   10. RESPONSIVE SYSTEM
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --space-unit: 0.375rem; /* 6px on mobile */
+  }
+
+  .grid-margiela {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-sacai > * {
+    grid-column: span 6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --duration-slowest: 0ms;
+  }
+
+  .interactive-deconstruct,
+  .interactive-layer {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--black-100);
+    --color-surface: var(--black-90);
+    --color-border: var(--gray-charcoal);
+    --color-text: var(--white-0);
+    --color-text-muted: var(--gray-plaster);
+  }
+}

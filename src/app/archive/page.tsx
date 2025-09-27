@@ -2,467 +2,401 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import Link from 'next/link'
 import {
-  archiveEntries,
-  philosophies,
-  getArchiveStats,
-  type ArchiveEntry,
-  type Philosophy,
-  type ArchiveStats
-} from '@/data/archive'
-import CipherText from '@/components/CipherText'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  DeconstructedHover,
+  SacaiLayer,
+  FragmentMosaic,
+  ExposedStructure,
+  AsymmetricTransform
+} from '@/components/HybridLayerEffects'
 
-gsap.registerPlugin(ScrollTrigger)
+// Archive entries - philosophical records
+const archiveEntries = [
+  {
+    id: '001',
+    date: '2024.01.15',
+    title: 'The Deconstruction Manifesto',
+    category: 'PHILOSOPHY',
+    content: 'Fashion is not about covering the body, but exposing the soul. Every seam we expose, every edge we leave raw, is a truth revealed.',
+    tags: ['deconstruction', 'truth', 'raw edges'],
+    status: 'FOUNDATIONAL'
+  },
+  {
+    id: '002',
+    date: '2024.02.03',
+    title: 'Hybrid Forms: Beyond Binary',
+    category: 'TECHNIQUE',
+    content: 'When two garments become one, we transcend the limitations of singular identity. Layering is not addition; it is multiplication of meaning.',
+    tags: ['hybrid', 'layering', 'identity'],
+    status: 'EXPERIMENTAL'
+  },
+  {
+    id: '003',
+    date: '2024.03.21',
+    title: 'The Failed Experiment',
+    category: 'FAILURE',
+    content: 'Today, the fabric refused to obey. The pattern collapsed. In this failure, we found a new form—chaos as creation.',
+    tags: ['failure', 'chaos', 'discovery'],
+    status: 'ARCHIVED'
+  },
+  {
+    id: '004',
+    date: '2024.04.07',
+    title: 'Volume as Philosophy',
+    category: 'CONCEPT',
+    content: 'Space between body and fabric is not emptiness—it is potential. We design not clothes, but the air around them.',
+    tags: ['volume', 'space', 'potential'],
+    status: 'DEVELOPING'
+  },
+  {
+    id: '005',
+    date: '2024.05.15',
+    title: 'Material Memory',
+    category: 'MATERIAL',
+    content: 'Every fabric remembers its origin. Cotton remembers the field, silk remembers the worm. We honor these memories by transformation.',
+    tags: ['material', 'memory', 'transformation'],
+    status: 'FOUNDATIONAL'
+  },
+  {
+    id: '006',
+    date: '2024.06.01',
+    title: 'The Anonymous Designer',
+    category: 'PHILOSOPHY',
+    content: 'The creator disappears into the creation. We are not designers; we are mediums through which fashion speaks.',
+    tags: ['anonymity', 'ego', 'medium'],
+    status: 'CORE'
+  },
+  {
+    id: '007',
+    date: '2024.07.12',
+    title: 'Reconstruction Ethics',
+    category: 'PROCESS',
+    content: 'To reconstruct is not to repair. It is to reimagine. Every broken piece becomes a new beginning.',
+    tags: ['reconstruction', 'ethics', 'reimagination'],
+    status: 'EXPERIMENTAL'
+  },
+  {
+    id: '008',
+    date: '2024.08.28',
+    title: 'Digital Patterns, Physical Dreams',
+    category: 'TECHNIQUE',
+    content: 'The screen shows perfection, but the hand creates truth. We embrace the imperfection of human touch in digital age.',
+    tags: ['digital', 'handmade', 'imperfection'],
+    status: 'DEVELOPING'
+  }
+]
+
+// Archive categories
+const categories = ['ALL', 'PHILOSOPHY', 'TECHNIQUE', 'MATERIAL', 'PROCESS', 'FAILURE', 'CONCEPT']
+const statusFilters = ['ALL', 'FOUNDATIONAL', 'EXPERIMENTAL', 'DEVELOPING', 'ARCHIVED', 'CORE']
+
+type ViewMode = 'JOURNAL' | 'TIMELINE' | 'FRAGMENTS' | 'INDEX'
 
 export default function ArchivePage() {
-  const [viewMode, setViewMode] = useState<'TIMELINE' | 'PHILOSOPHY' | 'CHRONICLE' | 'STATISTICS'>('TIMELINE')
-  const [selectedEntry, setSelectedEntry] = useState<ArchiveEntry | null>(null)
-  const [selectedPhilosophy, setSelectedPhilosophy] = useState<Philosophy | null>(null)
-  const [filterType, setFilterType] = useState<'ALL' | ArchiveEntry['type']>('ALL')
-  const [filterYear, setFilterYear] = useState<number | null>(null)
-  const [mindState, setMindState] = useState('CONTEMPLATING')
-  const [glitchActive, setGlitchActive] = useState(false)
+  const [selectedEntry, setSelectedEntry] = useState<typeof archiveEntries[0] | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('JOURNAL')
+  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [activeStatus, setActiveStatus] = useState('ALL')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isWritingMode, setIsWritingMode] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
 
-  // Parallax and transforms
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
-  const opacityParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0.2])
-  const scaleParallax = useTransform(scrollYProgress, [0, 1], [1, 1.1])
-
-  const stats = getArchiveStats()
-
-  useEffect(() => {
-    // Mind state updates
-    const mindInterval = setInterval(() => {
-      const states = ['CONTEMPLATING', 'REMEMBERING', 'CREATING', 'ANALYZING', 'DREAMING', 'MANIFESTING']
-      setMindState(states[Math.floor(Math.random() * states.length)])
-    }, 3000)
-
-    // Random glitch for mental effect
-    const glitchInterval = setInterval(() => {
-      if (Math.random() > 0.92) {
-        setGlitchActive(true)
-        setTimeout(() => setGlitchActive(false), 200)
-      }
-    }, 2000)
-
-    // GSAP animations
-    const ctx = gsap.context(() => {
-      gsap.from('.archive-entry', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out'
-      })
-
-      gsap.from('.philosophy-card', {
-        scale: 0.9,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power2.out'
-      })
-
-      // Floating thoughts animation
-      gsap.to('.floating-thought', {
-        y: 'random(-20, 20)',
-        x: 'random(-10, 10)',
-        duration: 'random(3, 5)',
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        stagger: {
-          amount: 2,
-          from: 'random'
-        }
-      })
-    })
-
-    return () => {
-      clearInterval(mindInterval)
-      clearInterval(glitchInterval)
-      ctx.revert()
-    }
-  }, [])
-
-  const filteredEntries = archiveEntries.filter(entry => {
-    const typeMatch = filterType === 'ALL' || entry.type === filterType
-    const yearMatch = !filterYear || entry.year === filterYear
-    return typeMatch && yearMatch
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
   })
 
-  const renderTimelineView = () => (
-    <div className="relative">
-      {/* Central Timeline Line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-white via-safety-orange to-white opacity-40" />
+  // Transform values
+  const rotatePages = useTransform(scrollYProgress, [0, 1], [0, 180])
+  const fadeIn = useTransform(scrollYProgress, [0, 0.2], [0, 1])
 
-      {/* Year Markers */}
-      {[...new Set(filteredEntries.map(e => e.year))].sort((a, b) => b - a).map((year, yearIndex) => (
-        <div key={year} className="relative mb-20">
-          {/* Year Header */}
-          <motion.div
-            className="relative text-center mb-12"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: yearIndex * 0.1 }}
-          >
-            <div className="absolute left-1/2 -translate-x-1/2 w-16 h-16 bg-safety-orange flex items-center justify-center">
-              <span className="text-2xl font-black text-carbon-black">{year}</span>
-            </div>
-          </motion.div>
+  // Filter entries
+  const filteredEntries = archiveEntries.filter(entry => {
+    const categoryMatch = activeCategory === 'ALL' || entry.category === activeCategory
+    const statusMatch = activeStatus === 'ALL' || entry.status === activeStatus
+    const searchMatch = searchTerm === '' ||
+      entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.content.toLowerCase().includes(searchTerm.toLowerCase())
+    return categoryMatch && statusMatch && searchMatch
+  })
 
-          {/* Entries for this year */}
-          <div className="mt-20 space-y-12">
-            {filteredEntries.filter(e => e.year === year).map((entry, index) => (
-              <motion.div
-                key={entry.id}
-                className={`archive-entry relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                {/* Timeline Node */}
-                <div className={`absolute left-1/2 -translate-x-1/2 w-4 h-4 ${
-                  entry.type === 'FAILURE' ? 'bg-glitch-red' :
-                  entry.type === 'DISCOVERY' ? 'bg-hazmat-green' :
-                  entry.type === 'COLLECTION' ? 'bg-safety-orange' :
-                  entry.type === 'PHILOSOPHY' ? 'bg-glitch-cyan' :
-                  'bg-white'
-                } border-2 border-carbon-black`} />
+  // Random thought generator
+  const [randomThought, setRandomThought] = useState('')
+  useEffect(() => {
+    const thoughts = [
+      'Deconstruction is construction...',
+      'The seam is the truth...',
+      'Imperfection is intention...',
+      'Volume creates void...',
+      'Layers reveal depth...'
+    ]
+    const interval = setInterval(() => {
+      setRandomThought(thoughts[Math.floor(Math.random() * thoughts.length)])
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
 
-                {/* Entry Card */}
-                <div
-                  className={`w-5/12 p-6 bg-white border-3 border-carbon-black cursor-pointer hover:border-safety-orange transition-all ${
-                    index % 2 === 0 ? 'mr-auto' : 'ml-auto'
-                  }`}
-                  onClick={() => setSelectedEntry(entry)}
-                >
-                  {/* Date Badge */}
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-xs font-mono opacity-60">
-                      {entry.month} {entry.day ? entry.day : ''}, {entry.year}
-                    </span>
-                    <span className={`px-2 py-1 text-xs font-mono font-bold ${
-                      entry.type === 'FAILURE' ? 'bg-glitch-red text-white' :
-                      entry.type === 'DISCOVERY' ? 'bg-hazmat-green text-carbon-black' :
-                      entry.type === 'COLLECTION' ? 'bg-safety-orange text-white' :
-                      entry.type === 'PHILOSOPHY' ? 'bg-glitch-cyan text-carbon-black' :
-                      entry.type === 'EVENT' ? 'bg-concrete-gray text-white' :
-                      'bg-carbon-black text-white'
-                    }`}>
-                      {entry.type}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-black mb-2">{entry.title}</h3>
-                  <p className="text-sm italic opacity-60 mb-3">{entry.subtitle}</p>
-                  <p className="text-xs leading-relaxed mb-4">{entry.content.substring(0, 150)}...</p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {entry.tags.slice(0, 3).map(tag => (
-                      <span key={tag} className="text-[10px] font-mono opacity-60">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Significance Indicator */}
-                  <div className="mt-4 flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-2 h-2 ${
-                          i < entry.significance ? 'bg-safety-orange' : 'bg-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-
-  const renderPhilosophyView = () => (
-    <div className="space-y-12">
-      {philosophies.map((philosophy, index) => (
-        <motion.div
-          key={philosophy.id}
-          className="philosophy-card relative"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.2 }}
-        >
-          <div
-            className="bg-white border-4 border-carbon-black p-8 cursor-pointer hover:border-safety-orange transition-all"
-            onClick={() => setSelectedPhilosophy(philosophy)}
-          >
-            {/* Category Badge */}
-            <div className="absolute -top-3 -left-3">
-              <span className="bg-carbon-black text-white px-3 py-1 text-xs font-mono">
-                {philosophy.category}
-              </span>
-            </div>
-
-            {/* Content */}
-            <h2 className="text-3xl font-black mb-4">
-              <CipherText text={philosophy.title} />
-            </h2>
-            <div className="prose prose-sm max-w-none opacity-80">
-              {philosophy.content.split('\n\n').map((paragraph, i) => (
-                <p key={i} className="mb-4 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            {/* Date */}
-            <div className="mt-6 text-xs font-mono opacity-60">
-              {philosophy.date}
-            </div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )
-
-  const renderChronicleView = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  const renderJournalView = () => (
+    <div className="space-y-8">
       {filteredEntries.map((entry, index) => (
         <motion.div
           key={entry.id}
-          className="archive-entry"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: index * 0.05 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          onClick={() => setSelectedEntry(entry)}
+          className="cursor-pointer"
         >
-          <div
-            className={`h-full p-6 border-2 cursor-pointer transition-all ${
-              entry.type === 'FAILURE' ? 'bg-glitch-red/10 border-glitch-red hover:bg-glitch-red/20' :
-              entry.type === 'DISCOVERY' ? 'bg-hazmat-green/10 border-hazmat-green hover:bg-hazmat-green/20' :
-              entry.type === 'COLLECTION' ? 'bg-safety-orange/10 border-safety-orange hover:bg-safety-orange/20' :
-              'bg-white border-carbon-black hover:border-safety-orange'
-            }`}
-            onClick={() => setSelectedEntry(entry)}
-          >
-            {/* Header */}
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-xs font-mono opacity-60">
-                {entry.month.substring(0, 3)} {entry.year}
-              </span>
-              <span className="text-xs font-mono font-bold">
-                {entry.category}
-              </span>
-            </div>
+          <DeconstructedHover intensity={1.5}>
+            <ExposedStructure showMeasurements={selectedEntry?.id === entry.id}>
+              <div className="p-8 bg-white-1 border border-gray-plaster">
+                {/* Entry Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      ENTRY_{entry.id} • {entry.date}
+                    </div>
+                    <h3 className="text-3xl font-black mb-2">{entry.title}</h3>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs px-2 py-1 bg-black-100 text-white-0">
+                        {entry.category}
+                      </span>
+                      <span className={`text-micro font-mono ${
+                        entry.status === 'FOUNDATIONAL' ? 'text-hybrid-blue' :
+                        entry.status === 'EXPERIMENTAL' ? 'text-hybrid-red' :
+                        'text-gray-steel'
+                      }`}>
+                        {entry.status}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Page Fold Effect */}
+                  <div className="w-8 h-8 bg-gradient-to-br from-white-0 to-gray-plaster transform rotate-45" />
+                </div>
 
-            {/* Title */}
-            <h3 className="text-lg font-black mb-2 line-clamp-2">{entry.title}</h3>
-            <p className="text-xs italic opacity-60 mb-3">{entry.subtitle}</p>
+                {/* Content */}
+                <p className="text-lg leading-relaxed mb-6 italic">
+                  "{entry.content}"
+                </p>
 
-            {/* Thoughts Preview */}
-            {entry.thoughts.length > 0 && (
-              <div className="mb-4 p-3 bg-carbon-black/5 border-l-2 border-carbon-black">
-                <p className="text-xs italic">"{entry.thoughts[0]}"</p>
+                {/* Tags */}
+                <div className="flex gap-2 flex-wrap">
+                  {entry.tags.map(tag => (
+                    <span key={tag} className="text-micro font-mono text-gray-steel">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            )}
+            </ExposedStructure>
+          </DeconstructedHover>
+        </motion.div>
+      ))}
+    </div>
+  )
 
-            {/* Footer */}
-            <div className="flex justify-between items-center">
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-1.5 h-1.5 ${
-                      i < entry.significance ? 'bg-carbon-black' : 'bg-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-[10px] font-mono opacity-60">
-                {entry.type}
-              </span>
+  const renderTimelineView = () => (
+    <div className="relative">
+      {/* Timeline spine */}
+      <div className="absolute left-12 top-0 bottom-0 w-px bg-gray-plaster" />
+
+      {filteredEntries.map((entry, index) => (
+        <motion.div
+          key={entry.id}
+          className="relative flex items-start mb-12"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          {/* Date marker */}
+          <div className="absolute left-12 w-3 h-3 bg-black-100 -translate-x-1/2" />
+
+          {/* Date */}
+          <div className="w-24 text-right pr-8">
+            <div className="text-micro font-mono text-gray-steel">
+              {entry.date}
             </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 ml-8">
+            <AsymmetricTransform intensity={1}>
+              <div
+                className="p-6 bg-white-0 border border-gray-plaster cursor-pointer hover:border-black-100 transition-all"
+                onClick={() => setSelectedEntry(entry)}
+              >
+                <h3 className="text-xl font-bold mb-2">{entry.title}</h3>
+                <p className="text-sm opacity-60 mb-3">{entry.content}</p>
+                <div className="flex items-center gap-4">
+                  <span className="text-micro font-mono">{entry.category}</span>
+                  <span className="text-micro text-gray-steel">{entry.status}</span>
+                </div>
+              </div>
+            </AsymmetricTransform>
           </div>
         </motion.div>
       ))}
     </div>
   )
 
-  const renderStatisticsView = () => (
-    <div className="space-y-12">
-      {/* Overall Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-        <div className="bg-white border-3 border-carbon-black p-6">
-          <h3 className="text-3xl font-black">{archiveEntries.length}</h3>
-          <p className="text-xs font-mono opacity-60">TOTAL_ENTRIES</p>
-        </div>
-        <div className="bg-white border-3 border-carbon-black p-6">
-          <h3 className="text-3xl font-black text-hazmat-green">
-            {archiveEntries.filter(e => e.type === 'DISCOVERY').length}
-          </h3>
-          <p className="text-xs font-mono opacity-60">DISCOVERIES</p>
-        </div>
-        <div className="bg-white border-3 border-carbon-black p-6">
-          <h3 className="text-3xl font-black text-glitch-red">
-            {archiveEntries.filter(e => e.type === 'FAILURE').length}
-          </h3>
-          <p className="text-xs font-mono opacity-60">FAILURES</p>
-        </div>
-        <div className="bg-white border-3 border-carbon-black p-6">
-          <h3 className="text-3xl font-black text-safety-orange">
-            {archiveEntries.filter(e => e.significance === 5).length}
-          </h3>
-          <p className="text-xs font-mono opacity-60">SIGNIFICANT</p>
-        </div>
-      </div>
+  const renderFragmentsView = () => (
+    <FragmentMosaic fragments={9}>
+      <div className="grid grid-cols-3 gap-0">
+        {filteredEntries.map((entry, index) => (
+          <motion.div
+            key={entry.id}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.05 }}
+            className="relative group cursor-pointer"
+            onClick={() => setSelectedEntry(entry)}
+          >
+            <div className="aspect-square p-6 bg-white-1 border border-gray-plaster hover:bg-black-100 hover:text-white-0 transition-all">
+              <div className="h-full flex flex-col justify-between">
+                <div>
+                  <div className="text-micro font-mono mb-2 opacity-60">
+                    {entry.id}
+                  </div>
+                  <h3 className="text-sm font-bold mb-2 line-clamp-2">
+                    {entry.title}
+                  </h3>
+                </div>
+                <div>
+                  <p className="text-xs italic line-clamp-3 opacity-60 mb-3">
+                    {entry.content}
+                  </p>
+                  <div className="text-micro">
+                    {entry.category}
+                  </div>
+                </div>
+              </div>
 
-      {/* Yearly Breakdown */}
-      <div>
-        <h2 className="text-2xl font-black mb-6">YEARLY_ANALYSIS</h2>
-        <div className="space-y-4">
-          {stats.map((yearStat, index) => (
-            <motion.div
-              key={yearStat.year}
-              className="bg-white border-2 border-carbon-black p-6"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-hybrid-red opacity-0 group-hover:opacity-10 transition-opacity" />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </FragmentMosaic>
+  )
+
+  const renderIndexView = () => (
+    <div className="bg-white-0 border-2 border-black-100">
+      <table className="w-full">
+        <thead className="bg-black-100 text-white-0">
+          <tr>
+            <th className="p-4 text-left text-micro font-mono">ID</th>
+            <th className="p-4 text-left text-micro font-mono">DATE</th>
+            <th className="p-4 text-left text-micro font-mono">TITLE</th>
+            <th className="p-4 text-left text-micro font-mono">CATEGORY</th>
+            <th className="p-4 text-left text-micro font-mono">STATUS</th>
+            <th className="p-4 text-left text-micro font-mono">TAGS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredEntries.map((entry, index) => (
+            <motion.tr
+              key={entry.id}
+              className="border-b border-gray-plaster hover:bg-gray-plaster/20 cursor-pointer"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.03 }}
+              onClick={() => setSelectedEntry(entry)}
             >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-black">{yearStat.year}</h3>
-                <span className="text-sm font-mono opacity-60">
-                  {yearStat.totalEntries} ENTRIES
+              <td className="p-4 font-mono text-xs">{entry.id}</td>
+              <td className="p-4 text-xs">{entry.date}</td>
+              <td className="p-4 font-bold text-sm">{entry.title}</td>
+              <td className="p-4 text-xs">{entry.category}</td>
+              <td className="p-4">
+                <span className={`text-micro font-mono ${
+                  entry.status === 'FOUNDATIONAL' ? 'text-hybrid-blue' :
+                  entry.status === 'EXPERIMENTAL' ? 'text-hybrid-red' :
+                  'text-gray-steel'
+                }`}>
+                  {entry.status}
                 </span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-xs">
-                <div>
-                  <span className="font-mono opacity-60">EXPERIMENTS:</span>
-                  <span className="ml-2 font-bold">{yearStat.experiments}</span>
-                </div>
-                <div>
-                  <span className="font-mono opacity-60">COLLECTIONS:</span>
-                  <span className="ml-2 font-bold">{yearStat.collections}</span>
-                </div>
-                <div>
-                  <span className="font-mono opacity-60">EVENTS:</span>
-                  <span className="ml-2 font-bold">{yearStat.events}</span>
-                </div>
-                <div>
-                  <span className="font-mono opacity-60 text-glitch-red">FAILURES:</span>
-                  <span className="ml-2 font-bold">{yearStat.failures}</span>
-                </div>
-                <div>
-                  <span className="font-mono opacity-60 text-hazmat-green">DISCOVERIES:</span>
-                  <span className="ml-2 font-bold">{yearStat.discoveries}</span>
-                </div>
-              </div>
-
-              {/* Visual Bar */}
-              <div className="mt-4 h-2 bg-gray-200 relative overflow-hidden">
-                <div
-                  className="absolute left-0 top-0 h-full bg-hazmat-green"
-                  style={{ width: `${(yearStat.discoveries / yearStat.totalEntries) * 100}%` }}
-                />
-                <div
-                  className="absolute right-0 top-0 h-full bg-glitch-red"
-                  style={{ width: `${(yearStat.failures / yearStat.totalEntries) * 100}%` }}
-                />
-              </div>
-            </motion.div>
+              </td>
+              <td className="p-4 text-micro">
+                {entry.tags.join(', ')}
+              </td>
+            </motion.tr>
           ))}
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
   )
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white relative">
-      {/* Background Effects */}
-      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
-      {glitchActive && <div className="fixed inset-0 noise-overlay pointer-events-none" />}
+    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 overlay-grid opacity-20" />
+        <div className="absolute inset-0 texture-muslin opacity-10" />
+      </div>
 
-      {/* Floating Thoughts Background */}
+      {/* Archive Status Bar */}
       <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{ opacity: opacityParallax }}
+        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-2"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.5 }}
       >
-        {['GENIUS', 'CREATION', 'DESTRUCTION', 'TRANSFORMATION', 'CINCH•RELEASE•REPEAT'].map((thought, i) => (
-          <div
-            key={thought}
-            className={`floating-thought absolute text-6xl font-black text-white/5 ${
-              i % 2 === 0 ? 'rotate-12' : '-rotate-12'
-            }`}
-            style={{
-              top: `${20 + i * 15}%`,
-              left: `${10 + i * 20}%`
-            }}
-          >
-            {thought}
+        <div className="container-wide">
+          <div className="flex items-center justify-between text-micro font-mono">
+            <div className="flex items-center gap-6">
+              <span>ARCHIVE_ENTRIES: {filteredEntries.length}/{archiveEntries.length}</span>
+              <span className="opacity-60">|</span>
+              <span>MODE: {isWritingMode ? 'WRITING' : 'READING'}</span>
+              <span className="opacity-60">|</span>
+              <motion.span
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                {randomThought}
+              </motion.span>
+            </div>
+            <span>PHILOSOPHICAL RECORDS</span>
           </div>
-        ))}
+        </div>
       </motion.div>
 
-      {/* Header */}
-      <section className="relative py-24 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto text-center"
-          style={{ y: yParallax }}
-        >
-          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
-            <CipherText text="ARCHIVE" />
-          </h1>
-          <p className="text-sm font-mono opacity-60 mb-4">
-            MENTAL LANDSCAPE • PHILOSOPHICAL RECORDS • GENIUS MANIFESTED
-          </p>
-          <p className="text-lg italic opacity-80 max-w-2xl mx-auto mb-8">
-            "CINCH LAB은 최고이자 난 천재야"
-          </p>
+      {/* Main Content */}
+      <div className="pt-32 pb-20">
+        <div className="container-wide">
+          {/* Page Title */}
+          <ExposedStructure showGrid className="mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="text-micro font-mono text-hybrid-red mb-2">
+                PHILOSOPHICAL_RECORDS / CREATIVE_MEMORY
+              </div>
+              <h1 className="text-display font-black tracking-tightest uppercase">
+                <SacaiLayer layers={2}>
+                  ARCHIVE
+                </SacaiLayer>
+              </h1>
+              <div className="text-lg text-gray-steel mt-4 max-w-2xl">
+                The mind of the laboratory. Every thought, every failure, every discovery.
+                This is where fashion philosophy lives.
+              </div>
+            </motion.div>
+          </ExposedStructure>
 
-          {/* Mind State Display */}
-          <div className="flex items-center justify-center gap-8 mb-12">
-            <div className="text-xs font-mono">
-              <span className="opacity-60">MIND_STATE:</span>
-              <span className={`ml-2 ${
-                mindState === 'CREATING' ? 'text-hazmat-green' :
-                mindState === 'DREAMING' ? 'text-glitch-cyan' :
-                'text-safety-orange'
-              }`}>
-                {mindState}
-              </span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">ENTRIES:</span>
-              <span className="ml-2">{archiveEntries.length}</span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">PHILOSOPHIES:</span>
-              <span className="ml-2">{philosophies.length}</span>
-            </div>
-          </div>
-
-          {/* View Controls */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          {/* Controls */}
+          <div className="mb-12 space-y-4">
             {/* View Mode */}
             <div className="flex gap-2">
-              {(['TIMELINE', 'PHILOSOPHY', 'CHRONICLE', 'STATISTICS'] as const).map(mode => (
+              {(['JOURNAL', 'TIMELINE', 'FRAGMENTS', 'INDEX'] as ViewMode[]).map(mode => (
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
                   className={`px-4 py-2 text-xs font-mono transition-all ${
                     viewMode === mode
-                      ? 'bg-white text-carbon-black'
-                      : 'bg-transparent text-white/60 hover:text-white border border-white/20'
+                      ? 'bg-black-100 text-white-0'
+                      : 'bg-white-0 text-black-100 border border-gray-plaster hover:border-black-100'
                   }`}
                 >
                   {mode}
@@ -470,49 +404,50 @@ export default function ArchivePage() {
               ))}
             </div>
 
-            {/* Filters (not for Philosophy view) */}
-            {viewMode !== 'PHILOSOPHY' && viewMode !== 'STATISTICS' && (
-              <>
-                <div className="flex gap-2">
-                  <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value as any)}
-                    className="px-3 py-2 bg-transparent border border-white/20 text-xs font-mono text-white"
-                  >
-                    <option value="ALL">ALL_TYPES</option>
-                    <option value="EXPERIMENT">EXPERIMENT</option>
-                    <option value="COLLECTION">COLLECTION</option>
-                    <option value="EVENT">EVENT</option>
-                    <option value="FAILURE">FAILURE</option>
-                    <option value="DISCOVERY">DISCOVERY</option>
-                  </select>
+            {/* Filters */}
+            <div className="flex gap-4 items-center">
+              {/* Category Filter */}
+              <select
+                value={activeCategory}
+                onChange={(e) => setActiveCategory(e.target.value)}
+                className="px-3 py-1 text-xs font-mono border border-gray-plaster bg-white-0"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
 
-                  <select
-                    value={filterYear || ''}
-                    onChange={(e) => setFilterYear(e.target.value ? Number(e.target.value) : null)}
-                    className="px-3 py-2 bg-transparent border border-white/20 text-xs font-mono text-white"
-                  >
-                    <option value="">ALL_YEARS</option>
-                    {[...new Set(archiveEntries.map(e => e.year))].sort((a, b) => b - a).map(year => (
-                      <option key={year} value={year}>{year}</option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            )}
+              {/* Status Filter */}
+              <select
+                value={activeStatus}
+                onChange={(e) => setActiveStatus(e.target.value)}
+                className="px-3 py-1 text-xs font-mono border border-gray-plaster bg-white-0"
+              >
+                {statusFilters.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+
+              {/* Search */}
+              <input
+                type="text"
+                placeholder="SEARCH_THOUGHTS..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-3 py-1 text-xs font-mono border border-gray-plaster bg-white-0 flex-1"
+              />
+            </div>
           </div>
-        </motion.div>
-      </section>
 
-      {/* Main Content */}
-      <section className="px-8 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {viewMode === 'TIMELINE' && renderTimelineView()}
-          {viewMode === 'PHILOSOPHY' && renderPhilosophyView()}
-          {viewMode === 'CHRONICLE' && renderChronicleView()}
-          {viewMode === 'STATISTICS' && renderStatisticsView()}
+          {/* Archive Display */}
+          <div className="mb-20">
+            {viewMode === 'JOURNAL' && renderJournalView()}
+            {viewMode === 'TIMELINE' && renderTimelineView()}
+            {viewMode === 'FRAGMENTS' && renderFragmentsView()}
+            {viewMode === 'INDEX' && renderIndexView()}
+          </div>
         </div>
-      </section>
+      </div>
 
       {/* Entry Detail Modal */}
       <AnimatePresence>
@@ -523,114 +458,82 @@ export default function ArchivePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedEntry(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
+              className="fixed inset-0 bg-black-100/90 z-50"
             />
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-8 md:inset-16 bg-white text-carbon-black z-50 overflow-auto"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed inset-8 md:inset-16 bg-white-0 z-50 overflow-auto"
             >
               <div className="p-8 md:p-12">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h2 className="text-4xl font-black mb-2">{selectedEntry.title}</h2>
-                    <p className="text-lg italic opacity-60">{selectedEntry.subtitle}</p>
-                    <div className="flex items-center gap-4 mt-4">
-                      <span className="text-xs font-mono opacity-60">
-                        {selectedEntry.month} {selectedEntry.day}, {selectedEntry.year}
-                      </span>
-                      <span className={`px-2 py-1 text-xs font-mono font-bold ${
-                        selectedEntry.type === 'FAILURE' ? 'bg-glitch-red text-white' :
-                        selectedEntry.type === 'DISCOVERY' ? 'bg-hazmat-green text-carbon-black' :
-                        selectedEntry.type === 'COLLECTION' ? 'bg-safety-orange text-white' :
-                        'bg-carbon-black text-white'
-                      }`}>
-                        {selectedEntry.type}
-                      </span>
-                      <span className="text-xs font-mono opacity-60">
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      ENTRY_{selectedEntry.id} • {selectedEntry.date}
+                    </div>
+                    <h2 className="text-5xl font-black mb-4">{selectedEntry.title}</h2>
+                    <div className="flex items-center gap-4">
+                      <span className="px-3 py-1 bg-black-100 text-white-0 text-xs">
                         {selectedEntry.category}
+                      </span>
+                      <span className={`text-sm font-mono ${
+                        selectedEntry.status === 'FOUNDATIONAL' ? 'text-hybrid-blue' :
+                        selectedEntry.status === 'EXPERIMENTAL' ? 'text-hybrid-red' :
+                        'text-gray-steel'
+                      }`}>
+                        {selectedEntry.status}
                       </span>
                     </div>
                   </div>
                   <button
                     onClick={() => setSelectedEntry(null)}
-                    className="w-12 h-12 flex items-center justify-center bg-carbon-black text-white hover:bg-glitch-red transition-colors"
+                    className="w-12 h-12 bg-black-100 text-white-0 flex items-center justify-center hover:bg-hybrid-red transition-colors"
                   >
                     <span className="text-2xl">×</span>
                   </button>
                 </div>
 
-                {/* Content */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-black mb-4">RECORD</h3>
-                  <p className="text-lg leading-relaxed">{selectedEntry.content}</p>
+                {/* Full Content */}
+                <div className="mb-12">
+                  <p className="text-2xl leading-relaxed italic">
+                    "{selectedEntry.content}"
+                  </p>
                 </div>
 
-                {/* Thoughts */}
-                {selectedEntry.thoughts.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-black mb-4">THOUGHTS</h3>
-                    <div className="space-y-3">
-                      {selectedEntry.thoughts.map((thought, i) => (
-                        <div key={i} className="p-4 bg-carbon-black/5 border-l-4 border-safety-orange">
-                          <p className="italic">{thought}</p>
-                        </div>
-                      ))}
-                    </div>
+                {/* Extended Thoughts (simulated) */}
+                <div className="mb-12 p-8 bg-gray-plaster/20 border-l-4 border-black-100">
+                  <h3 className="text-lg font-black mb-4">EXTENDED_THOUGHTS</h3>
+                  <p className="text-sm leading-relaxed opacity-80">
+                    This entry represents a fundamental shift in our understanding of garment construction.
+                    The philosophical implications extend beyond mere technique—they challenge the very
+                    foundation of what we consider "fashion." Each iteration brings us closer to a truth
+                    that exists not in the final product, but in the process itself.
+                  </p>
+                </div>
+
+                {/* Related Entries (simulated) */}
+                <div className="mb-12">
+                  <h3 className="text-lg font-black mb-4">RELATED_ENTRIES</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    {archiveEntries.slice(0, 3).map(entry => (
+                      <div key={entry.id} className="p-4 border border-gray-plaster">
+                        <div className="text-micro font-mono mb-1">{entry.id}</div>
+                        <div className="text-sm font-bold">{entry.title}</div>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
 
                 {/* Tags */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-black mb-4">TAGS</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedEntry.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1 bg-carbon-black text-white text-xs font-mono">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Significance */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-black mb-4">SIGNIFICANCE</h3>
-                  <div className="flex items-center gap-4">
-                    <div className="flex gap-2">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`w-8 h-8 ${
-                            i < selectedEntry.significance
-                              ? 'bg-safety-orange'
-                              : 'bg-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm font-mono opacity-60">
-                      LEVEL {selectedEntry.significance}/5
+                <div className="flex gap-3 flex-wrap">
+                  {selectedEntry.tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 bg-black-100 text-white-0 text-xs">
+                      #{tag}
                     </span>
-                  </div>
-                </div>
-
-                {/* Related Links */}
-                <div className="border-t-2 border-carbon-black pt-6">
-                  <div className="flex gap-4">
-                    {selectedEntry.relatedExperiments && (
-                      <Link href="/lab" className="text-sm font-mono underline">
-                        VIEW_RELATED_EXPERIMENTS →
-                      </Link>
-                    )}
-                    {selectedEntry.relatedCollections && (
-                      <Link href="/collections" className="text-sm font-mono underline">
-                        VIEW_RELATED_COLLECTIONS →
-                      </Link>
-                    )}
-                  </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -638,80 +541,18 @@ export default function ArchivePage() {
         )}
       </AnimatePresence>
 
-      {/* Philosophy Detail Modal */}
-      <AnimatePresence>
-        {selectedPhilosophy && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedPhilosophy(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              className="fixed inset-8 md:inset-16 bg-white text-carbon-black z-50 overflow-auto flex items-center justify-center"
-            >
-              <div className="max-w-4xl w-full p-12">
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedPhilosophy(null)}
-                  className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center bg-carbon-black text-white hover:bg-glitch-red transition-colors"
-                >
-                  <span className="text-2xl">×</span>
-                </button>
-
-                {/* Philosophy Content */}
-                <div className="text-center">
-                  <span className="text-xs font-mono opacity-60">{selectedPhilosophy.category}</span>
-                  <h2 className="text-5xl font-black mt-4 mb-8">{selectedPhilosophy.title}</h2>
-
-                  <div className="text-xl leading-loose max-w-3xl mx-auto">
-                    {selectedPhilosophy.content.split('\n\n').map((paragraph, i) => (
-                      <p key={i} className="mb-6">
-                        {paragraph.split('\n').map((line, j) => (
-                          <span key={j}>
-                            {line}
-                            {j < paragraph.split('\n').length - 1 && <br />}
-                          </span>
-                        ))}
-                      </p>
-                    ))}
-                  </div>
-
-                  <div className="mt-12 text-xs font-mono opacity-60">
-                    {selectedPhilosophy.date}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB_ARCHIVE • MENTAL_LANDSCAPE • {archiveEntries.length} MEMORIES
-          </p>
-          <div className="flex gap-4">
-            <span className="text-[10px] font-mono opacity-60">
-              FAILURES: {archiveEntries.filter(e => e.type === 'FAILURE').length}
-            </span>
-            <span className="text-[10px] font-mono opacity-60">
-              DISCOVERIES: {archiveEntries.filter(e => e.type === 'DISCOVERY').length}
-            </span>
-            <span className="text-[10px] font-mono opacity-60">
-              PHILOSOPHIES: {philosophies.length}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Writing Mode Indicator */}
+      <motion.div
+        className="fixed bottom-8 right-8"
+        style={{ opacity: fadeIn }}
+      >
+        <button
+          onClick={() => setIsWritingMode(!isWritingMode)}
+          className="bg-white-0 border border-black-100 px-4 py-2 text-micro font-mono hover:bg-black-100 hover:text-white-0 transition-all"
+        >
+          {isWritingMode ? 'EXIT_WRITING' : 'ENTER_WRITING'}
+        </button>
+      </motion.div>
     </div>
   )
 }

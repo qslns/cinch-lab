@@ -2,133 +2,220 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
-import { collections, getCurrentCollections, getArchivedCollections, type Collection } from '@/data/collections'
-import CipherText from '@/components/CipherText'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import {
+  DeconstructedHover,
+  SacaiLayer,
+  FragmentMosaic,
+  ExposedStructure,
+  AsymmetricTransform
+} from '@/components/HybridLayerEffects'
 
-gsap.registerPlugin(ScrollTrigger)
+// Collection data
+const collections = [
+  {
+    line: '00',
+    title: 'ARTISANAL',
+    season: 'SS24',
+    status: 'ARCHIVED',
+    pieces: 47,
+    philosophy: 'Deconstruction of the garment, reconstruction of the soul',
+    techniques: ['Hand Stitching', 'Raw Edges', 'Exposed Seams'],
+    lookbook: ['001', '002', '003', '004', '005', '006', '007', '008']
+  },
+  {
+    line: '01',
+    title: 'READY-TO-WEAR',
+    season: 'FW24',
+    status: 'CURRENT',
+    pieces: 82,
+    philosophy: 'Hybrid forms, layered identities, volume manipulation',
+    techniques: ['Splicing', 'Overlay', 'Asymmetric Construction'],
+    lookbook: ['009', '010', '011', '012', '013', '014', '015', '016']
+  },
+  {
+    line: '10',
+    title: 'MENS',
+    season: 'SS25',
+    status: 'UPCOMING',
+    pieces: 65,
+    philosophy: 'Masculinity deconstructed, tailoring reconstructed',
+    techniques: ['Deconstruction', 'Restructuring', 'Pattern Disruption'],
+    lookbook: ['017', '018', '019', '020', '021', '022', '023', '024']
+  },
+  {
+    line: '11',
+    title: 'ACCESSORIES',
+    season: 'CONTINUOUS',
+    status: 'CURRENT',
+    pieces: 28,
+    philosophy: 'Objects without purpose, beauty without function',
+    techniques: ['3D Printing', 'Metal Forming', 'Leather Molding'],
+    lookbook: ['025', '026', '027', '028', '029', '030', '031', '032']
+  }
+]
+
+// Lookbook views
+type ViewMode = 'FRAGMENTS' | 'LAYERS' | 'TIMELINE' | 'ARCHIVE'
+type LookDisplay = 'GRID' | 'DECONSTRUCTED' | 'EDITORIAL'
 
 export default function CollectionsPage() {
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
-  const [viewMode, setViewMode] = useState<'GALLERY' | 'TIMELINE' | 'ARCHIVE'>('GALLERY')
-  const [filterStatus, setFilterStatus] = useState<'ALL' | 'CURRENT' | 'ARCHIVED'>('ALL')
-  const [lookbookView, setLookbookView] = useState<'GRID' | 'RUNWAY' | 'EDITORIAL'>('GRID')
-  const [systemStatus, setSystemStatus] = useState('LOADING_VISUALS')
+  const [selectedCollection, setSelectedCollection] = useState<typeof collections[0] | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('FRAGMENTS')
+  const [lookDisplay, setLookDisplay] = useState<LookDisplay>('DECONSTRUCTED')
+  const [hoveredLook, setHoveredLook] = useState<string | null>(null)
+  const [isArchiveMode, setIsArchiveMode] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
 
-  // Parallax transforms
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1])
-
-  useEffect(() => {
-    // System status simulation
-    const statusInterval = setInterval(() => {
-      const statuses = ['LOADING_VISUALS', 'PROCESSING_LOOKS', 'RENDERING_STYLES', 'CURATING_AESTHETIC']
-      setSystemStatus(statuses[Math.floor(Math.random() * statuses.length)])
-    }, 4000)
-
-    // GSAP animations
-    const ctx = gsap.context(() => {
-      gsap.from('.collection-card', {
-        y: 100,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power4.out'
-      })
-
-      gsap.from('.lookbook-item', {
-        scale: 0.8,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        delay: 0.3,
-        ease: 'power3.out'
-      })
-    })
-
-    return () => {
-      clearInterval(statusInterval)
-      ctx.revert()
-    }
-  }, [])
-
-  const filteredCollections = collections.filter(col => {
-    if (filterStatus === 'ALL') return true
-    if (filterStatus === 'CURRENT') return col.status === 'CURRENT'
-    if (filterStatus === 'ARCHIVED') return col.status === 'ARCHIVED'
-    return true
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
   })
 
-  const renderGalleryView = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {filteredCollections.map((col, index) => (
+  // Transform values
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const rotateValue = useTransform(scrollYProgress, [0, 1], [0, 360])
+
+  // Random deconstruction
+  const [deconstructIndex, setDeconstructIndex] = useState(-1)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDeconstructIndex(Math.floor(Math.random() * collections.length))
+      setTimeout(() => setDeconstructIndex(-1), 500)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const renderFragmentsView = () => (
+    <div className="grid-sacai gap-0">
+      {collections.map((col, index) => (
         <motion.div
-          key={col.id}
-          className="collection-card relative group cursor-pointer"
-          onClick={() => setSelectedCollection(col)}
-          whileHover={{ y: -10 }}
-          whileTap={{ scale: 0.98 }}
+          key={col.line}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          className={`relative ${
+            index === 0 ? 'col-span-6' :
+            index === 1 ? 'col-span-4' :
+            index === 2 ? 'col-span-5' :
+            'col-span-3'
+          }`}
+          onMouseEnter={() => setSelectedCollection(col)}
+          onMouseLeave={() => setSelectedCollection(null)}
         >
-          <div className="bg-white border-4 border-carbon-black hover:border-safety-orange transition-all overflow-hidden">
-            {/* Collection Image Placeholder */}
-            <div className="relative h-64 bg-gradient-to-br from-concrete-gray to-carbon-black">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <h3 className="text-6xl font-black text-white/20">{col.code}</h3>
-                  <p className="text-xs font-mono text-white/40 mt-2">{col.season} {col.year}</p>
+          <FragmentMosaic fragments={9}>
+            <AsymmetricTransform intensity={1.5}>
+              <div className={`
+                p-8 bg-white-1 border-2 border-gray-plaster
+                ${selectedCollection?.line === col.line ? 'border-black-100' : ''}
+                transition-all duration-300
+              `}>
+                {/* Line Number - Margiela Style */}
+                <div className="absolute -top-3 -left-3 bg-white-0 px-2 text-micro font-mono text-hybrid-red">
+                  LINE_{col.line}
                 </div>
-              </div>
-              {/* Status Badge */}
-              <div className="absolute top-4 right-4">
-                <span className={`px-3 py-1 text-xs font-mono font-bold ${
-                  col.status === 'CURRENT' ? 'bg-hazmat-green text-carbon-black' :
-                  col.status === 'UPCOMING' ? 'bg-safety-orange text-white' :
-                  'bg-carbon-black text-white'
-                }`}>
-                  {col.status}
-                </span>
-              </div>
-            </div>
 
-            {/* Collection Info */}
-            <div className="p-6">
-              <h3 className="text-2xl font-black mb-2">
-                <CipherText text={col.title} />
-              </h3>
-              <p className="text-sm opacity-60 mb-4">{col.subtitle}</p>
-              <p className="text-xs leading-relaxed mb-6 opacity-80">
-                {col.description}
-              </p>
+                {/* Status */}
+                <div className="absolute top-4 right-4">
+                  <div className={`
+                    w-2 h-2 rounded-full
+                    ${col.status === 'CURRENT' ? 'bg-hybrid-blue animate-pulse' :
+                      col.status === 'UPCOMING' ? 'bg-hybrid-red animate-pulse' :
+                      'bg-gray-steel'}
+                  `} />
+                </div>
 
-              {/* Collection Stats */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="font-mono opacity-60">LOOKS:</span>
-                  <span className="font-bold">{col.lookbook.length}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="font-mono opacity-60">TECHNIQUES:</span>
-                  <span className="font-bold">{col.techniques.length}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="font-mono opacity-60">MATERIALS:</span>
-                  <span className="font-bold">{col.materials.length}</span>
+                {/* Content */}
+                <div className={deconstructIndex === index ? 'text-deconstructed' : ''}>
+                  <h3 className="text-2xl font-black mb-2">{col.title}</h3>
+                  <div className="text-micro font-mono text-gray-steel mb-4">
+                    {col.season} • {col.pieces} PIECES
+                  </div>
+
+                  {/* Philosophy Excerpt */}
+                  <p className="text-xs italic opacity-60 mb-4">
+                    "{col.philosophy}"
+                  </p>
+
+                  {/* Look Preview */}
+                  <div className="flex gap-1">
+                    {col.lookbook.slice(0, 4).map(look => (
+                      <div
+                        key={look}
+                        className="w-8 h-10 bg-gray-plaster"
+                      />
+                    ))}
+                    {col.lookbook.length > 4 && (
+                      <div className="w-8 h-10 bg-black-100 text-white-0 flex items-center justify-center text-micro">
+                        +{col.lookbook.length - 4}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            </AsymmetricTransform>
+          </FragmentMosaic>
+        </motion.div>
+      ))}
+    </div>
+  )
 
-              {/* Release Date */}
-              <div className="mt-6 pt-4 border-t border-carbon-black/10">
-                <p className="text-[10px] font-mono opacity-60">
-                  RELEASE: {col.releaseDate}
-                </p>
+  const renderLayersView = () => (
+    <div className="space-y-8">
+      {collections.map((col, index) => (
+        <motion.div
+          key={col.line}
+          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.15 }}
+          onClick={() => setSelectedCollection(col)}
+          className="cursor-pointer"
+        >
+          <SacaiLayer layers={3} color1="hybrid-blue" color2="hybrid-red">
+            <ExposedStructure showGrid={selectedCollection?.line === col.line}>
+              <div className="p-12 bg-white-0 border-3 border-gray-plaster">
+                <div className="flex items-start justify-between">
+                  {/* Left Side - Info */}
+                  <div className="flex-1">
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      COLLECTION_{col.line}
+                    </div>
+                    <h3 className="text-4xl font-black mb-4">{col.title}</h3>
+                    <p className="text-lg mb-6">{col.philosophy}</p>
+
+                    {/* Techniques */}
+                    <div className="flex gap-4">
+                      {col.techniques.map(tech => (
+                        <span key={tech} className="text-xs px-3 py-1 border border-gray-plaster">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Side - Visual Grid */}
+                  <div className="grid grid-cols-4 gap-2 ml-12">
+                    {col.lookbook.map((look, i) => (
+                      <motion.div
+                        key={look}
+                        className="w-16 h-20 bg-gradient-to-b from-gray-plaster to-gray-steel"
+                        whileHover={{ scale: 1.1, zIndex: 10 }}
+                        transition={{ type: 'spring', stiffness: 400 }}
+                      >
+                        <div className="w-full h-full flex items-center justify-center text-white-0 text-xs font-mono">
+                          {look}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Collection Meta */}
+                  <div className="absolute top-4 right-4 text-micro font-mono text-gray-steel">
+                    {col.season} | {col.status}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </ExposedStructure>
+          </SacaiLayer>
         </motion.div>
       ))}
     </div>
@@ -136,94 +223,83 @@ export default function CollectionsPage() {
 
   const renderTimelineView = () => (
     <div className="relative">
-      {/* Timeline Line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20" />
+      {/* Central Timeline */}
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-plaster" />
 
-      {filteredCollections.map((col, index) => (
+      {collections.map((col, index) => (
         <motion.div
-          key={col.id}
+          key={col.line}
           className={`relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'} mb-20`}
-          initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.1 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.2 }}
         >
           {/* Timeline Node */}
-          <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-safety-orange border-2 border-white" />
-
-          {/* Year Label */}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-8">
-            <span className="text-2xl font-black text-white">{col.year}</span>
+          <div className="absolute left-1/2 -translate-x-1/2 w-12 h-12 bg-white-0 border-2 border-black-100 flex items-center justify-center">
+            <span className="text-micro font-mono font-bold">{col.line}</span>
           </div>
 
           {/* Content Card */}
-          <div
-            className={`w-5/12 p-8 bg-white border-3 border-carbon-black cursor-pointer hover:border-safety-orange transition-all ${
-              index % 2 === 0 ? 'mr-auto' : 'ml-auto'
-            }`}
-            onClick={() => setSelectedCollection(col)}
-          >
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-3xl font-black">{col.code}</h3>
-              <span className={`px-2 py-1 text-xs font-mono font-bold ${
-                col.status === 'CURRENT' ? 'bg-hazmat-green text-carbon-black' :
-                col.status === 'UPCOMING' ? 'bg-safety-orange text-white' :
-                'bg-carbon-black text-white'
-              }`}>
-                {col.status}
-              </span>
+          <DeconstructedHover intensity={2}>
+            <div
+              className={`w-5/12 p-8 bg-white-1 border border-gray-plaster cursor-pointer hover:border-black-100 transition-all ${
+                index % 2 === 0 ? 'mr-auto text-right' : 'ml-auto'
+              }`}
+              onClick={() => setSelectedCollection(col)}
+            >
+              <div className="text-micro font-mono text-hybrid-red mb-2">{col.season}</div>
+              <h3 className="text-3xl font-black mb-3">{col.title}</h3>
+              <p className="text-sm italic opacity-60 mb-4">{col.philosophy}</p>
+              <div className="text-micro font-mono">
+                {col.pieces} PIECES • {col.lookbook.length} LOOKS
+              </div>
             </div>
-            <h4 className="text-xl font-bold mb-2">{col.title}</h4>
-            <p className="text-sm opacity-60 mb-4">{col.subtitle}</p>
-            <p className="text-xs mb-6">{col.description}</p>
-            <div className="text-[10px] font-mono opacity-60">
-              {col.season} • {col.lookbook.length} LOOKS
-            </div>
-          </div>
+          </DeconstructedHover>
         </motion.div>
       ))}
     </div>
   )
 
   const renderArchiveView = () => (
-    <div className="bg-white">
+    <div className="bg-white-0 border-2 border-black-100">
       <table className="w-full">
-        <thead className="bg-carbon-black text-white">
+        <thead className="bg-black-100 text-white-0">
           <tr>
-            <th className="p-4 text-left text-xs font-mono">CODE</th>
-            <th className="p-4 text-left text-xs font-mono">TITLE</th>
-            <th className="p-4 text-left text-xs font-mono">SEASON</th>
-            <th className="p-4 text-left text-xs font-mono">YEAR</th>
-            <th className="p-4 text-left text-xs font-mono">LOOKS</th>
-            <th className="p-4 text-left text-xs font-mono">STATUS</th>
-            <th className="p-4 text-left text-xs font-mono">PHILOSOPHY</th>
+            <th className="p-4 text-left text-micro font-mono">LINE</th>
+            <th className="p-4 text-left text-micro font-mono">COLLECTION</th>
+            <th className="p-4 text-left text-micro font-mono">SEASON</th>
+            <th className="p-4 text-left text-micro font-mono">PIECES</th>
+            <th className="p-4 text-left text-micro font-mono">LOOKS</th>
+            <th className="p-4 text-left text-micro font-mono">STATUS</th>
+            <th className="p-4 text-left text-micro font-mono">PHILOSOPHY</th>
           </tr>
         </thead>
         <tbody>
-          {filteredCollections.map((col, index) => (
+          {collections.map((col, index) => (
             <motion.tr
-              key={col.id}
-              className="border-b border-carbon-black/10 hover:bg-paper-white cursor-pointer transition-colors"
-              onClick={() => setSelectedCollection(col)}
+              key={col.line}
+              className="border-b border-gray-plaster hover:bg-gray-plaster/20 cursor-pointer transition-all"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
+              onClick={() => setSelectedCollection(col)}
             >
-              <td className="p-4 font-bold">{col.code}</td>
-              <td className="p-4 text-sm">{col.title}</td>
-              <td className="p-4 text-xs font-mono">{col.season}</td>
-              <td className="p-4 text-xs">{col.year}</td>
+              <td className="p-4 font-mono text-xs">{col.line}</td>
+              <td className="p-4 font-bold">{col.title}</td>
+              <td className="p-4 text-xs">{col.season}</td>
+              <td className="p-4 text-xs">{col.pieces}</td>
               <td className="p-4 text-xs">{col.lookbook.length}</td>
               <td className="p-4">
-                <span className={`text-xs font-mono ${
-                  col.status === 'CURRENT' ? 'text-hazmat-green' :
-                  col.status === 'UPCOMING' ? 'text-safety-orange' :
-                  'text-gray-600'
+                <span className={`text-micro font-mono ${
+                  col.status === 'CURRENT' ? 'text-hybrid-blue' :
+                  col.status === 'UPCOMING' ? 'text-hybrid-red' :
+                  'text-gray-steel'
                 }`}>
                   {col.status}
                 </span>
               </td>
-              <td className="p-4 text-xs italic opacity-60 max-w-xs">
-                {col.philosophy.substring(0, 50)}...
+              <td className="p-4 text-xs italic opacity-60 max-w-xs truncate">
+                {col.philosophy}
               </td>
             </motion.tr>
           ))}
@@ -233,94 +309,94 @@ export default function CollectionsPage() {
   )
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white">
-      {/* Background Effects */}
-      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
+    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
+      {/* Background Patterns */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 overlay-grid opacity-20" />
+        <div className="absolute inset-0 overlay-muslin opacity-10" />
+      </div>
+
+      {/* Collection Status Bar */}
       <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{ scale: scaleParallax }}
+        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-2"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
       >
-        <div className="absolute top-1/3 left-1/3 w-96 h-96 border border-white/5 rotate-45" />
+        <div className="container-wide">
+          <div className="flex items-center justify-between text-micro font-mono">
+            <div className="flex items-center gap-6">
+              <span>ARCHIVE_STATUS: {isArchiveMode ? 'ACTIVE' : 'BROWSING'}</span>
+              <span className="opacity-60">|</span>
+              <span>COLLECTIONS: {collections.length}</span>
+              <span className="opacity-60">|</span>
+              <span>TOTAL_LOOKS: {collections.reduce((acc, col) => acc + col.lookbook.length, 0)}</span>
+            </div>
+            <span>NO SALES • ONLY VISUALS</span>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Header */}
-      <section className="relative py-24 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto text-center"
-          style={{ y: yParallax }}
-        >
-          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
-            <CipherText text="COLLECTIONS" />
-          </h1>
-          <p className="text-sm font-mono opacity-60 mb-8">
-            VISUAL ARCHIVES • NO COMMERCE • PURE AESTHETICS
-          </p>
+      {/* Main Content */}
+      <div className="pt-32 pb-20">
+        <div className="container-wide">
+          {/* Page Title */}
+          <ExposedStructure showMeasurements className="mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="text-micro font-mono text-hybrid-red mb-2">
+                VISUAL_ARCHIVE / LOOKBOOK_DOCUMENTATION
+              </div>
+              <h1 className="text-display font-black tracking-tightest uppercase">
+                <SacaiLayer layers={2}>
+                  <span className={deconstructIndex === -2 ? 'text-deconstructed' : ''}>
+                    COLLECTIONS
+                  </span>
+                </SacaiLayer>
+              </h1>
+              <div className="text-lg text-gray-steel mt-4 max-w-2xl">
+                Visual documentation of experimental fashion. Every collection tells a story
+                of deconstruction and reconstruction.
+              </div>
+            </motion.div>
+          </ExposedStructure>
 
-          {/* Status Display */}
-          <div className="flex items-center justify-center gap-8 mb-12">
-            <div className="text-xs font-mono">
-              <span className="opacity-60">STATUS:</span>
-              <span className="ml-2 text-hazmat-green">{systemStatus}</span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">COLLECTIONS:</span>
-              <span className="ml-2">{collections.length}</span>
-            </div>
-            <div className="text-xs font-mono">
-              <span className="opacity-60">TOTAL_LOOKS:</span>
-              <span className="ml-2">{collections.reduce((acc, col) => acc + col.lookbook.length, 0)}</span>
-            </div>
+          {/* View Controls */}
+          <motion.div
+            className="mb-12 flex gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {(['FRAGMENTS', 'LAYERS', 'TIMELINE', 'ARCHIVE'] as ViewMode[]).map(mode => (
+              <button
+                key={mode}
+                onClick={() => setViewMode(mode)}
+                className={`px-4 py-2 text-xs font-mono transition-all ${
+                  viewMode === mode
+                    ? 'bg-black-100 text-white-0'
+                    : 'bg-white-0 text-black-100 border border-gray-plaster hover:border-black-100'
+                }`}
+              >
+                {mode}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Collections Display */}
+          <div className="mb-20">
+            {viewMode === 'FRAGMENTS' && renderFragmentsView()}
+            {viewMode === 'LAYERS' && renderLayersView()}
+            {viewMode === 'TIMELINE' && renderTimelineView()}
+            {viewMode === 'ARCHIVE' && renderArchiveView()}
           </div>
-
-          {/* Controls */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* View Mode */}
-            <div className="flex gap-2">
-              {(['GALLERY', 'TIMELINE', 'ARCHIVE'] as const).map(mode => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode)}
-                  className={`px-4 py-2 text-xs font-mono transition-all ${
-                    viewMode === mode
-                      ? 'bg-white text-carbon-black'
-                      : 'bg-transparent text-white/60 hover:text-white border border-white/20'
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
-            </div>
-
-            {/* Filter */}
-            <div className="flex gap-2">
-              {(['ALL', 'CURRENT', 'ARCHIVED'] as const).map(filter => (
-                <button
-                  key={filter}
-                  onClick={() => setFilterStatus(filter)}
-                  className={`px-4 py-2 text-xs font-mono transition-all ${
-                    filterStatus === filter
-                      ? 'bg-safety-orange text-carbon-black'
-                      : 'bg-transparent text-white/60 hover:text-white border border-white/20'
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Collections Display */}
-      <section className="px-8 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {viewMode === 'GALLERY' && renderGalleryView()}
-          {viewMode === 'TIMELINE' && renderTimelineView()}
-          {viewMode === 'ARCHIVE' && renderArchiveView()}
         </div>
-      </section>
+      </div>
 
-      {/* Collection Detail Modal - Lookbook Viewer */}
+      {/* Lookbook Modal */}
       <AnimatePresence>
         {selectedCollection && (
           <>
@@ -329,202 +405,132 @@ export default function CollectionsPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCollection(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
+              className="fixed inset-0 bg-black-100/90 z-50"
             />
 
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-8 md:inset-16 bg-white text-carbon-black z-50 overflow-auto"
+              className="fixed inset-8 md:inset-16 bg-white-0 z-50 overflow-auto"
             >
-              <div className="min-h-full">
-                {/* Modal Header */}
-                <div className="sticky top-0 bg-carbon-black text-white p-8 z-10">
-                  <div className="max-w-7xl mx-auto">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h2 className="text-5xl font-black mb-2">{selectedCollection.code}</h2>
-                        <h3 className="text-2xl mb-2">{selectedCollection.title}</h3>
-                        <p className="text-sm opacity-60">{selectedCollection.subtitle}</p>
-                      </div>
-                      <button
-                        onClick={() => setSelectedCollection(null)}
-                        className="w-12 h-12 flex items-center justify-center bg-white text-carbon-black hover:bg-glitch-red hover:text-white transition-colors"
-                      >
-                        <span className="text-2xl">×</span>
-                      </button>
+              <div className="p-8 md:p-12">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-8">
+                  <div>
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      LINE_{selectedCollection.line}
                     </div>
+                    <h2 className="text-5xl font-black mb-2">{selectedCollection.title}</h2>
+                    <p className="text-lg italic opacity-60">{selectedCollection.philosophy}</p>
                   </div>
+                  <button
+                    onClick={() => setSelectedCollection(null)}
+                    className="w-12 h-12 bg-black-100 text-white-0 flex items-center justify-center hover:bg-hybrid-red transition-colors"
+                  >
+                    <span className="text-2xl">×</span>
+                  </button>
                 </div>
 
-                {/* Modal Content */}
-                <div className="p-8 md:p-12">
-                  <div className="max-w-7xl mx-auto">
-                    {/* Collection Info */}
-                    <div className="grid md:grid-cols-3 gap-8 mb-12">
-                      <div className="md:col-span-2">
-                        <h4 className="text-lg font-black mb-4">COLLECTION_PHILOSOPHY</h4>
-                        <p className="text-lg leading-relaxed mb-6">{selectedCollection.description}</p>
-                        <p className="italic opacity-80">{selectedCollection.philosophy}</p>
-                      </div>
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="text-xs font-mono font-black mb-3">TECHNIQUES</h4>
-                          <div className="space-y-1">
-                            {selectedCollection.techniques.map((tech, i) => (
-                              <div key={i} className="text-sm">
-                                <span className="text-safety-orange mr-2">■</span>
-                                {tech}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-mono font-black mb-3">MATERIALS</h4>
-                          <div className="space-y-1">
-                            {selectedCollection.materials.map((mat, i) => (
-                              <div key={i} className="text-sm">
-                                <span className="text-safety-orange mr-2">■</span>
-                                {mat}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                {/* Lookbook Display Controls */}
+                <div className="flex gap-2 mb-8">
+                  {(['GRID', 'DECONSTRUCTED', 'EDITORIAL'] as LookDisplay[]).map(display => (
+                    <button
+                      key={display}
+                      onClick={() => setLookDisplay(display)}
+                      className={`px-3 py-1 text-xs font-mono ${
+                        lookDisplay === display
+                          ? 'bg-black-100 text-white-0'
+                          : 'border border-gray-plaster'
+                      }`}
+                    >
+                      {display}
+                    </button>
+                  ))}
+                </div>
 
-                    {/* Lookbook View Controls */}
-                    <div className="flex gap-2 mb-8">
-                      {(['GRID', 'RUNWAY', 'EDITORIAL'] as const).map(view => (
-                        <button
-                          key={view}
-                          onClick={() => setLookbookView(view)}
-                          className={`px-4 py-2 text-xs font-mono transition-all ${
-                            lookbookView === view
-                              ? 'bg-carbon-black text-white'
-                              : 'bg-transparent text-carbon-black border border-carbon-black'
-                          }`}
+                {/* Lookbook */}
+                {lookDisplay === 'GRID' && (
+                  <div className="grid grid-cols-4 gap-4">
+                    {selectedCollection.lookbook.map((look, i) => (
+                      <motion.div
+                        key={look}
+                        className="aspect-[3/4] bg-gradient-to-b from-gray-plaster to-gray-steel relative group cursor-pointer"
+                        whileHover={{ scale: 1.05 }}
+                        onMouseEnter={() => setHoveredLook(look)}
+                        onMouseLeave={() => setHoveredLook(null)}
+                      >
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-4xl font-black text-white-0/30">
+                            {look}
+                          </span>
+                        </div>
+                        <div className="absolute inset-0 bg-hybrid-red opacity-0 group-hover:opacity-20 transition-opacity" />
+                        <div className="absolute bottom-0 left-0 right-0 p-2 bg-black-100/80 text-white-0 text-micro font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                          LOOK_{look}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
+                {lookDisplay === 'DECONSTRUCTED' && (
+                  <FragmentMosaic fragments={16}>
+                    <div className="grid grid-cols-8 gap-0">
+                      {selectedCollection.lookbook.map((look, i) => (
+                        <div
+                          key={look}
+                          className="col-span-2 aspect-[3/4] bg-gradient-to-br from-white-1 to-gray-plaster border border-gray-plaster"
                         >
-                          {view}_VIEW
-                        </button>
+                          <div className="w-full h-full flex items-center justify-center text-2xl font-black text-gray-steel/50">
+                            {look}
+                          </div>
+                        </div>
                       ))}
                     </div>
+                  </FragmentMosaic>
+                )}
 
-                    {/* Lookbook Display */}
-                    <div className="mb-12">
-                      <h4 className="text-lg font-black mb-6">LOOKBOOK</h4>
-
-                      {lookbookView === 'GRID' && (
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {selectedCollection.lookbook.map((look) => (
-                            <motion.div
-                              key={look.id}
-                              className="lookbook-item group cursor-pointer"
-                              whileHover={{ scale: 1.05 }}
-                            >
-                              <div className="aspect-[3/4] bg-gradient-to-b from-concrete-gray to-carbon-black relative overflow-hidden">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="text-center text-white">
-                                    <p className="text-6xl font-black opacity-20">
-                                      {look.id.split('_')[1]}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-carbon-black/90 to-transparent">
-                                  <h5 className="text-sm font-bold text-white">{look.title}</h5>
-                                  <p className="text-xs text-white/60">{look.description}</p>
-                                </div>
-                                <div className="absolute inset-0 bg-safety-orange opacity-0 group-hover:opacity-20 transition-opacity" />
+                {lookDisplay === 'EDITORIAL' && (
+                  <div className="space-y-12">
+                    {selectedCollection.lookbook.map((look, i) => (
+                      <motion.div
+                        key={look}
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
+                        <ExposedStructure showGrid>
+                          <div className="aspect-[16/9] bg-gradient-to-r from-white-1 via-gray-plaster to-white-1 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="text-8xl font-black text-black-100/10 mb-4">
+                                {look}
                               </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-
-                      {lookbookView === 'RUNWAY' && (
-                        <div className="space-y-8">
-                          {selectedCollection.lookbook.map((look, index) => (
-                            <motion.div
-                              key={look.id}
-                              className="flex items-center gap-8"
-                              initial={{ opacity: 0, x: -50 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                            >
-                              <div className="w-1/3 aspect-[3/4] bg-gradient-to-b from-concrete-gray to-carbon-black relative">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <p className="text-6xl font-black text-white/20">
-                                    {look.id.split('_')[1]}
-                                  </p>
-                                </div>
+                              <div className="text-xs font-mono text-gray-steel">
+                                LOOK {i + 1} OF {selectedCollection.lookbook.length}
                               </div>
-                              <div className="flex-1">
-                                <h5 className="text-2xl font-black mb-2">{look.title}</h5>
-                                <p className="text-sm opacity-80">{look.description}</p>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
-
-                      {lookbookView === 'EDITORIAL' && (
-                        <div className="grid grid-cols-1 gap-12">
-                          {selectedCollection.lookbook.map((look) => (
-                            <div key={look.id} className="text-center">
-                              <div className="aspect-[16/9] bg-gradient-to-r from-concrete-gray via-carbon-black to-concrete-gray relative mb-6">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div>
-                                    <p className="text-8xl font-black text-white/10">
-                                      {look.id.split('_')[1]}
-                                    </p>
-                                    <h5 className="text-3xl font-black text-white mt-4">
-                                      {look.title}
-                                    </h5>
-                                  </div>
-                                </div>
-                              </div>
-                              <p className="text-lg italic opacity-80 max-w-2xl mx-auto">
-                                {look.description}
-                              </p>
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Collection Details */}
-                    <div className="border-t-2 border-carbon-black pt-8">
-                      <div className="flex justify-between text-xs font-mono opacity-60">
-                        <span>SEASON: {selectedCollection.season} {selectedCollection.year}</span>
-                        <span>STATUS: {selectedCollection.status}</span>
-                        <span>RELEASE: {selectedCollection.releaseDate}</span>
-                      </div>
-                    </div>
+                          </div>
+                        </ExposedStructure>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
+                )}
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Footer Status */}
-      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB_COLLECTIONS • VISUAL_ARCHIVE • NO_SALES
-          </p>
-          <div className="flex gap-4">
-            <span className="text-[10px] font-mono opacity-60">
-              CURRENT: {getCurrentCollections().length}
-            </span>
-            <span className="text-[10px] font-mono opacity-60">
-              ARCHIVED: {getArchivedCollections().length}
-            </span>
-          </div>
+      {/* Scroll Progress */}
+      <motion.div
+        className="fixed bottom-8 right-8 text-micro font-mono"
+        style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [0, 1]) }}
+      >
+        <div className="bg-white-0 border border-black-100 p-4">
+          VISUAL_PROGRESS: {Math.round(scrollYProgress.get() * 100)}%
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

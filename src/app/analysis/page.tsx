@@ -2,447 +2,422 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import Link from 'next/link'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import CipherText from '@/components/CipherText'
+import {
+  DeconstructedHover,
+  SacaiLayer,
+  FragmentMosaic,
+  ExposedStructure,
+  AsymmetricTransform
+} from '@/components/HybridLayerEffects'
 
-gsap.registerPlugin(ScrollTrigger)
-
-// Analysis Subjects - Other brands and collections we critique
-const analysisSubjects = [
+// Brand analyses
+const brandAnalyses = [
   {
-    id: 'ANALYSIS_001',
-    brand: 'MAINSTREAM_FASHION_001',
-    season: 'SS25',
-    title: 'THE DEATH OF CREATIVITY',
-    verdict: 'COMMERCIAL_SLAVERY',
-    score: 2,
-    critique: `Another collection that prioritizes sales over substance. Copy-paste designs from last season with different colors.
-    Where is the experimentation? Where is the risk? This is not fashion, this is manufacturing.`,
-    failures: [
-      'No conceptual foundation',
-      'Market-driven design',
-      'Zero innovation',
-      'Playing it safe'
-    ],
-    lesson: 'This is exactly what CINCH LAB will never become.'
-  },
-  {
-    id: 'ANALYSIS_002',
-    brand: 'LUXURY_HOUSE_002',
+    id: '001',
+    brand: 'BALENCIAGA',
     season: 'FW24',
-    title: 'LOGO WORSHIP',
-    verdict: 'BRAND_BEFORE_DESIGN',
-    score: 3,
-    critique: `Relying on heritage and logos instead of pushing boundaries. The craftsmanship is there, but where is the soul?
-    €10,000 for a bag that says nothing except "I can afford this."`,
-    failures: [
-      'Heritage as crutch',
-      'Price over purpose',
-      'Status symbol obsession',
-      'Creative stagnation'
-    ],
-    lesson: 'Tradition without innovation is death.'
+    rating: 8.5,
+    category: 'VOLUME',
+    analysis: 'Demna continues to push boundaries of silhouette. The oversized shoulders are not just fashion—they are architecture.',
+    strengths: ['Silhouette Innovation', 'Cultural Commentary', 'Technical Execution'],
+    weaknesses: ['Repetitive Themes', 'Accessibility'],
+    verdict: 'PROGRESSIVE'
   },
   {
-    id: 'ANALYSIS_003',
-    brand: 'FAST_FASHION_003',
-    season: 'CONTINUOUS',
-    title: 'THE RACE TO THE BOTTOM',
-    verdict: 'FASHION_APOCALYPSE',
-    score: 0,
-    critique: `52 micro-seasons a year. Copying runway looks within 2 weeks. Disposable clothes for disposable culture.
-    This is the antithesis of everything fashion should represent.`,
-    failures: [
-      'Creativity replaced by algorithms',
-      'Quantity over quality',
-      'Trend slavery',
-      'Environmental destruction'
-    ],
-    lesson: 'Speed kills creativity. Commerce kills art.'
+    id: '002',
+    brand: 'COMME DES GARÇONS',
+    season: 'SS24',
+    rating: 9.2,
+    category: 'DECONSTRUCTION',
+    analysis: 'Rei Kawakubo remains the master. Each piece is a question about the nature of clothing itself.',
+    strengths: ['Conceptual Depth', 'Pattern Innovation', 'Artistic Vision'],
+    weaknesses: ['Commercial Viability'],
+    verdict: 'GENIUS'
   },
   {
-    id: 'ANALYSIS_004',
-    brand: 'EXPERIMENTAL_LABEL_004',
-    season: 'AW24',
-    title: 'ALMOST THERE',
-    verdict: 'POTENTIAL_WASTED',
-    score: 6,
-    critique: `Interesting concepts undermined by commercial pressure. You can see where they wanted to go,
-    but the need to sell pulled them back. So close to breakthrough, yet so far.`,
-    failures: [
-      'Compromised vision',
-      'Half-measures',
-      'Fear of failure',
-      'Market considerations'
-    ],
-    lesson: 'You cannot serve two masters: art or commerce.'
+    id: '003',
+    brand: 'BOTTEGA VENETA',
+    season: 'SS24',
+    rating: 7.8,
+    category: 'CRAFT',
+    analysis: 'Matthieu Blazy elevates leather to art. The intrecciato is no longer technique—it is philosophy.',
+    strengths: ['Material Mastery', 'Subtle Innovation', 'Luxury Positioning'],
+    weaknesses: ['Limited Risk-Taking', 'Price Accessibility'],
+    verdict: 'REFINED'
   },
   {
-    id: 'ANALYSIS_005',
-    brand: 'STREETWEAR_BRAND_005',
-    season: 'DROP_47',
-    title: 'HYPE WITHOUT SUBSTANCE',
-    verdict: 'EMPTY_CALORIES',
-    score: 1,
-    critique: `Limited drops, artificial scarcity, resale culture. This is not fashion, it\'s stock trading.
-    A t-shirt is still just a t-shirt, no matter how "limited" you make it.`,
-    failures: [
-      'Scarcity as strategy',
-      'Hype over design',
-      'Resale focus',
-      'No artistic vision'
-    ],
-    lesson: 'Exclusivity without excellence is fraud.'
+    id: '004',
+    brand: 'YOHJI YAMAMOTO',
+    season: 'FW24',
+    rating: 8.9,
+    category: 'PHILOSOPHY',
+    analysis: 'Black is still the answer. Yohji proves that consistency is not stagnation—it is mastery.',
+    strengths: ['Tailoring Excellence', 'Poetic Vision', 'Timeless Appeal'],
+    weaknesses: ['Limited Color Palette', 'Market Expansion'],
+    verdict: 'ETERNAL'
+  },
+  {
+    id: '005',
+    brand: 'JACQUEMUS',
+    season: 'SS24',
+    rating: 6.5,
+    category: 'MARKETING',
+    analysis: 'Simon Porte creates Instagram moments, not fashion moments. The micro bag is a meme, not design.',
+    strengths: ['Social Media Mastery', 'Brand Building', 'Accessibility'],
+    weaknesses: ['Technical Depth', 'Innovation', 'Longevity'],
+    verdict: 'COMMERCIAL'
+  },
+  {
+    id: '006',
+    brand: 'LOEWE',
+    season: 'FW24',
+    rating: 8.7,
+    category: 'CRAFT',
+    analysis: 'Jonathan Anderson balances surrealism with wearability. The trompe l\'oeil pieces are both joke and genius.',
+    strengths: ['Artistic Direction', 'Leather Craft', 'Brand Revival'],
+    weaknesses: ['Price Point', 'Narrow Aesthetic'],
+    verdict: 'INTELLIGENT'
   }
 ]
 
-// Analysis Categories
-const analysisCategories = [
-  {
-    id: 'CAT_001',
-    name: 'CONCEPTUAL_FAILURE',
-    description: 'Brands that have no philosophical foundation',
-    count: 127
-  },
-  {
-    id: 'CAT_002',
-    name: 'COMMERCIAL_COMPROMISE',
-    description: 'When money defeats creativity',
-    count: 89
-  },
-  {
-    id: 'CAT_003',
-    name: 'TREND_SLAVERY',
-    description: 'Following instead of leading',
-    count: 234
-  },
-  {
-    id: 'CAT_004',
-    name: 'INNOVATION_VOID',
-    description: 'Playing it safe, dying slowly',
-    count: 156
-  },
-  {
-    id: 'CAT_005',
-    name: 'RARE_EXCELLENCE',
-    description: 'The few who dare to experiment',
-    count: 7
-  }
-]
+// Analysis categories
+const categories = ['ALL', 'VOLUME', 'DECONSTRUCTION', 'CRAFT', 'PHILOSOPHY', 'MARKETING']
+const verdicts = ['ALL', 'GENIUS', 'PROGRESSIVE', 'ETERNAL', 'REFINED', 'INTELLIGENT', 'COMMERCIAL']
 
-// Comparison Metrics
-const comparisonMetrics = {
-  cinchLab: {
-    creativity: 100,
-    innovation: 100,
-    commercialization: 0,
-    compromise: 0,
-    authenticity: 100,
-    risk: 100,
-    philosophy: 100
-  },
-  industryAverage: {
-    creativity: 20,
-    innovation: 15,
-    commercialization: 95,
-    compromise: 85,
-    authenticity: 10,
-    risk: 5,
-    philosophy: 5
-  }
-}
+type ViewMode = 'CRITIQUE' | 'COMPARISON' | 'TIMELINE' | 'MATRIX'
 
 export default function AnalysisPage() {
-  const [selectedAnalysis, setSelectedAnalysis] = useState<string | null>(null)
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [selectedAnalysis, setSelectedAnalysis] = useState<typeof brandAnalyses[0] | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('CRITIQUE')
+  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [activeVerdict, setActiveVerdict] = useState('ALL')
   const [comparisonMode, setComparisonMode] = useState(false)
-  const [verdictFilter, setVerdictFilter] = useState<'ALL' | 'FAILED' | 'POTENTIAL'>('ALL')
-  const [analysisMode, setAnalysisMode] = useState<'CRITIQUE' | 'COMPARISON' | 'MANIFESTO'>('CRITIQUE')
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
 
-  // Parallax effects
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
-  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 0.95])
-
-  useEffect(() => {
-    // GSAP animations
-    const ctx = gsap.context(() => {
-      gsap.from('.analysis-card', {
-        y: 100,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      })
-
-      gsap.from('.category-stat', {
-        scale: 0,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'back.out'
-      })
-
-      gsap.from('.metric-bar', {
-        scaleX: 0,
-        transformOrigin: 'left',
-        duration: 1,
-        stagger: 0.1,
-        ease: 'power2.out',
-        delay: 0.5
-      })
-    })
-
-    return () => ctx.revert()
-  }, [])
-
-  const filteredAnalyses = analysisSubjects.filter(analysis => {
-    if (verdictFilter === 'ALL') return true
-    if (verdictFilter === 'FAILED') return analysis.score < 5
-    if (verdictFilter === 'POTENTIAL') return analysis.score >= 5
-    return true
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
   })
 
-  const renderCritiqueMode = () => (
+  // Transform values
+  const criticalThinking = useTransform(scrollYProgress, [0, 1], [0, 100])
+  const intellectualDepth = useTransform(scrollYProgress, [0, 0.5, 1], [0, 50, 100])
+
+  // Filter analyses
+  const filteredAnalyses = brandAnalyses.filter(analysis => {
+    const categoryMatch = activeCategory === 'ALL' || analysis.category === activeCategory
+    const verdictMatch = activeVerdict === 'ALL' || analysis.verdict === activeVerdict
+    return categoryMatch && verdictMatch
+  })
+
+  // Critical thoughts
+  const [currentThought, setCurrentThought] = useState('')
+  useEffect(() => {
+    const thoughts = [
+      'Fashion is not art, but it can be...',
+      'Commerce kills creativity, slowly...',
+      'True innovation is always uncomfortable...',
+      'Copying is not referencing...',
+      'Hype is the enemy of design...'
+    ]
+    const interval = setInterval(() => {
+      setCurrentThought(thoughts[Math.floor(Math.random() * thoughts.length)])
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const renderCritiqueView = () => (
     <div className="space-y-8">
-      {filteredAnalyses.map((analysis) => (
+      {filteredAnalyses.map((analysis, index) => (
         <motion.div
           key={analysis.id}
-          className="analysis-card bg-white border-4 border-carbon-black p-8 cursor-pointer hover:border-glitch-red transition-all"
-          onClick={() => setSelectedAnalysis(analysis.id)}
-          whileHover={{ x: -10 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          onClick={() => setSelectedAnalysis(analysis)}
+          className="cursor-pointer"
         >
-          {/* Header */}
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <span className="text-xs font-mono opacity-60">{analysis.brand} • {analysis.season}</span>
-              <h3 className="text-3xl font-black mt-2">{analysis.title}</h3>
-            </div>
-            <div className="text-right">
-              <div className="text-xs font-mono opacity-60 mb-2">CINCH_SCORE</div>
-              <div className="flex gap-1">
-                {[...Array(10)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-3 h-8 ${
-                      i < analysis.score
-                        ? analysis.score < 3 ? 'bg-glitch-red' :
-                          analysis.score < 6 ? 'bg-warning-yellow' :
-                          'bg-hazmat-green'
-                        : 'bg-gray-200'
-                    }`}
-                  />
-                ))}
+          <DeconstructedHover intensity={1.5}>
+            <ExposedStructure showGrid={selectedAnalysis?.id === analysis.id}>
+              <div className="p-8 bg-white-1 border-2 border-gray-plaster">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      ANALYSIS_{analysis.id} • {analysis.season}
+                    </div>
+                    <h3 className="text-4xl font-black mb-2">{analysis.brand}</h3>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs px-2 py-1 bg-black-100 text-white-0">
+                        {analysis.category}
+                      </span>
+                      <span className={`text-sm font-mono font-bold ${
+                        analysis.verdict === 'GENIUS' ? 'text-hybrid-blue' :
+                        analysis.verdict === 'PROGRESSIVE' ? 'text-hybrid-red' :
+                        analysis.verdict === 'ETERNAL' ? 'text-black-100' :
+                        'text-gray-steel'
+                      }`}>
+                        {analysis.verdict}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Rating */}
+                  <div className="text-right">
+                    <div className="text-3xl font-black">{analysis.rating}</div>
+                    <div className="text-micro font-mono text-gray-steel">/ 10</div>
+                  </div>
+                </div>
+
+                {/* Analysis */}
+                <p className="text-lg leading-relaxed mb-6 italic">
+                  "{analysis.analysis}"
+                </p>
+
+                {/* Strengths & Weaknesses */}
+                <div className="grid grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="text-xs font-mono font-black mb-2 text-hybrid-blue">STRENGTHS</h4>
+                    <ul className="space-y-1">
+                      {analysis.strengths.map(strength => (
+                        <li key={strength} className="text-sm">+ {strength}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-mono font-black mb-2 text-hybrid-red">WEAKNESSES</h4>
+                    <ul className="space-y-1">
+                      {analysis.weaknesses.map(weakness => (
+                        <li key={weakness} className="text-sm">- {weakness}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-          {/* Verdict */}
-          <div className={`inline-block px-4 py-2 mb-6 text-sm font-mono font-bold ${
-            analysis.score < 3 ? 'bg-glitch-red text-white' :
-            analysis.score < 6 ? 'bg-warning-yellow text-carbon-black' :
-            'bg-hazmat-green text-carbon-black'
-          }`}>
-            VERDICT: {analysis.verdict}
-          </div>
-
-          {/* Critique */}
-          <p className="mb-6 leading-relaxed">{analysis.critique}</p>
-
-          {/* Failures */}
-          <div className="mb-6">
-            <h4 className="text-xs font-mono opacity-60 mb-3">PRIMARY_FAILURES:</h4>
-            <div className="flex flex-wrap gap-2">
-              {analysis.failures.map((failure, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 text-xs bg-carbon-black text-white"
-                >
-                  {failure}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Lesson */}
-          <div className="pt-6 border-t-2 border-carbon-black">
-            <p className="text-sm font-black italic">
-              LESSON: {analysis.lesson}
-            </p>
-          </div>
+            </ExposedStructure>
+          </DeconstructedHover>
         </motion.div>
       ))}
     </div>
   )
 
-  const renderComparisonMode = () => (
-    <div className="space-y-12">
-      <div className="bg-white border-4 border-carbon-black p-8">
-        <h3 className="text-2xl font-black mb-8">CINCH LAB VS. INDUSTRY AVERAGE</h3>
-
-        {Object.keys(comparisonMetrics.cinchLab).map((metric) => (
-          <div key={metric} className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-mono uppercase">{metric.replace('_', ' ')}</span>
-              <div className="text-xs font-mono opacity-60">
-                <span className="text-safety-orange">CINCH: {comparisonMetrics.cinchLab[metric as keyof typeof comparisonMetrics.cinchLab]}%</span>
-                {' / '}
-                <span>INDUSTRY: {comparisonMetrics.industryAverage[metric as keyof typeof comparisonMetrics.industryAverage]}%</span>
-              </div>
-            </div>
-
-            {/* Comparison Bars */}
-            <div className="relative h-8 bg-gray-100">
-              {/* Industry Bar */}
-              <div
-                className="absolute top-0 left-0 h-4 bg-gray-400 metric-bar"
-                style={{ width: `${comparisonMetrics.industryAverage[metric as keyof typeof comparisonMetrics.industryAverage]}%` }}
-              />
-              {/* CINCH Bar */}
-              <div
-                className="absolute bottom-0 left-0 h-4 bg-safety-orange metric-bar"
-                style={{ width: `${comparisonMetrics.cinchLab[metric as keyof typeof comparisonMetrics.cinchLab]}%` }}
-              />
-            </div>
-          </div>
-        ))}
-
-        <div className="mt-8 p-6 bg-carbon-black text-white">
-          <p className="text-sm font-mono">
-            CONCLUSION: While the industry chases profits, CINCH LAB chases perfection.
-            We are not better—we are different. We are not competing—we are creating.
-          </p>
+  const renderComparisonView = () => (
+    <div>
+      <div className="mb-8 p-4 bg-gray-plaster/20 border border-gray-plaster">
+        <p className="text-xs font-mono mb-4">SELECT BRANDS TO COMPARE (MAX 3)</p>
+        <div className="flex gap-2 flex-wrap">
+          {brandAnalyses.map(analysis => (
+            <button
+              key={analysis.id}
+              onClick={() => {
+                if (selectedBrands.includes(analysis.brand)) {
+                  setSelectedBrands(selectedBrands.filter(b => b !== analysis.brand))
+                } else if (selectedBrands.length < 3) {
+                  setSelectedBrands([...selectedBrands, analysis.brand])
+                }
+              }}
+              className={`px-3 py-1 text-xs font-mono transition-all ${
+                selectedBrands.includes(analysis.brand)
+                  ? 'bg-black-100 text-white-0'
+                  : 'bg-white-0 border border-gray-plaster hover:border-black-100'
+              }`}
+            >
+              {analysis.brand}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-glitch-red text-white p-6 text-center">
-          <div className="text-3xl font-black mb-2">98%</div>
-          <div className="text-xs font-mono">BRANDS_FAILED</div>
+      {selectedBrands.length >= 2 && (
+        <div className={`grid grid-cols-${selectedBrands.length} gap-4`}>
+          {selectedBrands.map(brand => {
+            const analysis = brandAnalyses.find(a => a.brand === brand)!
+            return (
+              <SacaiLayer key={brand} layers={2}>
+                <div className="p-6 bg-white-0 border-2 border-black-100">
+                  <h3 className="text-2xl font-black mb-4">{brand}</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-micro font-mono">RATING</span>
+                      <div className="text-3xl font-black">{analysis.rating}</div>
+                    </div>
+                    <div>
+                      <span className="text-micro font-mono">CATEGORY</span>
+                      <div className="text-sm font-bold">{analysis.category}</div>
+                    </div>
+                    <div>
+                      <span className="text-micro font-mono">VERDICT</span>
+                      <div className="text-sm font-bold">{analysis.verdict}</div>
+                    </div>
+                    <div>
+                      <span className="text-micro font-mono">STRENGTHS</span>
+                      <div className="text-xs mt-1">{analysis.strengths.length} identified</div>
+                    </div>
+                    <div>
+                      <span className="text-micro font-mono">WEAKNESSES</span>
+                      <div className="text-xs mt-1">{analysis.weaknesses.length} identified</div>
+                    </div>
+                  </div>
+                </div>
+              </SacaiLayer>
+            )
+          })}
         </div>
-        <div className="bg-warning-yellow text-carbon-black p-6 text-center">
-          <div className="text-3xl font-black mb-2">2%</div>
-          <div className="text-xs font-mono">SHOW_POTENTIAL</div>
-        </div>
-        <div className="bg-hazmat-green text-carbon-black p-6 text-center">
-          <div className="text-3xl font-black mb-2">0.1%</div>
-          <div className="text-xs font-mono">TRUE_INNOVATION</div>
-        </div>
-        <div className="bg-safety-orange text-white p-6 text-center">
-          <div className="text-3xl font-black mb-2">1</div>
-          <div className="text-xs font-mono">CINCH_LAB</div>
-        </div>
-      </div>
+      )}
     </div>
   )
 
-  const renderManifestoMode = () => (
-    <div className="bg-white border-4 border-carbon-black p-12">
-      <h2 className="text-4xl font-black mb-8 text-center">THE ANALYSIS MANIFESTO</h2>
+  const renderTimelineView = () => (
+    <div className="relative">
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-plaster" />
 
-      <div className="space-y-8 max-w-3xl mx-auto">
-        <div>
-          <h3 className="text-2xl font-black mb-4">WHY WE ANALYZE</h3>
-          <p className="leading-relaxed">
-            We don't analyze other brands out of spite or superiority. We analyze them to understand
-            what fashion has become and why it must change. Every failed collection is a lesson.
-            Every compromised vision is a warning. Every commercial success built on creative bankruptcy
-            is a reminder of why CINCH LAB exists.
-          </p>
-        </div>
+      {filteredAnalyses.map((analysis, index) => (
+        <motion.div
+          key={analysis.id}
+          className="relative flex items-center mb-12 ml-8"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          {/* Timeline node */}
+          <div className="absolute -left-8 w-4 h-4 bg-black-100" />
 
-        <div>
-          <h3 className="text-2xl font-black mb-4">THE PROBLEM</h3>
-          <p className="leading-relaxed">
-            Fashion has become a business first, art second (if at all). Designers design for buyers,
-            not for expression. Collections are planned in boardrooms, not studios. Success is measured
-            in sales, not in innovation. This is not fashion—this is retail.
-          </p>
-        </div>
+          {/* Season marker */}
+          <div className="absolute -left-20 text-micro font-mono text-gray-steel">
+            {analysis.season}
+          </div>
 
-        <div>
-          <h3 className="text-2xl font-black mb-4">THE SOLUTION</h3>
-          <p className="leading-relaxed">
-            Complete rejection of the commercial model. No sales targets. No market research.
-            No trend forecasting. No buyer feedback. Only pure creation, experimentation, and
-            the relentless pursuit of the new. This is CINCH LAB.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-2xl font-black mb-4">THE FUTURE</h3>
-          <p className="leading-relaxed">
-            We will continue to analyze, critique, and document the death of fashion as commerce
-            takes over. But we will also create, experiment, and prove that another way is possible.
-            We are not trying to change the industry—we are creating a new one.
-          </p>
-        </div>
-
-        <div className="mt-12 p-8 bg-carbon-black text-white text-center">
-          <p className="text-2xl font-black mb-4">
-            "CINCH LAB은 최고이자 난 천재야"
-          </p>
-          <p className="text-sm font-mono opacity-80">
-            This is not arrogance. This is necessity.
-            <br />
-            Someone must declare that the emperor has no clothes.
-            <br />
-            Someone must create without compromise.
-            <br />
-            That someone is us.
-          </p>
-        </div>
-      </div>
+          <AsymmetricTransform intensity={1}>
+            <div
+              className="flex-1 p-6 bg-white-0 border border-gray-plaster cursor-pointer hover:border-black-100"
+              onClick={() => setSelectedAnalysis(analysis)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-black">{analysis.brand}</h3>
+                  <p className="text-sm opacity-60 mt-1">{analysis.analysis}</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-black">{analysis.rating}</div>
+                  <div className="text-xs font-mono">{analysis.verdict}</div>
+                </div>
+              </div>
+            </div>
+          </AsymmetricTransform>
+        </motion.div>
+      ))}
     </div>
+  )
+
+  const renderMatrixView = () => (
+    <FragmentMosaic fragments={16}>
+      <div className="grid grid-cols-4 gap-0">
+        {filteredAnalyses.map((analysis, index) => (
+          <motion.div
+            key={analysis.id}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.05 }}
+            className="relative group cursor-pointer"
+            onClick={() => setSelectedAnalysis(analysis)}
+          >
+            <div className="aspect-square p-4 bg-white-1 border border-gray-plaster hover:bg-black-100 hover:text-white-0 transition-all">
+              <div className="h-full flex flex-col justify-between">
+                <div>
+                  <div className="text-micro font-mono mb-1">
+                    {analysis.season}
+                  </div>
+                  <h3 className="text-sm font-black mb-2">
+                    {analysis.brand}
+                  </h3>
+                </div>
+                <div>
+                  <div className="text-2xl font-black mb-1">
+                    {analysis.rating}
+                  </div>
+                  <div className="text-micro font-mono">
+                    {analysis.verdict}
+                  </div>
+                </div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-hybrid-red opacity-0 group-hover:opacity-10 transition-opacity" />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </FragmentMosaic>
   )
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-carbon-black text-white relative">
-      {/* Background Effects */}
-      <div className="fixed inset-0 scientific-grid opacity-10 pointer-events-none" />
+    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 overlay-grid opacity-20" />
+      </div>
+
+      {/* Analysis Status Bar */}
       <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{ scale: scaleParallax }}
+        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-2"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.5 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-glitch-red/5 via-transparent to-transparent" />
+        <div className="container-wide">
+          <div className="flex items-center justify-between text-micro font-mono">
+            <div className="flex items-center gap-6">
+              <span>CRITICAL_THINKING: {Math.round(criticalThinking.get())}%</span>
+              <span className="opacity-60">|</span>
+              <span>BRANDS_ANALYZED: {filteredAnalyses.length}</span>
+              <span className="opacity-60">|</span>
+              <motion.span
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                {currentThought}
+              </motion.span>
+            </div>
+            <span>HONEST CRITIQUE • NO MERCY</span>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Header */}
-      <section className="relative py-24 px-8">
-        <motion.div
-          className="max-w-7xl mx-auto text-center"
-          style={{ y: yParallax }}
-        >
-          <h1 className="text-[clamp(60px,10vw,180px)] font-black mb-8 leading-[0.85]">
-            <CipherText text="ANALYSIS" />
-          </h1>
-          <p className="text-sm font-mono opacity-60 mb-4">
-            CRITIQUING THE INDUSTRY • EXPOSING MEDIOCRITY • CELEBRATING FAILURE
-          </p>
-          <p className="text-lg italic opacity-80 max-w-2xl mx-auto">
-            "We analyze what fashion has become to understand what it should be."
-          </p>
-        </motion.div>
-      </section>
+      {/* Main Content */}
+      <div className="pt-32 pb-20">
+        <div className="container-wide">
+          {/* Page Title */}
+          <ExposedStructure showMeasurements className="mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="text-micro font-mono text-hybrid-red mb-2">
+                CRITICAL_ANALYSIS / BRAND_DISSECTION
+              </div>
+              <h1 className="text-display font-black tracking-tightest uppercase">
+                <SacaiLayer layers={2}>
+                  ANALYSIS
+                </SacaiLayer>
+              </h1>
+              <div className="text-lg text-gray-steel mt-4 max-w-2xl">
+                Honest critique of contemporary fashion. No brand is sacred.
+                We analyze, dissect, and judge without mercy.
+              </div>
+            </motion.div>
+          </ExposedStructure>
 
-      {/* Controls */}
-      <section className="py-8 px-8 bg-concrete-gray">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* Mode Selector */}
+          {/* Controls */}
+          <div className="mb-12 space-y-4">
+            {/* View Mode */}
             <div className="flex gap-2">
-              {(['CRITIQUE', 'COMPARISON', 'MANIFESTO'] as const).map(mode => (
+              {(['CRITIQUE', 'COMPARISON', 'TIMELINE', 'MATRIX'] as ViewMode[]).map(mode => (
                 <button
                   key={mode}
-                  onClick={() => setAnalysisMode(mode)}
+                  onClick={() => setViewMode(mode)}
                   className={`px-4 py-2 text-xs font-mono transition-all ${
-                    analysisMode === mode
-                      ? 'bg-white text-carbon-black'
-                      : 'bg-transparent text-white border border-white/20 hover:border-white'
+                    viewMode === mode
+                      ? 'bg-black-100 text-white-0'
+                      : 'bg-white-0 text-black-100 border border-gray-plaster hover:border-black-100'
                   }`}
                 >
                   {mode}
@@ -450,61 +425,41 @@ export default function AnalysisPage() {
               ))}
             </div>
 
-            {/* Filter (for Critique mode only) */}
-            {analysisMode === 'CRITIQUE' && (
-              <div className="flex gap-2">
-                {(['ALL', 'FAILED', 'POTENTIAL'] as const).map(filter => (
-                  <button
-                    key={filter}
-                    onClick={() => setVerdictFilter(filter)}
-                    className={`px-4 py-2 text-xs font-mono transition-all ${
-                      verdictFilter === filter
-                        ? 'bg-safety-orange text-carbon-black'
-                        : 'bg-transparent text-white border border-white/20 hover:border-white'
-                    }`}
-                  >
-                    {filter}
-                  </button>
+            {/* Filters */}
+            <div className="flex gap-4">
+              <select
+                value={activeCategory}
+                onChange={(e) => setActiveCategory(e.target.value)}
+                className="px-3 py-1 text-xs font-mono border border-gray-plaster bg-white-0"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
                 ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+              </select>
 
-      {/* Categories Overview */}
-      {analysisMode === 'CRITIQUE' && (
-        <section className="py-8 px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
-              {analysisCategories.map((category) => (
-                <motion.div
-                  key={category.id}
-                  className="category-stat bg-white text-carbon-black p-4 text-center cursor-pointer hover:bg-safety-orange transition-colors"
-                  onClick={() => setActiveCategory(category.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <div className="text-3xl font-black mb-2">{category.count}</div>
-                  <div className="text-xs font-mono mb-1">{category.name.replace('_', ' ')}</div>
-                  <div className="text-[10px] opacity-60">{category.description}</div>
-                </motion.div>
-              ))}
+              <select
+                value={activeVerdict}
+                onChange={(e) => setActiveVerdict(e.target.value)}
+                className="px-3 py-1 text-xs font-mono border border-gray-plaster bg-white-0"
+              >
+                {verdicts.map(verdict => (
+                  <option key={verdict} value={verdict}>{verdict}</option>
+                ))}
+              </select>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* Main Content */}
-      <section className="px-8 pb-24">
-        <div className="max-w-5xl mx-auto">
-          {analysisMode === 'CRITIQUE' && renderCritiqueMode()}
-          {analysisMode === 'COMPARISON' && renderComparisonMode()}
-          {analysisMode === 'MANIFESTO' && renderManifestoMode()}
+          {/* Analysis Display */}
+          <div className="mb-20">
+            {viewMode === 'CRITIQUE' && renderCritiqueView()}
+            {viewMode === 'COMPARISON' && renderComparisonView()}
+            {viewMode === 'TIMELINE' && renderTimelineView()}
+            {viewMode === 'MATRIX' && renderMatrixView()}
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* Analysis Detail Modal */}
+      {/* Detail Modal */}
       <AnimatePresence>
         {selectedAnalysis && (
           <>
@@ -513,125 +468,107 @@ export default function AnalysisPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedAnalysis(null)}
-              className="fixed inset-0 bg-carbon-black/95 z-50 backdrop-blur-sm"
+              className="fixed inset-0 bg-black-100/90 z-50"
             />
 
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-8 md:inset-16 bg-white text-carbon-black z-50 overflow-auto"
+              className="fixed inset-8 md:inset-16 bg-white-0 z-50 overflow-auto"
             >
-              <div className="p-12">
-                {(() => {
-                  const analysis = analysisSubjects.find(a => a.id === selectedAnalysis)
-                  if (!analysis) return null
+              <div className="p-8 md:p-12">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-8">
+                  <div>
+                    <div className="text-micro font-mono text-hybrid-red mb-2">
+                      {selectedAnalysis.season} ANALYSIS
+                    </div>
+                    <h2 className="text-6xl font-black mb-4">{selectedAnalysis.brand}</h2>
+                    <div className="flex items-center gap-4">
+                      <span className="px-4 py-2 bg-black-100 text-white-0 text-sm">
+                        {selectedAnalysis.category}
+                      </span>
+                      <span className="text-xl font-bold">
+                        {selectedAnalysis.verdict}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedAnalysis(null)}
+                    className="w-12 h-12 bg-black-100 text-white-0 flex items-center justify-center hover:bg-hybrid-red transition-colors"
+                  >
+                    <span className="text-2xl">×</span>
+                  </button>
+                </div>
 
-                  return (
-                    <>
-                      {/* Header */}
-                      <div className="flex justify-between items-start mb-8">
-                        <div>
-                          <h2 className="text-4xl font-black mb-2">{analysis.title}</h2>
-                          <p className="text-lg opacity-60">{analysis.brand} • {analysis.season}</p>
-                        </div>
-                        <button
-                          onClick={() => setSelectedAnalysis(null)}
-                          className="w-12 h-12 flex items-center justify-center bg-carbon-black text-white hover:bg-glitch-red transition-colors"
-                        >
-                          <span className="text-2xl">×</span>
-                        </button>
-                      </div>
+                {/* Rating */}
+                <div className="mb-12 text-center">
+                  <div className="text-8xl font-black">{selectedAnalysis.rating}</div>
+                  <div className="text-sm font-mono text-gray-steel">OUT OF 10</div>
+                </div>
 
-                      {/* Score Visualization */}
-                      <div className="mb-8">
-                        <div className="flex items-center gap-4 mb-4">
-                          <span className="text-sm font-mono">CINCH_LAB_SCORE:</span>
-                          <div className="flex gap-1">
-                            {[...Array(10)].map((_, i) => (
-                              <div
-                                key={i}
-                                className={`w-6 h-12 ${
-                                  i < analysis.score
-                                    ? analysis.score < 3 ? 'bg-glitch-red' :
-                                      analysis.score < 6 ? 'bg-warning-yellow' :
-                                      'bg-hazmat-green'
-                                    : 'bg-gray-200'
-                                }`}
-                              />
-                            ))}
+                {/* Full Analysis */}
+                <div className="mb-12">
+                  <h3 className="text-lg font-black mb-4">FULL CRITIQUE</h3>
+                  <p className="text-2xl leading-relaxed italic">
+                    "{selectedAnalysis.analysis}"
+                  </p>
+                </div>
+
+                {/* Detailed Assessment */}
+                <div className="grid md:grid-cols-2 gap-12 mb-12">
+                  <div>
+                    <h3 className="text-lg font-black mb-6 text-hybrid-blue">WHAT WORKS</h3>
+                    <ul className="space-y-4">
+                      {selectedAnalysis.strengths.map(strength => (
+                        <li key={strength} className="flex items-start">
+                          <span className="text-2xl mr-4">+</span>
+                          <div>
+                            <div className="font-bold mb-1">{strength}</div>
+                            <p className="text-sm opacity-60">
+                              This aspect demonstrates understanding of contemporary fashion's demands.
+                            </p>
                           </div>
-                          <span className="text-2xl font-black">{analysis.score}/10</span>
-                        </div>
-                        <div className={`inline-block px-6 py-3 text-lg font-mono font-bold ${
-                          analysis.score < 3 ? 'bg-glitch-red text-white' :
-                          analysis.score < 6 ? 'bg-warning-yellow text-carbon-black' :
-                          'bg-hazmat-green text-carbon-black'
-                        }`}>
-                          {analysis.verdict}
-                        </div>
-                      </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black mb-6 text-hybrid-red">WHAT FAILS</h3>
+                    <ul className="space-y-4">
+                      {selectedAnalysis.weaknesses.map(weakness => (
+                        <li key={weakness} className="flex items-start">
+                          <span className="text-2xl mr-4">-</span>
+                          <div>
+                            <div className="font-bold mb-1">{weakness}</div>
+                            <p className="text-sm opacity-60">
+                              This limitation prevents the brand from achieving true innovation.
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
 
-                      {/* Full Critique */}
-                      <div className="mb-8">
-                        <h3 className="text-lg font-black mb-4">FULL ANALYSIS</h3>
-                        <p className="text-lg leading-relaxed">{analysis.critique}</p>
-                      </div>
-
-                      {/* Detailed Failures */}
-                      <div className="mb-8">
-                        <h3 className="text-lg font-black mb-4">CRITICAL FAILURES</h3>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          {analysis.failures.map((failure, i) => (
-                            <div key={i} className="p-4 bg-carbon-black text-white">
-                              <span className="text-glitch-red mr-2">✗</span>
-                              {failure}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* The Lesson */}
-                      <div className="p-8 bg-safety-orange text-white">
-                        <h3 className="text-lg font-black mb-4">THE LESSON</h3>
-                        <p className="text-xl italic">{analysis.lesson}</p>
-                      </div>
-
-                      {/* CINCH LAB Response */}
-                      <div className="mt-8 p-8 bg-carbon-black text-white">
-                        <h3 className="text-lg font-black mb-4">CINCH LAB RESPONSE</h3>
-                        <p className="mb-4">
-                          This is why we exist. This is why we don't sell. This is why we experiment without compromise.
-                        </p>
-                        <p className="text-lg font-black">
-                          We are not them. We will never be them.
-                        </p>
-                      </div>
-                    </>
-                  )
-                })()}
+                {/* Final Verdict */}
+                <div className="p-8 bg-black-100 text-white-0">
+                  <h3 className="text-lg font-black mb-4">FINAL VERDICT</h3>
+                  <p className="text-xl">
+                    {selectedAnalysis.verdict === 'GENIUS' && 'This is fashion at its highest level. Few understand this depth of creation.'}
+                    {selectedAnalysis.verdict === 'PROGRESSIVE' && 'Moving fashion forward, but not yet revolutionary. The potential exists.'}
+                    {selectedAnalysis.verdict === 'ETERNAL' && 'Timeless excellence that transcends trends. This is permanence in fashion.'}
+                    {selectedAnalysis.verdict === 'REFINED' && 'Technically excellent, conceptually safe. Luxury without risk.'}
+                    {selectedAnalysis.verdict === 'INTELLIGENT' && 'Smart fashion that understands its context. Clever, not genius.'}
+                    {selectedAnalysis.verdict === 'COMMERCIAL' && 'Designed for sales, not for history. Fashion as product, not art.'}
+                  </p>
+                </div>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
-      {/* Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-carbon-black/80 backdrop-blur-sm border-t border-white/10 p-4 z-40">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-[10px] font-mono opacity-60">
-            CINCH_LAB_ANALYSIS • TRUTH_WITHOUT_MERCY • NO_COMPROMISES
-          </p>
-          <div className="flex gap-4">
-            <span className="text-[10px] font-mono opacity-60">
-              BRANDS_ANALYZED: {analysisSubjects.length}
-            </span>
-            <span className="text-[10px] font-mono opacity-60">
-              FAILURES_DOCUMENTED: ∞
-            </span>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

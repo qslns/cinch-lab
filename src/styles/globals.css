@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Margiela × Sacai Design System */
+@import './margiela-sacai-system.css';
+
 /* Premium Typography System inspired by luxury brands */
 @layer base {
   :root {
