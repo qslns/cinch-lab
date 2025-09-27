@@ -43,7 +43,7 @@ const voidLayers = [
 ]
 
 // Void Elements - Fashion Components Dissolving
-const voidElements = [
+const initialVoidElements = [
   { id: 'SEAM_01', type: 'FRENCH_SEAM', dissolved: false, opacity: 1 },
   { id: 'DART_02', type: 'BUST_DART', dissolved: false, opacity: 1 },
   { id: 'PLEAT_03', type: 'BOX_PLEAT', dissolved: false, opacity: 1 },
@@ -66,7 +66,7 @@ type ViewMode = 'DESCENT' | 'LAYERS' | 'PHILOSOPHY' | 'ARCHIVE'
 export default function VoidPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('DESCENT')
   const [currentDepth, setCurrentDepth] = useState(0)
-  const [voidElements, setVoidElements] = useState(voidElements)
+  const [voidElements, setVoidElements] = useState(initialVoidElements)
   const [isDissolving, setIsDissolving] = useState(false)
   const [selectedLayer, setSelectedLayer] = useState<typeof voidLayers[0] | null>(null)
   const [philosophyIndex, setPhilosophyIndex] = useState(0)
