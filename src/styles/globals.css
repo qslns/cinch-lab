@@ -5,23 +5,47 @@
 /* Import Design Systems */
 @import './margiela-sacai-system.css';
 @import './deconstructed-system.css';
+@import './cinch-laboratory.css';
 
-/* Premium Typography System inspired by luxury brands */
+/* CINCH LAB Design System - Margiela × Sacai Reconstruction */
 @layer base {
   :root {
-    /* Colors - Minimal Palette */
-    --black: #000000;
-    --white: #ffffff;
-    --gray-50: #fafafa;
-    --gray-100: #f4f4f4;
-    --gray-200: #e5e5e5;
-    --gray-300: #d1d1d1;
-    --gray-400: #a1a1a1;
-    --gray-500: #717171;
-    --gray-600: #4a4a4a;
-    --gray-700: #2a2a2a;
-    --gray-800: #1a1a1a;
-    --gray-900: #0a0a0a;
+    /* Core Palette - Laboratory Brutalism */
+    --lab-void: #000000;
+    --lab-carbon: #0A0908;
+    --lab-graphite: #1C1917;
+    --lab-concrete: #292524;
+    --lab-steel: #44403C;
+    --lab-aluminum: #78716C;
+    --lab-titanium: #A8A29E;
+    --lab-platinum: #D6D3D1;
+    --lab-paper: #F5F5F4;
+    --lab-white: #FAFAF9;
+    --lab-pure: #FFFFFF;
+
+    /* Material Colors - Deconstruction */
+    --thread-black: #0C0A09;
+    --thread-red: #DC143C;
+    --thread-blue: #1E3A8A;
+    --raw-white: #FAF9F6;
+    --unbleached: #F5F3F0;
+
+    /* Hybrid Accents - Sacai Inspired */
+    --safety-orange: #FF6B35;
+    --centrifuge-blue: #0066CC;
+    --hazmat-green: #84CC16;
+    --warning-yellow: #FACC15;
+    --petri-pink: #EC4899;
+
+    /* Deconstructive Overlays */
+    --glitch-cyan: #00FFFF;
+    --glitch-magenta: #FF00FF;
+    --glitch-yellow: #FFFF00;
+
+    /* Process Colors */
+    --oxidized-metal: #708090;
+    --aged-leather: #8B5A3C;
+    --denim-blue: #2B3856;
     
     /* Typography Scale */
     --text-xs: 0.65rem;      /* 10.4px */
@@ -52,13 +76,17 @@
   }
 
   body {
-    font-family: 'Helvetica Neue', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
     font-weight: 400;
-    font-size: var(--text-base);
+    font-size: 1rem;
     line-height: 1.5;
-    letter-spacing: 0.01em;
-    color: var(--black);
-    background: var(--white);
+    letter-spacing: -0.011em;
+    color: var(--lab-carbon);
+    background: var(--lab-white);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'ss01' on, 'ss02' on, 'ss03' on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Typography */
@@ -609,30 +637,32 @@ nav [data-cipher-text="true"] {
   }
 }
 
-/* Extended Color Variables */
+/* Transitions & Easing - Professional */
 :root {
-  /* Core System */
-  --carbon-black: #0a0a0a;
-  --paper-white: #fafafa;
-  --concrete-gray: #2a2a2a;
-  --off-black: #0a0a0a;
-  --charcoal: #1a1a1a;
+  /* Easing Functions */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* Material Colors */
-  --denim-blue: #1E3A5F;
-  --raw-silk: #FFF8E7;
-  --aged-leather: #8B4513;
-  --oxidized-metal: #708090;
-  --bleached-bone: #FFFEF0;
+  /* Durations */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 800ms;
 
-  /* Accent System */
-  --safety-orange: #ff4500;
-  --centrifuge-blue: #0066ff;
-  --hazmat-green: #00ff00;
-  --warning-yellow: #ffff00;
-  --glitch-red: #ff0000;
-  --glitch-cyan: #00ffff;
-  --glitch-magenta: #ff00ff;
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-notification: 800;
+  --z-maximum: 9999;
 }
 
 /* Brutalist Typography */

@@ -1,0 +1,741 @@
+/* ==========================================================================
+   CINCH LABORATORY DESIGN SYSTEM
+   Margiela × Sacai Digital Laboratory
+
+   Philosophy:
+   - Deconstructive asymmetry meets scientific precision
+   - Raw experimental aesthetics with haute couture finish
+   - Anti-design principles with professional execution
+   - No commerce, only process
+   ========================================================================== */
+
+/* ==========================================================================
+   1. LABORATORY GRID SYSTEM - Asymmetric Chaos
+   ========================================================================== */
+
+.grid-laboratory {
+  display: grid;
+  grid-template-columns: 1.5fr 2.618fr 1fr 3.14fr 0.618fr 2fr;
+  grid-auto-rows: minmax(120px, auto);
+  gap: 2px;
+  background: var(--lab-carbon);
+  padding: 2px;
+}
+
+.grid-asymmetric {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+}
+
+.grid-asymmetric > * {
+  position: relative;
+}
+
+.grid-asymmetric > *:nth-child(7n+1) {
+  grid-column: span 5;
+  transform: rotate(-0.5deg);
+}
+
+.grid-asymmetric > *:nth-child(5n+2) {
+  grid-column: span 3;
+  transform: translateY(-2px);
+}
+
+.grid-asymmetric > *:nth-child(3n+3) {
+  grid-column: span 4;
+  transform: rotate(0.3deg);
+}
+
+.grid-asymmetric > *:nth-child(4n) {
+  grid-column: span 2;
+}
+
+/* Broken Grid */
+.grid-broken {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-auto-flow: dense;
+  gap: 0;
+}
+
+.grid-broken > *:nth-child(odd) {
+  transform: translateX(-2px) rotate(-0.2deg);
+}
+
+.grid-broken > *:nth-child(even) {
+  transform: translateX(2px) rotate(0.2deg);
+}
+
+/* ==========================================================================
+   2. DECONSTRUCTED COMPONENTS
+   ========================================================================== */
+
+/* Exposed Seam Effect */
+.exposed-seam {
+  position: relative;
+  overflow: visible;
+}
+
+.exposed-seam::before,
+.exposed-seam::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.exposed-seam::before {
+  inset: -1px;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    var(--thread-red) 10px,
+    var(--thread-red) 11px
+  );
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.exposed-seam::after {
+  inset: -3px;
+  border: 1px dashed var(--thread-black);
+  opacity: 0.15;
+}
+
+/* Raw Edge */
+.raw-edge {
+  clip-path: polygon(
+    0 2%, 1% 0, 99% 0, 100% 1%,
+    100% 98%, 99% 100%, 2% 100%, 0 99%
+  );
+}
+
+/* Pattern Piece */
+.pattern-piece {
+  position: relative;
+  background: var(--raw-white);
+}
+
+.pattern-piece::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, var(--thread-blue) 39px, var(--thread-blue) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, var(--thread-blue) 39px, var(--thread-blue) 40px);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Construction Mark */
+.construction-mark {
+  position: relative;
+}
+
+.construction-mark::before {
+  content: attr(data-mark);
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--thread-red);
+  opacity: 0.5;
+}
+
+/* Stitching */
+.stitching {
+  position: relative;
+  border-top: 1px dashed var(--thread-black);
+  border-bottom: 1px dashed var(--thread-black);
+  padding: 1rem 0;
+}
+
+.stitching::before,
+.stitching::after {
+  content: '×';
+  position: absolute;
+  font-size: 12px;
+  color: var(--thread-red);
+  opacity: 0.4;
+}
+
+.stitching::before {
+  top: -6px;
+  left: 0;
+}
+
+.stitching::after {
+  bottom: -6px;
+  right: 0;
+}
+
+/* ==========================================================================
+   3. HYBRID LAYERING EFFECTS - Sacai Inspired
+   ========================================================================== */
+
+.hybrid-split {
+  position: relative;
+  display: inline-block;
+}
+
+.hybrid-split::before,
+.hybrid-split::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hybrid-split::before {
+  color: var(--thread-red);
+  transform: translate(-2px, -2px);
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.hybrid-split::after {
+  color: var(--thread-blue);
+  transform: translate(2px, 2px);
+  opacity: 0.3;
+  z-index: -2;
+}
+
+/* Layer Card */
+.layer-card {
+  position: relative;
+  background: var(--lab-white);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.layer-card::before,
+.layer-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  z-index: -1;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.layer-card::before {
+  transform: translate(-4px, -4px);
+  border: 1px solid var(--thread-black);
+  opacity: 0.4;
+}
+
+.layer-card::after {
+  transform: translate(4px, 4px);
+  background: var(--lab-carbon);
+  opacity: 0.2;
+}
+
+.layer-card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.layer-card:hover::before {
+  transform: translate(-8px, -8px);
+}
+
+.layer-card:hover::after {
+  transform: translate(8px, 8px);
+}
+
+/* ==========================================================================
+   4. LABORATORY TEXTURES
+   ========================================================================== */
+
+/* Graph Paper */
+.texture-graph {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,0.01) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(0,0,0,0.01) 2px, transparent 2px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+}
+
+/* Lab Table */
+.texture-lab-table {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(0,0,0,0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0,0,0,0.01) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0,0,0,0.01) 0%, transparent 50%),
+    linear-gradient(180deg, var(--lab-paper), var(--lab-white));
+}
+
+/* Raw Canvas */
+.texture-raw-canvas {
+  background-color: var(--raw-white);
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,0.01) 35px, rgba(0,0,0,0.01) 70px),
+    repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,0.01) 35px, rgba(0,0,0,0.01) 70px);
+}
+
+/* Scan Lines */
+.texture-scan {
+  position: relative;
+}
+
+.texture-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   5. BUTTONS - Deconstructed
+   ========================================================================== */
+
+.btn-deconstructed {
+  position: relative;
+  padding: 14px 32px;
+  background: transparent;
+  border: 1px solid var(--lab-carbon);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.3s var(--ease-out-expo);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.btn-deconstructed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--lab-carbon);
+  transition: left 0.3s var(--ease-out-expo);
+  z-index: -1;
+}
+
+.btn-deconstructed:hover {
+  color: var(--lab-white);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--thread-red);
+}
+
+.btn-deconstructed:hover::before {
+  left: 0;
+}
+
+/* Hybrid Button */
+.btn-hybrid {
+  position: relative;
+  padding: 12px 28px;
+  background: var(--lab-white);
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out-expo);
+  overflow: visible;
+}
+
+.btn-hybrid::before,
+.btn-hybrid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--lab-carbon);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.btn-hybrid::before {
+  transform: translate(-3px, -3px);
+  z-index: -1;
+}
+
+.btn-hybrid::after {
+  transform: translate(3px, 3px);
+  z-index: -2;
+  background: var(--thread-blue);
+  opacity: 0.1;
+}
+
+.btn-hybrid:hover::before {
+  transform: translate(-5px, -5px);
+}
+
+.btn-hybrid:hover::after {
+  transform: translate(5px, 5px);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  position: relative;
+  padding: 10px 24px;
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.btn-ghost:hover::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   6. TYPOGRAPHY - Editorial Experimental
+   ========================================================================== */
+
+.text-deconstructed {
+  position: relative;
+  display: inline-block;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.text-deconstructed::before,
+.text-deconstructed::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.15;
+}
+
+.text-deconstructed::before {
+  color: var(--thread-red);
+  transform: translate(-2px, -2px);
+}
+
+.text-deconstructed::after {
+  color: var(--thread-blue);
+  transform: translate(1px, 1px);
+}
+
+/* Glitch Text */
+.text-glitch {
+  position: relative;
+  display: inline-block;
+  animation: glitch-skew 1s infinite linear alternate-reverse;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.text-glitch::before {
+  animation: glitch-1 0.3s infinite;
+  color: var(--glitch-cyan);
+  mix-blend-mode: screen;
+}
+
+.text-glitch::after {
+  animation: glitch-2 0.3s infinite;
+  color: var(--glitch-magenta);
+  mix-blend-mode: screen;
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(1deg); }
+  40% { transform: skew(-1deg); }
+  60% { transform: skew(0.5deg); }
+  80% { transform: skew(-0.5deg); }
+  100% { transform: skew(0deg); }
+}
+
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(40% 0 60% 0); transform: translate(0); }
+  20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
+  40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -2px); }
+  60% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 1px); }
+  80% { clip-path: inset(70% 0 10% 0); transform: translate(1px, -1px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(60% 0 40% 0); transform: translate(0); }
+  20% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+  60% { clip-path: inset(80% 0 10% 0); transform: translate(1px, -2px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+}
+
+/* ==========================================================================
+   7. NAVIGATION - Laboratory Interface
+   ========================================================================== */
+
+.nav-laboratory {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-fixed);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(250, 250, 249, 0.8);
+  border-bottom: 1px solid var(--lab-carbon);
+}
+
+.nav-item {
+  position: relative;
+  padding: 0.5rem 1rem;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--thread-red);
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+.nav-item.active {
+  color: var(--thread-red);
+}
+
+/* ==========================================================================
+   8. ANIMATIONS - Experimental
+   ========================================================================== */
+
+@keyframes float-random {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -30px) rotate(-5deg); }
+  66% { transform: translate(-20px, 20px) rotate(3deg); }
+}
+
+@keyframes morph-shape {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  33% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  66% { border-radius: 40% 60% 60% 40% / 70% 30% 40% 60%; }
+}
+
+@keyframes reveal-text {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) rotateX(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.animate-float {
+  animation: float-random 20s ease-in-out infinite;
+}
+
+.animate-morph {
+  animation: morph-shape 8s ease-in-out infinite;
+}
+
+.animate-reveal {
+  animation: reveal-text 0.8s var(--ease-out-expo) forwards;
+}
+
+.animate-scan {
+  animation: scan-line 8s linear infinite;
+}
+
+/* ==========================================================================
+   9. UTILITIES - Laboratory Specific
+   ========================================================================== */
+
+/* Rotation */
+.rotate-slight { transform: rotate(-0.5deg); }
+.rotate-reverse { transform: rotate(0.5deg); }
+.rotate-tilt { transform: rotate(-1.5deg); }
+.rotate-random { transform: rotate(var(--random-rotation, 0deg)); }
+
+/* Offset */
+.offset-up { transform: translateY(-2px); }
+.offset-down { transform: translateY(2px); }
+.offset-left { transform: translateX(-2px); }
+.offset-right { transform: translateX(2px); }
+
+/* Z-Index */
+.z-behind { z-index: -1; }
+.z-base { z-index: 0; }
+.z-raised { z-index: 10; }
+.z-float { z-index: 100; }
+.z-overlay { z-index: 1000; }
+
+/* Opacity */
+.opacity-5 { opacity: 0.05; }
+.opacity-15 { opacity: 0.15; }
+.opacity-25 { opacity: 0.25; }
+.opacity-35 { opacity: 0.35; }
+.opacity-45 { opacity: 0.45; }
+.opacity-55 { opacity: 0.55; }
+.opacity-65 { opacity: 0.65; }
+.opacity-75 { opacity: 0.75; }
+.opacity-85 { opacity: 0.85; }
+.opacity-95 { opacity: 0.95; }
+
+/* Mix Blend Modes */
+.blend-multiply { mix-blend-mode: multiply; }
+.blend-screen { mix-blend-mode: screen; }
+.blend-overlay { mix-blend-mode: overlay; }
+.blend-difference { mix-blend-mode: difference; }
+.blend-exclusion { mix-blend-mode: exclusion; }
+.blend-hard-light { mix-blend-mode: hard-light; }
+.blend-soft-light { mix-blend-mode: soft-light; }
+
+/* Filters */
+.filter-noise {
+  filter: contrast(120%) brightness(120%);
+}
+
+.filter-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02' /%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Experimental Cursor */
+.cursor-crosshair { cursor: crosshair; }
+.cursor-cell { cursor: cell; }
+.cursor-grab { cursor: grab; }
+.cursor-grabbing { cursor: grabbing; }
+.cursor-zoom-in { cursor: zoom-in; }
+.cursor-zoom-out { cursor: zoom-out; }
+
+/* ==========================================================================
+   10. RESPONSIVE LABORATORY
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .grid-asymmetric {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid-asymmetric > * {
+    grid-column: span 2 !important;
+    transform: none !important;
+  }
+
+  .mobile-simplify {
+    transform: none !important;
+    clip-path: none !important;
+    filter: none !important;
+  }
+
+  .mobile-hide-decoration::before,
+  .mobile-hide-decoration::after {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .ultra-wide-expand {
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .construction-mark::before,
+  .pattern-piece::before,
+  .exposed-seam::before,
+  .exposed-seam::after {
+    display: none !important;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lab-white: #0A0908;
+    --lab-carbon: #FAFAF9;
+    --raw-white: #1C1917;
+    --unbleached: #292524;
+  }
+
+  .material-glass {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .btn-deconstructed,
+  .btn-hybrid {
+    border-width: 2px;
+  }
+
+  .text-deconstructed::before,
+  .text-deconstructed::after {
+    display: none;
+  }
+}

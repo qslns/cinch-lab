@@ -2,18 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import {
-  MagneticButton,
-  RippleEffect,
-  DistortionText,
-  ParallaxContainer,
-  FabricDrag,
-  RevealOnScroll,
-  SplitText,
-  Card3D,
-  NoiseBackground,
-  MorphingShape
-} from '@/components/InteractiveElements'
 
 // ==========================================================================
 // ANALYSIS PAGE - Technical Critique Layout
@@ -159,7 +147,12 @@ export default function AnalysisPage() {
   return (
     <div ref={containerRef} className="min-h-screen bg-raw-white relative">
 
-      <NoiseBackground opacity={0.03} />
+      {/* Noise Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`
+        }} />
+      </div>
 
       {/* Dynamic Background */}
       <motion.div
@@ -188,8 +181,8 @@ export default function AnalysisPage() {
       </motion.div>
 
       {/* ==========================================================================
-         HEADER - Critical Interface
-         ========================================================================== */}
+        HEADER - Critical Interface
+        ========================================================================== */}
 
       <section className="relative pt-32 pb-16 px-8">
         <div className="absolute inset-0 material-paper opacity-20" />
@@ -225,7 +218,7 @@ export default function AnalysisPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <DistortionText text="ANALYSIS" className="tracking-tighter" />
+            ANALYSIS
           </motion.h1>
 
           <motion.p
@@ -250,21 +243,18 @@ export default function AnalysisPage() {
               <span className="text-xs uppercase tracking-widest text-carbon/50">View:</span>
               <div className="flex gap-1">
                 {(['CRITIQUE', 'COMPARISON', 'TIMELINE', 'MATRIX'] as const).map(mode => (
-                  <MagneticButton key={mode} strength={0.2}>
-                    <button
-                      onClick={() => setViewMode(mode)}
-                      className={`
-                        px-4 py-2 text-xs font-mono uppercase transition-all
-                        ${viewMode === mode
-                          ? 'bg-carbon text-raw-white'
-                          : 'bg-transparent text-carbon border border-carbon/20 hover:border-carbon/60'}
-                      `}
-                    >
-                      <RippleEffect color={viewMode === mode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.1)'}>
-                        {mode}
-                      </RippleEffect>
-                    </button>
-                  </MagneticButton>
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={`
+                      px-4 py-2 text-xs font-mono uppercase transition-all
+                      ${viewMode === mode
+                        ? 'bg-carbon text-raw-white'
+                        : 'bg-transparent text-carbon border border-carbon/20 hover:border-carbon/60'}
+                    `}
+                  >
+                    {mode}
+                  </button>
                 ))}
               </div>
             </div>
@@ -290,8 +280,8 @@ export default function AnalysisPage() {
       </section>
 
       {/* ==========================================================================
-         ANALYSES DISPLAY
-         ========================================================================== */}
+        ANALYSES DISPLAY
+        ========================================================================== */}
 
       <section className="px-8 pb-24">
         <div className="max-w-7xl mx-auto">
@@ -300,89 +290,90 @@ export default function AnalysisPage() {
           {viewMode === 'CRITIQUE' && (
             <div className="space-y-8">
               {filteredAnalyses.map((analysis, index) => (
-                <RevealOnScroll key={analysis.id}>
-                  <motion.div
-                    whileHover={{ x: 10 }}
-                    onClick={() => setSelectedAnalysis(analysis)}
-                  >
-                    <Card3D>
-                      <div className="layer-card bg-raw-white p-8 cursor-pointer group">
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-6">
-                          <div>
-                            <div className="text-xs font-mono text-carbon/50 mb-2">
-                              {analysis.season} • ANALYSIS_{analysis.id}
-                            </div>
-                            <h3 className="text-4xl font-black mb-3">
-                              {analysis.brand}
-                            </h3>
-                            <div className="flex items-center gap-3">
-                              <span className="px-2 py-1 bg-carbon text-raw-white text-xs">
-                                {analysis.category}
-                              </span>
-                              <span className={`text-xs font-mono font-bold
-                                ${analysis.verdict === 'GENIUS' ? 'text-thread-white' :
-                                  analysis.verdict === 'PROGRESSIVE' ? 'text-thread-red' :
-                                  analysis.verdict === 'ETERNAL' ? 'text-carbon' :
-                                  'text-carbon/50'}
-                              `}>
-                                {analysis.verdict}
-                              </span>
-                            </div>
-                          </div>
-                          {/* Rating */}
-                          <div className="text-right">
-                            <div className="text-3xl font-black">{analysis.rating}</div>
-                            <div className="text-xs font-mono text-carbon/40">/ 10</div>
-                          </div>
+                <motion.div
+                  key={analysis.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ x: 10 }}
+                  onClick={() => setSelectedAnalysis(analysis)}
+                  className="cursor-pointer"
+                >
+                  <div className="layer-card bg-raw-white p-8 group relative">
+                    {/* Header */}
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <div className="text-xs font-mono text-carbon/50 mb-2">
+                          {analysis.season} • ANALYSIS_{analysis.id}
                         </div>
-
-                        {/* Analysis Text */}
-                        <p className="text-lg leading-relaxed mb-6 italic text-carbon/80">
-                          "{analysis.analysis}"
-                        </p>
-
-                        {/* Philosophy */}
-                        <div className="p-4 bg-carbon/5 border-l-4 border-thread-red mb-6">
-                          <p className="text-sm italic">
-                            {analysis.philosophy}
-                          </p>
+                        <h3 className="text-4xl font-black mb-3">
+                          {analysis.brand}
+                        </h3>
+                        <div className="flex items-center gap-3">
+                          <span className="px-2 py-1 bg-carbon text-raw-white text-xs">
+                            {analysis.category}
+                          </span>
+                          <span className={`text-xs font-mono font-bold
+                            ${analysis.verdict === 'GENIUS' ? 'text-thread-white' :
+                              analysis.verdict === 'PROGRESSIVE' ? 'text-thread-red' :
+                              analysis.verdict === 'ETERNAL' ? 'text-carbon' :
+                              'text-carbon/50'}
+                          `}>
+                            {analysis.verdict}
+                          </span>
                         </div>
-
-                        {/* Strengths & Weaknesses */}
-                        <div className="grid md:grid-cols-2 gap-8">
-                          <div>
-                            <h4 className="text-xs font-mono uppercase tracking-wider text-thread-white mb-3">
-                              STRENGTHS
-                            </h4>
-                            <ul className="space-y-1">
-                              {analysis.strengths.map(strength => (
-                                <li key={strength} className="text-sm text-carbon/70">
-                                  + {strength}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-mono uppercase tracking-wider text-thread-red mb-3">
-                              WEAKNESSES
-                            </h4>
-                            <ul className="space-y-1">
-                              {analysis.weaknesses.map(weakness => (
-                                <li key={weakness} className="text-sm text-carbon/70">
-                                  - {weakness}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-
-                        {/* Hover Effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-thread-red/0 to-thread-red/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                       </div>
-                    </Card3D>
-                  </motion.div>
-                </RevealOnScroll>
+                      {/* Rating */}
+                      <div className="text-right">
+                        <div className="text-3xl font-black">{analysis.rating}</div>
+                        <div className="text-xs font-mono text-carbon/40">/ 10</div>
+                      </div>
+                    </div>
+
+                    {/* Analysis Text */}
+                    <p className="text-lg leading-relaxed mb-6 italic text-carbon/80">
+                      "{analysis.analysis}"
+                    </p>
+
+                    {/* Philosophy */}
+                    <div className="p-4 bg-carbon/5 border-l-4 border-thread-red mb-6">
+                      <p className="text-sm italic">
+                        {analysis.philosophy}
+                      </p>
+                    </div>
+
+                    {/* Strengths & Weaknesses */}
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-thread-white mb-3">
+                          STRENGTHS
+                        </h4>
+                        <ul className="space-y-1">
+                          {analysis.strengths.map(strength => (
+                            <li key={strength} className="text-sm text-carbon/70">
+                              + {strength}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-mono uppercase tracking-wider text-thread-red mb-3">
+                          WEAKNESSES
+                        </h4>
+                        <ul className="space-y-1">
+                          {analysis.weaknesses.map(weakness => (
+                            <li key={weakness} className="text-sm text-carbon/70">
+                              - {weakness}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Hover Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-thread-red/0 to-thread-red/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -397,19 +388,18 @@ export default function AnalysisPage() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {brandAnalyses.map(analysis => (
-                    <MagneticButton key={analysis.id} strength={0.1}>
-                      <button
-                        onClick={() => toggleBrandSelection(analysis.brand)}
-                        className={`
-                          px-4 py-2 text-xs transition-all
-                          ${selectedBrands.includes(analysis.brand)
-                            ? 'bg-carbon text-raw-white'
-                            : 'bg-raw-white border border-carbon/20 hover:border-carbon'}
-                        `}
-                      >
-                        {analysis.brand}
-                      </button>
-                    </MagneticButton>
+                    <button
+                      key={analysis.id}
+                      onClick={() => toggleBrandSelection(analysis.brand)}
+                      className={`
+                        px-4 py-2 text-xs transition-all
+                        ${selectedBrands.includes(analysis.brand)
+                          ? 'bg-carbon text-raw-white'
+                          : 'bg-raw-white border border-carbon/20 hover:border-carbon'}
+                      `}
+                    >
+                      {analysis.brand}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -420,38 +410,36 @@ export default function AnalysisPage() {
                   {selectedBrands.map(brand => {
                     const analysis = brandAnalyses.find(a => a.brand === brand)!
                     return (
-                      <Card3D key={brand}>
-                        <div className="layer-card bg-raw-white p-6 h-full">
-                          <h3 className="text-2xl font-black mb-6">{brand}</h3>
+                      <div key={brand} className="layer-card bg-raw-white p-6 h-full">
+                        <h3 className="text-2xl font-black mb-6">{brand}</h3>
 
-                          <div className="space-y-4">
-                            <div>
-                              <span className="text-xs font-mono text-carbon/50">RATING</span>
-                              <div className="text-3xl font-black">{analysis.rating}</div>
-                            </div>
+                        <div className="space-y-4">
+                          <div>
+                            <span className="text-xs font-mono text-carbon/50">RATING</span>
+                            <div className="text-3xl font-black">{analysis.rating}</div>
+                          </div>
 
-                            <div>
-                              <span className="text-xs font-mono text-carbon/50">CATEGORY</span>
-                              <div className="text-sm font-bold">{analysis.category}</div>
-                            </div>
+                          <div>
+                            <span className="text-xs font-mono text-carbon/50">CATEGORY</span>
+                            <div className="text-sm font-bold">{analysis.category}</div>
+                          </div>
 
-                            <div>
-                              <span className="text-xs font-mono text-carbon/50">VERDICT</span>
-                              <div className="text-sm font-bold">{analysis.verdict}</div>
-                            </div>
+                          <div>
+                            <span className="text-xs font-mono text-carbon/50">VERDICT</span>
+                            <div className="text-sm font-bold">{analysis.verdict}</div>
+                          </div>
 
-                            <div>
-                              <span className="text-xs font-mono text-carbon/50">STRENGTHS</span>
-                              <div className="text-xs mt-1">{analysis.strengths.length} identified</div>
-                            </div>
+                          <div>
+                            <span className="text-xs font-mono text-carbon/50">STRENGTHS</span>
+                            <div className="text-xs mt-1">{analysis.strengths.length} identified</div>
+                          </div>
 
-                            <div>
-                              <span className="text-xs font-mono text-carbon/50">WEAKNESSES</span>
-                              <div className="text-xs mt-1">{analysis.weaknesses.length} identified</div>
-                            </div>
+                          <div>
+                            <span className="text-xs font-mono text-carbon/50">WEAKNESSES</span>
+                            <div className="text-xs mt-1">{analysis.weaknesses.length} identified</div>
                           </div>
                         </div>
-                      </Card3D>
+                      </div>
                     )
                   })}
                 </div>
@@ -487,25 +475,23 @@ export default function AnalysisPage() {
 
                   {/* Content */}
                   <div className="flex-1 ml-12">
-                    <FabricDrag>
-                      <div
-                        className="hybrid-split bg-raw-white p-6 cursor-pointer hover:bg-carbon/5 transition-colors"
-                        onClick={() => setSelectedAnalysis(analysis)}
-                      >
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="text-2xl font-bold">{analysis.brand}</h3>
-                            <p className="text-sm text-carbon/70 mt-1 line-clamp-1">
-                              {analysis.analysis}
-                            </p>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-black">{analysis.rating}</div>
-                            <div className="text-xs font-mono">{analysis.verdict}</div>
-                          </div>
+                    <div
+                      className="hybrid-split bg-raw-white p-6 cursor-pointer hover:bg-carbon/5 transition-colors"
+                      onClick={() => setSelectedAnalysis(analysis)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h3 className="text-2xl font-bold">{analysis.brand}</h3>
+                          <p className="text-sm text-carbon/70 mt-1 line-clamp-1">
+                            {analysis.analysis}
+                          </p>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-black">{analysis.rating}</div>
+                          <div className="text-xs font-mono">{analysis.verdict}</div>
                         </div>
                       </div>
-                    </FabricDrag>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -550,8 +536,8 @@ export default function AnalysisPage() {
       </section>
 
       {/* ==========================================================================
-         DETAIL MODAL
-         ========================================================================== */}
+        DETAIL MODAL
+        ========================================================================== */}
 
       <AnimatePresence>
         {selectedAnalysis && (
@@ -581,7 +567,7 @@ export default function AnalysisPage() {
                           {selectedAnalysis.season} ANALYSIS
                         </div>
                         <h2 className="text-6xl font-black mb-4">
-                          <SplitText text={selectedAnalysis.brand} delay={0.02} />
+                          {selectedAnalysis.brand}
                         </h2>
                         <div className="flex items-center gap-4">
                           <span className="px-4 py-2 bg-carbon text-raw-white">
@@ -592,30 +578,26 @@ export default function AnalysisPage() {
                           </span>
                         </div>
                       </div>
-                      <MagneticButton strength={0.5}>
-                        <button
-                          onClick={() => setSelectedAnalysis(null)}
-                          className="text-4xl hover:text-thread-red transition-colors p-2"
-                        >
-                          ×
-                        </button>
-                      </MagneticButton>
+                      <button
+                        onClick={() => setSelectedAnalysis(null)}
+                        className="text-4xl hover:text-thread-red transition-colors p-2"
+                      >
+                        ×
+                      </button>
                     </div>
 
                     {/* Rating Display */}
-                    <ParallaxContainer offset={20}>
-                      <div className="text-center py-12">
-                        <motion.div
-                          className="text-9xl font-black"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 200 }}
-                        >
-                          {selectedAnalysis.rating}
-                        </motion.div>
-                        <div className="text-sm font-mono text-carbon/50">OUT OF 10</div>
-                      </div>
-                    </ParallaxContainer>
+                    <div className="text-center py-12">
+                      <motion.div
+                        className="text-9xl font-black"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                      >
+                        {selectedAnalysis.rating}
+                      </motion.div>
+                      <div className="text-sm font-mono text-carbon/50">OUT OF 10</div>
+                    </div>
 
                     {/* Full Analysis */}
                     <div className="mb-12">
@@ -699,8 +681,8 @@ export default function AnalysisPage() {
       </AnimatePresence>
 
       {/* ==========================================================================
-         FOOTER STATEMENT
-         ========================================================================== */}
+        FOOTER STATEMENT
+        ========================================================================== */}
 
       <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-carbon text-raw-white">
         <div className="max-w-4xl mx-auto text-center">
@@ -710,7 +692,7 @@ export default function AnalysisPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <DistortionText text="TRUTH OVER COMMERCE" />
+            TRUTH OVER COMMERCE
           </motion.h3>
           <motion.p
             className="text-xl mb-12 text-raw-white/80 font-light"

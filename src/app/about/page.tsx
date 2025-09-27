@@ -3,17 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
-import {
-  MagneticButton,
-  RippleEffect,
-  DistortionText,
-  ParallaxContainer,
-  RevealOnScroll,
-  SplitText,
-  Card3D,
-  NoiseBackground,
-  MorphingShape
-} from '@/components/InteractiveElements'
 
 // ==========================================================================
 // ABOUT PAGE - Philosophical Narrative
@@ -89,7 +78,12 @@ export default function AboutPage() {
   return (
     <div ref={containerRef} className="min-h-screen bg-raw-white relative overflow-hidden">
 
-      <NoiseBackground opacity={0.02} />
+      {/* Noise Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`
+        }} />
+      </div>
 
       {/* Dynamic Background Elements */}
       <motion.div
@@ -110,8 +104,8 @@ export default function AboutPage() {
       </motion.div>
 
       {/* ==========================================================================
-         HERO - Manifesto
-         ========================================================================== */}
+        HERO - Manifesto
+        ========================================================================== */}
 
       <section className="relative min-h-screen flex items-center px-8 py-32">
         {/* Deconstructed Grid */}
@@ -148,7 +142,7 @@ export default function AboutPage() {
                 ease: 'linear'
               }}
             >
-              <MorphingShape size={60 + i * 20} />
+              <div className="w-12 h-12 border-2 border-carbon/20 rotate-45" />
             </motion.div>
           ))}
         </div>
@@ -175,7 +169,14 @@ export default function AboutPage() {
 
             {/* Main Statement */}
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-12 leading-none">
-              <DistortionText text="WE ARE NOT" className="block" />
+              <motion.span
+                className="block"
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                WE ARE NOT
+              </motion.span>
               <motion.span
                 className="text-thread-red block"
                 initial={{ scaleX: 0 }}
@@ -235,8 +236,8 @@ export default function AboutPage() {
       </section>
 
       {/* ==========================================================================
-         CORE PHILOSOPHIES - Interactive Cards
-         ========================================================================== */}
+        CORE PHILOSOPHIES - Interactive Cards
+        ========================================================================== */}
 
       <section className="py-24 px-8 relative">
         <div className="absolute inset-0 material-paper opacity-20" />
@@ -249,123 +250,122 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <SplitText text="CORE PHILOSOPHIES" delay={0.03} />
+            CORE PHILOSOPHIES
           </motion.h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {philosophies.map((philosophy, index) => (
-              <RevealOnScroll key={philosophy.id}>
-                <motion.div
-                  whileHover={{ scale: 1.05, rotate: index % 2 === 0 ? 2 : -2 }}
-                  onClick={() => setActivePhilosophy(index)}
-                  className={`cursor-pointer ${activePhilosophy === index ? 'z-10' : ''}`}
-                >
-                  <Card3D>
-                    <div className={`
-                      layer-card p-6 h-full transition-all
-                      ${activePhilosophy === index
-                        ? 'bg-carbon text-raw-white'
-                        : 'bg-raw-white text-carbon'}
-                    `}>
-                      {/* Icon */}
-                      <div className="text-4xl font-black mb-4 opacity-20">
-                        {philosophy.icon}
-                      </div>
+              <motion.div
+                key={philosophy.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, rotate: index % 2 === 0 ? 2 : -2 }}
+                onClick={() => setActivePhilosophy(index)}
+                className={`cursor-pointer ${activePhilosophy === index ? 'z-10' : ''}`}
+              >
+                <div className={`
+                  layer-card p-6 h-full transition-all transform-gpu
+                  ${activePhilosophy === index
+                    ? 'bg-carbon text-raw-white shadow-2xl'
+                    : 'bg-raw-white text-carbon shadow-lg'}
+                `}>
+                  {/* Icon */}
+                  <div className="text-4xl font-black mb-4 opacity-20">
+                    {philosophy.icon}
+                  </div>
 
-                      {/* Title */}
-                      <h3 className="text-xl font-bold mb-3">
-                        {philosophy.title}
-                      </h3>
+                  {/* Title */}
+                  <h3 className="text-xl font-bold mb-3">
+                    {philosophy.title}
+                  </h3>
 
-                      {/* Description */}
-                      <p className={`
-                        text-sm leading-relaxed
-                        ${activePhilosophy === index ? 'text-raw-white/80' : 'text-carbon/70'}
-                      `}>
-                        {philosophy.description}
-                      </p>
+                  {/* Description */}
+                  <p className={`
+                    text-sm leading-relaxed
+                    ${activePhilosophy === index ? 'text-raw-white/80' : 'text-carbon/70'}
+                  `}>
+                    {philosophy.description}
+                  </p>
 
-                      {/* Index */}
-                      <div className="mt-6 text-xs font-mono opacity-50">
-                        0{index + 1}/04
-                      </div>
-                    </div>
-                  </Card3D>
-                </motion.div>
-              </RevealOnScroll>
+                  {/* Index */}
+                  <div className="mt-6 text-xs font-mono opacity-50">
+                    0{index + 1}/04
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ==========================================================================
-         PROCESS VISUALIZATION
-         ========================================================================== */}
+        PROCESS VISUALIZATION
+        ========================================================================== */}
 
-      <ParallaxContainer offset={50}>
-        <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-ivory">
-          <div className="max-w-6xl mx-auto">
-            <motion.h2
-              className="text-4xl font-black mb-12"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              <DistortionText text="OUR PROCESS" />
-            </motion.h2>
+      <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-ivory">
+        <div className="max-w-6xl mx-auto">
+          <motion.h2
+            className="text-4xl font-black mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            OUR PROCESS
+          </motion.h2>
 
-            <div className="relative">
-              {/* Process Flow */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-thread-red/20 -translate-x-1/2" />
+          <div className="relative">
+            {/* Process Flow */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-thread-red/20 -translate-x-1/2" />
 
-              {[
-                { phase: 'OBSERVE', description: 'Study existing forms and their limitations' },
-                { phase: 'DECONSTRUCT', description: 'Take apart systematically, understand the architecture' },
-                { phase: 'EXPERIMENT', description: 'Test new combinations, embrace failure as data' },
-                { phase: 'RECONSTRUCT', description: 'Build new forms from fragments of understanding' },
-                { phase: 'DOCUMENT', description: 'Archive the process, not just the product' }
-              ].map((step, index) => (
-                <motion.div
-                  key={step.phase}
-                  className={`flex items-center gap-8 mb-12 ${index % 2 === 0 ? '' : 'flex-row-reverse'}`}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {/* Content */}
-                  <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                    <div className="hybrid-split bg-raw-white p-6">
-                      <h3 className="text-2xl font-bold mb-2">{step.phase}</h3>
-                      <p className="text-sm text-carbon/70">{step.description}</p>
-                    </div>
+            {[
+              { phase: 'OBSERVE', description: 'Study existing forms and their limitations' },
+              { phase: 'DECONSTRUCT', description: 'Take apart systematically, understand the architecture' },
+              { phase: 'EXPERIMENT', description: 'Test new combinations, embrace failure as data' },
+              { phase: 'RECONSTRUCT', description: 'Build new forms from fragments of understanding' },
+              { phase: 'DOCUMENT', description: 'Archive the process, not just the product' }
+            ].map((step, index) => (
+              <motion.div
+                key={step.phase}
+                className={`flex items-center gap-8 mb-12 ${index % 2 === 0 ? '' : 'flex-row-reverse'}`}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                {/* Content */}
+                <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
+                  <div className="hybrid-split bg-raw-white p-6">
+                    <h3 className="text-2xl font-bold mb-2">{step.phase}</h3>
+                    <p className="text-sm text-carbon/70">{step.description}</p>
                   </div>
+                </div>
 
-                  {/* Node */}
-                  <motion.div
-                    className="w-12 h-12 bg-carbon rounded-full flex items-center justify-center text-raw-white font-bold relative z-10"
-                    whileHover={{ scale: 1.2, rotate: 180 }}
-                  >
-                    {index + 1}
-                  </motion.div>
-
-                  {/* Spacer */}
-                  <div className="flex-1" />
+                {/* Node */}
+                <motion.div
+                  className="w-12 h-12 bg-carbon rounded-full flex items-center justify-center text-raw-white font-bold relative z-10"
+                  whileHover={{ scale: 1.2, rotate: 180 }}
+                >
+                  {index + 1}
                 </motion.div>
-              ))}
-            </div>
+
+                {/* Spacer */}
+                <div className="flex-1" />
+              </motion.div>
+            ))}
           </div>
-        </section>
-      </ParallaxContainer>
+        </div>
+      </section>
 
       {/* ==========================================================================
-         INSPIRATIONS - Margiela & Sacai
-         ========================================================================== */}
+        INSPIRATIONS - Margiela & Sacai
+        ========================================================================== */}
 
       <section className="py-24 px-8 bg-carbon text-raw-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-black mb-16 text-center">
-            <SplitText text="OUR INSPIRATIONS" delay={0.02} />
+            OUR INSPIRATIONS
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12">
@@ -444,8 +444,8 @@ export default function AboutPage() {
       </section>
 
       {/* ==========================================================================
-         LABORATORY STATS
-         ========================================================================== */}
+        LABORATORY STATS
+        ========================================================================== */}
 
       <section className="py-24 px-8 relative">
         <div className="absolute inset-0 material-concrete opacity-10" />
@@ -467,7 +467,7 @@ export default function AboutPage() {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="text-5xl font-black mb-2">
-                  <DistortionText text={stat.value} />
+                  {stat.value}
                 </div>
                 <div className="text-xs font-mono text-carbon/60">
                   {stat.label}
@@ -482,8 +482,8 @@ export default function AboutPage() {
       </section>
 
       {/* ==========================================================================
-         FINAL STATEMENT
-         ========================================================================== */}
+        FINAL STATEMENT
+        ========================================================================== */}
 
       <section className="py-32 px-8 bg-gradient-to-b from-raw-white to-carbon text-raw-white">
         <div className="max-w-4xl mx-auto text-center">
@@ -493,8 +493,8 @@ export default function AboutPage() {
             viewport={{ once: true }}
             style={{ scale: scaleProgress }}
           >
-            <h2 className="text-6xl font-black mb-8">
-              <DistortionText text="NO SALES" className="text-thread-red" />
+            <h2 className="text-6xl font-black mb-8 text-thread-red">
+              NO SALES
             </h2>
             <p className="text-2xl mb-12 font-light">
               This is not commerce.
@@ -507,17 +507,15 @@ export default function AboutPage() {
               Our work is documentation, not product. Our goal is understanding, not profit.
             </p>
 
-            <MagneticButton strength={0.4}>
-              <Link href="/lab">
-                <motion.button
-                  className="px-8 py-4 bg-raw-white text-carbon hover:bg-thread-red hover:text-raw-white transition-colors text-lg"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Enter the Laboratory
-                </motion.button>
-              </Link>
-            </MagneticButton>
+            <Link href="/lab">
+              <motion.button
+                className="px-8 py-4 bg-raw-white text-carbon hover:bg-thread-red hover:text-raw-white transition-colors text-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Enter the Laboratory
+              </motion.button>
+            </Link>
           </motion.div>
         </div>
       </section>

@@ -1,74 +1,78 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import { useEffect, useRef, useState, useMemo } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, useInView } from 'framer-motion'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import {
-  MagneticButton,
-  RippleEffect,
-  DistortionText,
-  ParallaxContainer,
-  FabricDrag,
-  RevealOnScroll,
-  SplitText,
-  NoiseBackground,
-  Card3D,
-  CursorFollower
-} from '@/components/InteractiveElements'
-
-// Dynamic imports for heavy components
-const MorphingShape = dynamic(() => import('@/components/InteractiveElements').then(mod => mod.MorphingShape), { ssr: false })
+import Image from 'next/image'
 
 // ==========================================================================
-// CINCH LAB HOME - Complete Margiela × Sacai Implementation
-// Deconstructive, Layered, Interactive, Experimental
+// CINCH LAB HOME - Margiela × Sacai Digital Laboratory
+// Deconstructive Design, Hybrid Layering, Anti-Design Principles
 // ==========================================================================
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
+  const labRef = useRef<HTMLDivElement>(null)
   const { scrollY, scrollYProgress } = useScroll()
 
-  // Mouse position for interactive effects
+  // Mouse position tracking for interactive effects
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 })
-  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 })
+  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 20 })
+  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 20 })
 
-  // State
+  // State management
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isLoading, setIsLoading] = useState(true)
-  const [hoveredSection, setHoveredSection] = useState<string | null>(null)
   const [activeExperiment, setActiveExperiment] = useState(0)
+  const [labStatus, setLabStatus] = useState('OPERATIONAL')
+  const [glitchActive, setGlitchActive] = useState(false)
 
-  // Experiments data
+  // Laboratory experiments data
   const experiments = [
-    { id: 'DECONSTRUCTION', name: 'Pattern Deconstruction', status: 'active' },
-    { id: 'LAYERING', name: 'Hybrid Layering', status: 'processing' },
-    { id: 'MATERIAL', name: 'Material Research', status: 'complete' },
-    { id: 'VOLUME', name: 'Volume Studies', status: 'active' }
+    { id: '001', name: 'PATTERN DECONSTRUCTION', status: 'IN_PROGRESS', color: 'thread-red' },
+    { id: '002', name: 'HYBRID LAYERING', status: 'TESTING', color: 'thread-blue' },
+    { id: '003', name: 'MATERIAL SYNTHESIS', status: 'COMPLETE', color: 'safety-orange' },
+    { id: '004', name: 'VOLUME DISTORTION', status: 'FAILED', color: 'hazmat-green' },
+    { id: '005', name: 'SEAM EXPOSURE', status: 'IN_PROGRESS', color: 'warning-yellow' }
+  ]
+
+  // Research areas for navigation
+  const researchAreas = [
+    { name: 'LAB', desc: 'Technical experiments & process', path: '/lab', span: 'col-span-5 row-span-2' },
+    { name: 'COLLECTIONS', desc: 'Seasonal archives', path: '/collections', span: 'col-span-3 row-span-1' },
+    { name: 'ARCHIVE', desc: 'Failed experiments & iterations', path: '/archive', span: 'col-span-4 row-span-1' },
+    { name: 'ANALYSIS', desc: 'Fashion critique', path: '/analysis', span: 'col-span-2 row-span-1' },
+    { name: 'ABOUT', desc: 'Philosophy & manifesto', path: '/about', span: 'col-span-3 row-span-1' },
+    { name: 'CONTACT', desc: 'Collaboration only', path: '/contact', span: 'col-span-3 row-span-1' }
   ]
 
   // Parallax transforms
-  const heroY = useTransform(scrollY, [0, 1000], [0, -500])
-  const heroScale = useTransform(scrollY, [0, 500], [1, 0.8])
-  const heroRotate = useTransform(scrollY, [0, 1000], [0, -5])
-  const textY = useTransform(scrollY, [0, 500], [0, 200])
-  const opacity = useTransform(scrollY, [0, 300], [1, 0])
+  const heroY = useTransform(scrollY, [0, 1000], [0, -300])
+  const heroScale = useTransform(scrollY, [0, 500], [1, 0.85])
+  const heroRotate = useTransform(scrollY, [0, 1000], [0, -2])
+  const textY = useTransform(scrollY, [0, 500], [0, 150])
+  const opacity = useTransform(scrollY, [0, 400], [1, 0])
 
-  // Initialize
+  // Initialize and lifecycle
   useEffect(() => {
     // Loading animation
-    setTimeout(() => setIsLoading(false), 2000)
+    const loadTimer = setTimeout(() => setIsLoading(false), 1800)
 
-    // Time update
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    // Clock update
+    const clockTimer = setInterval(() => setCurrentTime(new Date()), 1000)
 
     // Experiment rotation
     const experimentTimer = setInterval(() => {
       setActiveExperiment(prev => (prev + 1) % experiments.length)
-    }, 3000)
+    }, 4000)
+
+    // Random glitch effect
+    const glitchTimer = setInterval(() => {
+      setGlitchActive(true)
+      setTimeout(() => setGlitchActive(false), 200)
+    }, 8000)
 
     // Mouse tracking
     const handleMouseMove = (e: MouseEvent) => {
@@ -76,275 +80,342 @@ export default function HomePage() {
       mouseY.set(e.clientY)
     }
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('mousemove', handleMouseMove)
-    }
+    window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
-      clearInterval(timer)
+      clearTimeout(loadTimer)
+      clearInterval(clockTimer)
       clearInterval(experimentTimer)
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('mousemove', handleMouseMove)
-      }
+      clearInterval(glitchTimer)
+      window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [mouseX, mouseY, experiments.length])
 
-  // Loading Screen
+  // Loading Screen with Deconstructed Animation
   if (isLoading) {
     return (
-      <motion.div
-        className="fixed inset-0 z-50 bg-raw-white flex items-center justify-center"
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="text-center">
-          <motion.div
-            className="inline-block"
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          >
-            <div className="w-32 h-32 border-4 border-thread-black relative">
-              <div className="absolute inset-2 border-2 border-thread-red animate-spin-slow" />
-              <div className="absolute inset-4 border border-thread-blue animate-spin-slow reverse" />
-            </div>
-          </motion.div>
-          <motion.p
-            className="mt-8 text-xs font-mono uppercase tracking-widest"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Deconstructing Fashion
-          </motion.p>
-        </div>
-      </motion.div>
+      <AnimatePresence>
+        <motion.div
+          className="fixed inset-0 z-50 bg-lab-white flex items-center justify-center"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="relative">
+            {/* Deconstructed Loading Shape */}
+            <motion.div className="relative w-48 h-48">
+              <motion.div
+                className="absolute inset-0 border-2 border-thread-black"
+                animate={{
+                  rotate: [0, 90, 180, 270, 360],
+                  scale: [1, 1.1, 1, 0.9, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+              <motion.div
+                className="absolute inset-4 border border-thread-red"
+                animate={{
+                  rotate: [360, 270, 180, 90, 0],
+                  scale: [1, 0.9, 1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+              <motion.div
+                className="absolute inset-8 border border-thread-blue"
+                animate={{
+                  rotate: [0, -90, -180, -270, -360],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+            </motion.div>
+
+            {/* Loading Text */}
+            <motion.p
+              className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-xs font-mono uppercase tracking-widest whitespace-nowrap"
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              INITIALIZING LABORATORY
+            </motion.p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     )
   }
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
-      {/* Custom Cursor */}
-      <CursorFollower />
+    <div ref={containerRef} className="relative min-h-screen bg-lab-white overflow-hidden">
+      {/* Background Texture Layers */}
+      <div className="fixed inset-0 texture-graph opacity-5 pointer-events-none" />
+      <div className="fixed inset-0 texture-scan pointer-events-none" />
 
-      {/* Noise Texture Overlay */}
-      <NoiseBackground opacity={0.02} />
-
-      {/* Background Layers */}
-      <div className="fixed inset-0 pointer-events-none">
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: `radial-gradient(circle at ${smoothMouseX}px ${smoothMouseY}px, rgba(255,107,53,0.05) 0%, transparent 50%)`
-          }}
-        />
-      </div>
+      {/* Interactive Background Gradient */}
+      <motion.div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle 800px at ${smoothMouseX}px ${smoothMouseY}px,
+            rgba(220, 20, 60, 0.02) 0%,
+            transparent 40%)`,
+        }}
+      />
 
       {/* ==========================================================================
-         HERO SECTION - Fully Interactive & Deconstructed
+         HEADER - Laboratory Status Bar
          ========================================================================== */}
 
-      <section ref={heroRef} className="relative min-h-screen flex items-center">
-        {/* Animated Background Elements */}
+      <header className="fixed top-0 left-0 right-0 z-50 nav-laboratory">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Lab Identity */}
+            <div className="flex items-center gap-8">
+              <Link href="/">
+                <motion.div
+                  className="flex items-center gap-3"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="w-8 h-8 border-2 border-lab-carbon rotate-45">
+                    <div className="w-full h-full border border-thread-red rotate-45 scale-75" />
+                  </div>
+                  <span className="text-xs font-mono font-bold tracking-widest">
+                    CINCH LAB
+                  </span>
+                </motion.div>
+              </Link>
+
+              {/* Status Indicators */}
+              <div className="hidden md:flex items-center gap-4 text-xs font-mono">
+                <span className={`inline-flex items-center gap-2 ${glitchActive ? 'text-glitch' : ''}`}>
+                  <span className="w-2 h-2 bg-hazmat-green rounded-full animate-pulse" />
+                  {labStatus}
+                </span>
+                <span className="opacity-50">|</span>
+                <span className="tabular-nums">
+                  {currentTime.toLocaleTimeString('en-US', { hour12: false })}
+                </span>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              {['LAB', 'COLLECTIONS', 'ARCHIVE', 'ABOUT'].map((item) => (
+                <Link key={item} href={`/${item.toLowerCase()}`}>
+                  <motion.span
+                    className="nav-item text-xs font-medium tracking-wider"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item}
+                  </motion.span>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Menu Toggle */}
+            <button className="md:hidden p-2">
+              <div className="w-5 h-4 flex flex-col justify-between">
+                <span className="block w-full h-[1px] bg-lab-carbon" />
+                <span className="block w-3/4 h-[1px] bg-lab-carbon" />
+                <span className="block w-1/2 h-[1px] bg-lab-carbon" />
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ==========================================================================
+         HERO SECTION - Deconstructed Typography & Experiments
+         ========================================================================== */}
+
+      <section ref={heroRef} className="relative min-h-screen flex items-center pt-20">
+        {/* Background Shapes - Floating Elements */}
         <motion.div
           className="absolute inset-0"
           style={{ y: heroY, scale: heroScale, rotate: heroRotate }}
         >
-          {/* Floating Shapes */}
-          {[...Array(5)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute"
               style={{
-                top: `${20 + i * 15}%`,
-                left: `${10 + i * 20}%`,
+                top: `${20 + i * 12}%`,
+                left: `${10 + i * 15}%`,
               }}
               animate={{
-                y: [0, -30, 0],
-                rotate: [0, 180, 360],
+                y: [0, -20, 0],
+                rotate: [0, 90, 180, 270, 360],
+                scale: [1, 1.1, 1],
               }}
               transition={{
-                duration: 10 + i * 2,
+                duration: 20 + i * 2,
                 repeat: Infinity,
                 ease: "linear"
               }}
             >
-              <MorphingShape size={150} />
+              <div className={`w-24 h-24 border border-lab-carbon opacity-10 rotate-${i * 15} animate-morph`} />
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Main Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-8">
-          {/* Status Bar */}
+        {/* Main Content Container */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="mb-12"
+            style={{ y: textY, opacity }}
           >
-            <div className="flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-6">
-                <span className="text-thread-red">●</span>
-                <DistortionText text="LABORATORY ACTIVE" />
-                <span className="opacity-50">
-                  {currentTime.toLocaleTimeString('en-US', { hour12: false })}
-                </span>
-              </div>
-              <div className="flex items-center gap-6">
-                <span className="opacity-50">EXPERIMENT:</span>
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={activeExperiment}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="text-thread-blue"
-                  >
-                    {experiments[activeExperiment].name}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Hero Typography - Deconstructed Layout */}
-          <div className="grid grid-cols-12 gap-4">
-            <motion.div
-              className="col-span-12 lg:col-span-8"
-              style={{ y: textY, opacity }}
-            >
-              {/* Main Slogan - Split and Layered */}
-              <h1 className="relative">
+            {/* Experiment Status */}
+            <div className="mb-8">
+              <AnimatePresence mode="wait">
                 <motion.div
-                  initial={{ x: -100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="relative inline-block"
+                  key={activeExperiment}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="flex items-center gap-4 text-xs font-mono"
                 >
-                  <FabricDrag>
-                    <span className="text-[8rem] font-black leading-none tracking-tighter">
-                      CINCH
-                    </span>
-                  </FabricDrag>
-                  <div className="absolute -top-2 -left-2 text-[8rem] font-black text-thread-red opacity-30 blur-[2px]">
-                    CINCH
-                  </div>
+                  <span className="text-thread-red">EXP_{experiments[activeExperiment].id}</span>
+                  <span className="opacity-50">|</span>
+                  <span className="tracking-wider">{experiments[activeExperiment].name}</span>
+                  <span className={`px-2 py-1 bg-lab-carbon/10 text-${experiments[activeExperiment].color}`}>
+                    {experiments[activeExperiment].status}
+                  </span>
                 </motion.div>
+              </AnimatePresence>
+            </div>
 
-                <motion.div
-                  initial={{ x: 100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="relative block ml-[15%] -mt-8"
-                >
-                  <MagneticButton strength={0.2}>
-                    <span className="text-[7rem] font-bold leading-none hybrid-split">
+            {/* Main Typography - Deconstructed Layout */}
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 lg:col-span-9">
+                <h1 className="relative">
+                  {/* CINCH */}
+                  <motion.span
+                    className="block text-[clamp(4rem,12vw,10rem)] font-black leading-[0.8] tracking-tighter"
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <span className="inline-block relative">
+                      CINCH
+                      <span className="absolute -top-1 -left-1 text-thread-red opacity-20 blur-[1px]">
+                        CINCH
+                      </span>
+                    </span>
+                  </motion.span>
+
+                  {/* RELEASE */}
+                  <motion.span
+                    className="block text-[clamp(3.5rem,10vw,8rem)] font-bold leading-[0.8] -mt-4 ml-[10%]"
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <span className="inline-block relative hybrid-split" data-text="RELEASE">
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-thread-blue to-safety-orange">
                         RELEASE
                       </span>
                     </span>
-                  </MagneticButton>
-                </motion.div>
+                  </motion.span>
 
+                  {/* REPEAT */}
+                  <motion.span
+                    className="block text-[clamp(3rem,8vw,6rem)] font-light leading-[0.8] -mt-2"
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                  >
+                    <span className="text-lab-carbon/60">REPEAT</span>
+                  </motion.span>
+                </h1>
+
+                {/* Description */}
                 <motion.div
-                  initial={{ x: -100, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="relative block -mt-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="mt-8 max-w-2xl"
                 >
-                  <span className="text-[6rem] font-light leading-none text-oxidized-metal">
-                    <SplitText text="REPEAT" delay={0.05} />
-                  </span>
+                  <p className="text-lg font-light leading-relaxed mb-4">
+                    Experimental fashion laboratory exploring the space between
+                    <span className="font-medium text-thread-red"> destruction </span>
+                    and
+                    <span className="font-medium text-thread-blue"> reconstruction</span>.
+                  </p>
+                  <p className="text-sm opacity-60 font-mono">
+                    NO SALES • NO COMPROMISE • ONLY PROCESS
+                  </p>
                 </motion.div>
-              </h1>
 
-              {/* Description - Editorial Style */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="mt-12 max-w-2xl"
-              >
-                <p className="text-xl font-light leading-relaxed mb-4">
-                  Experimental fashion laboratory where
-                  <span className="font-medium text-thread-red"> destruction </span>
-                  meets
-                  <span className="font-medium text-thread-blue"> creation</span>.
-                  No commerce. No compromise. Only process.
-                </p>
-                <p className="text-sm opacity-60 font-mono">
-                  実験的ファッション研究所 × 해체주의 실험실
-                </p>
-              </motion.div>
-
-              {/* Interactive CTAs */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 1 }}
-                className="mt-12 flex flex-wrap gap-4"
-              >
-                <RippleEffect color="rgba(220, 20, 60, 0.3)">
-                  <button className="btn-deconstructed">
-                    <span className="text-xs font-mono uppercase tracking-widest">
-                      Enter Laboratory
-                    </span>
-                  </button>
-                </RippleEffect>
-
-                <MagneticButton>
-                  <Link href="/archive">
-                    <button className="btn-hybrid">
-                      <span className="text-xs font-mono uppercase tracking-widest">
-                        View Archive
-                      </span>
+                {/* CTA Buttons */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                  className="mt-12 flex flex-wrap gap-4"
+                >
+                  <Link href="/lab">
+                    <button className="btn-deconstructed group">
+                      <span className="relative z-10">ENTER LABORATORY</span>
                     </button>
                   </Link>
-                </MagneticButton>
-              </motion.div>
-            </motion.div>
 
-            {/* Side Panel - Floating Information */}
-            <motion.div
-              className="col-span-12 lg:col-span-4"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <Card3D>
-                <div className="layer-card p-8 bg-raw-white/90 backdrop-blur-sm border border-thread-black/20 exposed-seam">
-                  <h3 className="text-xs font-mono uppercase tracking-widest mb-6 text-thread-red">
-                    Current Research
+                  <Link href="/archive">
+                    <button className="btn-hybrid">
+                      <span>VIEW ARCHIVE</span>
+                    </button>
+                  </Link>
+                </motion.div>
+              </div>
+
+              {/* Side Info Panel */}
+              <div className="col-span-12 lg:col-span-3 mt-12 lg:mt-0">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="layer-card p-6 exposed-seam"
+                >
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-4 text-thread-red">
+                    CURRENT RESEARCH
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {[
-                      'Deconstructive pattern making through exposed seams',
-                      'Hybrid garment splicing: MA-1 meets tailoring',
-                      'Zero-waste through pattern tessellation',
-                      'Biomaterial cultivation: mycelium leather'
-                    ].map((text, i) => (
-                      <RevealOnScroll key={i}>
-                        <div className="flex items-start gap-3 group cursor-pointer">
-                          <span className="text-xs font-mono text-thread-blue">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          <p className="text-sm leading-relaxed group-hover:translate-x-1 transition-transform">
-                            {text}
-                          </p>
-                        </div>
-                      </RevealOnScroll>
+                      'Exposed seam methodology',
+                      'Hybrid garment splicing',
+                      'Zero-waste tessellation',
+                      'Biomaterial synthesis'
+                    ].map((item, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1 + i * 0.1 }}
+                        className="flex items-start gap-3 group cursor-pointer"
+                      >
+                        <span className="text-xs font-mono text-thread-blue">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <p className="text-sm leading-relaxed group-hover:translate-x-1 transition-transform">
+                          {item}
+                        </p>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
-              </Card3D>
-            </motion.div>
-          </div>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Scroll Indicator */}
@@ -354,110 +425,59 @@ export default function HomePage() {
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-thread-black to-transparent" />
-            <span className="text-xs font-mono uppercase tracking-widest opacity-50">
-              Scroll to Explore
+            <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-lab-carbon/50 to-transparent" />
+            <span className="text-xs font-mono uppercase tracking-widest opacity-40">
+              SCROLL
             </span>
           </div>
         </motion.div>
       </section>
 
       {/* ==========================================================================
-         DEPARTMENTS SECTION - Interactive Grid with Hover Effects
+         RESEARCH AREAS - Asymmetric Grid
          ========================================================================== */}
 
-      <section className="py-32 px-8 bg-gradient-to-b from-raw-white to-unbleached">
+      <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <RevealOnScroll>
-            <div className="mb-16">
-              <h2 className="text-5xl font-black mb-4">
-                <DistortionText text="Laboratory" className="mr-2" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-thread-red to-thread-blue">
-                  Departments
-                </span>
-              </h2>
-              <p className="text-lg font-light opacity-70">
-                Autonomous research units exploring fashion's experimental frontiers
-              </p>
-            </div>
-          </RevealOnScroll>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <h2 className="text-3xl font-bold mb-2">RESEARCH DEPARTMENTS</h2>
+            <p className="text-sm opacity-60 font-mono">AUTONOMOUS UNITS • EXPERIMENTAL PROCESSES</p>
+          </motion.div>
 
           {/* Asymmetric Department Grid */}
           <div className="grid-asymmetric">
-            {[
-              {
-                name: 'LAB',
-                desc: 'Pattern experiments & material research',
-                color: 'from-thread-black to-oxidized-metal',
-                size: 'col-span-5 row-span-2',
-                link: '/lab'
-              },
-              {
-                name: 'COLLECTIONS',
-                desc: 'Seasonal documentation',
-                color: 'from-thread-blue to-denim-blue',
-                size: 'col-span-3 row-span-1',
-                link: '/collections'
-              },
-              {
-                name: 'ARCHIVE',
-                desc: 'Process & failure documentation',
-                color: 'from-aged-leather to-thread-red',
-                size: 'col-span-4 row-span-1',
-                link: '/archive'
-              },
-              {
-                name: 'ANALYSIS',
-                desc: 'Technical critique',
-                color: 'from-hazmat-green to-centrifuge-blue',
-                size: 'col-span-2 row-span-1',
-                link: '/analysis'
-              },
-              {
-                name: 'ABOUT',
-                desc: 'Philosophy & manifesto',
-                color: 'from-warning-yellow to-safety-orange',
-                size: 'col-span-3 row-span-1',
-                link: '/about'
-              },
-              {
-                name: 'CONTACT',
-                desc: 'Collaboration inquiries',
-                color: 'from-glitch-magenta to-glitch-cyan',
-                size: 'col-span-3 row-span-1',
-                link: '/contact'
-              }
-            ].map((dept, i) => (
+            {researchAreas.map((area, i) => (
               <motion.div
-                key={dept.name}
-                className={`relative group cursor-pointer ${dept.size}`}
+                key={area.name}
+                className={`relative group ${area.span}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                onMouseEnter={() => setHoveredSection(dept.name)}
-                onMouseLeave={() => setHoveredSection(null)}
+                transition={{ delay: i * 0.05 }}
               >
-                <Link href={dept.link}>
-                  <div className="h-full min-h-[200px] relative overflow-hidden">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${dept.color} opacity-10 group-hover:opacity-20 transition-opacity duration-500`} />
+                <Link href={area.path}>
+                  <div className="h-full min-h-[160px] relative overflow-hidden pattern-piece cursor-pointer">
+                    <div className="absolute inset-0 bg-gradient-to-br from-lab-carbon/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    <div className="relative h-full p-8 border border-thread-black/20 group-hover:border-thread-black/40 transition-all duration-300">
-                      <div className="absolute inset-0 exposed-seam opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="relative h-full p-6 border border-lab-carbon/20 group-hover:border-lab-carbon/40 transition-all duration-300">
+                      <div className="construction-mark" data-mark={`DEPT_00${i + 1}`} />
 
-                      <h3 className="text-3xl font-bold mb-2">
-                        {dept.name}
+                      <h3 className="text-2xl font-bold mb-2 group-hover:text-thread-red transition-colors">
+                        {area.name}
                       </h3>
                       <p className="text-sm opacity-60">
-                        {dept.desc}
+                        {area.desc}
                       </p>
 
-                      {/* Hover indicator */}
+                      {/* Hover Arrow */}
                       <motion.div
-                        className="absolute bottom-4 right-4 text-4xl font-black opacity-0 group-hover:opacity-30"
-                        animate={hoveredSection === dept.name ? {
-                          x: [0, 10, 0],
-                        } : {}}
+                        className="absolute bottom-4 right-4 text-2xl font-black opacity-0 group-hover:opacity-30"
+                        animate={{ x: [0, 5, 0] }}
                         transition={{ duration: 1, repeat: Infinity }}
                       >
                         →
@@ -472,120 +492,114 @@ export default function HomePage() {
       </section>
 
       {/* ==========================================================================
-         PHILOSOPHY SECTION - Deconstructed Text Layout
+         PHILOSOPHY SECTION - Deconstructed Text
          ========================================================================== */}
 
-      <ParallaxContainer offset={100}>
-        <section className="py-32 px-8 bg-thread-black text-raw-white relative overflow-hidden">
-          {/* Texture overlay */}
-          <div className="absolute inset-0 texture-paper opacity-10" />
+      <section ref={labRef} className="py-24 px-6 bg-lab-carbon text-lab-white relative overflow-hidden">
+        <div className="absolute inset-0 texture-scan opacity-10" />
 
-          <div className="max-w-6xl mx-auto relative z-10">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              {/* Header */}
-              <div className="mb-16">
-                <span className="text-xs font-mono text-thread-red tracking-widest">
-                  MANIFESTO / 宣言 / 선언문
-                </span>
-                <h2 className="text-6xl font-black mt-4">
-                  Fashion Without
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-glitch-cyan to-glitch-magenta">
-                    Commerce
-                  </span>
-                </h2>
-              </div>
-
-              {/* Philosophy Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="space-y-8">
-                  <p className="text-2xl font-light leading-relaxed">
-                    We operate at the intersection of
-                    <span className="font-semibold text-glitch-cyan"> destruction </span>
-                    and
-                    <span className="font-semibold text-glitch-magenta"> creation</span>,
-                    where garments exist in perpetual transformation.
-                  </p>
-                  <div className="stitching py-4">
-                    <p className="text-sm opacity-70 font-mono">
-                      Inspired by Margiela's deconstruction and Sacai's hybrid philosophy
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {[
-                    { label: 'PROCESS', text: 'Every stitch is a decision' },
-                    { label: 'PURPOSE', text: 'No sales. Only experimentation' },
-                    { label: 'PHILOSOPHY', text: 'The space between what is and what could be' }
-                  ].map((item, i) => (
-                    <RevealOnScroll key={i}>
-                      <div className="border-l-2 border-glitch-cyan/30 pl-6 raw-edge">
-                        <p className="text-xs font-mono uppercase tracking-wider mb-2 text-glitch-cyan">
-                          {item.label}
-                        </p>
-                        <p className="opacity-80">{item.text}</p>
-                      </div>
-                    </RevealOnScroll>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      </ParallaxContainer>
-
-      {/* ==========================================================================
-         RECENT EXPERIMENTS - Masonry Gallery with Interactions
-         ========================================================================== */}
-
-      <section className="py-32 px-8 bg-gradient-to-b from-unbleached to-raw-white">
-        <div className="max-w-7xl mx-auto">
-          <RevealOnScroll>
-            <div className="text-center mb-16">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            {/* Header */}
+            <div className="mb-12">
               <span className="text-xs font-mono text-thread-red tracking-widest">
-                RECENT / 最近 / 최근
+                MANIFESTO / 宣言 / 선언문
               </span>
               <h2 className="text-5xl font-black mt-4">
-                Latest Experiments
+                FASHION WITHOUT
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-glitch-cyan to-glitch-magenta">
+                  COMMERCE
+                </span>
               </h2>
             </div>
-          </RevealOnScroll>
 
-          {/* Masonry Grid with different sizes */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[200px] gap-4">
-            {[
-              { span: 'col-span-1 row-span-2', gradient: 'from-thread-red/20 to-thread-blue/20' },
-              { span: 'col-span-1 row-span-1', gradient: 'from-safety-orange/20 to-warning-yellow/20' },
-              { span: 'col-span-2 row-span-1', gradient: 'from-centrifuge-blue/20 to-hazmat-green/20' },
-              { span: 'col-span-1 row-span-1', gradient: 'from-glitch-magenta/20 to-glitch-cyan/20' },
-              { span: 'col-span-1 row-span-2', gradient: 'from-aged-leather/20 to-oxidized-metal/20' },
-              { span: 'col-span-1 row-span-1', gradient: 'from-denim-blue/20 to-thread-black/20' },
-              { span: 'col-span-1 row-span-1', gradient: 'from-warning-yellow/20 to-thread-red/20' },
-              { span: 'col-span-2 row-span-2', gradient: 'from-glitch-cyan/20 to-safety-orange/20' },
-            ].map((item, i) => (
+            {/* Philosophy Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-8">
+                <p className="text-xl font-light leading-relaxed">
+                  We exist at the intersection of
+                  <span className="font-semibold text-glitch-cyan"> deconstruction </span>
+                  and
+                  <span className="font-semibold text-glitch-magenta"> reconstruction</span>,
+                  where garments become living experiments.
+                </p>
+                <div className="stitching py-4">
+                  <p className="text-sm opacity-70 font-mono">
+                    Inspired by Margiela's raw edges and Sacai's hybrid philosophy
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {[
+                  { label: 'PROCESS', text: 'Every stitch tells a story of experimentation' },
+                  { label: 'PURPOSE', text: 'No products. Only prototypes' },
+                  { label: 'PHILOSOPHY', text: 'The beauty of unfinished work' }
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="border-l-2 border-glitch-cyan/30 pl-6 raw-edge"
+                  >
+                    <p className="text-xs font-mono uppercase tracking-wider mb-2 text-glitch-cyan">
+                      {item.label}
+                    </p>
+                    <p className="opacity-80">{item.text}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         RECENT EXPERIMENTS - Gallery
+         ========================================================================== */}
+
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-xs font-mono text-thread-red tracking-widest">
+              RECENT / 最近 / 최근
+            </span>
+            <h2 className="text-4xl font-black mt-4">LATEST EXPERIMENTS</h2>
+          </motion.div>
+
+          {/* Experiment Gallery */}
+          <div className="grid-broken">
+            {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
-                className={`${item.span} relative group cursor-pointer overflow-hidden`}
+                className="relative group cursor-pointer"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, rotate: -0.5 }}
               >
-                <div className={`h-full bg-gradient-to-br ${item.gradient} relative pattern-piece`}>
-                  <div className="absolute inset-0 bg-texture-raw-canvas opacity-20" />
+                <div className="aspect-[3/4] bg-gradient-to-br from-lab-carbon/5 to-lab-carbon/10 relative pattern-piece">
+                  <div className="absolute inset-0 bg-gradient-to-t from-lab-carbon/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   {/* Content overlay */}
-                  <div className="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-thread-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-xs font-mono text-raw-white mb-1">
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-lab-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="text-xs font-mono mb-1">
                       EXP_{String(i + 1).padStart(3, '0')}
                     </p>
-                    <p className="text-sm text-raw-white/80">
-                      {i % 3 === 0 ? 'Volume Study' : i % 2 === 0 ? 'Pattern Deconstruction' : 'Material Research'}
+                    <p className="text-sm">
+                      {i % 3 === 0 ? 'Volume Study' : i % 2 === 0 ? 'Pattern Research' : 'Material Test'}
                     </p>
                   </div>
 
@@ -599,46 +613,15 @@ export default function HomePage() {
       </section>
 
       {/* ==========================================================================
-         CONTACT CTA - Interactive
+         FOOTER - Laboratory Information
          ========================================================================== */}
 
-      <section className="py-24 px-8 border-t border-thread-black/20">
-        <div className="max-w-4xl mx-auto text-center">
-          <RevealOnScroll>
-            <h2 className="text-4xl font-bold mb-6">
-              Collaboration & Exhibition
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-thread-red to-thread-blue">
-                Inquiries
-              </span>
-            </h2>
-            <p className="text-lg font-light opacity-70 mb-12 max-w-2xl mx-auto">
-              We collaborate with institutions, galleries, and brands on experimental projects
-              that push the boundaries of what fashion can be.
-            </p>
-
-            <MagneticButton strength={0.2}>
-              <Link href="/contact">
-                <button className="btn-deconstructed">
-                  <span className="text-xs font-mono uppercase tracking-widest">
-                    Start Conversation
-                  </span>
-                </button>
-              </Link>
-            </MagneticButton>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         FOOTER - Minimalist Information
-         ========================================================================== */}
-
-      <footer className="py-16 px-8 bg-thread-black text-raw-white relative">
+      <footer className="py-16 px-6 bg-lab-carbon text-lab-white relative">
         <div className="absolute inset-0 texture-overlay opacity-5" />
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            {/* Brand */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            {/* Lab Identity */}
             <div>
               <h3 className="text-xs font-mono tracking-widest mb-4 text-thread-red">
                 CINCH LAB
@@ -648,22 +631,24 @@ export default function HomePage() {
                 <br />
                 Research Laboratory
                 <br />
-                Est. 2024
+                Seoul × Tokyo × Paris
               </p>
             </div>
 
-            {/* Locations */}
+            {/* Research */}
             <div>
               <h3 className="text-xs font-mono tracking-widest mb-4">
-                LOCATIONS
+                RESEARCH
               </h3>
-              <p className="text-xs opacity-60 leading-relaxed">
-                Tokyo Research
-                <br />
-                Paris Archive
-                <br />
-                Seoul Studio
-              </p>
+              <div className="space-y-2">
+                {['Process', 'Materials', 'Techniques'].map((item) => (
+                  <Link key={item} href={`/${item.toLowerCase()}`}>
+                    <span className="block text-xs opacity-60 hover:opacity-100 hover:text-thread-red transition-all">
+                      {item}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Status */}
@@ -672,37 +657,35 @@ export default function HomePage() {
                 STATUS
               </h3>
               <p className="text-xs opacity-60 leading-relaxed">
-                Lab: OPERATIONAL
+                Lab: ACTIVE
                 <br />
                 Commerce: DISABLED
                 <br />
-                Research: ACTIVE
+                Experiments: ONGOING
               </p>
             </div>
 
-            {/* Connect */}
+            {/* Contact */}
             <div>
               <h3 className="text-xs font-mono tracking-widest mb-4">
-                CONNECT
+                COLLABORATION
               </h3>
-              <div className="space-y-2">
-                {['Instagram', 'Archive', 'Newsletter'].map((link, i) => (
-                  <a
-                    key={i}
-                    href="#"
-                    className="block text-xs opacity-60 hover:opacity-100 hover:text-thread-red transition-all"
-                  >
-                    {link}
-                  </a>
-                ))}
-              </div>
+              <p className="text-xs opacity-60 leading-relaxed">
+                Exhibitions only
+                <br />
+                No commercial inquiries
+                <br />
+                <Link href="/contact" className="underline hover:text-thread-red">
+                  Submit proposal
+                </Link>
+              </p>
             </div>
           </div>
 
-          {/* Bottom line */}
-          <div className="pt-8 border-t border-raw-white/10">
+          {/* Bottom Line */}
+          <div className="pt-8 border-t border-lab-white/10">
             <p className="text-xs font-mono opacity-40 text-center">
-              © 2024 CINCH LAB. All experiments documented. No rights reserved.
+              © 2024 CINCH LAB • NO SALES • EXPERIMENTAL ONLY • 실험실
             </p>
           </div>
         </div>

@@ -2,17 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import {
-  MagneticButton,
-  RippleEffect,
-  DistortionText,
-  ParallaxContainer,
-  RevealOnScroll,
-  SplitText,
-  Card3D,
-  NoiseBackground,
-  FabricDrag
-} from '@/components/InteractiveElements'
 
 // ==========================================================================
 // CONTACT PAGE - Interactive Form Design
@@ -105,7 +94,12 @@ export default function ContactPage() {
   return (
     <div ref={containerRef} className="min-h-screen bg-raw-white relative overflow-hidden">
 
-      <NoiseBackground opacity={0.02} />
+      {/* Noise Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`
+        }} />
+      </div>
 
       {/* Dynamic Grid Background */}
       <motion.div
@@ -124,8 +118,8 @@ export default function ContactPage() {
       </motion.div>
 
       {/* ==========================================================================
-         HEADER - Contact Interface
-         ========================================================================== */}
+        HEADER - Contact Interface
+        ========================================================================== */}
 
       <section className="relative pt-32 pb-16 px-8">
         {/* Deconstructed elements */}
@@ -164,7 +158,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <DistortionText text="CONTACT" className="tracking-tighter" />
+            CONTACT
           </motion.h1>
 
           <motion.p
@@ -180,8 +174,8 @@ export default function ContactPage() {
       </section>
 
       {/* ==========================================================================
-         CONTACT FORM - Interactive Design
-         ========================================================================== */}
+        CONTACT FORM - Interactive Design
+        ========================================================================== */}
 
       <section className="px-8 pb-24">
         <div className="max-w-4xl mx-auto">
@@ -192,158 +186,79 @@ export default function ContactPage() {
             style={{ rotateX: formRotate }}
           >
             {/* Inquiry Type Selector */}
-            <RevealOnScroll>
-              <div className="space-y-4">
-                <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
-                  INQUIRY_TYPE
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {inquiryTypes.map((type) => (
-                    <motion.div
-                      key={type.value}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+            <motion.div
+              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
+                INQUIRY_TYPE
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {inquiryTypes.map((type) => (
+                  <motion.div
+                    key={type.value}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, type: type.value as FormData['type'] })}
+                      className={`
+                        w-full p-4 text-left transition-all transform-gpu
+                        ${formData.type === type.value
+                          ? 'layer-card bg-carbon text-raw-white shadow-xl'
+                          : 'exposed-seam bg-raw-white text-carbon hover:bg-carbon/5 shadow-md'}
+                      `}
                     >
-                      <Card3D>
-                        <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, type: type.value as FormData['type'] })}
-                          className={`
-                            w-full p-4 text-left transition-all
-                            ${formData.type === type.value
-                              ? 'layer-card bg-carbon text-raw-white'
-                              : 'exposed-seam bg-raw-white text-carbon hover:bg-carbon/5'}
-                          `}
-                        >
-                          <div className="text-sm font-bold mb-1">{type.label}</div>
-                          <div className={`text-xs ${formData.type === type.value ? 'text-raw-white/70' : 'text-carbon/50'}`}>
-                            {type.description}
-                          </div>
-                        </button>
-                      </Card3D>
-                    </motion.div>
-                  ))}
-                </div>
+                      <div className="text-sm font-bold mb-1">{type.label}</div>
+                      <div className={`text-xs ${formData.type === type.value ? 'text-raw-white/70' : 'text-carbon/50'}`}>
+                        {type.description}
+                      </div>
+                    </button>
+                  </motion.div>
+                ))}
               </div>
-            </RevealOnScroll>
+            </motion.div>
 
             {/* Form Fields */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Name Field */}
-              <RevealOnScroll>
-                <div className="space-y-2">
-                  <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
-                    NAME / 名前
-                  </label>
-                  <motion.div
-                    className="relative"
-                    onMouseEnter={() => setHoveredField('name')}
-                    onMouseLeave={() => setHoveredField(null)}
-                    whileHover={{ x: 5 }}
-                  >
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                      className={`
-                        w-full px-4 py-3 bg-transparent border-b-2 transition-all
-                        ${focusedField === 'name'
-                          ? 'border-thread-red'
-                          : hoveredField === 'name'
-                          ? 'border-carbon/40'
-                          : 'border-carbon/20'}
-                        focus:outline-none
-                      `}
-                      placeholder="Enter your name"
-                    />
-                    {focusedField === 'name' && (
-                      <motion.div
-                        className="absolute bottom-0 left-0 h-0.5 bg-thread-red"
-                        initial={{ width: 0 }}
-                        animate={{ width: '100%' }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    )}
-                  </motion.div>
-                </div>
-              </RevealOnScroll>
-
-              {/* Email Field */}
-              <RevealOnScroll>
-                <div className="space-y-2">
-                  <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
-                    EMAIL / メール
-                  </label>
-                  <motion.div
-                    className="relative"
-                    onMouseEnter={() => setHoveredField('email')}
-                    onMouseLeave={() => setHoveredField(null)}
-                    whileHover={{ x: 5 }}
-                  >
-                    <input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                      className={`
-                        w-full px-4 py-3 bg-transparent border-b-2 transition-all
-                        ${focusedField === 'email'
-                          ? 'border-thread-red'
-                          : hoveredField === 'email'
-                          ? 'border-carbon/40'
-                          : 'border-carbon/20'}
-                        focus:outline-none
-                      `}
-                      placeholder="your@email.com"
-                    />
-                    {focusedField === 'email' && (
-                      <motion.div
-                        className="absolute bottom-0 left-0 h-0.5 bg-thread-red"
-                        initial={{ width: 0 }}
-                        animate={{ width: '100%' }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    )}
-                  </motion.div>
-                </div>
-              </RevealOnScroll>
-            </div>
-
-            {/* Organization Field */}
-            <RevealOnScroll>
-              <div className="space-y-2">
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
-                  ORGANIZATION / 組織 (OPTIONAL)
+                  NAME / 名前
                 </label>
                 <motion.div
                   className="relative"
-                  onMouseEnter={() => setHoveredField('organization')}
+                  onMouseEnter={() => setHoveredField('name')}
                   onMouseLeave={() => setHoveredField(null)}
                   whileHover={{ x: 5 }}
                 >
                   <input
                     type="text"
-                    value={formData.organization}
-                    onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                    onFocus={() => setFocusedField('organization')}
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onFocus={() => setFocusedField('name')}
                     onBlur={() => setFocusedField(null)}
                     className={`
                       w-full px-4 py-3 bg-transparent border-b-2 transition-all
-                      ${focusedField === 'organization'
+                      ${focusedField === 'name'
                         ? 'border-thread-red'
-                        : hoveredField === 'organization'
+                        : hoveredField === 'name'
                         ? 'border-carbon/40'
                         : 'border-carbon/20'}
                       focus:outline-none
                     `}
-                    placeholder="Institution, brand, or collective"
+                    placeholder="Enter your name"
                   />
-                  {focusedField === 'organization' && (
+                  {focusedField === 'name' && (
                     <motion.div
                       className="absolute bottom-0 left-0 h-0.5 bg-thread-red"
                       initial={{ width: 0 }}
@@ -352,46 +267,136 @@ export default function ContactPage() {
                     />
                   )}
                 </motion.div>
-              </div>
-            </RevealOnScroll>
+              </motion.div>
+
+              {/* Email Field */}
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
+                  EMAIL / メール
+                </label>
+                <motion.div
+                  className="relative"
+                  onMouseEnter={() => setHoveredField('email')}
+                  onMouseLeave={() => setHoveredField(null)}
+                  whileHover={{ x: 5 }}
+                >
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField(null)}
+                    className={`
+                      w-full px-4 py-3 bg-transparent border-b-2 transition-all
+                      ${focusedField === 'email'
+                        ? 'border-thread-red'
+                        : hoveredField === 'email'
+                        ? 'border-carbon/40'
+                        : 'border-carbon/20'}
+                      focus:outline-none
+                    `}
+                    placeholder="your@email.com"
+                  />
+                  {focusedField === 'email' && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 h-0.5 bg-thread-red"
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Organization Field */}
+            <motion.div
+              className="space-y-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
+                ORGANIZATION / 組織 (OPTIONAL)
+              </label>
+              <motion.div
+                className="relative"
+                onMouseEnter={() => setHoveredField('organization')}
+                onMouseLeave={() => setHoveredField(null)}
+                whileHover={{ x: 5 }}
+              >
+                <input
+                  type="text"
+                  value={formData.organization}
+                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                  onFocus={() => setFocusedField('organization')}
+                  onBlur={() => setFocusedField(null)}
+                  className={`
+                    w-full px-4 py-3 bg-transparent border-b-2 transition-all
+                    ${focusedField === 'organization'
+                      ? 'border-thread-red'
+                      : hoveredField === 'organization'
+                      ? 'border-carbon/40'
+                      : 'border-carbon/20'}
+                    focus:outline-none
+                  `}
+                  placeholder="Institution, brand, or collective"
+                />
+                {focusedField === 'organization' && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 h-0.5 bg-thread-red"
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </motion.div>
+            </motion.div>
 
             {/* Message Field */}
-            <RevealOnScroll>
-              <div className="space-y-2">
-                <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
-                  MESSAGE / メッセージ
-                </label>
-                <FabricDrag>
-                  <motion.div
-                    className="relative"
-                    onMouseEnter={() => setHoveredField('message')}
-                    onMouseLeave={() => setHoveredField(null)}
-                  >
-                    <textarea
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      onFocus={() => setFocusedField('message')}
-                      onBlur={() => setFocusedField(null)}
-                      className={`
-                        w-full px-4 py-3 bg-transparent border-2 transition-all resize-none h-32
-                        ${focusedField === 'message'
-                          ? 'border-thread-red'
-                          : hoveredField === 'message'
-                          ? 'border-carbon/40'
-                          : 'border-carbon/20'}
-                        focus:outline-none
-                      `}
-                      placeholder="Describe your vision, your philosophy, your experiment..."
-                    />
-                    {/* Character count */}
-                    <div className="absolute bottom-2 right-2 text-xs font-mono text-carbon/40">
-                      {formData.message.length}/1000
-                    </div>
-                  </motion.div>
-                </FabricDrag>
-              </div>
-            </RevealOnScroll>
+            <motion.div
+              className="space-y-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <label className="text-xs font-mono uppercase tracking-wider text-carbon/60">
+                MESSAGE / メッセージ
+              </label>
+              <motion.div
+                className="relative"
+                onMouseEnter={() => setHoveredField('message')}
+                onMouseLeave={() => setHoveredField(null)}
+              >
+                <textarea
+                  required
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  onFocus={() => setFocusedField('message')}
+                  onBlur={() => setFocusedField(null)}
+                  className={`
+                    w-full px-4 py-3 bg-transparent border-2 transition-all resize-none h-32
+                    ${focusedField === 'message'
+                      ? 'border-thread-red'
+                      : hoveredField === 'message'
+                      ? 'border-carbon/40'
+                      : 'border-carbon/20'}
+                    focus:outline-none
+                  `}
+                  placeholder="Describe your vision, your philosophy, your experiment..."
+                />
+                {/* Character count */}
+                <div className="absolute bottom-2 right-2 text-xs font-mono text-carbon/40">
+                  {formData.message.length}/1000
+                </div>
+              </motion.div>
+            </motion.div>
 
             {/* Additional Fields for Commission */}
             <AnimatePresence>
@@ -436,36 +441,32 @@ export default function ContactPage() {
 
             {/* Submit Button */}
             <div className="flex justify-center pt-8">
-              <MagneticButton strength={0.4}>
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`
-                    px-12 py-4 transition-all relative overflow-hidden
-                    ${isSubmitting
-                      ? 'bg-carbon/50 text-raw-white/50 cursor-not-allowed'
-                      : 'bg-carbon text-raw-white hover:bg-thread-red'}
-                  `}
-                  whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-                  whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                >
-                  <RippleEffect>
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-3">
-                        <motion.span
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        >
-                          ⟳
-                        </motion.span>
-                        TRANSMITTING...
-                      </span>
-                    ) : (
-                      'SUBMIT INQUIRY'
-                    )}
-                  </RippleEffect>
-                </motion.button>
-              </MagneticButton>
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                className={`
+                  px-12 py-4 transition-all relative overflow-hidden
+                  ${isSubmitting
+                    ? 'bg-carbon/50 text-raw-white/50 cursor-not-allowed'
+                    : 'bg-carbon text-raw-white hover:bg-thread-red'}
+                `}
+                whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-3">
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    >
+                      ⟳
+                    </motion.span>
+                    TRANSMITTING...
+                  </span>
+                ) : (
+                  'SUBMIT INQUIRY'
+                )}
+              </motion.button>
             </div>
           </motion.form>
 
@@ -502,71 +503,86 @@ export default function ContactPage() {
       </section>
 
       {/* ==========================================================================
-         CONTACT INFORMATION
-         ========================================================================== */}
+        CONTACT INFORMATION
+        ========================================================================== */}
 
-      <ParallaxContainer offset={30}>
-        <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-ivory">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-black mb-12">
-              <SplitText text="ALTERNATIVE CHANNELS" delay={0.02} />
-            </h2>
+      <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-ivory">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-black mb-12">
+            ALTERNATIVE CHANNELS
+          </h2>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Studio Location */}
-              <Card3D>
-                <div className="layer-card bg-raw-white p-6 h-full">
-                  <h3 className="text-xl font-bold mb-4">STUDIO</h3>
-                  <p className="text-sm text-carbon/70 mb-4">
-                    Location undisclosed.
-                    <br />
-                    By appointment only.
-                    <br />
-                    No unscheduled visits.
-                  </p>
-                  <div className="text-xs font-mono text-carbon/50">
-                    Seoul / Tokyo / Paris
-                  </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Studio Location */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="layer-card bg-raw-white p-6 h-full">
+                <h3 className="text-xl font-bold mb-4">STUDIO</h3>
+                <p className="text-sm text-carbon/70 mb-4">
+                  Location undisclosed.
+                  <br />
+                  By appointment only.
+                  <br />
+                  No unscheduled visits.
+                </p>
+                <div className="text-xs font-mono text-carbon/50">
+                  Seoul / Tokyo / Paris
                 </div>
-              </Card3D>
+              </div>
+            </motion.div>
 
-              {/* Press Inquiries */}
-              <Card3D>
-                <div className="layer-card bg-raw-white p-6 h-full">
-                  <h3 className="text-xl font-bold mb-4">PRESS</h3>
-                  <p className="text-sm text-carbon/70 mb-4">
-                    For media inquiries and
-                    <br />
-                    publication requests only.
-                  </p>
-                  <div className="text-xs font-mono">
-                    press@cinchlab.void
-                  </div>
+            {/* Press Inquiries */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="layer-card bg-raw-white p-6 h-full">
+                <h3 className="text-xl font-bold mb-4">PRESS</h3>
+                <p className="text-sm text-carbon/70 mb-4">
+                  For media inquiries and
+                  <br />
+                  publication requests only.
+                </p>
+                <div className="text-xs font-mono">
+                  press@cinchlab.void
                 </div>
-              </Card3D>
+              </div>
+            </motion.div>
 
-              {/* Collaborations */}
-              <Card3D>
-                <div className="layer-card bg-raw-white p-6 h-full">
-                  <h3 className="text-xl font-bold mb-4">COLLABORATIONS</h3>
-                  <p className="text-sm text-carbon/70 mb-4">
-                    Research partnerships and
-                    <br />
-                    experimental projects.
-                  </p>
-                  <div className="text-xs font-mono">
-                    collab@cinchlab.void
-                  </div>
+            {/* Collaborations */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="layer-card bg-raw-white p-6 h-full">
+                <h3 className="text-xl font-bold mb-4">COLLABORATIONS</h3>
+                <p className="text-sm text-carbon/70 mb-4">
+                  Research partnerships and
+                  <br />
+                  experimental projects.
+                </p>
+                <div className="text-xs font-mono">
+                  collab@cinchlab.void
                 </div>
-              </Card3D>
-            </div>
+              </div>
+            </motion.div>
           </div>
-        </section>
-      </ParallaxContainer>
+        </div>
+      </section>
 
       {/* ==========================================================================
-         FINAL WARNING
-         ========================================================================== */}
+        FINAL WARNING
+        ========================================================================== */}
 
       <section className="py-24 px-8 bg-carbon text-raw-white">
         <div className="max-w-4xl mx-auto text-center">
@@ -575,8 +591,8 @@ export default function ContactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-3xl font-black mb-6">
-              <DistortionText text="IMPORTANT NOTICE" className="text-thread-red" />
+            <h3 className="text-3xl font-black mb-6 text-thread-red">
+              IMPORTANT NOTICE
             </h3>
             <p className="text-lg mb-8 text-raw-white/80">
               CINCH LAB does not sell products. We do not have a shop.

@@ -1,441 +1,388 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import {
-  MagneticButton,
-  RippleEffect,
-  DistortionText,
-  ParallaxContainer,
-  FabricDrag,
-  MorphingShape,
-  RevealOnScroll,
-  SplitText,
-  Card3D
-} from '@/components/InteractiveElements'
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
 
 // ==========================================================================
-// LABORATORY PAGE - Experimental Fashion Research
-// Margiela × Sacai Philosophy Applied
+// LABORATORY PAGE - Technical Research & Process Documentation
+// Margiela's Artisanal × Sacai's Innovation
 // ==========================================================================
 
 interface Experiment {
   id: string
   title: string
-  category: 'DECONSTRUCTION' | 'MATERIAL' | 'HYBRID' | 'PROCESS'
-  status: 'ACTIVE' | 'COMPLETE' | 'ARCHIVED'
+  category: 'DECONSTRUCTION' | 'MATERIAL' | 'HYBRID' | 'PROCESS' | 'VOLUME' | 'TECHNIQUE'
+  status: 'IN_PROGRESS' | 'TESTING' | 'COMPLETE' | 'FAILED' | 'ARCHIVED'
   date: string
   description: string
   techniques: string[]
   materials: string[]
-  images?: string[]
+  measurements?: string[]
+  temperature?: string
+  duration?: string
+  result?: string
 }
 
 const experiments: Experiment[] = [
   {
-    id: 'EXP_001',
-    title: 'Seam Exposure Study',
+    id: '001',
+    title: 'Exposed Seam Architecture',
     category: 'DECONSTRUCTION',
     status: 'COMPLETE',
     date: '2024.11.15',
-    description: 'Revealing the hidden architecture of garments through exposed construction methods.',
-    techniques: ['Raw edge finishing', 'Exposed interfacing', 'Inside-out construction', 'Visible basting'],
-    materials: ['Japanese selvage denim', 'Cotton canvas', 'Horsehair interfacing', 'Red contrast thread'],
-    images: ['/lab/exp-001-1.jpg', '/lab/exp-001-2.jpg']
+    description: 'Revealing hidden garment infrastructure through externalized construction.',
+    techniques: ['Raw edge exposure', 'Inverted seaming', 'Visible interfacing', 'Contrast basting'],
+    materials: ['21oz Japanese denim', 'Horsehair canvas', 'Red polyester thread #40'],
+    measurements: ['Seam allowance: 2.5cm', 'Stitch length: 4mm', 'Thread tension: 3.5'],
+    temperature: '180°C pressing',
+    duration: '72 hours',
+    result: 'Successfully externalized 87% of internal structure'
   },
   {
-    id: 'EXP_002',
-    title: 'Hybrid Garment System',
+    id: '002',
+    title: 'MA-1 × Tailoring Hybrid',
     category: 'HYBRID',
-    status: 'ACTIVE',
+    status: 'IN_PROGRESS',
     date: '2024.12.03',
-    description: 'Combining disparate garment typologies into singular, transformable pieces.',
-    techniques: ['Garment splicing', 'Detachable components', 'Modular construction', 'Reversible techniques'],
-    materials: ['Technical ripstop', 'Merino wool', 'YKK zippers', 'Magnetic fasteners'],
-    images: ['/lab/exp-002-1.jpg']
+    description: 'Splicing bomber jacket with suit tailoring for transformable garment system.',
+    techniques: ['Pattern splicing', 'Modular attachment', 'Reversible construction', 'Magnetic closure'],
+    materials: ['Flight nylon MA-1', 'Super 120s wool', 'YKK Excella zippers', 'Neodymium magnets'],
+    measurements: ['Splice angle: 45°', 'Module size: 30x40cm', 'Magnet strength: N42'],
+    duration: '120 hours ongoing'
   },
   {
-    id: 'EXP_003',
-    title: 'Material Deterioration',
+    id: '003',
+    title: 'Controlled Material Decay',
     category: 'MATERIAL',
-    status: 'ACTIVE',
+    status: 'TESTING',
     date: '2024.12.20',
-    description: 'Exploring beauty in decay through controlled material degradation.',
-    techniques: ['Chemical treatment', 'Laser distressing', 'Heat manipulation', 'Oxidation process'],
-    materials: ['Organic cotton', 'Copper mesh', 'Natural rubber', 'Salt crystals'],
-    images: ['/lab/exp-003-1.jpg', '/lab/exp-003-2.jpg']
+    description: 'Accelerated aging through chemical and environmental manipulation.',
+    techniques: ['Oxidation treatment', 'UV exposure', 'Chemical erosion', 'Salt crystallization'],
+    materials: ['Organic cotton 280gsm', 'Copper sulfate solution', 'Sea salt', 'Hydrogen peroxide'],
+    measurements: ['pH level: 4.5', 'UV exposure: 72 hours', 'Solution concentration: 15%'],
+    temperature: 'Variable 20-80°C',
+    result: 'Material degradation achieved at 62% target level'
   },
   {
-    id: 'EXP_004',
-    title: 'Process as Product',
+    id: '004',
+    title: 'Pattern as Garment',
     category: 'PROCESS',
     status: 'COMPLETE',
     date: '2024.11.28',
-    description: 'Making the construction process the focal point of the final garment.',
-    techniques: ['Visible pattern pieces', 'Unfinished hems', 'Marking preservation', 'Tool traces'],
-    materials: ['Muslin', 'Pattern paper', 'Chalk markers', 'Basting thread'],
-    images: ['/lab/exp-004-1.jpg']
+    description: 'Transforming paper patterns directly into wearable pieces.',
+    techniques: ['Pattern preservation', 'Marking retention', 'Tool trace documentation', 'Process layering'],
+    materials: ['Pattern paper 80gsm', 'Muslin toile', 'Chalk markers', 'Cotton basting'],
+    measurements: ['Pattern scale: 1:1', 'Layer count: 4', 'Opacity: 60%'],
+    result: 'Process successfully integrated as aesthetic element'
   },
   {
-    id: 'EXP_005',
-    title: 'Asymmetric Balance',
-    category: 'DECONSTRUCTION',
-    status: 'ACTIVE',
+    id: '005',
+    title: 'Zero Gravity Draping',
+    category: 'VOLUME',
+    status: 'TESTING',
     date: '2025.01.01',
-    description: 'Creating harmony through intentional imbalance and structural tension.',
-    techniques: ['Off-center seaming', 'Weighted draping', 'Diagonal grain cutting', 'Tension manipulation'],
-    materials: ['Silk organza', 'Steel wire', 'Lead weights', 'Elastic cord'],
-    images: []
+    description: 'Creating volume through suspension and weighted balance systems.',
+    techniques: ['Suspension draping', 'Weight distribution', 'Tension manipulation', 'Anti-gravity forming'],
+    materials: ['Silk organza 8mm', 'Steel wire 0.5mm', 'Lead weights 50g', 'Invisible thread'],
+    measurements: ['Suspension height: 3m', 'Weight ratio: 1:3:5', 'Wire tension: 2.5N'],
+    duration: '48 hours forming'
   },
   {
-    id: 'EXP_006',
-    title: 'Transparent Layering',
-    category: 'HYBRID',
-    status: 'ARCHIVED',
+    id: '006',
+    title: 'Transparent Construction',
+    category: 'TECHNIQUE',
+    status: 'FAILED',
     date: '2024.10.10',
-    description: 'Revealing construction through translucent material combinations.',
-    techniques: ['Sheer layering', 'Visible internals', 'Light manipulation', 'Shadow play'],
-    materials: ['PVC film', 'Mesh fabric', 'Acetate sheets', 'Glass beads'],
-    images: ['/lab/exp-006-1.jpg', '/lab/exp-006-2.jpg']
+    description: 'Complete visibility of internal garment mechanisms.',
+    techniques: ['Clear material layering', 'Visible internals', 'Light refraction', 'Shadow mapping'],
+    materials: ['PVC 0.5mm', 'TPU film', 'Acetate sheets', 'Glass micro beads'],
+    measurements: ['Transparency: 92%', 'Refraction index: 1.46', 'Layer separation: 5mm'],
+    result: 'Structure collapsed at 70% completion - material incompatibility'
+  },
+  {
+    id: '007',
+    title: 'Biomaterial Cultivation',
+    category: 'MATERIAL',
+    status: 'IN_PROGRESS',
+    date: '2024.12.28',
+    description: 'Growing leather alternatives from mycelium and bacterial cellulose.',
+    techniques: ['Mycelium cultivation', 'Bacterial fermentation', 'Bio-composite forming', 'Living material'],
+    materials: ['Pleurotus ostreatus', 'Kombucha SCOBY', 'Agar medium', 'Glycerin'],
+    measurements: ['Growth rate: 2mm/day', 'Humidity: 85%', 'pH: 6.5'],
+    temperature: '27°C incubation',
+    duration: '21 days growth cycle'
+  },
+  {
+    id: '008',
+    title: 'Tessellation Patterns',
+    category: 'TECHNIQUE',
+    status: 'COMPLETE',
+    date: '2024.12.15',
+    description: 'Zero-waste pattern cutting through geometric tessellation.',
+    techniques: ['Geometric patterning', 'Interlocking cuts', 'Modular assembly', 'Mathematical precision'],
+    materials: ['Wool felt 3mm', 'Laser cutting', 'Heat bonding', 'Ultrasonic welding'],
+    measurements: ['Module size: 15x15cm', 'Waste: 0%', 'Interlock depth: 8mm'],
+    result: '100% material utilization achieved'
   }
 ]
 
+const categories = ['ALL', 'DECONSTRUCTION', 'MATERIAL', 'HYBRID', 'PROCESS', 'VOLUME', 'TECHNIQUE']
+const statusColors = {
+  IN_PROGRESS: 'text-warning-yellow',
+  TESTING: 'text-centrifuge-blue',
+  COMPLETE: 'text-hazmat-green',
+  FAILED: 'text-thread-red',
+  ARCHIVED: 'text-lab-carbon/50'
+}
+
 export default function LabPage() {
-  const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null)
-  const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'COMPLETE' | 'ARCHIVED'>('ALL')
-  const [category, setCategory] = useState<'ALL' | 'DECONSTRUCTION' | 'MATERIAL' | 'HYBRID' | 'PROCESS'>('ALL')
-  const [viewMode, setViewMode] = useState<'GRID' | 'LIST' | 'TIMELINE'>('GRID')
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const { scrollY } = useScroll()
+  const [selectedCategory, setSelectedCategory] = useState('ALL')
+  const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null)
+  const [viewMode, setViewMode] = useState<'GRID' | 'LIST' | 'TIMELINE'>('GRID')
+  const [labTime, setLabTime] = useState(new Date())
 
-  // Time display
-  const [currentTime, setCurrentTime] = useState(new Date())
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+  // Mouse tracking for interactive effects
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 20 })
+  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 20 })
 
-  // Mouse tracking for interactive background
+  // Parallax transforms
+  const backgroundY = useTransform(scrollY, [0, 1000], [0, -200])
+
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    const timer = setInterval(() => setLabTime(new Date()), 1000)
 
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
+      mouseX.set(e.clientX)
+      mouseY.set(e.clientY)
     }
+
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
 
-  const filteredExperiments = experiments.filter(exp => {
-    const statusMatch = filter === 'ALL' || exp.status === filter
-    const categoryMatch = category === 'ALL' || exp.category === category
-    return statusMatch && categoryMatch
-  })
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [mouseX, mouseY])
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const gridRotate = useTransform(scrollYProgress, [0, 1], [0, 3])
+  const filteredExperiments = selectedCategory === 'ALL'
+    ? experiments
+    : experiments.filter(exp => exp.category === selectedCategory)
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-raw-white relative overflow-hidden">
-
-      {/* Animated Background Grid */}
+    <div ref={containerRef} className="min-h-screen bg-lab-white">
+      {/* Background Textures */}
+      <div className="fixed inset-0 texture-graph opacity-5 pointer-events-none" />
       <motion.div
-        className="fixed inset-0 pointer-events-none opacity-[0.02]"
+        className="fixed inset-0 pointer-events-none"
         style={{ y: backgroundY }}
       >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(0deg, #000 0px, transparent 1px, transparent 40px, #000 41px),
-              repeating-linear-gradient(90deg, #000 0px, transparent 1px, transparent 40px, #000 41px)
-            `,
-            transform: `perspective(500px) rotateX(60deg) translateZ(-100px)`
-          }}
-        />
+        <div className="absolute inset-0 texture-lab-table" />
       </motion.div>
 
-      {/* Interactive Floating Elements */}
-      <div className="fixed inset-0 pointer-events-none">
-        <motion.div
-          className="absolute w-96 h-96 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,0,0,0.05) 0%, transparent 70%)',
-            left: mousePosition.x - 192,
-            top: mousePosition.y - 192,
-            filter: 'blur(40px)'
-          }}
-          animate={{
-            x: [0, 20, 0],
-            y: [0, -20, 0]
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'linear'
-          }}
-        />
-      </div>
+      {/* Interactive Gradient */}
+      <motion.div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle 600px at ${smoothMouseX}px ${smoothMouseY}px,
+            rgba(30, 58, 138, 0.03) 0%,
+            transparent 50%)`,
+        }}
+      />
 
       {/* ==========================================================================
-         HEADER - Laboratory Interface
+         HEADER - Laboratory Control Panel
          ========================================================================== */}
 
-      <section className="relative pt-32 pb-16 px-8">
-        {/* Deconstructed background texture */}
-        <div className="absolute inset-0 material-paper opacity-30" />
-        <div className="absolute inset-0 exposed-seam" />
-
-        {/* Status Terminal */}
-        <motion.div
-          className="relative z-10 max-w-7xl mx-auto mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="bg-carbon/90 text-raw-white p-4 font-mono text-xs backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-6">
-                <span className="text-thread-red animate-pulse">●</span>
-                <span>CINCH_LAB_RESEARCH_FACILITY_v5.2.1</span>
-                <span>|</span>
-                <span>{currentTime.toLocaleString('en-US', {
-                  weekday: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: false
-                })}</span>
-              </div>
-              <div>
-                <span>EXPERIMENTS: {experiments.filter(e => e.status === 'ACTIVE').length} ACTIVE</span>
-              </div>
+      <header className="relative pt-24 pb-12 px-6 border-b border-lab-carbon/20">
+        <div className="max-w-7xl mx-auto">
+          {/* Status Bar */}
+          <div className="flex items-center justify-between mb-8 text-xs font-mono">
+            <div className="flex items-center gap-6">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-hazmat-green rounded-full animate-pulse" />
+                LABORATORY OPERATIONAL
+              </span>
+              <span className="opacity-50">|</span>
+              <span className="tabular-nums">
+                {labTime.toLocaleTimeString('en-US', { hour12: false })}
+              </span>
+              <span className="opacity-50">|</span>
+              <span>TEMP: 22.5°C</span>
+              <span className="opacity-50">|</span>
+              <span>HUMIDITY: 45%</span>
             </div>
-            <div className="grid grid-cols-4 gap-8 text-thread-white/60">
-              <div>TEMP: 23.5°C</div>
-              <div>HUMIDITY: 45%</div>
-              <div>PRESSURE: 1013hPa</div>
-              <div>STATUS: OPERATIONAL</div>
-            </div>
+            <span className="text-thread-red">
+              {filteredExperiments.filter(e => e.status === 'IN_PROGRESS').length} ACTIVE
+            </span>
           </div>
-        </motion.div>
 
-        {/* Title with Distortion Effect */}
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <h1 className="text-7xl md:text-9xl font-black mb-6">
-            <DistortionText text="LABORATORY" className="tracking-tight" />
-          </h1>
-          <motion.p
-            className="text-xl text-carbon/70 max-w-3xl font-light"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+          {/* Page Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            Experimental research facility for garment deconstruction and hybrid construction.
-            Where Margiela's exposed process meets Sacai's transformative layering.
-          </motion.p>
-        </div>
+            <h1 className="text-6xl font-black mb-4">
+              <span className="text-deconstructed" data-text="LABORATORY">
+                LABORATORY
+              </span>
+            </h1>
+            <p className="text-lg font-light opacity-70">
+              Technical Research • Process Documentation • Material Innovation
+            </p>
+          </motion.div>
 
-        {/* Control Panel */}
-        <motion.div
-          className="relative z-10 max-w-7xl mx-auto mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="flex flex-wrap gap-6">
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest text-carbon/50">View:</span>
-              <div className="flex gap-1">
-                {(['GRID', 'LIST', 'TIMELINE'] as const).map(mode => (
-                  <MagneticButton key={mode} strength={0.2}>
-                    <button
-                      onClick={() => setViewMode(mode)}
-                      className={`
-                        px-4 py-2 text-xs font-mono uppercase transition-all relative overflow-hidden
-                        ${viewMode === mode
-                          ? 'bg-carbon text-raw-white'
-                          : 'bg-transparent text-carbon border border-carbon/20 hover:border-carbon/40'
-                        }
-                      `}
-                    >
-                      <RippleEffect color={viewMode === mode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)'}>
-                        {mode}
-                      </RippleEffect>
-                    </button>
-                  </MagneticButton>
-                ))}
-              </div>
-            </div>
-
-            {/* Status Filter */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest text-carbon/50">Status:</span>
-              <div className="flex gap-1">
-                {(['ALL', 'ACTIVE', 'COMPLETE', 'ARCHIVED'] as const).map(status => (
-                  <button
-                    key={status}
-                    onClick={() => setFilter(status)}
-                    className={`
-                      px-3 py-2 text-xs font-mono uppercase transition-all border
-                      ${filter === status
-                        ? 'bg-carbon text-raw-white border-carbon'
-                        : 'bg-transparent text-carbon border-carbon/20 hover:border-carbon/40'
-                      }
-                    `}
-                  >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            </div>
-
+          {/* Controls */}
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             {/* Category Filter */}
+            <div className="flex items-center gap-2 p-2 bg-lab-carbon/5 rounded">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1 text-xs font-medium tracking-wider transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-lab-carbon text-lab-white'
+                      : 'hover:bg-lab-carbon/10'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* View Mode */}
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest text-carbon/50">Category:</span>
-              <div className="flex gap-1">
-                {(['ALL', 'DECONSTRUCTION', 'MATERIAL', 'HYBRID', 'PROCESS'] as const).map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategory(cat)}
-                    className={`
-                      px-3 py-2 text-xs font-mono uppercase transition-all border
-                      ${category === cat
-                        ? 'bg-carbon text-raw-white border-carbon'
-                        : 'bg-transparent text-carbon border-carbon/20 hover:border-carbon/40'
-                      }
-                    `}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
+              {['GRID', 'LIST', 'TIMELINE'].map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode as any)}
+                  className={`px-3 py-1 text-xs font-mono tracking-wider transition-all ${
+                    viewMode === mode
+                      ? 'text-thread-red'
+                      : 'opacity-50 hover:opacity-100'
+                  }`}
+                >
+                  {mode}
+                </button>
+              ))}
             </div>
           </div>
-        </motion.div>
-      </section>
+        </div>
+      </header>
 
       {/* ==========================================================================
          EXPERIMENTS DISPLAY
          ========================================================================== */}
 
-      <section className="py-16 px-8">
+      <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
-
-          {/* Grid View */}
           {viewMode === 'GRID' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredExperiments.map((experiment, index) => (
-                <RevealOnScroll key={experiment.id}>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -8 }}
-                  >
-                    <Card3D className="h-full">
-                      <div
-                        className="layer-card bg-raw-white h-full cursor-pointer group"
-                        onClick={() => setSelectedExperiment(experiment)}
-                      >
-                        <div className="p-6 h-full flex flex-col relative">
-                          {/* Status Indicator */}
-                          <div className="absolute top-0 right-0">
-                            <span className={`
-                              inline-block px-3 py-1 text-xs font-mono
-                              ${experiment.status === 'ACTIVE'
-                                ? 'bg-thread-red text-raw-white animate-pulse'
-                                : experiment.status === 'COMPLETE'
-                                ? 'bg-thread-white text-carbon'
-                                : 'bg-carbon/20 text-carbon'}
-                            `}>
-                              {experiment.status}
-                            </span>
-                          </div>
+            <div className="grid-broken">
+              {filteredExperiments.map((exp, i) => (
+                <motion.div
+                  key={exp.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="relative group cursor-pointer"
+                  onClick={() => setSelectedExperiment(exp)}
+                >
+                  <div className="h-full min-h-[280px] p-6 bg-lab-white border border-lab-carbon/20
+                    hover:border-lab-carbon/40 transition-all duration-300 pattern-piece">
+                    {/* Status Indicator */}
+                    <div className="absolute top-4 right-4">
+                      <span className={`text-xs font-mono ${statusColors[exp.status]}`}>
+                        {exp.status.replace('_', ' ')}
+                      </span>
+                    </div>
 
-                          {/* ID and Date */}
-                          <div className="text-xs font-mono text-carbon/40 mb-2">
-                            {experiment.id} | {experiment.date}
-                          </div>
+                    {/* Experiment ID */}
+                    <div className="construction-mark" data-mark={`EXP_${exp.id}`} />
 
-                          {/* Title with hover effect */}
-                          <h3 className="text-2xl font-bold mb-3 group-hover:text-thread-red transition-colors">
-                            {experiment.title}
-                          </h3>
+                    {/* Content */}
+                    <div className="mt-8">
+                      <p className="text-xs font-mono text-thread-red mb-2">
+                        {exp.category}
+                      </p>
+                      <h3 className="text-xl font-bold mb-3 group-hover:text-thread-blue transition-colors">
+                        {exp.title}
+                      </h3>
+                      <p className="text-sm opacity-70 mb-4 line-clamp-2">
+                        {exp.description}
+                      </p>
 
-                          {/* Category Badge */}
-                          <div className="mb-4">
-                            <span className="text-xs font-mono uppercase tracking-wider text-thread-red">
-                              {experiment.category}
-                            </span>
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-sm text-carbon/70 mb-4 flex-grow line-clamp-3">
-                            {experiment.description}
-                          </p>
-
-                          {/* Techniques Preview */}
-                          <div className="space-y-1">
-                            <span className="text-xs text-carbon/40 uppercase tracking-wider">Techniques:</span>
-                            <div className="flex flex-wrap gap-1">
-                              {experiment.techniques.slice(0, 3).map((tech, i) => (
-                                <span key={i} className="text-xs bg-carbon/5 px-2 py-1">
-                                  {tech}
-                                </span>
-                              ))}
-                              {experiment.techniques.length > 3 && (
-                                <span className="text-xs text-carbon/40">
-                                  +{experiment.techniques.length - 3} more
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Hover Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-carbon/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                        </div>
+                      {/* Techniques Preview */}
+                      <div className="flex flex-wrap gap-1">
+                        {exp.techniques.slice(0, 3).map((tech, j) => (
+                          <span key={j} className="text-xs px-2 py-1 bg-lab-carbon/5 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                        {exp.techniques.length > 3 && (
+                          <span className="text-xs px-2 py-1 opacity-50">
+                            +{exp.techniques.length - 3}
+                          </span>
+                        )}
                       </div>
-                    </Card3D>
-                  </motion.div>
-                </RevealOnScroll>
+
+                      {/* Date */}
+                      <p className="mt-4 text-xs font-mono opacity-50">
+                        {exp.date}
+                      </p>
+                    </div>
+
+                    {/* Hover Effect */}
+                    <motion.div
+                      className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      <span className="text-2xl">→</span>
+                    </motion.div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           )}
 
-          {/* List View */}
           {viewMode === 'LIST' && (
-            <div className="space-y-4">
-              {filteredExperiments.map((experiment, index) => (
+            <div className="space-y-2">
+              {filteredExperiments.map((exp, i) => (
                 <motion.div
-                  key={experiment.id}
-                  initial={{ opacity: 0, x: -50 }}
+                  key={exp.id}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="hybrid-split bg-raw-white hover:bg-carbon/5 transition-colors cursor-pointer"
-                  onClick={() => setSelectedExperiment(experiment)}
+                  transition={{ delay: i * 0.03 }}
+                  className="p-4 bg-lab-white border border-lab-carbon/10 hover:border-lab-carbon/30
+                    transition-all cursor-pointer group"
+                  onClick={() => setSelectedExperiment(exp)}
                 >
-                  <div className="p-6 flex items-center justify-between">
-                    <div className="flex-grow">
-                      <div className="flex items-center gap-4 mb-2">
-                        <span className="text-xs font-mono text-carbon/40">{experiment.id}</span>
-                        <h3 className="text-xl font-bold">{experiment.title}</h3>
-                        <span className={`
-                          px-2 py-1 text-xs font-mono
-                          ${experiment.status === 'ACTIVE' ? 'text-thread-red' : 'text-carbon/50'}
-                        `}>
-                          {experiment.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-carbon/70 max-w-2xl">{experiment.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <span className="text-xs font-mono text-thread-red">
+                        EXP_{exp.id}
+                      </span>
+                      <h3 className="text-lg font-medium group-hover:text-thread-blue transition-colors">
+                        {exp.title}
+                      </h3>
+                      <span className="text-xs opacity-50">
+                        {exp.category}
+                      </span>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xs font-mono text-carbon/40">{experiment.date}</div>
-                      <div className="text-xs uppercase tracking-wider text-thread-red mt-1">
-                        {experiment.category}
-                      </div>
+                    <div className="flex items-center gap-4">
+                      <span className={`text-xs font-mono ${statusColors[exp.status]}`}>
+                        {exp.status.replace('_', ' ')}
+                      </span>
+                      <span className="text-xs font-mono opacity-50">
+                        {exp.date}
+                      </span>
                     </div>
                   </div>
                 </motion.div>
@@ -443,67 +390,55 @@ export default function LabPage() {
             </div>
           )}
 
-          {/* Timeline View */}
           {viewMode === 'TIMELINE' && (
             <div className="relative">
               {/* Timeline Line */}
-              <div className="absolute left-8 top-0 bottom-0 w-px bg-carbon/20" />
+              <div className="absolute left-8 top-0 bottom-0 w-[1px] bg-lab-carbon/20" />
 
-              <div className="space-y-12">
-                {filteredExperiments
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                  .map((experiment, index) => (
+              {filteredExperiments
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .map((exp, i) => (
                   <motion.div
-                    key={experiment.id}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                    key={exp.id}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`flex items-center gap-8 ${index % 2 === 0 ? '' : 'flex-row-reverse'}`}
+                    transition={{ delay: i * 0.05 }}
+                    className="relative flex items-start gap-8 mb-12"
                   >
-                    {/* Timeline Dot */}
-                    <div className="relative z-10 flex-shrink-0">
-                      <div className={`
-                        w-4 h-4 rounded-full border-2 border-carbon bg-raw-white
-                        ${experiment.status === 'ACTIVE' ? 'animate-pulse' : ''}
-                      `} />
+                    {/* Timeline Node */}
+                    <div className="relative z-10 w-16 flex-shrink-0">
+                      <div className={`w-4 h-4 rounded-full border-2 border-lab-carbon bg-lab-white
+                        ${exp.status === 'IN_PROGRESS' ? 'animate-pulse' : ''}`} />
+                      <p className="mt-2 text-xs font-mono opacity-50 -rotate-45 origin-top-left">
+                        {exp.date.slice(5)}
+                      </p>
                     </div>
 
-                    {/* Content Card */}
+                    {/* Content */}
                     <div
-                      className="exposed-seam bg-raw-white p-6 flex-grow cursor-pointer hover:shadow-lg transition-shadow"
-                      onClick={() => setSelectedExperiment(experiment)}
+                      className="flex-1 p-6 bg-lab-white border border-lab-carbon/20
+                        hover:border-lab-carbon/40 transition-all cursor-pointer group"
+                      onClick={() => setSelectedExperiment(exp)}
                     >
-                      <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-start justify-between mb-3">
                         <div>
-                          <span className="text-xs font-mono text-carbon/40">{experiment.date}</span>
-                          <h3 className="text-xl font-bold mt-1">{experiment.title}</h3>
+                          <p className="text-xs font-mono text-thread-red mb-1">
+                            EXP_{exp.id} • {exp.category}
+                          </p>
+                          <h3 className="text-xl font-bold group-hover:text-thread-blue transition-colors">
+                            {exp.title}
+                          </h3>
                         </div>
-                        <span className={`
-                          px-2 py-1 text-xs font-mono
-                          ${experiment.status === 'ACTIVE'
-                            ? 'bg-thread-red text-raw-white'
-                            : experiment.status === 'COMPLETE'
-                            ? 'bg-thread-white text-carbon'
-                            : 'bg-carbon/10 text-carbon'}
-                        `}>
-                          {experiment.status}
+                        <span className={`text-xs font-mono ${statusColors[exp.status]}`}>
+                          {exp.status.replace('_', ' ')}
                         </span>
                       </div>
-                      <p className="text-sm text-carbon/70">{experiment.description}</p>
-                      <div className="mt-3 text-xs uppercase tracking-wider text-thread-red">
-                        {experiment.category}
-                      </div>
+                      <p className="text-sm opacity-70">
+                        {exp.description}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {filteredExperiments.length === 0 && (
-            <div className="text-center py-16">
-              <MorphingShape size={100} />
-              <p className="text-carbon/50 mt-8">No experiments found matching current filters.</p>
             </div>
           )}
         </div>
@@ -519,405 +454,181 @@ export default function LabPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-carbon/90 backdrop-blur-md z-50 flex items-center justify-center p-8"
+            className="fixed inset-0 z-50 bg-lab-carbon/80 backdrop-blur-sm flex items-center justify-center p-6"
             onClick={() => setSelectedExperiment(null)}
           >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0, rotateX: -10 }}
-              animate={{ scale: 1, opacity: 1, rotateX: 0 }}
-              exit={{ scale: 0.8, opacity: 0, rotateX: 10 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              className="bg-raw-white max-w-5xl w-full max-h-[90vh] overflow-auto relative"
-              onClick={e => e.stopPropagation()}
-              style={{ perspective: '1000px' }}
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-lab-white p-8"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Deconstructed edges */}
-              <div className="absolute inset-0 exposed-seam pointer-events-none" />
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedExperiment(null)}
+                className="absolute top-6 right-6 text-2xl hover:text-thread-red transition-colors"
+              >
+                ×
+              </button>
 
-              <div className="relative z-10 p-8 md:p-12">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-8">
-                  <div>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xs font-mono text-carbon/40">
-                        {selectedExperiment.id}
-                      </span>
-                      <span className="text-xs font-mono text-carbon/40">|</span>
-                      <span className="text-xs font-mono text-carbon/40">
-                        {selectedExperiment.date}
-                      </span>
-                      <span className={`
-                        px-3 py-1 text-xs font-mono
-                        ${selectedExperiment.status === 'ACTIVE'
-                          ? 'bg-thread-red text-raw-white animate-pulse'
-                          : selectedExperiment.status === 'COMPLETE'
-                          ? 'bg-thread-white text-carbon'
-                          : 'bg-carbon/10 text-carbon'}
-                      `}>
-                        {selectedExperiment.status}
-                      </span>
-                    </div>
-                    <h2 className="text-4xl font-black">
-                      <SplitText text={selectedExperiment.title} delay={0.02} />
-                    </h2>
-                    <div className="mt-2">
-                      <span className="text-sm uppercase tracking-wider text-thread-red">
-                        {selectedExperiment.category}
-                      </span>
-                    </div>
-                  </div>
-                  <MagneticButton strength={0.5}>
-                    <button
-                      onClick={() => setSelectedExperiment(null)}
-                      className="text-3xl hover:text-thread-red transition-colors p-2"
-                    >
-                      ×
-                    </button>
-                  </MagneticButton>
+              {/* Header */}
+              <div className="mb-6">
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="text-xs font-mono text-thread-red">
+                    EXP_{selectedExperiment.id}
+                  </span>
+                  <span className={`text-xs font-mono ${statusColors[selectedExperiment.status]}`}>
+                    {selectedExperiment.status.replace('_', ' ')}
+                  </span>
+                  <span className="text-xs font-mono opacity-50">
+                    {selectedExperiment.date}
+                  </span>
+                </div>
+                <h2 className="text-3xl font-bold mb-2">
+                  {selectedExperiment.title}
+                </h2>
+                <p className="text-sm font-mono uppercase tracking-wider opacity-50">
+                  {selectedExperiment.category}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="mb-8">
+                <h3 className="text-xs font-mono uppercase tracking-widest mb-3 text-thread-blue">
+                  OBJECTIVE
+                </h3>
+                <p className="text-base leading-relaxed">
+                  {selectedExperiment.description}
+                </p>
+              </div>
+
+              {/* Technical Details Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Techniques */}
+                <div className="p-4 border border-lab-carbon/20 pattern-piece">
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-3 text-thread-blue">
+                    TECHNIQUES APPLIED
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedExperiment.techniques.map((tech, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <span className="text-thread-red">→</span>
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Content Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                  {/* Left Column */}
-                  <div className="space-y-8">
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-carbon/50 mb-4">
-                        Research Abstract
-                      </h3>
-                      <p className="text-lg leading-relaxed">
-                        {selectedExperiment.description}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-carbon/50 mb-4">
-                        Techniques Applied
-                      </h3>
-                      <div className="space-y-3">
-                        {selectedExperiment.techniques.map((technique, i) => (
-                          <motion.div
-                            key={i}
-                            className="flex items-center gap-3"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                          >
-                            <span className="text-thread-red text-lg">→</span>
-                            <span className="text-sm">{technique}</span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-8">
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-carbon/50 mb-4">
-                        Materials Used
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        {selectedExperiment.materials.map((material, i) => (
-                          <motion.div
-                            key={i}
-                            className="bg-carbon/5 p-3 text-sm"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.05 }}
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            {material}
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-carbon/50 mb-4">
-                        Process Documentation
-                      </h3>
-                      <div className="bg-carbon text-raw-white p-6 font-mono text-xs leading-relaxed">
-                        <p className="text-thread-red mb-2">// RESEARCH_LOG</p>
-                        <p>Temperature: 23.5°C</p>
-                        <p>Humidity: 45%</p>
-                        <p>Pressure: 1013 hPa</p>
-                        <p className="mt-3 text-thread-white/60">
-                          Process iterations: 14<br/>
-                          Material tests: 27<br/>
-                          Construction time: 148 hours<br/>
-                          Status: {selectedExperiment.status}
-                        </p>
-                        <p className="mt-3 text-thread-red">
-                          Next phase: Pattern optimization
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Image Gallery Placeholder */}
-                {selectedExperiment.images && selectedExperiment.images.length > 0 && (
-                  <div className="mt-12">
-                    <h3 className="text-xs uppercase tracking-widest text-carbon/50 mb-4">
-                      Visual Documentation
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {selectedExperiment.images.map((img, i) => (
-                        <FabricDrag key={i}>
-                          <div className="bg-carbon/10 aspect-square flex items-center justify-center text-carbon/30">
-                            <span className="text-xs font-mono">{img}</span>
-                          </div>
-                        </FabricDrag>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-4 mt-12">
-                  <MagneticButton strength={0.3}>
-                    <button className="px-6 py-3 bg-carbon text-raw-white hover:bg-thread-red transition-colors">
-                      Download Research PDF
-                    </button>
-                  </MagneticButton>
-                  <MagneticButton strength={0.3}>
-                    <button className="px-6 py-3 border border-carbon text-carbon hover:bg-carbon hover:text-raw-white transition-colors">
-                      View 3D Model
-                    </button>
-                  </MagneticButton>
+                {/* Materials */}
+                <div className="p-4 border border-lab-carbon/20 pattern-piece">
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-3 text-thread-blue">
+                    MATERIALS USED
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedExperiment.materials.map((mat, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <span className="text-thread-red">→</span>
+                        {mat}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
+
+              {/* Measurements & Parameters */}
+              {(selectedExperiment.measurements || selectedExperiment.temperature || selectedExperiment.duration) && (
+                <div className="p-4 bg-lab-carbon/5 mb-8">
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-3 text-thread-blue">
+                    TECHNICAL PARAMETERS
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {selectedExperiment.measurements && (
+                      <div>
+                        <p className="text-xs font-mono opacity-50 mb-1">MEASUREMENTS</p>
+                        {selectedExperiment.measurements.map((m, i) => (
+                          <p key={i} className="text-sm font-mono">{m}</p>
+                        ))}
+                      </div>
+                    )}
+                    {selectedExperiment.temperature && (
+                      <div>
+                        <p className="text-xs font-mono opacity-50 mb-1">TEMPERATURE</p>
+                        <p className="text-sm font-mono">{selectedExperiment.temperature}</p>
+                      </div>
+                    )}
+                    {selectedExperiment.duration && (
+                      <div>
+                        <p className="text-xs font-mono opacity-50 mb-1">DURATION</p>
+                        <p className="text-sm font-mono">{selectedExperiment.duration}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Result */}
+              {selectedExperiment.result && (
+                <div className="p-4 border-l-2 border-thread-red">
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-2 text-thread-red">
+                    RESULT
+                  </h3>
+                  <p className="text-sm">{selectedExperiment.result}</p>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ==========================================================================
-         RESEARCH METHODOLOGY SECTION
+         LAB NOTES SECTION
          ========================================================================== */}
 
-      <ParallaxContainer offset={50}>
-        <section className="py-24 px-8 bg-gradient-to-b from-raw-white to-ivory">
-          <div className="max-w-6xl mx-auto">
-            <motion.h2
-              className="text-5xl font-black mb-16 text-center"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <DistortionText text="METHODOLOGY" />
-            </motion.h2>
+      <section className="py-12 px-6 border-t border-lab-carbon/20">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold mb-8">LABORATORY NOTES</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Phase 1 */}
-              <RevealOnScroll>
-                <div className="material-fabric p-8 h-full">
-                  <div className="text-6xl font-black text-thread-red mb-4">01</div>
-                  <h3 className="text-2xl font-bold mb-4">DECONSTRUCT</h3>
-                  <p className="text-sm text-carbon/70 mb-6">
-                    Dismantling existing structures to understand their fundamental construction.
-                    Every seam tells a story, every thread holds memory.
-                  </p>
-                  <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-red" />
-                      Pattern extraction & analysis
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-red" />
-                      Seam documentation
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-red" />
-                      Material decomposition
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-red" />
-                      Construction archaeology
-                    </li>
-                  </ul>
-                </div>
-              </RevealOnScroll>
+          <div className="space-y-6">
+            <div className="stitching py-4">
+              <p className="text-sm font-mono opacity-70">
+                2025.01.28 — Current focus: Hybrid construction methods combining Margiela's
+                deconstruction philosophy with Sacai's layering techniques. Testing magnetic
+                attachment systems for modular garment transformation.
+              </p>
+            </div>
 
-              {/* Phase 2 */}
-              <RevealOnScroll>
-                <div className="material-paper p-8 h-full">
-                  <div className="text-6xl font-black text-thread-white mb-4">02</div>
-                  <h3 className="text-2xl font-bold mb-4">EXPERIMENT</h3>
-                  <p className="text-sm text-carbon/70 mb-6">
-                    Testing boundaries through controlled chaos. Failure is data,
-                    success is temporary, process is eternal.
-                  </p>
-                  <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-white" />
-                      Material stress testing
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-white" />
-                      Hybrid technique development
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-white" />
-                      Form manipulation
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-thread-white" />
-                      Process iteration cycles
-                    </li>
-                  </ul>
-                </div>
-              </RevealOnScroll>
+            <div className="stitching py-4">
+              <p className="text-sm font-mono opacity-70">
+                2025.01.15 — Material research breakthrough: Successfully cultivated 15cm² of
+                mycelium leather with tensile strength comparable to 2mm cowhide. Growth cycle
+                reduced to 21 days through optimized pH control.
+              </p>
+            </div>
 
-              {/* Phase 3 */}
-              <RevealOnScroll>
-                <div className="material-concrete p-8 h-full">
-                  <div className="text-6xl font-black text-carbon mb-4">03</div>
-                  <h3 className="text-2xl font-bold mb-4">RECONSTRUCT</h3>
-                  <p className="text-sm text-carbon/70 mb-6">
-                    Building new realities from fragmented truths. The final form
-                    carries the ghost of its process.
-                  </p>
-                  <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-carbon" />
-                      Hybrid assembly techniques
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-carbon" />
-                      Process preservation
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-carbon" />
-                      Technical documentation
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-carbon" />
-                      Knowledge archival
-                    </li>
-                  </ul>
-                </div>
-              </RevealOnScroll>
+            <div className="stitching py-4">
+              <p className="text-sm font-mono opacity-70">
+                2024.12.28 — Zero-waste tessellation patterns achieving 100% material utilization.
+                Mathematical precision meets aesthetic chaos. All waste eliminated through
+                geometric interlocking systems.
+              </p>
             </div>
           </div>
-        </section>
-      </ParallaxContainer>
+        </div>
+      </section>
 
       {/* ==========================================================================
-         EQUIPMENT STATUS GRID
+         FOOTER - Lab Information
          ========================================================================== */}
 
-      <section className="py-24 px-8 bg-carbon text-raw-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-black mb-12">Equipment Status</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: 'Industrial Overlock M5', status: 'OPERATIONAL', usage: 89 },
-              { name: 'Ultrasonic Welder X2', status: 'OPERATIONAL', usage: 45 },
-              { name: 'Heat Press 3000', status: 'MAINTENANCE', usage: 0 },
-              { name: 'Laser Cutter Pro', status: 'OPERATIONAL', usage: 67 },
-              { name: 'Pattern Digitizer v4', status: 'OPERATIONAL', usage: 92 },
-              { name: '3D Body Scanner', status: 'OFFLINE', usage: 0 },
-              { name: 'Chemical Treatment Bath', status: 'OPERATIONAL', usage: 34 },
-              { name: 'Vacuum Former XL', status: 'OPERATIONAL', usage: 58 }
-            ].map((equipment, i) => (
-              <motion.div
-                key={i}
-                className="bg-raw-white/5 backdrop-blur-sm p-4 border border-raw-white/10"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-              >
-                <h4 className="text-sm font-bold mb-3">{equipment.name}</h4>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className={`
-                    w-2 h-2 rounded-full
-                    ${equipment.status === 'OPERATIONAL' ? 'bg-thread-white animate-pulse' :
-                      equipment.status === 'MAINTENANCE' ? 'bg-thread-red' :
-                      'bg-carbon/50'}
-                  `} />
-                  <span className="text-xs font-mono text-raw-white/60">
-                    {equipment.status}
-                  </span>
-                </div>
-                {equipment.status === 'OPERATIONAL' && (
-                  <div className="mt-2">
-                    <div className="text-xs text-raw-white/40 mb-1">Usage</div>
-                    <div className="h-1 bg-raw-white/10">
-                      <motion.div
-                        className="h-full bg-thread-white"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${equipment.usage}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.1 }}
-                      />
-                    </div>
-                    <div className="text-xs text-raw-white/40 mt-1">{equipment.usage}%</div>
-                  </div>
-                )}
-              </motion.div>
-            ))}
+      <footer className="py-8 px-6 border-t border-lab-carbon/20 mt-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between text-xs font-mono opacity-50">
+            <span>CINCH LAB • TECHNICAL RESEARCH DIVISION</span>
+            <span>NO COMMERCIAL APPLICATION • EXPERIMENTAL ONLY</span>
           </div>
         </div>
-      </section>
-
-      {/* ==========================================================================
-         CALL TO ACTION
-         ========================================================================== */}
-
-      <section className="py-24 px-8 bg-raw-white relative overflow-hidden">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <motion.div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,0.5) 35px, rgba(0,0,0,0.5) 70px)`
-            }}
-            animate={{
-              x: [0, 70],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: 'linear'
-            }}
-          />
-        </div>
-
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.h3
-            className="text-4xl font-black mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Research Collaboration
-          </motion.h3>
-          <motion.p
-            className="text-xl text-carbon/70 mb-12 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            We collaborate with institutions and individuals pushing the boundaries of fashion construction.
-            No commercial projects. Only pure research.
-          </motion.p>
-
-          <MagneticButton strength={0.4}>
-            <motion.button
-              className="px-8 py-4 bg-carbon text-raw-white text-lg hover:bg-thread-red transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Propose Research Collaboration
-            </motion.button>
-          </MagneticButton>
-        </div>
-      </section>
+      </footer>
     </div>
   )
 }
