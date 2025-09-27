@@ -1,445 +1,385 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
+import Link from 'next/link'
 import {
-  DeconstructedHover,
-  SacaiLayer,
-  FragmentMosaic,
-  ExposedStructure,
-  AsymmetricTransform
-} from '@/components/HybridLayerEffects'
+  DeconstructedText,
+  LayeredCard,
+  ExposedSeam,
+  MaterialCard,
+  EditorialSection,
+  RawEdgeButton,
+  ConstructionMarker
+} from '@/components/MargielaSacaiComponents'
 
-// Identity Declarations
-const identityStatements = [
-  {
-    id: '001',
-    category: 'PHILOSOPHY',
-    title: 'We Are Not Designers',
-    content: 'We are mediums. Fashion flows through us, not from us. The ego dissolves in the creation.',
-    emphasis: 'FOUNDATIONAL'
-  },
-  {
-    id: '002',
-    category: 'METHOD',
-    title: 'Deconstruction Is Construction',
-    content: 'To destroy is to understand. Every seam we expose teaches us how to build anew.',
-    emphasis: 'TECHNICAL'
-  },
-  {
-    id: '003',
-    category: 'VISION',
-    title: 'No Sales, Only Creation',
-    content: 'Commerce is the death of creativity. We create because we must, not because markets demand.',
-    emphasis: 'RADICAL'
-  },
-  {
-    id: '004',
-    category: 'PROCESS',
-    title: 'Failure Is Discovery',
-    content: 'Our failures are more valuable than others\' successes. In chaos, we find new forms.',
-    emphasis: 'EXPERIMENTAL'
-  },
-  {
-    id: '005',
-    category: 'IDENTITY',
-    title: 'Anonymous Excellence',
-    content: 'The work speaks. The creator disappears. This is the highest form of design.',
-    emphasis: 'PURE'
-  },
-  {
-    id: '006',
-    category: 'FUTURE',
-    title: 'Beyond Fashion',
-    content: 'We don\'t follow fashion. We don\'t lead fashion. We exist outside of fashion.',
-    emphasis: 'TRANSCENDENT'
-  }
-]
-
-// Capabilities
-const capabilities = [
-  { skill: 'PATTERN MAKING', level: 100, category: 'TECHNICAL' },
-  { skill: 'DECONSTRUCTION', level: 100, category: 'CONCEPTUAL' },
-  { skill: 'MATERIAL RESEARCH', level: 95, category: 'EXPERIMENTAL' },
-  { skill: 'STRUCTURAL ENGINEERING', level: 98, category: 'TECHNICAL' },
-  { skill: 'PHILOSOPHY', level: 100, category: 'CONCEPTUAL' },
-  { skill: 'COMMERCIAL VIABILITY', level: 0, category: 'IRRELEVANT' }
-]
-
-// Timeline
-const timeline = [
-  { year: '2024', event: 'LABORATORY ESTABLISHED', description: 'The beginning of pure creation' },
-  { year: '2024', event: 'FIRST DECONSTRUCTION', description: 'Discovery through destruction' },
-  { year: '2024', event: 'PHILOSOPHY DEFINED', description: 'No sales, only creation' },
-  { year: 'FUTURE', event: 'TRANSCENDENCE', description: 'Beyond fashion, beyond commerce' }
-]
-
-type ViewMode = 'MANIFESTO' | 'IDENTITY' | 'PROCESS' | 'PHILOSOPHY'
+// ==========================================================================
+// ABOUT PAGE - Brand Manifesto & Philosophy
+// Professional, Dense, Sophisticated
+// ==========================================================================
 
 export default function AboutPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>('MANIFESTO')
-  const [selectedStatement, setSelectedStatement] = useState<typeof identityStatements[0] | null>(null)
-  const [isRevealing, setIsRevealing] = useState(false)
-  const [philosophyIndex, setPhilosophyIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
-
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   })
 
-  // Transform values
-  const identityReveal = useTransform(scrollYProgress, [0, 1], [0, 100])
-  const philosophyDepth = useTransform(scrollYProgress, [0, 0.5, 1], [0, 50, 100])
-
-  // Philosophy cycling
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPhilosophyIndex((prev) => (prev + 1) % identityStatements.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Random reveal effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.9) {
-        setIsRevealing(true)
-        setTimeout(() => setIsRevealing(false), 1000)
-      }
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const renderManifestoView = () => (
-    <div className="max-w-4xl mx-auto">
-      <ExposedStructure showGrid showMeasurements>
-        <div className="p-12 bg-white-0">
-          <h2 className="text-5xl font-black mb-8">CINCH LAB MANIFESTO</h2>
-
-          <div className="space-y-12 text-lg leading-relaxed">
-            <p className="text-2xl font-bold">
-              We are not a brand. We are a laboratory.
-            </p>
-
-            <p>
-              In this space, fashion is not product—it is process. Not commodity—it is philosophy.
-              We exist in the gap between what fashion was and what it could become.
-            </p>
-
-            <p>
-              Every garment we create is a question: What if clothes were not meant to be worn?
-              What if fashion existed purely as thought? What if the seam was more important than the silhouette?
-            </p>
-
-            <p>
-              We follow the path of Margiela's anonymity and Kawakubo's rebellion. We splice like Sacai,
-              deconstruct like Margiela, think like Yamamoto. But we are none of them. We are the next step.
-            </p>
-
-            <p className="italic">
-              "Cinch • Release • Repeat" is not just our process—it is our existence.
-              We grip ideas, release them transformed, and repeat infinitely.
-            </p>
-
-            <div className="pt-8 border-t border-black-100">
-              <p className="text-3xl font-black">
-                NO SALES. NO COMPROMISE. ONLY CREATION.
-              </p>
-            </div>
-          </div>
-        </div>
-      </ExposedStructure>
-    </div>
-  )
-
-  const renderIdentityView = () => (
-    <div className="space-y-8">
-      {identityStatements.map((statement, index) => (
-        <motion.div
-          key={statement.id}
-          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.1 }}
-          onClick={() => setSelectedStatement(statement)}
-          className="cursor-pointer"
-        >
-          <DeconstructedHover intensity={2}>
-            <AsymmetricTransform intensity={1.5}>
-              <div className="p-8 bg-white-1 border-2 border-gray-plaster">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="text-micro font-mono text-hybrid-red mb-2">
-                      STATEMENT_{statement.id} • {statement.category}
-                    </div>
-                    <h3 className="text-3xl font-black mb-4">{statement.title}</h3>
-                  </div>
-                  <div className={`px-3 py-1 text-xs font-mono ${
-                    statement.emphasis === 'FOUNDATIONAL' ? 'bg-black-100 text-white-0' :
-                    statement.emphasis === 'RADICAL' ? 'bg-hybrid-red text-white-0' :
-                    statement.emphasis === 'PURE' ? 'bg-white-0 border-2 border-black-100' :
-                    'bg-gray-steel text-white-0'
-                  }`}>
-                    {statement.emphasis}
-                  </div>
-                </div>
-                <p className="text-lg leading-relaxed italic">
-                  "{statement.content}"
-                </p>
-              </div>
-            </AsymmetricTransform>
-          </DeconstructedHover>
-        </motion.div>
-      ))}
-    </div>
-  )
-
-  const renderProcessView = () => (
-    <div>
-      {/* Capabilities */}
-      <div className="mb-16">
-        <h3 className="text-2xl font-black mb-8">LABORATORY CAPABILITIES</h3>
-        <div className="space-y-4">
-          {capabilities.map((cap, index) => (
-            <motion.div
-              key={cap.skill}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <span className="text-sm font-bold">{cap.skill}</span>
-                  <span className={`ml-3 text-micro font-mono ${
-                    cap.category === 'IRRELEVANT' ? 'text-hybrid-red' : 'text-gray-steel'
-                  }`}>
-                    {cap.category}
-                  </span>
-                </div>
-                <span className="text-sm font-mono">{cap.level}%</span>
-              </div>
-              <div className="relative h-2 bg-gray-plaster">
-                <motion.div
-                  className={`absolute left-0 top-0 h-full ${
-                    cap.category === 'IRRELEVANT' ? 'bg-hybrid-red' : 'bg-black-100'
-                  }`}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${cap.level}%` }}
-                  transition={{ delay: index * 0.1 + 0.5, duration: 0.8 }}
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Timeline */}
-      <div>
-        <h3 className="text-2xl font-black mb-8">LABORATORY TIMELINE</h3>
-        <div className="relative">
-          <div className="absolute left-8 top-0 bottom-0 w-px bg-gray-plaster" />
-
-          {timeline.map((item, index) => (
-            <motion.div
-              key={index}
-              className="relative flex items-center mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.2 }}
-            >
-              <div className="absolute left-8 w-4 h-4 bg-black-100 -translate-x-1/2" />
-              <div className="ml-16">
-                <div className="text-micro font-mono text-hybrid-red mb-1">{item.year}</div>
-                <h4 className="text-xl font-black mb-1">{item.event}</h4>
-                <p className="text-sm opacity-60">{item.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderPhilosophyView = () => (
-    <FragmentMosaic fragments={9}>
-      <div className="grid grid-cols-3 gap-0">
-        {[
-          'DECONSTRUCTION',
-          'RECONSTRUCTION',
-          'ANONYMITY',
-          'LAYERING',
-          'VOLUME',
-          'VOID',
-          'PATTERN',
-          'CHAOS',
-          'CREATION'
-        ].map((concept, index) => (
-          <motion.div
-            key={concept}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-            className="aspect-square p-8 bg-white-1 border border-gray-plaster flex items-center justify-center group cursor-pointer hover:bg-black-100 hover:text-white-0 transition-all"
-          >
-            <div className="text-center">
-              <div className="text-2xl font-black mb-2">{concept}</div>
-              <div className="text-micro font-mono opacity-60">
-                PHILOSOPHY_{(index + 1).toString().padStart(3, '0')}
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </FragmentMosaic>
-  )
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
+  const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [1, 0.9, 0.8, 0.7])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
-      {/* Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 overlay-grid opacity-20" />
-        <div className="absolute inset-0 texture-muslin opacity-10" />
-      </div>
+    <div ref={containerRef} className="min-h-screen bg-off-white">
 
-      {/* Identity Status Bar */}
-      <motion.div
-        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-2"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        <div className="container-wide">
-          <div className="flex items-center justify-between text-micro font-mono">
-            <div className="flex items-center gap-6">
-              <span>IDENTITY_REVEAL: {Math.round(identityReveal.get())}%</span>
-              <span className="opacity-60">|</span>
-              <span>PHILOSOPHY_DEPTH: {Math.round(philosophyDepth.get())}%</span>
-              <span className="opacity-60">|</span>
-              <motion.span
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                {identityStatements[philosophyIndex].title}
-              </motion.span>
-            </div>
-            <span>WE ARE CINCH LAB</span>
-          </div>
+      {/* ==========================================================================
+         HERO - Brand Philosophy Statement
+         ========================================================================== */}
+
+      <section className="relative min-h-screen flex items-center px-8 py-32">
+        {/* Background Texture */}
+        <motion.div
+          className="absolute inset-0 material-paper opacity-30"
+          style={{ y: parallaxY }}
+        />
+
+        {/* Construction Lines */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute top-1/4 left-0 right-0 h-px bg-accent-blood opacity-10"
+            style={{ transform: 'rotate(-1deg)' }}
+          />
+          <div
+            className="absolute top-1/2 left-0 right-0 h-px bg-accent-ink opacity-10"
+            style={{ transform: 'rotate(0.5deg)' }}
+          />
+          <div
+            className="absolute top-3/4 left-0 right-0 h-px bg-accent-blood opacity-10"
+            style={{ transform: 'rotate(-0.5deg)' }}
+          />
         </div>
-      </motion.div>
 
-      {/* Main Content */}
-      <div className="pt-32 pb-20">
-        <div className="container-wide">
-          {/* Page Title */}
+        <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2 }}
+            style={{ opacity: textOpacity }}
+          >
+            {/* Label */}
+            <span className="text-label text-accent-blood mb-8 block">
+              MANIFESTO / 宣言
+            </span>
+
+            {/* Main Statement */}
+            <h1 className="text-5xl md:text-hero font-black mb-12 leading-none">
+              <DeconstructedText intensity={2}>
+                WE ARE NOT
+              </DeconstructedText>
+              <br />
+              <span className="text-steel">
+                <DeconstructedText intensity={2}>
+                  A BRAND
+                </DeconstructedText>
+              </span>
+            </h1>
+
+            {/* Philosophy Text */}
+            <div className="grid md:grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <p className="text-lg leading-relaxed">
+                  CINCH LAB exists in the space between destruction and creation.
+                  We are an experimental fashion laboratory where commerce is disabled,
+                  where sales don't exist, where every piece is a study in deconstruction.
+                </p>
+                <p className="text-body text-steel">
+                  Inspired by Margiela's philosophy of anonymity and Sacai's hybrid constructions,
+                  we operate without the constraints of commercial fashion.
+                  Our work is not for sale—it is for study, for contemplation, for pushing boundaries.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <p className="text-body text-steel">
+                  每一件作品都是实验的结果。我们不制造产品，我们创造可能性。
+                  <br />
+                  <span className="text-xs opacity-70">
+                    Every piece is a result of experimentation. We don't make products, we create possibilities.
+                  </span>
+                </p>
+                <p className="text-body text-steel">
+                  解构不是破坏，而是理解。重建不是修复，而是重新想象。
+                  <br />
+                  <span className="text-xs opacity-70">
+                    Deconstruction is not destruction, but understanding. Reconstruction is not repair, but reimagination.
+                  </span>
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         CORE PRINCIPLES
+         ========================================================================== */}
+
+      <EditorialSection
+        lineNumber="01"
+        title="Core Principles"
+        subtitle="The foundations of our experimental practice"
+        className="py-24 px-8 bg-ivory"
+      >
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {[
+            {
+              number: '001',
+              title: 'DECONSTRUCTION',
+              description: 'Every garment begins whole, then is methodically taken apart. We expose seams, reveal structure, celebrate the internal architecture of clothing.',
+              techniques: ['Pattern disruption', 'Seam exposure', 'Raw finishing']
+            },
+            {
+              number: '002',
+              title: 'HYBRIDIZATION',
+              description: 'Two become one. Three become one. Multiple garments fuse into singular forms that defy categorization and challenge perception.',
+              techniques: ['Garment splicing', 'Layer fusion', 'Form multiplication']
+            },
+            {
+              number: '003',
+              title: 'EXPERIMENTATION',
+              description: 'Failure is data. Success is temporary. Every experiment teaches us something new about form, function, and the limits of fabric.',
+              techniques: ['Material testing', 'Process iteration', 'Controlled chaos']
+            }
+          ].map((principle, index) => (
+            <motion.div
+              key={principle.number}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+            >
+              <LayeredCard layers={2}>
+                <MaterialCard material={index === 0 ? 'paper' : index === 1 ? 'fabric' : 'concrete'} className="p-8 h-full">
+                  <ConstructionMarker label={principle.number} position="top-left" />
+                  <h3 className="text-2xl font-bold mb-4 mt-8">
+                    {principle.title}
+                  </h3>
+                  <p className="text-sm text-steel mb-6">
+                    {principle.description}
+                  </p>
+                  <div className="space-y-2">
+                    {principle.techniques.map(tech => (
+                      <div key={tech} className="text-2xs font-mono text-steel">
+                        → {tech}
+                      </div>
+                    ))}
+                  </div>
+                </MaterialCard>
+              </LayeredCard>
+            </motion.div>
+          ))}
+        </div>
+      </EditorialSection>
+
+      {/* ==========================================================================
+         LABORATORY PROCESS
+         ========================================================================== */}
+
+      <section className="py-24 px-8 bg-carbon text-off-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <SacaiLayer layers={3}>
-              <ExposedStructure showGrid={isRevealing}>
-                <div className="py-12">
-                  <div className="text-micro font-mono text-hybrid-red mb-2">
-                    IDENTITY_DECLARATION / PHILOSOPHY_CORE
-                  </div>
-                  <h1 className="text-display font-black tracking-tightest uppercase">
-                    ABOUT
-                  </h1>
-                  <div className="text-lg text-gray-steel mt-4 max-w-2xl">
-                    The mind behind the laboratory. The philosophy behind the fashion.
-                    This is who we are when the seams are exposed.
-                  </div>
-                </div>
-              </ExposedStructure>
-            </SacaiLayer>
-          </motion.div>
+            <h2 className="text-4xl font-bold mb-12">Our Process</h2>
 
-          {/* View Controls */}
-          <div className="mb-12">
-            <div className="flex gap-2">
-              {(['MANIFESTO', 'IDENTITY', 'PROCESS', 'PHILOSOPHY'] as ViewMode[]).map(mode => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode)}
-                  className={`px-4 py-2 text-xs font-mono transition-all ${
-                    viewMode === mode
-                      ? 'bg-black-100 text-white-0'
-                      : 'bg-white-0 text-black-100 border border-gray-plaster hover:border-black-100'
-                  }`}
+            <div className="grid md:grid-cols-4 gap-px bg-steel">
+              {[
+                { phase: '01', name: 'OBSERVE', description: 'Study existing forms' },
+                { phase: '02', name: 'DECONSTRUCT', description: 'Take apart systematically' },
+                { phase: '03', name: 'EXPERIMENT', description: 'Test new combinations' },
+                { phase: '04', name: 'DOCUMENT', description: 'Archive the process' }
+              ].map((step, index) => (
+                <motion.div
+                  key={step.phase}
+                  className="bg-carbon p-8"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  {mode}
-                </button>
+                  <span className="text-5xl font-black text-steel/30">{step.phase}</span>
+                  <h3 className="text-lg font-bold mt-4 mb-2">{step.name}</h3>
+                  <p className="text-sm text-steel">{step.description}</p>
+                </motion.div>
               ))}
             </div>
-          </div>
-
-          {/* Content Display */}
-          <div className="mb-20">
-            {viewMode === 'MANIFESTO' && renderManifestoView()}
-            {viewMode === 'IDENTITY' && renderIdentityView()}
-            {viewMode === 'PROCESS' && renderProcessView()}
-            {viewMode === 'PHILOSOPHY' && renderPhilosophyView()}
-          </div>
-
-          {/* Core Values */}
-          <motion.div
-            className="mt-20 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
-            <div className="text-micro font-mono text-gray-steel mb-4">
-              CORE VALUES
-            </div>
-            <h2 className="text-4xl font-black mb-8">
-              DECONSTRUCTION • RECONSTRUCTION • TRANSCENDENCE
-            </h2>
-            <p className="text-lg text-gray-steel max-w-2xl mx-auto">
-              We exist in the space between what fashion was and what it will become.
-              Every creation is a step toward something that has never existed.
-            </p>
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Statement Detail Modal */}
-      <AnimatePresence>
-        {selectedStatement && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedStatement(null)}
-              className="fixed inset-0 bg-black-100/90 z-50"
-            />
+      {/* ==========================================================================
+         INSPIRATIONS
+         ========================================================================== */}
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-16 md:inset-32 bg-white-0 z-50 flex items-center justify-center"
-            >
-              <div className="p-12 text-center max-w-2xl">
-                <div className="text-micro font-mono text-hybrid-red mb-4">
-                  {selectedStatement.category}
-                </div>
-                <h2 className="text-5xl font-black mb-8">{selectedStatement.title}</h2>
-                <p className="text-2xl leading-relaxed italic mb-8">
-                  "{selectedStatement.content}"
+      <EditorialSection
+        lineNumber="02"
+        title="Inspirations"
+        subtitle="The masters who guide our philosophy"
+        className="py-24 px-8"
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-16">
+            {/* Margiela */}
+            <ExposedSeam showMeasurements={false} showStitching={true}>
+              <div className="p-12">
+                <h3 className="text-3xl font-bold mb-6">MARTIN MARGIELA</h3>
+                <p className="text-lg text-steel mb-6">
+                  The master of deconstruction. Margiela taught us that fashion is not about the designer,
+                  but about the garment itself. Anonymity as philosophy. White as a canvas for possibility.
                 </p>
-                <button
-                  onClick={() => setSelectedStatement(null)}
-                  className="px-6 py-3 bg-black-100 text-white-0 text-sm font-mono hover:bg-hybrid-red transition-colors"
-                >
-                  CLOSE
-                </button>
+                <div className="grid md:grid-cols-3 gap-6 text-sm">
+                  <div>
+                    <span className="text-label block mb-2">TECHNIQUES</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Exposed linings</li>
+                      <li>• Blank labels</li>
+                      <li>• Trompe-l'œil</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-label block mb-2">PHILOSOPHY</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Anonymity</li>
+                      <li>• Deconstruction</li>
+                      <li>• Transformation</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-label block mb-2">LEGACY</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Artisanal approach</li>
+                      <li>• Conceptual fashion</li>
+                      <li>• Process as product</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            </ExposedSeam>
+
+            {/* Sacai */}
+            <ExposedSeam showMeasurements={false} showStitching={true}>
+              <div className="p-12">
+                <h3 className="text-3xl font-bold mb-6">CHITOSE ABE / SACAI</h3>
+                <p className="text-lg text-steel mb-6">
+                  The architect of hybrid forms. Sacai showed us that one plus one can equal three.
+                  Garments that exist in multiple dimensions simultaneously.
+                </p>
+                <div className="grid md:grid-cols-3 gap-6 text-sm">
+                  <div>
+                    <span className="text-label block mb-2">TECHNIQUES</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Hybrid construction</li>
+                      <li>• Spliced patterns</li>
+                      <li>• Multiple identities</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-label block mb-2">PHILOSOPHY</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Duality</li>
+                      <li>• Unexpected combinations</li>
+                      <li>• Familiar yet new</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-label block mb-2">LEGACY</span>
+                    <ul className="space-y-1 text-steel">
+                      <li>• Collaboration culture</li>
+                      <li>• Technical innovation</li>
+                      <li>• Hybrid aesthetics</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </ExposedSeam>
+          </div>
+        </div>
+      </EditorialSection>
+
+      {/* ==========================================================================
+         LABORATORY TEAM
+         ========================================================================== */}
+
+      <section className="py-24 px-8 bg-ivory">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12">The Laboratory</h2>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            <MaterialCard material="paper" className="p-8">
+              <h3 className="text-xl font-bold mb-4">RESEARCH DIVISION</h3>
+              <p className="text-sm text-steel mb-6">
+                Pattern engineers, material scientists, and garment archaeologists
+                working to understand the fundamental nature of clothing construction.
+              </p>
+              <div className="text-2xs font-mono text-steel space-y-1">
+                <div>EXPERIMENTS_CONDUCTED: 1,247</div>
+                <div>PATTERNS_ARCHIVED: 892</div>
+                <div>FAILURES_DOCUMENTED: 2,103</div>
+              </div>
+            </MaterialCard>
+
+            <MaterialCard material="fabric" className="p-8">
+              <h3 className="text-xl font-bold mb-4">DOCUMENTATION DIVISION</h3>
+              <p className="text-sm text-steel mb-6">
+                Archivists and philosophers recording every experiment,
+                every failure, every breakthrough in our ongoing exploration.
+              </p>
+              <div className="text-2xs font-mono text-steel space-y-1">
+                <div>IMAGES_CAPTURED: 47,892</div>
+                <div>WORDS_WRITTEN: 892,471</div>
+                <div>THOUGHTS_PRESERVED: ∞</div>
+              </div>
+            </MaterialCard>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         FINAL STATEMENT
+         ========================================================================== */}
+
+      <section className="py-32 px-8 bg-carbon text-off-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            <h2 className="text-5xl font-black mb-8">
+              <DeconstructedText intensity={1.5}>
+                NO SALES
+              </DeconstructedText>
+            </h2>
+            <p className="text-xl mb-12">
+              This is not a shop. This is not a brand.
+              <br />
+              This is an experimental fashion laboratory.
+            </p>
+            <p className="text-body text-steel max-w-2xl mx-auto mb-12">
+              We exist to push boundaries, to question conventions,
+              to explore what fashion can become when freed from commercial constraints.
+              Our work is documentation, not product. Our goal is understanding, not profit.
+            </p>
+            <Link href="/lab">
+              <RawEdgeButton variant="secondary" size="large">
+                Enter the Laboratory
+              </RawEdgeButton>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
     </div>
   )
 }
