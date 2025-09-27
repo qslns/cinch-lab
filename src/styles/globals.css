@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Margiela × Sacai Design System */
+/* Import Design Systems */
 @import './margiela-sacai-system.css';
+@import './deconstructed-system.css';
 
 /* Premium Typography System inspired by luxury brands */
 @layer base {
@@ -608,12 +609,23 @@ nav [data-cipher-text="true"] {
   }
 }
 
-/* Laboratory Brutalist Styles */
+/* Extended Color Variables */
 :root {
-  /* Brutalist Color System */
+  /* Core System */
   --carbon-black: #0a0a0a;
   --paper-white: #fafafa;
   --concrete-gray: #2a2a2a;
+  --off-black: #0a0a0a;
+  --charcoal: #1a1a1a;
+
+  /* Material Colors */
+  --denim-blue: #1E3A5F;
+  --raw-silk: #FFF8E7;
+  --aged-leather: #8B4513;
+  --oxidized-metal: #708090;
+  --bleached-bone: #FFFEF0;
+
+  /* Accent System */
   --safety-orange: #ff4500;
   --centrifuge-blue: #0066ff;
   --hazmat-green: #00ff00;
@@ -621,8 +633,6 @@ nav [data-cipher-text="true"] {
   --glitch-red: #ff0000;
   --glitch-cyan: #00ffff;
   --glitch-magenta: #ff00ff;
-  --off-black: #0a0a0a;
-  --charcoal: #1a1a1a;
 }
 
 /* Brutalist Typography */
@@ -658,27 +668,31 @@ nav [data-cipher-text="true"] {
   z-index: 1;
 }
 
-/* Glitch Effects - Balanced */
+/* Glitch Effects - Enhanced */
 @keyframes glitch {
   0%, 100% {
     text-shadow:
-      0.02em 0 0 var(--glitch-red),
-      -0.02em 0 0 var(--glitch-cyan);
+      0.02em 0 0 rgba(255, 0, 0, 0.75),
+      -0.02em 0 0 rgba(0, 255, 255, 0.75),
+      0.025em 0 2px rgba(255, 255, 0, 0.25);
   }
   25% {
     text-shadow:
-      -0.03em 0 0 var(--glitch-red),
-      0.03em 0 0 var(--glitch-cyan);
+      -0.03em 0 0 rgba(255, 0, 0, 0.75),
+      0.03em 0 0 rgba(0, 255, 255, 0.75),
+      -0.025em 0 2px rgba(255, 0, 255, 0.25);
   }
   50% {
     text-shadow:
-      0.03em 0 0 var(--glitch-red),
-      -0.03em 0 0 var(--glitch-cyan);
+      0.03em 0 0 rgba(255, 0, 0, 0.75),
+      -0.03em 0 0 rgba(0, 255, 255, 0.75),
+      0 0 3px rgba(255, 255, 255, 0.5);
   }
   75% {
     text-shadow:
-      -0.02em 0 0 var(--glitch-red),
-      0.02em 0 0 var(--glitch-cyan);
+      -0.02em 0 0 rgba(255, 0, 0, 0.75),
+      0.02em 0 0 rgba(0, 255, 255, 0.75),
+      0.025em 0 2px rgba(0, 255, 0, 0.25);
   }
 }
 
@@ -832,4 +846,82 @@ nav [data-cipher-text="true"] {
 
 .perspective-1000 {
   perspective: 1000px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+/* Blend Modes */
+.mix-difference { mix-blend-mode: difference; }
+.mix-multiply { mix-blend-mode: multiply; }
+.mix-screen { mix-blend-mode: screen; }
+.mix-overlay { mix-blend-mode: overlay; }
+.mix-exclusion { mix-blend-mode: exclusion; }
+
+/* Advanced Animations */
+@keyframes float-rotate {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(-5deg); }
+  75% { transform: translateY(20px) rotate(5deg); }
+}
+
+@keyframes morph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-10px) scaleY(1.1); }
+}
+
+.animate-float-rotate { animation: float-rotate 6s ease-in-out infinite; }
+.animate-morph { animation: morph 8s ease-in-out infinite; }
+.animate-wave { animation: wave 2s ease-in-out infinite; }
+
+/* Experimental Filters */
+.filter-vintage {
+  filter: sepia(0.3) contrast(1.2) brightness(1.1) saturate(1.3);
+}
+
+.filter-cold {
+  filter: hue-rotate(180deg) saturate(0.5) brightness(1.2);
+}
+
+.filter-warm {
+  filter: sepia(0.2) saturate(1.5) hue-rotate(-10deg);
+}
+
+/* Custom Scrollbar - Enhanced */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--carbon-black), var(--concrete-gray));
+  border-radius: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--glitch-red), var(--glitch-cyan));
+}
+
+/* Selection Styles */
+::selection {
+  background: var(--glitch-cyan);
+  color: var(--carbon-black);
+  text-shadow: 1px 1px 0 var(--glitch-red);
+}
+
+::-moz-selection {
+  background: var(--glitch-cyan);
+  color: var(--carbon-black);
+  text-shadow: 1px 1px 0 var(--glitch-red);
 }

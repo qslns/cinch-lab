@@ -78,6 +78,7 @@ export default function ChaosPage() {
   const [activeExperiment, setActiveExperiment] = useState<ChaosExperiment | null>(null)
   const [elements, setElements] = useState(chaosElements)
   const [isDeconstructing, setIsDeconstructing] = useState(false)
+  const [windowDimensions, setWindowDimensions] = useState({ width: 1920, height: 1080 })
 
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -109,6 +110,22 @@ export default function ChaosPage() {
     }, 3000)
     return () => clearInterval(interval)
   }, [chaosLevel])
+
+  // Track window dimensions
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const updateDimensions = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
+
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [])
 
   return (
     <div ref={containerRef} className="min-h-screen bg-off-white">
@@ -172,12 +189,12 @@ export default function ChaosPage() {
                 key={i}
                 className="absolute w-2 h-2 bg-carbon"
                 initial={{
-                  x: Math.random() * window.innerWidth,
-                  y: Math.random() * window.innerHeight
+                  x: Math.random() * windowDimensions.width,
+                  y: Math.random() * windowDimensions.height
                 }}
                 animate={{
-                  x: Math.random() * window.innerWidth,
-                  y: Math.random() * window.innerHeight,
+                  x: Math.random() * windowDimensions.width,
+                  y: Math.random() * windowDimensions.height,
                   rotate: Math.random() * 360
                 }}
                 transition={{

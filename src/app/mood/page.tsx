@@ -30,6 +30,8 @@ export default function MoodPage() {
 
   // Responsive columns
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const handleResize = () => {
       const width = window.innerWidth
       if (width < 640) setColumns(1)

@@ -9,6 +9,8 @@ import '@/styles/globals.css'
 import '@/styles/variables.css'
 import '@/styles/modern.css'
 import '@/styles/brutalism.css'
+import '@/styles/deconstructed-system.css'
+import '@/styles/responsive-system.css'
 
 export const metadata: Metadata = {
   title: 'CINCH LAB — 최고이자 난 천재야',

@@ -6,6 +6,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import KineticText from '@/components/KineticText'
 import { ExposedStructure } from '@/components/DeconstructedHover'
+import { useResponsive } from '@/hooks/useResponsive'
+import { MobileMenu } from '@/components/ResponsiveWrapper'
 
 const navLinks = [
   { href: '/', label: 'HOME', code: '001' },
@@ -23,6 +25,7 @@ export default function BrutalistNavigation() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const [systemStatus, setSystemStatus] = useState('OPERATIONAL')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { isMobile, isTablet, isSmallScreen } = useResponsive()
 
   // Random glitch effect
   useEffect(() => {
@@ -47,7 +50,7 @@ export default function BrutalistNavigation() {
 
       {/* Main Navigation Header - Deconstructed */}
       <header className="experimental-nav border-decon shadow-layer-2" role="banner">
-        <div className="asymmetric-container h-20 items-center px-8 texture-raw-canvas">
+        <div className={`asymmetric-container h-20 items-center ${isSmallScreen ? 'px-4' : 'px-8'} texture-raw-canvas`}>
           {/* System Status */}
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 ${systemStatus === 'OPERATIONAL' ? 'bg-green-500' : 'bg-red-500'} ${isGlitching ? 'flicker' : ''}`} />
@@ -59,19 +62,21 @@ export default function BrutalistNavigation() {
           {/* Logo with Kinetic Typography */}
           <Link href="/" className="flex items-center gap-4 group" aria-label="CINCH LAB Home">
             <ExposedStructure className="inline-block">
-              <div className="text-2xl font-black tracking-tighter">
+              <div className={`${isSmallScreen ? 'text-lg' : 'text-2xl'} font-black tracking-tighter`}>
                 <KineticText text="CINCH" mode="morph" className="inline" />
                 <span className="text-medical-red mx-1">{'//'}</span>
                 <KineticText text="LAB" mode="distort" className="inline" />
               </div>
             </ExposedStructure>
-            <div className="text-[10px] font-mono opacity-60 chemical-formula group-hover:text-acid-yellow transition-colors">
-              C₆H₅NO₂ <span className="text-medical-red">→</span> FASHION
-            </div>
+            {!isMobile && (
+              <div className="text-[10px] font-mono opacity-60 chemical-formula group-hover:text-acid-yellow transition-colors">
+                C₆H₅NO₂ <span className="text-medical-red">→</span> FASHION
+              </div>
+            )}
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link, index) => {
               const isActive = pathname === link.href
               return (
@@ -144,7 +149,7 @@ export default function BrutalistNavigation() {
 
       {/* Mobile Menu Button */}
       <button
-        className="fixed top-4 right-4 z-[1001] md:hidden brutalist-btn p-2 focus:outline-none focus:ring-2 focus:ring-safety-orange"
+        className="fixed top-6 right-4 z-[1001] lg:hidden flex items-center justify-center w-10 h-10 focus:outline-none focus:ring-2 focus:ring-safety-orange"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={isMobileMenuOpen}
@@ -157,39 +162,10 @@ export default function BrutalistNavigation() {
         </div>
       </button>
 
-      {/* Mobile Menu */}
-      <div
-        id="mobile-menu"
-        className={`fixed top-0 right-0 h-full w-64 bg-white border-l-3 border-carbon-black z-[1000] transform transition-transform duration-300 md:hidden ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-        aria-hidden={!isMobileMenuOpen}
-      >
-        <div className="p-8 pt-20">
-          <div className="space-y-6">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block ${isActive ? 'font-black' : 'font-bold'} focus:outline-none focus:ring-2 focus:ring-safety-orange focus:ring-inset p-2 -m-2`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono opacity-60">{link.code}</span>
-                    <span className="text-lg tracking-wider">{link.label}</span>
-                  </div>
-                  {isActive && (
-                    <div className="mt-2 h-0.5 bg-safety-orange" />
-                  )}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      </div>
+      {/* Mobile Menu - Using Responsive Component */}
+      {isSmallScreen && (
+        <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      )}
 
       {/* Experimental Circular Menu - Margiela Inspired */}
       <div className="fixed bottom-8 left-8 hidden lg:block hover-explode">

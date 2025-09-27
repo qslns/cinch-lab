@@ -1,565 +1,596 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, useInView } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import {
-  DeconstructedText,
-  LayeredCard,
-  ExposedSeam,
-  MaterialCard,
-  AsymmetricGridItem,
-  EditorialSection,
-  RawEdgeButton,
-  ConstructionMarker
-} from '@/components/MargielaSacaiComponents'
+  MagneticButton,
+  RippleEffect,
+  DistortionText,
+  ParallaxContainer,
+  FabricDrag,
+  RevealOnScroll,
+  SplitText,
+  NoiseBackground,
+  Card3D,
+  CursorFollower
+} from '@/components/InteractiveElements'
+
+// Dynamic imports for heavy components
+const MorphingShape = dynamic(() => import('@/components/InteractiveElements').then(mod => mod.MorphingShape), { ssr: false })
 
 // ==========================================================================
-// CINCH LAB HOME - Avant-Garde Fashion Laboratory
-// Margiela × Sacai Philosophy - Deconstructive Asymmetry
+// CINCH LAB HOME - Complete Margiela × Sacai Implementation
+// Deconstructive, Layered, Interactive, Experimental
 // ==========================================================================
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
+  const { scrollY, scrollYProgress } = useScroll()
 
-  // Mouse tracking for parallax
+  // Mouse position for interactive effects
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
+  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 })
+  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 })
 
-  const springConfig = { damping: 25, stiffness: 150 }
-  const xSpring = useSpring(mouseX, springConfig)
-  const ySpring = useSpring(mouseY, springConfig)
+  // State
+  const [currentTime, setCurrentTime] = useState(new Date())
+  const [isLoading, setIsLoading] = useState(true)
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null)
+  const [activeExperiment, setActiveExperiment] = useState(0)
+
+  // Experiments data
+  const experiments = [
+    { id: 'DECONSTRUCTION', name: 'Pattern Deconstruction', status: 'active' },
+    { id: 'LAYERING', name: 'Hybrid Layering', status: 'processing' },
+    { id: 'MATERIAL', name: 'Material Research', status: 'complete' },
+    { id: 'VOLUME', name: 'Volume Studies', status: 'active' }
+  ]
 
   // Parallax transforms
-  const heroParallax = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const scaleProgress = useTransform(scrollYProgress, [0, 0.5], [1, 0.95])
-  const rotateProgress = useTransform(scrollYProgress, [0, 1], [0, 5])
+  const heroY = useTransform(scrollY, [0, 1000], [0, -500])
+  const heroScale = useTransform(scrollY, [0, 500], [1, 0.8])
+  const heroRotate = useTransform(scrollY, [0, 1000], [0, -5])
+  const textY = useTransform(scrollY, [0, 500], [0, 200])
+  const opacity = useTransform(scrollY, [0, 300], [1, 0])
 
-  // Current time for laboratory status
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const [activeExperiment, setActiveExperiment] = useState('PATTERN_DECONSTRUCTION')
-  const [hoveredDepartment, setHoveredDepartment] = useState<string | null>(null)
-
+  // Initialize
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
+    // Loading animation
+    setTimeout(() => setIsLoading(false), 2000)
 
+    // Time update
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+
+    // Experiment rotation
     const experimentTimer = setInterval(() => {
-      const experiments = [
-        'PATTERN_DECONSTRUCTION',
-        'FABRIC_MANIPULATION',
-        'HYBRID_LAYERING',
-        'VOLUME_STUDIES',
-        'MATERIAL_RESEARCH',
-        'COLOR_EXTRACTION'
-      ]
-      setActiveExperiment(experiments[Math.floor(Math.random() * experiments.length)])
-    }, 5000)
+      setActiveExperiment(prev => (prev + 1) % experiments.length)
+    }, 3000)
+
+    // Mouse tracking
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX)
+      mouseY.set(e.clientY)
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('mousemove', handleMouseMove)
+    }
 
     return () => {
       clearInterval(timer)
       clearInterval(experimentTimer)
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('mousemove', handleMouseMove)
+      }
     }
   }, [])
 
-  // Mouse tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set((e.clientX / window.innerWidth - 0.5) * 20)
-      mouseY.set((e.clientY / window.innerHeight - 0.5) * 20)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
-
-  const departmentColors = {
-    LAB: 'var(--accent-electric)',
-    COLLECTIONS: 'var(--accent-violet)',
-    ARCHIVE: 'var(--accent-amber)',
-    ANALYSIS: 'var(--accent-teal)',
-    ABOUT: 'var(--accent-rose)',
-    CONTACT: 'var(--accent-lime)'
+  // Loading Screen
+  if (isLoading) {
+    return (
+      <motion.div
+        className="fixed inset-0 z-50 bg-raw-white flex items-center justify-center"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-center">
+          <motion.div
+            className="inline-block"
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            <div className="w-32 h-32 border-4 border-thread-black relative">
+              <div className="absolute inset-2 border-2 border-thread-red animate-spin-slow" />
+              <div className="absolute inset-4 border border-thread-blue animate-spin-slow reverse" />
+            </div>
+          </motion.div>
+          <motion.p
+            className="mt-8 text-xs font-mono uppercase tracking-widest"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Deconstructing Fashion
+          </motion.p>
+        </div>
+      </motion.div>
+    )
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-off-white via-ivory to-bone text-carbon overflow-hidden">
+    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
+      {/* Custom Cursor */}
+      <CursorFollower />
 
-      {/* ==========================================================================
-         HERO SECTION - Asymmetric Editorial Opening
-         ========================================================================== */}
+      {/* Noise Texture Overlay */}
+      <NoiseBackground opacity={0.02} />
 
-      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Dynamic Background Layers */}
+      {/* Background Layers */}
+      <div className="fixed inset-0 pointer-events-none">
         <motion.div
           className="absolute inset-0"
           style={{
-            x: xSpring,
-            y: ySpring,
+            background: `radial-gradient(circle at ${smoothMouseX}px ${smoothMouseY}px, rgba(255,107,53,0.05) 0%, transparent 50%)`
           }}
+        />
+      </div>
+
+      {/* ==========================================================================
+         HERO SECTION - Fully Interactive & Deconstructed
+         ========================================================================== */}
+
+      <section ref={heroRef} className="relative min-h-screen flex items-center">
+        {/* Animated Background Elements */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ y: heroY, scale: heroScale, rotate: heroRotate }}
         >
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-10 left-10 w-96 h-96 bg-accent-electric rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-20 right-20 w-80 h-80 bg-accent-violet rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-coral rounded-full blur-3xl animate-breathe" />
-          </div>
+          {/* Floating Shapes */}
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{
+                top: `${20 + i * 15}%`,
+                left: `${10 + i * 20}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 10 + i * 2,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
+              <MorphingShape size={150} />
+            </motion.div>
+          ))}
         </motion.div>
 
-        {/* Technical Grid Overlay */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(90deg, rgba(0,51,255,0.03) 1px, transparent 1px),
-                linear-gradient(180deg, rgba(0,51,255,0.03) 1px, transparent 1px)
-              `,
-              backgroundSize: '50px 50px',
-            }}
-          />
-        </div>
-
         {/* Main Content */}
-        <motion.div
-          className="relative z-10 container max-w-7xl mx-auto px-8 py-24"
-          style={{
-            y: heroParallax,
-            scale: scaleProgress,
-            rotate: rotateProgress
-          }}
-        >
-          {/* Laboratory Status Bar */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-8">
+          {/* Status Bar */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-16"
+            className="mb-12"
           >
-            <div className="flex items-center justify-between text-2xs font-mono text-steel">
+            <div className="flex items-center justify-between text-xs font-mono">
               <div className="flex items-center gap-6">
-                <span className="hover-glitch cursor-pointer">LAB_STATUS: OPERATIONAL</span>
-                <span className="w-2 h-2 bg-gradient-to-r from-accent-electric to-accent-lime rounded-full animate-pulse" />
-                <span>{currentTime.toLocaleTimeString('en-US', { hour12: false })}</span>
+                <span className="text-thread-red">●</span>
+                <DistortionText text="LABORATORY ACTIVE" />
+                <span className="opacity-50">
+                  {currentTime.toLocaleTimeString('en-US', { hour12: false })}
+                </span>
               </div>
               <div className="flex items-center gap-6">
-                <span className="hover-text-split" data-text={`EXPERIMENT: ${activeExperiment}`}>
-                  EXPERIMENT: {activeExperiment}
-                </span>
-                <span className="opacity-50">TOKYO / PARIS / SEOUL</span>
+                <span className="opacity-50">EXPERIMENT:</span>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeExperiment}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-thread-blue"
+                  >
+                    {experiments[activeExperiment].name}
+                  </motion.span>
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
 
-          {/* Main Typography - Asymmetric Layout */}
-          <div className="grid grid-cols-12 gap-6">
+          {/* Hero Typography - Deconstructed Layout */}
+          <div className="grid grid-cols-12 gap-4">
             <motion.div
-              className="col-span-12 lg:col-span-7 lg:col-start-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
+              className="col-span-12 lg:col-span-8"
+              style={{ y: textY, opacity }}
             >
-              {/* Slogan - Deconstructed Typography */}
-              <h1 className="text-hero font-black leading-none tracking-compressed mb-8">
-                <motion.span
-                  className="block hover-layer cursor-default"
-                  initial={{ x: -100, opacity: 0, rotate: -2 }}
-                  animate={{ x: 0, opacity: 1, rotate: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  style={{ color: 'var(--carbon)' }}
-                >
-                  CINCH
-                </motion.span>
-                <motion.span
-                  className="block text-transparent bg-clip-text bg-gradient-to-r from-accent-electric to-accent-violet hover-deconstruct cursor-default"
-                  initial={{ x: 100, opacity: 0 }}
-                  animate={{ x: 50, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  style={{ marginLeft: '10%' }}
-                >
-                  RELEASE
-                </motion.span>
-                <motion.span
-                  className="block hover-asymmetric cursor-default"
+              {/* Main Slogan - Split and Layered */}
+              <h1 className="relative">
+                <motion.div
                   initial={{ x: -100, opacity: 0 }}
-                  animate={{ x: -30, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  style={{ color: 'var(--accent-coral)' }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="relative inline-block"
                 >
-                  REPEAT
-                </motion.span>
+                  <FabricDrag>
+                    <span className="text-[8rem] font-black leading-none tracking-tighter">
+                      CINCH
+                    </span>
+                  </FabricDrag>
+                  <div className="absolute -top-2 -left-2 text-[8rem] font-black text-thread-red opacity-30 blur-[2px]">
+                    CINCH
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: 100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="relative block ml-[15%] -mt-8"
+                >
+                  <MagneticButton strength={0.2}>
+                    <span className="text-[7rem] font-bold leading-none hybrid-split">
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-thread-blue to-safety-orange">
+                        RELEASE
+                      </span>
+                    </span>
+                  </MagneticButton>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="relative block -mt-6"
+                >
+                  <span className="text-[6rem] font-light leading-none text-oxidized-metal">
+                    <SplitText text="REPEAT" delay={0.05} />
+                  </span>
+                </motion.div>
               </h1>
 
-              {/* Description - Editorial Typography */}
+              {/* Description - Editorial Style */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="space-y-4 max-w-2xl"
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="mt-12 max-w-2xl"
               >
-                <p className="text-lg leading-relaxed font-light">
-                  Experimental fashion laboratory exploring the space between
-                  <span className="font-semibold text-accent-electric"> destruction </span>
-                  and
-                  <span className="font-semibold text-accent-violet"> creation</span>.
-                  Where traditional garment construction meets radical deconstruction.
+                <p className="text-xl font-light leading-relaxed mb-4">
+                  Experimental fashion laboratory where
+                  <span className="font-medium text-thread-red"> destruction </span>
+                  meets
+                  <span className="font-medium text-thread-blue"> creation</span>.
+                  No commerce. No compromise. Only process.
                 </p>
-                <p className="text-body text-steel opacity-70">
-                  実験的ファッション研究所 • 해체주의 패션 실험실
-                  <br />
-                  No products. No sales. Only experiments.
+                <p className="text-sm opacity-60 font-mono">
+                  実験的ファッション研究所 × 해체주의 실험실
                 </p>
               </motion.div>
 
-              {/* CTA Buttons - Interactive */}
+              {/* Interactive CTAs */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex gap-4 mt-12"
+                transition={{ duration: 0.8, delay: 1 }}
+                className="mt-12 flex flex-wrap gap-4"
               >
-                <button
-                  className="btn-interactive px-8 py-4 border-2 border-carbon hover-brutal"
-                  onClick={() => document.getElementById('experiments')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  <span className="text-xs uppercase tracking-widest font-medium">
-                    Enter Laboratory
-                  </span>
-                </button>
-                <Link href="/archive">
-                  <button className="px-8 py-4 border border-steel/30 hover:bg-carbon hover:text-off-white transition-all duration-300">
-                    <span className="text-xs uppercase tracking-widest">
-                      View Archive
+                <RippleEffect color="rgba(220, 20, 60, 0.3)">
+                  <button className="btn-deconstructed">
+                    <span className="text-xs font-mono uppercase tracking-widest">
+                      Enter Laboratory
                     </span>
                   </button>
-                </Link>
+                </RippleEffect>
+
+                <MagneticButton>
+                  <Link href="/archive">
+                    <button className="btn-hybrid">
+                      <span className="text-xs font-mono uppercase tracking-widest">
+                        View Archive
+                      </span>
+                    </button>
+                  </Link>
+                </MagneticButton>
               </motion.div>
             </motion.div>
 
-            {/* Side Information - Floating Card */}
+            {/* Side Panel - Floating Information */}
             <motion.div
-              className="col-span-12 lg:col-span-4 lg:col-start-9"
-              initial={{ opacity: 0, x: 20, rotate: 2 }}
-              animate={{ opacity: 1, x: 0, rotate: -1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              className="col-span-12 lg:col-span-4"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <div className="relative hover-layer">
-                <MaterialCard material="glass" className="p-8 backdrop-blur-sm bg-white/50 border border-carbon/10">
-                  <h3 className="text-label mb-4 text-accent-electric">CURRENT RESEARCH</h3>
-                  <ul className="space-y-3 text-sm">
+              <Card3D>
+                <div className="layer-card p-8 bg-raw-white/90 backdrop-blur-sm border border-thread-black/20 exposed-seam">
+                  <h3 className="text-xs font-mono uppercase tracking-widest mb-6 text-thread-red">
+                    Current Research
+                  </h3>
+                  <div className="space-y-4">
                     {[
-                      { label: '01', text: 'Deconstructive pattern making via algorithmic design', color: 'var(--accent-electric)' },
-                      { label: '02', text: 'Hybrid garment splicing: East meets West', color: 'var(--accent-violet)' },
-                      { label: '03', text: 'Bio-material cultivation & textile futures', color: 'var(--accent-teal)' }
-                    ].map((item) => (
-                      <li key={item.label} className="flex items-start gap-3 hover-fabric cursor-pointer group">
-                        <span className="font-mono text-xs" style={{ color: item.color }}>{item.label}</span>
-                        <span className="group-hover:translate-x-1 transition-transform">{item.text}</span>
-                      </li>
+                      'Deconstructive pattern making through exposed seams',
+                      'Hybrid garment splicing: MA-1 meets tailoring',
+                      'Zero-waste through pattern tessellation',
+                      'Biomaterial cultivation: mycelium leather'
+                    ].map((text, i) => (
+                      <RevealOnScroll key={i}>
+                        <div className="flex items-start gap-3 group cursor-pointer">
+                          <span className="text-xs font-mono text-thread-blue">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <p className="text-sm leading-relaxed group-hover:translate-x-1 transition-transform">
+                            {text}
+                          </p>
+                        </div>
+                      </RevealOnScroll>
                     ))}
-                  </ul>
-                </MaterialCard>
-              </div>
+                  </div>
+                </div>
+              </Card3D>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Animated Scroll Indicator */}
+        {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-carbon to-transparent" />
-          <span className="text-2xs font-mono text-steel tracking-widest uppercase">
-            Explore
-          </span>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-thread-black to-transparent" />
+            <span className="text-xs font-mono uppercase tracking-widest opacity-50">
+              Scroll to Explore
+            </span>
+          </div>
         </motion.div>
       </section>
 
       {/* ==========================================================================
-         EXPERIMENTS SECTION - Asymmetric Grid Layout
+         DEPARTMENTS SECTION - Interactive Grid with Hover Effects
          ========================================================================== */}
 
-      <section id="experiments" className="py-32 px-8 relative">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, var(--accent-electric) 35px, var(--accent-electric) 70px)`
-          }} />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16"
-          >
-            <span className="text-2xs font-mono text-accent-electric tracking-widest">
-              DEPARTMENTS / 部門 / 부서
-            </span>
-            <h2 className="text-6xl font-black mt-4 mb-6">
-              Laboratory
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-violet to-accent-coral"> Departments</span>
-            </h2>
-            <p className="text-lg text-steel max-w-3xl">
-              Each department operates as an autonomous research unit,
-              pushing boundaries through experimental methodologies and radical approaches.
-            </p>
-          </motion.div>
+      <section className="py-32 px-8 bg-gradient-to-b from-raw-white to-unbleached">
+        <div className="max-w-7xl mx-auto">
+          <RevealOnScroll>
+            <div className="mb-16">
+              <h2 className="text-5xl font-black mb-4">
+                <DistortionText text="Laboratory" className="mr-2" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-thread-red to-thread-blue">
+                  Departments
+                </span>
+              </h2>
+              <p className="text-lg font-light opacity-70">
+                Autonomous research units exploring fashion's experimental frontiers
+              </p>
+            </div>
+          </RevealOnScroll>
 
           {/* Asymmetric Department Grid */}
-          <div className="grid grid-cols-12 gap-4 auto-rows-[200px]">
-            {/* LAB Department - Large */}
-            <motion.div
-              className="col-span-12 md:col-span-5 row-span-2"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              onMouseEnter={() => setHoveredDepartment('LAB')}
-              onMouseLeave={() => setHoveredDepartment(null)}
-            >
-              <Link href="/lab">
-                <div className="h-full relative group hover-deconstruct cursor-pointer">
-                  <div className="h-full p-8 bg-gradient-to-br from-carbon to-anthracite text-off-white flex flex-col justify-between relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent-electric/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="relative z-10">
-                      <h3 className="text-4xl font-bold mb-2">LAB</h3>
-                      <span className="text-xs font-mono opacity-60">LINE_01 / RESEARCH</span>
-                    </div>
-                    <div className="relative z-10">
-                      <p className="text-sm opacity-80 mb-4">
-                        Pattern experiments. Material research. Construction techniques.
-                        Where garments are deconstructed and reborn.
+          <div className="grid-asymmetric">
+            {[
+              {
+                name: 'LAB',
+                desc: 'Pattern experiments & material research',
+                color: 'from-thread-black to-oxidized-metal',
+                size: 'col-span-5 row-span-2',
+                link: '/lab'
+              },
+              {
+                name: 'COLLECTIONS',
+                desc: 'Seasonal documentation',
+                color: 'from-thread-blue to-denim-blue',
+                size: 'col-span-3 row-span-1',
+                link: '/collections'
+              },
+              {
+                name: 'ARCHIVE',
+                desc: 'Process & failure documentation',
+                color: 'from-aged-leather to-thread-red',
+                size: 'col-span-4 row-span-1',
+                link: '/archive'
+              },
+              {
+                name: 'ANALYSIS',
+                desc: 'Technical critique',
+                color: 'from-hazmat-green to-centrifuge-blue',
+                size: 'col-span-2 row-span-1',
+                link: '/analysis'
+              },
+              {
+                name: 'ABOUT',
+                desc: 'Philosophy & manifesto',
+                color: 'from-warning-yellow to-safety-orange',
+                size: 'col-span-3 row-span-1',
+                link: '/about'
+              },
+              {
+                name: 'CONTACT',
+                desc: 'Collaboration inquiries',
+                color: 'from-glitch-magenta to-glitch-cyan',
+                size: 'col-span-3 row-span-1',
+                link: '/contact'
+              }
+            ].map((dept, i) => (
+              <motion.div
+                key={dept.name}
+                className={`relative group cursor-pointer ${dept.size}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                onMouseEnter={() => setHoveredSection(dept.name)}
+                onMouseLeave={() => setHoveredSection(null)}
+              >
+                <Link href={dept.link}>
+                  <div className="h-full min-h-[200px] relative overflow-hidden">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${dept.color} opacity-10 group-hover:opacity-20 transition-opacity duration-500`} />
+
+                    <div className="relative h-full p-8 border border-thread-black/20 group-hover:border-thread-black/40 transition-all duration-300">
+                      <div className="absolute inset-0 exposed-seam opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                      <h3 className="text-3xl font-bold mb-2">
+                        {dept.name}
+                      </h3>
+                      <p className="text-sm opacity-60">
+                        {dept.desc}
                       </p>
-                      <div className="flex items-center gap-2 text-xs font-mono">
-                        <span className="w-2 h-2 bg-accent-electric rounded-full animate-pulse" />
-                        <span>EXPERIMENTS ACTIVE</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
 
-            {/* COLLECTIONS Department */}
-            <motion.div
-              className="col-span-12 md:col-span-7 row-span-1"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              onMouseEnter={() => setHoveredDepartment('COLLECTIONS')}
-              onMouseLeave={() => setHoveredDepartment(null)}
-            >
-              <Link href="/collections">
-                <div className="h-full relative group hover-layer cursor-pointer">
-                  <div className="h-full p-8 bg-gradient-to-br from-accent-violet/10 to-accent-violet/5 border-2 border-accent-violet/30 flex items-center justify-between overflow-hidden">
-                    <div>
-                      <h3 className="text-3xl font-bold text-accent-violet mb-1">COLLECTIONS</h3>
-                      <p className="text-sm text-steel">Seasonal documentation. Visual archives.</p>
-                    </div>
-                    <span className="text-5xl font-black opacity-10 group-hover:opacity-30 transition-opacity">→</span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* ARCHIVE Department */}
-            <motion.div
-              className="col-span-12 md:col-span-4 row-span-1"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              onMouseEnter={() => setHoveredDepartment('ARCHIVE')}
-              onMouseLeave={() => setHoveredDepartment(null)}
-            >
-              <Link href="/archive">
-                <div className="h-full relative group hover-asymmetric cursor-pointer">
-                  <div className="h-full p-6 bg-gradient-to-br from-accent-amber/10 to-accent-ochre/10 border border-accent-amber/30 flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold text-accent-ochre mb-2">ARCHIVE</h3>
-                    <p className="text-xs text-steel">Process documentation. The beauty of failure.</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* ANALYSIS Department */}
-            <motion.div
-              className="col-span-12 md:col-span-3 row-span-1"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <Link href="/analysis">
-                <div className="h-full relative group hover-brutal cursor-pointer">
-                  <div className="h-full p-6 bg-accent-teal/5 border-2 border-accent-teal/30 flex flex-col justify-center">
-                    <h3 className="text-xl font-bold text-accent-teal">ANALYSIS</h3>
-                    <p className="text-xs text-steel mt-1">Technical critique.</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* ABOUT & CONTACT - Split Cell */}
-            <motion.div
-              className="col-span-12 md:col-span-5 row-span-1"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="h-full grid grid-cols-2 gap-4">
-                <Link href="/about">
-                  <div className="h-full relative group hover-fabric cursor-pointer">
-                    <div className="h-full p-6 bg-gradient-to-br from-accent-rose/10 to-accent-rose/5 border border-accent-rose/30 flex flex-col justify-center">
-                      <h3 className="text-lg font-bold text-accent-rose">ABOUT</h3>
-                      <p className="text-xs text-steel mt-1">Philosophy.</p>
+                      {/* Hover indicator */}
+                      <motion.div
+                        className="absolute bottom-4 right-4 text-4xl font-black opacity-0 group-hover:opacity-30"
+                        animate={hoveredSection === dept.name ? {
+                          x: [0, 10, 0],
+                        } : {}}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        →
+                      </motion.div>
                     </div>
                   </div>
                 </Link>
-                <Link href="/contact">
-                  <div className="h-full relative group hover-glitch cursor-pointer">
-                    <div className="h-full p-6 bg-gradient-to-br from-accent-lime/10 to-accent-lime/5 border border-accent-lime/30 flex flex-col justify-center">
-                      <h3 className="text-lg font-bold" style={{ color: 'var(--accent-lime)' }}>CONTACT</h3>
-                      <p className="text-xs text-steel mt-1">Collaborate.</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </motion.div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ==========================================================================
-         PHILOSOPHY SECTION - Minimalist Statement
+         PHILOSOPHY SECTION - Deconstructed Text Layout
          ========================================================================== */}
 
-      <section className="py-32 px-8 bg-gradient-to-b from-carbon to-obsidian text-off-white relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent-electric/5 rounded-full blur-3xl"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
+      <ParallaxContainer offset={100}>
+        <section className="py-32 px-8 bg-thread-black text-raw-white relative overflow-hidden">
+          {/* Texture overlay */}
+          <div className="absolute inset-0 texture-paper opacity-10" />
 
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            {/* Header */}
-            <div className="mb-16">
-              <span className="text-xs font-mono text-accent-electric tracking-widest">
-                MANIFESTO / 宣言 / 선언문
-              </span>
-              <h2 className="text-6xl font-black mt-6 mb-8">
-                Fashion Without
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-electric via-accent-violet to-accent-coral"> Commerce</span>
-              </h2>
-            </div>
-
-            {/* Philosophy Text - Clean Typography */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <p className="text-xl font-light leading-relaxed">
-                  We operate at the intersection of
-                  <span className="font-semibold text-accent-electric"> destruction </span>
-                  and
-                  <span className="font-semibold text-accent-violet"> creation</span>,
-                  where garments exist in perpetual transformation.
-                </p>
-                <p className="text-base opacity-70">
-                  Inspired by Margiela's deconstruction and Sacai's hybrid philosophy,
-                  we document possibilities, not products.
-                </p>
+          <div className="max-w-6xl mx-auto relative z-10">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {/* Header */}
+              <div className="mb-16">
+                <span className="text-xs font-mono text-thread-red tracking-widest">
+                  MANIFESTO / 宣言 / 선언문
+                </span>
+                <h2 className="text-6xl font-black mt-4">
+                  Fashion Without
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-glitch-cyan to-glitch-magenta">
+                    Commerce
+                  </span>
+                </h2>
               </div>
 
-              <div className="space-y-6">
-                <div className="border-l-2 border-accent-electric/30 pl-6">
-                  <p className="text-sm font-mono uppercase tracking-wider mb-2">Process</p>
-                  <p className="opacity-70">Every stitch is a decision. Every cut is philosophy.</p>
-                </div>
-                <div className="border-l-2 border-accent-violet/30 pl-6">
-                  <p className="text-sm font-mono uppercase tracking-wider mb-2">Purpose</p>
-                  <p className="opacity-70">No sales. No seasons. Only experimentation.</p>
-                </div>
-                <div className="border-l-2 border-accent-coral/30 pl-6">
-                  <p className="text-sm font-mono uppercase tracking-wider mb-2">Philosophy</p>
-                  <p className="opacity-70">The space between what clothing is and what it could become.</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         RECENT EXPERIMENTS - Gallery Preview
-         ========================================================================== */}
-
-      <section className="py-32 px-8 bg-gradient-to-b from-ivory to-off-white">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <span className="text-2xs font-mono text-accent-violet tracking-widest">
-              RECENT / 最近 / 최근
-            </span>
-            <h2 className="text-5xl font-black mt-4 mb-6">
-              Latest Experiments
-            </h2>
-          </motion.div>
-
-          {/* Masonry Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[
-              { id: 1, span: 'col-span-1 row-span-2', color: 'from-accent-electric/20 to-accent-violet/20' },
-              { id: 2, span: 'col-span-1 row-span-1', color: 'from-accent-coral/20 to-accent-rose/20' },
-              { id: 3, span: 'col-span-1 row-span-1', color: 'from-accent-teal/20 to-accent-lime/20' },
-              { id: 4, span: 'col-span-2 row-span-1', color: 'from-accent-violet/20 to-accent-electric/20' },
-              { id: 5, span: 'col-span-1 row-span-1', color: 'from-accent-amber/20 to-accent-ochre/20' },
-              { id: 6, span: 'col-span-1 row-span-2', color: 'from-accent-rose/20 to-accent-coral/20' },
-              { id: 7, span: 'col-span-1 row-span-1', color: 'from-accent-lime/20 to-accent-teal/20' },
-              { id: 8, span: 'col-span-1 row-span-1', color: 'from-accent-electric/20 to-accent-indigo/20' },
-            ].map((item) => (
-              <motion.div
-                key={item.id}
-                className={`${item.span} relative group cursor-pointer hover-layer`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: item.id * 0.05 }}
-              >
-                <div className={`h-full min-h-[200px] bg-gradient-to-br ${item.color} relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/30" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-2xs font-mono text-off-white mb-1">
-                      EXP_{String(item.id).padStart(3, '0')}
-                    </p>
-                    <p className="text-xs text-off-white/80">
-                      {item.id % 3 === 0 ? 'Volume Study' : item.id % 2 === 0 ? 'Pattern Deconstruction' : 'Material Research'}
+              {/* Philosophy Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-8">
+                  <p className="text-2xl font-light leading-relaxed">
+                    We operate at the intersection of
+                    <span className="font-semibold text-glitch-cyan"> destruction </span>
+                    and
+                    <span className="font-semibold text-glitch-magenta"> creation</span>,
+                    where garments exist in perpetual transformation.
+                  </p>
+                  <div className="stitching py-4">
+                    <p className="text-sm opacity-70 font-mono">
+                      Inspired by Margiela's deconstruction and Sacai's hybrid philosophy
                     </p>
                   </div>
+                </div>
+
+                <div className="space-y-6">
+                  {[
+                    { label: 'PROCESS', text: 'Every stitch is a decision' },
+                    { label: 'PURPOSE', text: 'No sales. Only experimentation' },
+                    { label: 'PHILOSOPHY', text: 'The space between what is and what could be' }
+                  ].map((item, i) => (
+                    <RevealOnScroll key={i}>
+                      <div className="border-l-2 border-glitch-cyan/30 pl-6 raw-edge">
+                        <p className="text-xs font-mono uppercase tracking-wider mb-2 text-glitch-cyan">
+                          {item.label}
+                        </p>
+                        <p className="opacity-80">{item.text}</p>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </ParallaxContainer>
+
+      {/* ==========================================================================
+         RECENT EXPERIMENTS - Masonry Gallery with Interactions
+         ========================================================================== */}
+
+      <section className="py-32 px-8 bg-gradient-to-b from-unbleached to-raw-white">
+        <div className="max-w-7xl mx-auto">
+          <RevealOnScroll>
+            <div className="text-center mb-16">
+              <span className="text-xs font-mono text-thread-red tracking-widest">
+                RECENT / 最近 / 최근
+              </span>
+              <h2 className="text-5xl font-black mt-4">
+                Latest Experiments
+              </h2>
+            </div>
+          </RevealOnScroll>
+
+          {/* Masonry Grid with different sizes */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[200px] gap-4">
+            {[
+              { span: 'col-span-1 row-span-2', gradient: 'from-thread-red/20 to-thread-blue/20' },
+              { span: 'col-span-1 row-span-1', gradient: 'from-safety-orange/20 to-warning-yellow/20' },
+              { span: 'col-span-2 row-span-1', gradient: 'from-centrifuge-blue/20 to-hazmat-green/20' },
+              { span: 'col-span-1 row-span-1', gradient: 'from-glitch-magenta/20 to-glitch-cyan/20' },
+              { span: 'col-span-1 row-span-2', gradient: 'from-aged-leather/20 to-oxidized-metal/20' },
+              { span: 'col-span-1 row-span-1', gradient: 'from-denim-blue/20 to-thread-black/20' },
+              { span: 'col-span-1 row-span-1', gradient: 'from-warning-yellow/20 to-thread-red/20' },
+              { span: 'col-span-2 row-span-2', gradient: 'from-glitch-cyan/20 to-safety-orange/20' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className={`${item.span} relative group cursor-pointer overflow-hidden`}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className={`h-full bg-gradient-to-br ${item.gradient} relative pattern-piece`}>
+                  <div className="absolute inset-0 bg-texture-raw-canvas opacity-20" />
+
+                  {/* Content overlay */}
+                  <div className="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-thread-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-xs font-mono text-raw-white mb-1">
+                      EXP_{String(i + 1).padStart(3, '0')}
+                    </p>
+                    <p className="text-sm text-raw-white/80">
+                      {i % 3 === 0 ? 'Volume Study' : i % 2 === 0 ? 'Pattern Deconstruction' : 'Material Research'}
+                    </p>
+                  </div>
+
+                  {/* Construction marks */}
+                  <div className="absolute top-4 left-4 construction-mark" data-mark={`TEST_${i + 1}`} />
                 </div>
               </motion.div>
             ))}
@@ -568,38 +599,51 @@ export default function HomePage() {
       </section>
 
       {/* ==========================================================================
-         CONTACT SECTION - Minimal CTA
+         CONTACT CTA - Interactive
          ========================================================================== */}
 
-      <section className="py-24 px-8 border-t border-carbon/10">
+      <section className="py-24 px-8 border-t border-thread-black/20">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">
-            Collaboration & Exhibition Inquiries
-          </h2>
-          <p className="text-steel mb-8 max-w-2xl mx-auto">
-            We collaborate with institutions, galleries, and forward-thinking brands on experimental projects that push the boundaries of fashion.
-          </p>
-          <Link href="/contact">
-            <button className="btn-interactive px-10 py-4 border-2 border-carbon hover-brutal">
-              <span className="text-xs uppercase tracking-widest font-medium">
-                Start Conversation
+          <RevealOnScroll>
+            <h2 className="text-4xl font-bold mb-6">
+              Collaboration & Exhibition
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-thread-red to-thread-blue">
+                Inquiries
               </span>
-            </button>
-          </Link>
+            </h2>
+            <p className="text-lg font-light opacity-70 mb-12 max-w-2xl mx-auto">
+              We collaborate with institutions, galleries, and brands on experimental projects
+              that push the boundaries of what fashion can be.
+            </p>
+
+            <MagneticButton strength={0.2}>
+              <Link href="/contact">
+                <button className="btn-deconstructed">
+                  <span className="text-xs font-mono uppercase tracking-widest">
+                    Start Conversation
+                  </span>
+                </button>
+              </Link>
+            </MagneticButton>
+          </RevealOnScroll>
         </div>
       </section>
 
       {/* ==========================================================================
-         FOOTER - Minimal Laboratory Information
+         FOOTER - Minimalist Information
          ========================================================================== */}
 
-      <footer className="py-16 px-8 bg-carbon text-off-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <footer className="py-16 px-8 bg-thread-black text-raw-white relative">
+        <div className="absolute inset-0 texture-overlay opacity-5" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             {/* Brand */}
             <div>
-              <h3 className="text-xs font-mono tracking-widest mb-4 text-accent-electric">CINCH LAB</h3>
-              <p className="text-xs opacity-60">
+              <h3 className="text-xs font-mono tracking-widest mb-4 text-thread-red">
+                CINCH LAB
+              </h3>
+              <p className="text-xs opacity-60 leading-relaxed">
                 Experimental Fashion
                 <br />
                 Research Laboratory
@@ -610,9 +654,11 @@ export default function HomePage() {
 
             {/* Locations */}
             <div>
-              <h3 className="text-xs font-mono tracking-widest mb-4">LOCATIONS</h3>
-              <p className="text-xs opacity-60">
-                Tokyo Facility
+              <h3 className="text-xs font-mono tracking-widest mb-4">
+                LOCATIONS
+              </h3>
+              <p className="text-xs opacity-60 leading-relaxed">
+                Tokyo Research
                 <br />
                 Paris Archive
                 <br />
@@ -622,8 +668,10 @@ export default function HomePage() {
 
             {/* Status */}
             <div>
-              <h3 className="text-xs font-mono tracking-widest mb-4">STATUS</h3>
-              <p className="text-xs opacity-60">
+              <h3 className="text-xs font-mono tracking-widest mb-4">
+                STATUS
+              </h3>
+              <p className="text-xs opacity-60 leading-relaxed">
                 Lab: OPERATIONAL
                 <br />
                 Commerce: DISABLED
@@ -632,24 +680,27 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Links */}
+            {/* Connect */}
             <div>
-              <h3 className="text-xs font-mono tracking-widest mb-4">CONNECT</h3>
+              <h3 className="text-xs font-mono tracking-widest mb-4">
+                CONNECT
+              </h3>
               <div className="space-y-2">
-                <a href="#" className="text-xs opacity-60 hover:opacity-100 hover:text-accent-electric transition-all block">
-                  Instagram
-                </a>
-                <a href="#" className="text-xs opacity-60 hover:opacity-100 hover:text-accent-electric transition-all block">
-                  Archive
-                </a>
-                <a href="#" className="text-xs opacity-60 hover:opacity-100 hover:text-accent-electric transition-all block">
-                  Newsletter
-                </a>
+                {['Instagram', 'Archive', 'Newsletter'].map((link, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    className="block text-xs opacity-60 hover:opacity-100 hover:text-thread-red transition-all"
+                  >
+                    {link}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-steel/20">
+          {/* Bottom line */}
+          <div className="pt-8 border-t border-raw-white/10">
             <p className="text-xs font-mono opacity-40 text-center">
               © 2024 CINCH LAB. All experiments documented. No rights reserved.
             </p>
