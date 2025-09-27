@@ -1,12 +1,12 @@
 /* ==========================================================================
-   CINCH LAB DESIGN SYSTEM v4.0 - Professional Edition
+   CINCH LAB DESIGN SYSTEM v5.0 - Avant-Garde Edition
    Margiela × Sacai Digital Laboratory
 
    Core Philosophy:
-   - No childish elements, pure professionalism
-   - Rich, dense, functional design
-   - Deconstructive beauty meets hybrid innovation
-   - Editorial quality with experimental edge
+   - Deconstructive asymmetry meets hybrid innovation
+   - Rich material textures with contemporary interactions
+   - Editorial sophistication with experimental edge
+   - Professional brutalism with fashion sensibility
    ========================================================================== */
 
 /* ==========================================================================
@@ -44,13 +44,21 @@
   --silver: #D0D0D0;
   --platinum: #E4E4E4;
 
-  /* Accent Colors - Refined & Minimal */
+  /* Accent Colors - Expanded Avant-Garde Palette */
   --accent-blood: #8B0000;      /* Deep red for critical accents */
   --accent-ink: #1A1A2E;        /* Navy for depth */
   --accent-ochre: #B8860B;      /* Warm earth tone */
   --accent-sage: #6B7F68;       /* Muted green */
   --accent-rust: #8B4513;       /* Oxidized metal */
   --accent-cream: #FFF8DC;      /* Soft highlight */
+  --accent-electric: #0033FF;   /* Electric blue - Sacai signature */
+  --accent-lime: #BFFF00;        /* Acid lime - experimental */
+  --accent-violet: #6B46C1;      /* Deep violet - luxury */
+  --accent-coral: #FF6B6B;       /* Soft coral - warmth */
+  --accent-teal: #20C997;        /* Modern teal - freshness */
+  --accent-amber: #FFC107;       /* Warm amber - energy */
+  --accent-indigo: #5C6BC0;      /* Soft indigo - depth */
+  --accent-rose: #E91E63;        /* Rose pink - avant-garde */
 
   /* Functional Colors - UI States */
   --state-error: #CC0000;
@@ -799,4 +807,349 @@
   .text-body {
     font-weight: var(--weight-500);
   }
+}
+
+/* ==========================================================================
+   11. ADVANCED INTERACTIONS & HOVER EFFECTS
+   ========================================================================== */
+
+/* Hover States - Margiela Inspired */
+.hover-deconstruct {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.hover-deconstruct:hover {
+  transform: scale(1.02) rotate(-0.5deg);
+}
+
+.hover-deconstruct::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid var(--accent-blood);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.hover-deconstruct:hover::after {
+  opacity: 1;
+}
+
+/* Sacai Layering Hover */
+.hover-layer {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.hover-layer::before,
+.hover-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  transition: transform 0.3s ease;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.hover-layer:hover::before {
+  transform: translate(-4px, -4px);
+}
+
+.hover-layer:hover::after {
+  transform: translate(4px, 4px);
+}
+
+/* Glitch Hover Effect */
+.hover-glitch {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.hover-glitch:hover {
+  animation: micro-glitch 0.3s ease;
+}
+
+@keyframes micro-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Material Hover Effects */
+.hover-fabric {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-fabric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.hover-fabric:hover::before {
+  left: 100%;
+}
+
+/* Brutalist Hover */
+.hover-brutal {
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 var(--carbon);
+}
+
+.hover-brutal:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 3px 3px 0 var(--carbon);
+}
+
+/* Experimental Text Hover */
+.hover-text-split {
+  display: inline-block;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.hover-text-split::before,
+.hover-text-split::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.hover-text-split:hover {
+  color: transparent;
+}
+
+.hover-text-split:hover::before {
+  opacity: 1;
+  color: var(--accent-electric);
+  transform: translate(-2px, -2px);
+}
+
+.hover-text-split:hover::after {
+  opacity: 1;
+  color: var(--accent-coral);
+  transform: translate(2px, 2px);
+}
+
+/* Asymmetric Transform Hover */
+.hover-asymmetric {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.hover-asymmetric:hover {
+  transform: skewY(-2deg) skewX(1deg) scale(1.02);
+}
+
+/* ==========================================================================
+   12. ADVANCED ANIMATIONS
+   ========================================================================== */
+
+/* Breathing Animation */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.95; }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Float Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  75% { transform: translateY(10px) rotate(-1deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Reveal Animation */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-reveal {
+  animation: reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Slide Animations */
+@keyframes slide-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slide-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slide-left {
+  animation: slide-left 0.6s ease-out;
+}
+
+.animate-slide-right {
+  animation: slide-right 0.6s ease-out;
+}
+
+/* ==========================================================================
+   13. INTERACTIVE COMPONENTS
+   ========================================================================== */
+
+/* Interactive Buttons */
+.btn-interactive {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-interactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--accent-electric);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-interactive:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-interactive span {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.btn-interactive:hover span {
+  color: var(--pure-white);
+}
+
+/* Magnetic Effect */
+.magnetic {
+  transition: transform 0.2s ease;
+}
+
+/* This requires JS to work properly, but we set up the CSS */
+.magnetic[data-magnetic-active="true"] {
+  transform: translate(var(--magnetic-x), var(--magnetic-y));
+}
+
+/* Link Underline Variants */
+.link-slide {
+  position: relative;
+  display: inline-block;
+}
+
+.link-slide::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-slide:hover::after {
+  width: 100%;
+}
+
+.link-slide-reverse::after {
+  left: auto;
+  right: 0;
+}
+
+.link-slide-reverse:hover::after {
+  right: auto;
+  left: 0;
+}
+
+/* ==========================================================================
+   14. SCROLL ANIMATIONS
+   ========================================================================== */
+
+/* Parallax Classes */
+.parallax-slow {
+  transform: translateY(var(--parallax-offset, 0));
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+.parallax-fast {
+  transform: translateY(calc(var(--parallax-offset, 0) * 2));
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+/* Scroll Reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   15. CURSOR EFFECTS
+   ========================================================================== */
+
+/* Custom Cursor Styles */
+.cursor-experiment {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--carbon);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: transform 0.15s ease;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-dot.hovering {
+  transform: translate(-50%, -50%) scale(2);
+  background: var(--accent-electric);
+  mix-blend-mode: difference;
 }
