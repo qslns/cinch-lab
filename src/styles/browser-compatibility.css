@@ -1,0 +1,356 @@
+/* ==========================================================================
+   BROWSER COMPATIBILITY - Cross-browser support
+   ========================================================================== */
+
+/* Webkit (Safari, Chrome) specific fixes */
+@supports (-webkit-appearance: none) {
+  /* Fix for Safari flexbox issues */
+  .flex {
+    display: -webkit-flex;
+    display: flex;
+  }
+
+  .flex-1 {
+    -webkit-flex: 1;
+    flex: 1;
+  }
+
+  /* Safari sticky position fix */
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  /* Webkit scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Webkit touch callout disable */
+  * {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Fix for webkit transforms */
+  .transform {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Webkit backdrop filter */
+  .backdrop-blur {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Firefox specific fixes */
+@-moz-document url-prefix() {
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.05);
+  }
+
+  /* Firefox button styling fix */
+  button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+
+  /* Firefox select styling */
+  select {
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* Firefox sticky position fix */
+  .sticky {
+    position: sticky;
+    position: -moz-sticky;
+  }
+}
+
+/* Edge/IE specific fixes */
+@supports (-ms-ime-align: auto) {
+  /* Edge smooth scrolling */
+  html {
+    -ms-scroll-chaining: none;
+    overscroll-behavior: none;
+  }
+
+  /* Edge grid fixes */
+  .grid {
+    display: -ms-grid;
+    display: grid;
+  }
+
+  /* Edge flexbox fixes */
+  .flex {
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+/* Safari iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS safe area insets */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+    padding-top: constant(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: constant(safe-area-inset-bottom);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+    padding-left: constant(safe-area-inset-left);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+    padding-right: constant(safe-area-inset-right);
+  }
+
+  /* iOS momentum scrolling */
+  .overflow-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* iOS input zoom prevention */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* iOS rubber band scrolling fix */
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  #__next {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+  }
+}
+
+/* Chrome/Blink specific fixes */
+@supports (contain: paint) {
+  /* Chrome performance optimizations */
+  .contain-paint {
+    contain: paint;
+  }
+
+  .contain-layout {
+    contain: layout;
+  }
+
+  .contain-size {
+    contain: size;
+  }
+
+  .contain-content {
+    contain: content;
+  }
+}
+
+/* Fallbacks for older browsers */
+
+/* Flexbox fallback */
+.no-flexbox .flex {
+  display: table;
+  width: 100%;
+}
+
+.no-flexbox .flex > * {
+  display: table-cell;
+}
+
+/* Grid fallback */
+.no-grid .grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.no-grid .grid > * {
+  flex: 1 1 auto;
+}
+
+/* CSS Variables fallback */
+.no-cssVariables {
+  --black: #000000;
+  --white: #ffffff;
+  --gray: #808080;
+}
+
+/* Sticky position fallback */
+.no-sticky .sticky {
+  position: relative;
+}
+
+/* Object-fit fallback */
+.no-objectFit img {
+  width: 100%;
+  height: auto;
+}
+
+/* CSS Filters fallback */
+.no-filters .blur {
+  opacity: 0.5;
+}
+
+/* Transform fallback */
+.no-transforms .transform {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+/* Transition fallback */
+.no-transitions * {
+  transition: none !important;
+}
+
+/* Animation fallback */
+.no-animations * {
+  animation: none !important;
+}
+
+/* Viewport units fallback */
+.no-vhvw {
+  height: 100%;
+  width: 100%;
+}
+
+/* Calc fallback */
+.no-calc .w-half-minus-gap {
+  width: 48%;
+}
+
+/* Feature queries for progressive enhancement */
+
+/* CSS Grid support */
+@supports (display: grid) {
+  .grid-supported {
+    display: grid;
+  }
+}
+
+/* Flexbox gap support */
+@supports (gap: 1rem) {
+  .gap-supported {
+    gap: 1rem;
+  }
+}
+
+/* Backdrop filter support */
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+  .backdrop-supported {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* Sticky position support */
+@supports (position: sticky) or (position: -webkit-sticky) {
+  .sticky-supported {
+    position: sticky;
+    position: -webkit-sticky;
+  }
+}
+
+/* Object-fit support */
+@supports (object-fit: cover) {
+  .object-fit-supported {
+    object-fit: cover;
+  }
+}
+
+/* CSS Shapes support */
+@supports (shape-outside: circle()) {
+  .shapes-supported {
+    shape-outside: circle();
+  }
+}
+
+/* Scroll snap support */
+@supports (scroll-snap-type: x mandatory) {
+  .scroll-snap-supported {
+    scroll-snap-type: x mandatory;
+  }
+
+  .scroll-snap-supported > * {
+    scroll-snap-align: center;
+  }
+}
+
+/* Houdini API support */
+@supports (background: paint(something)) {
+  .houdini-supported {
+    background: paint(smooth-corners);
+  }
+}
+
+/* Container queries support */
+@supports (container-type: inline-size) {
+  .container-query-supported {
+    container-type: inline-size;
+  }
+}
+
+/* Browser-specific hacks (use with caution) */
+
+/* Chrome only */
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+  .chrome-only {
+    /* Chrome-specific styles */
+  }
+}
+
+/* Firefox only */
+@-moz-document url-prefix() {
+  .firefox-only {
+    /* Firefox-specific styles */
+  }
+}
+
+/* Safari only */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    .safari-only {
+      /* Safari-specific styles */
+    }
+  }
+}
+
+/* Edge only */
+@supports (-ms-ime-align:auto) {
+  .edge-only {
+    /* Edge-specific styles */
+  }
+}

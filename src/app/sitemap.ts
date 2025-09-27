@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/lab',
     '/collections',
     '/archive',
+    '/analysis',
     '/about',
     '/contact',
     '/chaos',
@@ -22,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: route === '/' ? 1 : 0.8,
+    changeFrequency: route === '/' ? 'daily' : 'weekly' as const,
+    priority: route === '/' ? 1.0 : route.startsWith('/lab') || route.startsWith('/collections') ? 0.9 : 0.8,
   }))
 }

@@ -1,0 +1,242 @@
+/* ==========================================================================
+   OPTIMIZED ANIMATIONS - Performance-focused CSS animations
+   ========================================================================== */
+
+/* Use GPU acceleration for smooth animations */
+.will-change-optimized {
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation */
+.animation-complete {
+  will-change: auto;
+}
+
+/* Prefer transform and opacity for best performance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.9, 0.9, 1);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate3d(0, 0, 1, -10deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+}
+
+/* Optimized animation classes */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96) both;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.4s cubic-bezier(0.43, 0.13, 0.23, 0.96) both;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s cubic-bezier(0.43, 0.13, 0.23, 0.96) both;
+}
+
+.animate-rotateIn {
+  animation: rotateIn 0.4s cubic-bezier(0.43, 0.13, 0.23, 0.96) both;
+}
+
+/* Stagger animations for lists */
+.stagger-children > * {
+  animation: fadeInUp 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96) both;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .will-change-optimized {
+    will-change: auto !important;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  .animate-fadeInUp,
+  .animate-slideIn,
+  .animate-scaleIn,
+  .animate-rotateIn {
+    animation-duration: 0.3s;
+  }
+
+  /* Disable parallax on mobile for better performance */
+  .parallax {
+    transform: none !important;
+  }
+
+  /* Simplify hover states on touch devices */
+  @media (hover: none) {
+    .hover\:scale-105:hover {
+      transform: none;
+    }
+
+    .hover\:opacity-80:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* Performance hints for browsers */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize box-shadow animations */
+.shadow-optimized {
+  position: relative;
+}
+
+.shadow-optimized::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.shadow-optimized:hover::after {
+  opacity: 1;
+}
+
+/* Optimize filter animations */
+.blur-optimized {
+  position: relative;
+  overflow: hidden;
+}
+
+.blur-optimized::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: inherit;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.blur-optimized:hover::before {
+  opacity: 1;
+}
+
+/* Intersection Observer animations */
+.io-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.43, 0.13, 0.23, 0.96),
+              transform 0.6s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+.io-animate.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading states */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+}
+
+/* Micro-interactions */
+.micro-interact {
+  transition: transform 0.2s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+.micro-interact:active {
+  transform: scale(0.98);
+}
+
+/* Optimize text rendering */
+.text-optimized {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize image loading */
+.image-optimized {
+  content-visibility: auto;
+  contain-intrinsic-size: 512px;
+}
+
+/* Critical CSS for above-the-fold content */
+.critical-animation {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Non-critical animations */
+.lazy-animation {
+  animation: none;
+}
+
+.lazy-animation.loaded {
+  animation: fadeInUp 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
