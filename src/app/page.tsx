@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
+import CipherText from '@/components/CipherText'
 import {
   DeconstructedHover,
   SacaiLayer,
@@ -135,7 +136,7 @@ export default function HomePage() {
             PATTERN № 001 — EXPERIMENTAL LABORATORY
           </motion.div>
 
-          {/* Main Slogan - Deconstructed Typography */}
+          {/* Main Slogan - Deconstructed Typography with Cipher Effect */}
           <ExposedStructure showGrid={deconstructMode} className="inline-block">
             <motion.h1
               className="text-[clamp(60px,10vw,180px)] font-black leading-[0.85] tracking-tightest uppercase"
@@ -154,7 +155,9 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
               >
                 <SacaiLayer layers={2} color1="hybrid-blue" color2="hybrid-red">
-                  <span className="block">CINCH</span>
+                  <CipherText mode="auto" interval={8000}>
+                    CINCH
+                  </CipherText>
                 </SacaiLayer>
               </motion.div>
 
@@ -177,7 +180,9 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
               >
                 <DeconstructedHover intensity={1.5}>
-                  <span className="block">RELEASE</span>
+                  <CipherText mode="auto" interval={8000} delay={200}>
+                    RELEASE
+                  </CipherText>
                 </DeconstructedHover>
               </motion.div>
 
@@ -200,7 +205,9 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
               >
                 <AsymmetricTransform intensity={0.5}>
-                  <span className="block">REPEAT</span>
+                  <CipherText mode="auto" interval={8000} delay={400}>
+                    REPEAT
+                  </CipherText>
                 </AsymmetricTransform>
               </motion.div>
             </motion.h1>
@@ -217,7 +224,7 @@ export default function HomePage() {
               LINE_0 / ARTISANAL
             </div>
             <h2 className="text-2xl font-black tracking-wider">
-              CINCH LABORATORY
+              <CipherText>CINCH LABORATORY</CipherText>
             </h2>
             <div className="text-xs font-mono mt-2 opacity-60">
               EXPERIMENTAL FASHION RESEARCH FACILITY
@@ -232,10 +239,15 @@ export default function HomePage() {
             transition={{ delay: 1 }}
           >
             <p className="text-sm leading-relaxed tracking-wide">
-              NO SALES • ONLY CREATION
+              <CipherText>NO SALES • ONLY CREATION</CipherText>
             </p>
             <p className="text-xs font-mono mt-4 opacity-60">
-              판매하지 않습니다. 창조합니다.
+              <CipherText delay={500}>판매하지 않습니다. 창조합니다.</CipherText>
+            </p>
+            <p className="text-lg font-black mt-6 text-hybrid-red">
+              <CipherText mode="auto" interval={10000}>
+                난 천재야, CINCH LAB은 최고야
+              </CipherText>
             </p>
           </motion.div>
 
@@ -321,8 +333,8 @@ export default function HomePage() {
                     LINE_1
                   </div>
 
-                  <h3 className="text-2xl font-black mb-4 group-hover:text-deconstructed transition-all">
-                    LAB
+                  <h3 className="text-2xl font-black mb-4 group-hover:text-hybrid-red transition-all">
+                    <CipherText>LAB</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     실험적 기술과 프로세스. 해체와 재구성의 작업장.
@@ -354,7 +366,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className="text-2xl font-black mb-4">
-                    COLLECTIONS
+                    <CipherText>COLLECTIONS</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     시각적 기록. 가격 없는 비전.
@@ -384,7 +396,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className="text-2xl font-black mb-4">
-                    ARCHIVE
+                    <CipherText>ARCHIVE</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     철학과 프로세스의 기록.
@@ -413,7 +425,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className="text-2xl font-black mb-4">
-                    ANALYSIS
+                    <CipherText>ANALYSIS</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     타 브랜드 해체. 기술적 분석.
@@ -442,7 +454,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className="text-2xl font-black mb-4">
-                    ABOUT
+                    <CipherText>ABOUT</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     정체성 선언. 창작 철학.
@@ -471,7 +483,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className="text-2xl font-black mb-4">
-                    CONTACT
+                    <CipherText>CONTACT</CipherText>
                   </h3>
                   <p className="text-xs leading-relaxed opacity-60 mb-4">
                     전시 문의. 협업 제안.
