@@ -1,693 +1,533 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import CipherText from '@/components/CipherText'
 import {
-  DeconstructedHover,
-  SacaiLayer,
-  FragmentMosaic,
-  ExposedStructure,
-  AsymmetricTransform
-} from '@/components/HybridLayerEffects'
+  DeconstructedText,
+  LayeredCard,
+  ExposedSeam,
+  MaterialCard,
+  EditorialSection,
+  RawEdgeButton,
+  ConstructionMarker
+} from '@/components/MargielaSacaiComponents'
 
-// Detailed fashion experiments with real terminology
-const experiments = [
+// ==========================================================================
+// LABORATORY PAGE - Material Research & Experimentation
+// Professional, Dense, Functional
+// ==========================================================================
+
+interface Experiment {
+  id: string
+  title: string
+  category: 'PATTERN' | 'MATERIAL' | 'CONSTRUCTION' | 'HYBRID'
+  status: 'ACTIVE' | 'COMPLETE' | 'ARCHIVED'
+  date: string
+  description: string
+  techniques: string[]
+  materials: string[]
+}
+
+const experiments: Experiment[] = [
   {
-    id: 'EXP-001',
-    title: 'DECONSTRUCTED BLAZER ANALYSIS',
-    status: 'IN_PROGRESS',
-    progress: 67,
-    startDate: '2024.03.15',
-    techniques: ['Pattern Drafting', 'Draping', 'Seam Ripping', 'French Seams'],
-    materials: ['Wool Gabardine 280gsm', 'Canvas Interfacing', 'Silk Lining'],
-    specifications: {
-      seamAllowance: '1.5cm',
-      grainDirection: 'Lengthwise',
-      ease: '6cm chest',
-      constructionMethod: 'Tailored'
-    },
-    notes: 'Investigating traditional structure through deconstruction. Each seam reveals construction history.',
-    phase: 'TOILE_FITTING'
+    id: 'EXP_001',
+    title: 'Deconstructed Tailoring',
+    category: 'PATTERN',
+    status: 'COMPLETE',
+    date: '2024.01.15',
+    description: 'Reimagining classic suit construction through exposed seams and inverted structures.',
+    techniques: ['Raw edge finishing', 'Exposed interfacing', 'Asymmetric pattern cutting'],
+    materials: ['Wool gabardine', 'Cotton canvas', 'Horsehair interfacing']
   },
   {
-    id: 'EXP-002',
-    title: 'BONDED SEAM CONSTRUCTION',
-    status: 'COMPLETED',
-    progress: 100,
-    startDate: '2024.02.28',
-    techniques: ['Ultrasonic Welding', 'Heat Sealing', 'Laser Cutting'],
-    materials: ['Neoprene 3mm', 'TPU Film', 'Polyurethane Tape'],
-    specifications: {
-      bondWidth: '8mm',
-      temperature: '180°C',
-      pressure: '2.5 bar',
-      seamStrength: '45N/cm'
-    },
-    notes: 'Revolutionary seam-free construction eliminates traditional stitching. Future of garment assembly.',
-    phase: 'ARCHIVED'
+    id: 'EXP_002',
+    title: 'Heat-Pressed Hybrid',
+    category: 'MATERIAL',
+    status: 'ACTIVE',
+    date: '2024.02.03',
+    description: 'Fusing disparate materials through industrial heat-pressing techniques.',
+    techniques: ['Thermoplastic bonding', 'Ultrasonic welding', 'Heat lamination'],
+    materials: ['TPU film', 'Organic cotton', 'Recycled polyester mesh']
   },
   {
-    id: 'EXP-003',
-    title: 'HYBRID LAYERING SYSTEM',
-    status: 'TESTING',
-    progress: 34,
-    startDate: '2024.03.22',
-    techniques: ['Layer Splicing', 'Asymmetric Assembly', 'Volume Manipulation'],
-    materials: ['Jersey Knit', 'Woven Cotton', 'Mesh Insert'],
-    specifications: {
-      layerCount: '3-7 layers',
-      maxThickness: '12mm',
-      breathability: 'Maintained',
-      flexibility: 'Enhanced'
-    },
-    notes: 'Sacai-inspired multi-layer integration. Each layer maintains independence while creating unity.',
-    phase: 'PROTOTYPE'
+    id: 'EXP_003',
+    title: 'Volume Manipulation Study',
+    category: 'CONSTRUCTION',
+    status: 'ACTIVE',
+    date: '2024.02.20',
+    description: 'Exploring three-dimensional forms through structural padding and wire frameworks.',
+    techniques: ['3D pattern making', 'Wire frame construction', 'Sculptural draping'],
+    materials: ['Memory foam', 'Steel wire', 'Tyvek paper']
   },
   {
-    id: 'EXP-004',
-    title: '3D KNIT SEAMLESS CONSTRUCTION',
-    status: 'IN_PROGRESS',
-    progress: 89,
-    startDate: '2024.01.10',
-    techniques: ['Whole Garment Knitting', 'Intarsia', 'Cable Structures'],
-    materials: ['Merino Wool', 'Lycra Core', 'Conductive Thread'],
-    specifications: {
-      gauge: '12GG',
-      structure: 'Full Fashion',
-      seamReduction: '95%',
-      fitPrecision: '±2mm'
-    },
-    notes: 'Zero-waste knitting eliminates cutting and sewing. Machine becomes the pattern maker.',
-    phase: 'REFINEMENT'
+    id: 'EXP_004',
+    title: 'Sacai-Inspired Splicing',
+    category: 'HYBRID',
+    status: 'COMPLETE',
+    date: '2024.01.28',
+    description: 'Combining multiple garment typologies into singular hybrid forms.',
+    techniques: ['Garment splicing', 'Multi-layer construction', 'Hybrid pattern making'],
+    materials: ['Denim', 'Technical nylon', 'Knit jersey']
   },
   {
-    id: 'EXP-005',
-    title: 'PATTERN MORPHING ALGORITHM',
-    status: 'EXPERIMENTAL',
-    progress: 12,
-    startDate: '2024.03.01',
-    techniques: ['Digital Pattern Making', 'Parametric Design', 'AI Generation'],
-    materials: ['Digital Canvas', 'Virtual Fabric', 'Code Patterns'],
-    specifications: {
-      iterations: '∞',
-      variables: '47 parameters',
-      accuracy: '99.7%',
-      adaptability: 'Real-time'
-    },
-    notes: 'Machine learning meets pattern making. Teaching computers to understand fabric behavior.',
-    phase: 'RESEARCH'
+    id: 'EXP_005',
+    title: 'Biodegradable Structures',
+    category: 'MATERIAL',
+    status: 'ACTIVE',
+    date: '2024.03.01',
+    description: 'Developing garments designed to decompose, exploring temporality in fashion.',
+    techniques: ['Bio-fabrication', 'Natural dyeing', 'Compostable construction'],
+    materials: ['Mycelium leather', 'Algae fiber', 'Natural rubber latex']
   },
   {
-    id: 'EXP-006',
-    title: 'MEMORY FABRIC INTEGRATION',
-    status: 'SUSPENDED',
-    progress: 8,
-    startDate: '2024.02.14',
-    techniques: ['Shape Memory Alloy', 'Heat Activation', 'Fiber Embedding'],
-    materials: ['Nitinol Wire', 'Smart Textile', 'Thermoplastic'],
-    specifications: {
-      activationTemp: '37°C',
-      memoryDuration: '30 min',
-      cycles: '1000+',
-      recovery: '98%'
-    },
-    notes: 'Garments that remember and return to original form. Self-adjusting fit technology.',
-    phase: 'SUSPENDED'
+    id: 'EXP_006',
+    title: 'Negative Space Design',
+    category: 'PATTERN',
+    status: 'ARCHIVED',
+    date: '2023.12.10',
+    description: 'Creating garments defined by what is removed rather than what remains.',
+    techniques: ['Laser cutting', 'Chemical dissolution', 'Strategic destruction'],
+    materials: ['Wool felt', 'Acetate film', 'Cotton poplin']
   }
-]
-
-// Current active projects
-const currentProjects = [
-  {
-    name: 'CINCH-24-SS-001',
-    description: 'Deconstructed Tailoring Series',
-    deadline: '2024.04.30',
-    team: ['Pattern Maker', 'Seamstress', 'Fit Specialist'],
-    materials: ['Wool Suiting', 'Canvas', 'Thread'],
-    status: 'CUTTING'
-  },
-  {
-    name: 'CINCH-24-FW-002',
-    description: 'Hybrid Construction Research',
-    deadline: '2024.05.15',
-    team: ['Technical Designer', 'R&D Engineer'],
-    materials: ['Technical Fabrics', 'Hardware'],
-    status: 'PROTOTYPE'
-  }
-]
-
-// Technical library categories
-const technicalLibrary = [
-  {
-    category: 'SEAMING TECHNIQUES',
-    count: 47,
-    entries: [
-      'French Seam', 'Flat Fell Seam', 'Hong Kong Finish', 'Serged Seam',
-      'Pinked Seam', 'Bound Seam', 'Welted Seam', 'Lapped Seam'
-    ]
-  },
-  {
-    category: 'PATTERN LIBRARY',
-    count: 234,
-    entries: [
-      'Basic Bodice Block', 'Sleeve Sloper', 'Skirt Block', 'Trouser Block',
-      'Collar Variations', 'Dart Manipulations', 'Ease Adjustments'
-    ]
-  },
-  {
-    category: 'MATERIAL DATABASE',
-    count: 189,
-    entries: [
-      'Natural Fibers', 'Synthetic Fibers', 'Technical Textiles', 'Smart Fabrics',
-      'Interfacings', 'Notions', 'Hardware', 'Treatments'
-    ]
-  },
-  {
-    category: 'CONSTRUCTION METHODS',
-    count: 67,
-    entries: [
-      'Tailored Construction', 'Couture Techniques', 'Industrial Methods',
-      'Zero Waste Patterns', 'Seamless Knitting', 'Bonded Seams'
-    ]
-  }
-]
-
-// Process documentation steps
-const processStages = [
-  { id: 'CONCEPT', label: 'Conceptual Development', duration: '∞', icon: '◐' },
-  { id: 'RESEARCH', label: 'Technical Research', duration: '168hrs', icon: '◒' },
-  { id: 'PATTERN', label: 'Pattern Engineering', duration: '72hrs', icon: '◓' },
-  { id: 'TOILE', label: 'Toile Construction', duration: '48hrs', icon: '◑' },
-  { id: 'FITTING', label: 'Fit Analysis', duration: '24hrs', icon: '◐' },
-  { id: 'CONSTRUCTION', label: 'Final Assembly', duration: '96hrs', icon: '◒' },
-  { id: 'FINISHING', label: 'Detail Refinement', duration: '36hrs', icon: '◓' },
-  { id: 'ANALYSIS', label: 'Post-Construction Review', duration: '12hrs', icon: '◑' }
 ]
 
 export default function LabPage() {
-  const [activeExperiment, setActiveExperiment] = useState<number | null>(null)
-  const [currentStage, setCurrentStage] = useState(0)
-  const [selectedTab, setSelectedTab] = useState<'experiments' | 'projects' | 'process' | 'library'>('experiments')
-  const [labStatus, setLabStatus] = useState<'OPERATIONAL' | 'EXPERIMENTING' | 'CRITICAL'>('OPERATIONAL')
+  const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null)
+  const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'COMPLETE' | 'ARCHIVED'>('ALL')
+  const [category, setCategory] = useState<'ALL' | 'PATTERN' | 'MATERIAL' | 'CONSTRUCTION' | 'HYBRID'>('ALL')
   const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll()
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end']
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const filteredExperiments = experiments.filter(exp => {
+    const statusMatch = filter === 'ALL' || exp.status === filter
+    const categoryMatch = category === 'ALL' || exp.category === category
+    return statusMatch && categoryMatch
   })
 
-  // Cycle through process stages
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStage((prev) => (prev + 1) % processStages.length)
-    }, 4000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Random status changes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.9) {
-        setLabStatus(prev => {
-          const statuses: typeof labStatus[] = ['OPERATIONAL', 'EXPERIMENTING', 'CRITICAL']
-          return statuses[Math.floor(Math.random() * statuses.length)]
-        })
-      }
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [])
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white-0 relative">
-      {/* Technical Grid Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-20"
-             style={{
-               backgroundImage: `
-                 linear-gradient(var(--gray-plaster) 1px, transparent 1px),
-                 linear-gradient(90deg, var(--gray-plaster) 1px, transparent 1px)
-               `,
-               backgroundSize: '20px 20px'
-             }}
-        />
-      </div>
+    <div ref={containerRef} className="min-h-screen bg-off-white">
 
-      {/* Laboratory Status Bar */}
-      <motion.div
-        className="fixed top-20 left-0 right-0 z-40 bg-black-100 text-white-0 py-3 border-b border-gray-steel"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between text-micro font-mono">
-            <div className="flex items-center gap-8">
-              <span>LAB_STATUS: <span className={`
-                ${labStatus === 'OPERATIONAL' ? 'text-centrifuge-blue' :
-                  labStatus === 'EXPERIMENTING' ? 'text-warning-yellow' : 'text-safety-orange'}
-              `}>{labStatus}</span></span>
-              <span className="opacity-60">|</span>
-              <span>ACTIVE_EXPERIMENTS: {experiments.filter(e => e.status === 'IN_PROGRESS').length}</span>
-              <span className="opacity-60">|</span>
-              <span>CURRENT_PROCESS: {processStages[currentStage].label}</span>
+      {/* ==========================================================================
+         HEADER - Laboratory Control Panel
+         ========================================================================== */}
+
+      <section className="relative pt-32 pb-16 px-8 border-b border-carbon/10">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 material-paper opacity-50" />
+
+        {/* Status Bar */}
+        <div className="relative z-10 max-w-7xl mx-auto mb-12">
+          <div className="flex items-center justify-between text-2xs font-mono text-steel mb-8">
+            <div className="flex items-center gap-6">
+              <span>LABORATORY_INTERFACE v4.0</span>
+              <span className="w-2 h-2 bg-accent-blood rounded-full animate-pulse" />
+              <span>{currentTime.toLocaleString('en-US', {
+                weekday: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              })}</span>
             </div>
-            <div className="flex items-center gap-4">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-safety-orange"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <CipherText mode="auto" delay={2000}>NO SALES • ONLY CREATION</CipherText>
+            <div>
+              <span>EXPERIMENTS: {experiments.filter(e => e.status === 'ACTIVE').length} ACTIVE</span>
+            </div>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-6xl font-black mb-6">
+            <DeconstructedText intensity={1.5}>
+              LABORATORY
+            </DeconstructedText>
+          </h1>
+          <p className="text-lg text-steel max-w-3xl">
+            Experimental research facility for garment deconstruction, material innovation,
+            and hybrid construction techniques. No commercial intent, pure exploration.
+          </p>
+        </div>
+
+        {/* Filter Controls */}
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="flex flex-wrap gap-4">
+            {/* Status Filter */}
+            <div className="flex items-center gap-2">
+              <span className="text-label">STATUS:</span>
+              <div className="flex gap-1">
+                {(['ALL', 'ACTIVE', 'COMPLETE', 'ARCHIVED'] as const).map(status => (
+                  <button
+                    key={status}
+                    onClick={() => setFilter(status)}
+                    className={`
+                      px-3 py-1 text-2xs font-mono uppercase transition-all
+                      ${filter === status
+                        ? 'bg-carbon text-off-white'
+                        : 'bg-transparent text-carbon border border-carbon/20 hover:border-carbon/40'
+                      }
+                    `}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex items-center gap-2">
+              <span className="text-label">CATEGORY:</span>
+              <div className="flex gap-1">
+                {(['ALL', 'PATTERN', 'MATERIAL', 'CONSTRUCTION', 'HYBRID'] as const).map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategory(cat)}
+                    className={`
+                      px-3 py-1 text-2xs font-mono uppercase transition-all
+                      ${category === cat
+                        ? 'bg-carbon text-off-white'
+                        : 'bg-transparent text-carbon border border-carbon/20 hover:border-carbon/40'
+                      }
+                    `}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </motion.div>
+      </section>
 
-      {/* Main Content */}
-      <div className="pt-40 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* ==========================================================================
+         EXPERIMENTS GRID
+         ========================================================================== */}
 
-          {/* Page Title */}
-          <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="text-micro font-mono text-safety-orange mb-4 tracking-wider">
-              CINCH LAB / EXPERIMENTAL_DIVISION
-            </div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tightest uppercase mb-6">
-              <CipherText mode="auto" delay={1000}>LABORATORY</CipherText>
-            </h1>
-            <div className="text-lg text-concrete-gray max-w-3xl">
-              Advanced fashion research facility. Every technique deconstructed, every method questioned,
-              every possibility explored. We are the future of garment construction.
-            </div>
-            <div className="text-sm font-mono mt-4 text-concrete-gray">
-              "난 천재야, CINCH LAB은 최고야" — Research Director
-            </div>
-          </motion.div>
-
-          {/* Navigation Tabs */}
-          <motion.div
-            className="mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="flex border-b border-gray-plaster">
-              {[
-                { id: 'experiments', label: 'EXPERIMENTS', count: experiments.length },
-                { id: 'projects', label: 'CURRENT PROJECTS', count: currentProjects.length },
-                { id: 'process', label: 'PROCESS DOCUMENTATION', count: processStages.length },
-                { id: 'library', label: 'TECHNICAL LIBRARY', count: technicalLibrary.reduce((acc, cat) => acc + cat.count, 0) }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedTab(tab.id as any)}
-                  className={`px-6 py-4 text-sm font-mono uppercase transition-all duration-300 ${
-                    selectedTab === tab.id
-                      ? 'border-b-2 border-black-100 text-black-100'
-                      : 'text-concrete-gray hover:text-black-100'
-                  }`}
+      <section className="py-16 px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredExperiments.map((experiment, index) => (
+              <motion.div
+                key={experiment.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <LayeredCard
+                  layers={2}
+                  className="h-full cursor-pointer"
+                  interactive={true}
                 >
-                  {tab.label} ({tab.count})
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Experiments Section */}
-          <AnimatePresence mode="wait">
-            {selectedTab === 'experiments' && (
-              <motion.div
-                key="experiments"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">
-                    <CipherText>ACTIVE EXPERIMENTS</CipherText>
-                  </h2>
-                  <p className="text-concrete-gray">
-                    Ongoing research into advanced construction techniques and material innovations.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {experiments.map((exp, index) => (
-                    <motion.div
-                      key={exp.id}
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      onMouseEnter={() => setActiveExperiment(index)}
-                      onMouseLeave={() => setActiveExperiment(null)}
-                      className={`relative bg-paper-white p-8 border transition-all duration-300 ${
-                        activeExperiment === index
-                          ? 'border-black-100 shadow-2xl transform -translate-y-1'
-                          : 'border-concrete-gray/30'
-                      }`}
+                  <MaterialCard
+                    material={
+                      experiment.category === 'MATERIAL' ? 'fabric' :
+                      experiment.category === 'PATTERN' ? 'paper' :
+                      experiment.category === 'CONSTRUCTION' ? 'concrete' :
+                      'glass'
+                    }
+                    className="p-6 h-full"
+                    interactive={false}
+                  >
+                    <div
+                      onClick={() => setSelectedExperiment(experiment)}
+                      className="h-full flex flex-col"
                     >
-                      {/* Experiment Header */}
-                      <div className="flex items-start justify-between mb-6">
+                      {/* Header */}
+                      <div className="flex justify-between items-start mb-4">
                         <div>
-                          <div className="text-micro font-mono text-safety-orange mb-1">
-                            {exp.id} • {exp.startDate}
-                          </div>
-                          <h3 className="text-xl font-bold tracking-wider">
-                            <CipherText>{exp.title}</CipherText>
-                          </h3>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className={`px-2 py-1 text-micro font-mono uppercase ${
-                            exp.status === 'COMPLETED' ? 'bg-hazmat-green text-off-black' :
-                            exp.status === 'IN_PROGRESS' ? 'bg-centrifuge-blue text-white' :
-                            exp.status === 'TESTING' ? 'bg-warning-yellow text-off-black' :
-                            exp.status === 'EXPERIMENTAL' ? 'bg-petri-pink text-off-black' :
-                            'bg-concrete-gray text-white'
-                          }`}>
-                            {exp.status}
+                          <span className="text-2xs font-mono text-steel">
+                            {experiment.id}
                           </span>
-                        </div>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="mb-6">
-                        <div className="flex justify-between text-micro font-mono mb-2">
-                          <span>PROGRESS</span>
-                          <span>{exp.progress}%</span>
-                        </div>
-                        <div className="h-1 bg-concrete-gray/30">
-                          <motion.div
-                            className="h-full bg-black-100"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${exp.progress}%` }}
-                            transition={{ duration: 1, delay: index * 0.1 }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Techniques & Materials */}
-                      <div className="space-y-4 mb-6">
-                        <div>
-                          <div className="text-micro font-mono text-concrete-gray mb-2">TECHNIQUES:</div>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.techniques.map(tech => (
-                              <span key={tech} className="text-xs px-2 py-1 bg-concrete-gray/20 font-mono">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-micro font-mono text-concrete-gray mb-2">MATERIALS:</div>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.materials.map(mat => (
-                              <span key={mat} className="text-xs px-2 py-1 border border-concrete-gray/30 font-mono">
-                                {mat}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Technical Specifications */}
-                      <div className="mb-4">
-                        <div className="text-micro font-mono text-concrete-gray mb-2">SPECIFICATIONS:</div>
-                        <div className="space-y-1">
-                          {Object.entries(exp.specifications).map(([key, value]) => (
-                            <div key={key} className="flex justify-between text-xs font-mono">
-                              <span className="uppercase">{key.replace(/([A-Z])/g, '_$1')}:</span>
-                              <span>{value}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Notes */}
-                      <div className="text-sm text-concrete-gray italic border-t border-concrete-gray/20 pt-4">
-                        {exp.notes}
-                      </div>
-
-                      {/* Phase Indicator */}
-                      <div className="absolute bottom-4 right-4">
-                        <span className="text-micro font-mono text-concrete-gray">
-                          {exp.phase}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Current Projects Section */}
-            {selectedTab === 'projects' && (
-              <motion.div
-                key="projects"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">
-                    <CipherText>CURRENT PROJECTS</CipherText>
-                  </h2>
-                  <p className="text-concrete-gray">
-                    Active development projects in various stages of completion.
-                  </p>
-                </div>
-
-                <div className="space-y-6">
-                  {currentProjects.map((project, index) => (
-                    <motion.div
-                      key={project.name}
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.2 }}
-                      className="bg-paper-white p-8 border border-concrete-gray/30"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold mb-2">
-                            <CipherText>{project.name}</CipherText>
+                          <h3 className="text-xl font-bold mt-1">
+                            {experiment.title}
                           </h3>
-                          <p className="text-concrete-gray">{project.description}</p>
                         </div>
-                        <span className={`px-3 py-1 text-sm font-mono uppercase ${
-                          project.status === 'CUTTING' ? 'bg-warning-yellow text-off-black' :
-                          'bg-centrifuge-blue text-white'
-                        }`}>
-                          {project.status}
+                        <span className={`
+                          text-2xs font-mono px-2 py-1
+                          ${experiment.status === 'ACTIVE' ? 'bg-accent-blood text-off-white' :
+                            experiment.status === 'COMPLETE' ? 'bg-accent-sage text-off-white' :
+                            'bg-steel text-off-white'}
+                        `}>
+                          {experiment.status}
                         </span>
                       </div>
 
-                      <div className="grid md:grid-cols-3 gap-6 text-sm">
-                        <div>
-                          <div className="text-micro font-mono text-concrete-gray mb-2">DEADLINE:</div>
-                          <div className="font-mono">{project.deadline}</div>
+                      {/* Description */}
+                      <p className="text-sm text-steel mb-4 flex-grow">
+                        {experiment.description}
+                      </p>
+
+                      {/* Metadata */}
+                      <div className="space-y-2 text-2xs font-mono">
+                        <div className="flex justify-between">
+                          <span className="text-steel">CATEGORY</span>
+                          <span>{experiment.category}</span>
                         </div>
-                        <div>
-                          <div className="text-micro font-mono text-concrete-gray mb-2">TEAM:</div>
-                          <div className="space-y-1">
-                            {project.team.map(member => (
-                              <div key={member} className="font-mono">{member}</div>
-                            ))}
-                          </div>
+                        <div className="flex justify-between">
+                          <span className="text-steel">DATE</span>
+                          <span>{experiment.date}</span>
                         </div>
-                        <div>
-                          <div className="text-micro font-mono text-concrete-gray mb-2">MATERIALS:</div>
-                          <div className="space-y-1">
-                            {project.materials.map(material => (
-                              <div key={material} className="font-mono">{material}</div>
-                            ))}
-                          </div>
+                        <div className="flex justify-between">
+                          <span className="text-steel">TECHNIQUES</span>
+                          <span>{experiment.techniques.length}</span>
                         </div>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
 
-            {/* Process Documentation */}
-            {selectedTab === 'process' && (
-              <motion.div
-                key="process"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">
-                    <CipherText>PROCESS DOCUMENTATION</CipherText>
-                  </h2>
-                  <p className="text-concrete-gray">
-                    Step-by-step methodology for garment creation and experimentation.
-                  </p>
-                </div>
-
-                {/* Live Process Indicator */}
-                <div className="mb-12 p-6 bg-off-black text-white">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">LIVE PROCESS MONITOR</h3>
-                    <motion.div
-                      className="text-2xl"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    >
-                      {processStages[currentStage].icon}
-                    </motion.div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <div className="text-micro font-mono mb-1">CURRENT STAGE:</div>
-                      <div className="text-xl font-mono">{processStages[currentStage].label}</div>
+                      {/* Corner Marker */}
+                      <ConstructionMarker
+                        label={experiment.category}
+                        position="top-right"
+                      />
                     </div>
-                    <div>
-                      <div className="text-micro font-mono mb-1">ESTIMATED DURATION:</div>
-                      <div className="text-xl font-mono">{processStages[currentStage].duration}</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Process Steps */}
-                <div className="space-y-4">
-                  {processStages.map((stage, index) => (
-                    <motion.div
-                      key={stage.id}
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`p-6 border transition-all duration-300 ${
-                        index === currentStage
-                          ? 'border-black-100 bg-paper-white'
-                          : 'border-concrete-gray/30'
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`text-2xl ${
-                          index === currentStage ? 'text-black-100' : 'text-concrete-gray'
-                        }`}>
-                          {stage.icon}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-bold">
-                              STAGE {(index + 1).toString().padStart(2, '0')}: {stage.label}
-                            </h3>
-                            <span className="text-sm font-mono text-concrete-gray">
-                              {stage.duration}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                  </MaterialCard>
+                </LayeredCard>
               </motion.div>
-            )}
+            ))}
+          </div>
 
-            {/* Technical Library */}
-            {selectedTab === 'library' && (
-              <motion.div
-                key="library"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">
-                    <CipherText>TECHNICAL LIBRARY</CipherText>
-                  </h2>
-                  <p className="text-concrete-gray">
-                    Comprehensive archive of fashion construction techniques and methodologies.
-                  </p>
-                </div>
+          {filteredExperiments.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-steel">No experiments found matching current filters.</p>
+            </div>
+          )}
+        </div>
+      </section>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                  {technicalLibrary.map((category, index) => (
-                    <motion.div
-                      key={category.category}
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-paper-white p-6 border border-concrete-gray/30"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-bold">
-                          <CipherText>{category.category}</CipherText>
-                        </h3>
-                        <span className="px-2 py-1 bg-off-black text-white text-sm font-mono">
-                          {category.count}
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        {category.entries.map(entry => (
-                          <div key={entry} className="text-sm py-1 border-b border-concrete-gray/20 font-mono">
-                            {entry}
-                          </div>
-                        ))}
-                        <div className="text-xs text-concrete-gray italic pt-2">
-                          + {category.count - category.entries.length} more entries
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {/* ==========================================================================
+         EXPERIMENT DETAIL MODAL
+         ========================================================================== */}
 
-          {/* Laboratory Manifesto */}
+      <AnimatePresence>
+        {selectedExperiment && (
           <motion.div
-            className="mt-20 text-center py-16 border-t border-concrete-gray/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-carbon/80 backdrop-blur-sm z-50 flex items-center justify-center p-8"
+            onClick={() => setSelectedExperiment(null)}
           >
-            <h2 className="text-3xl font-black mb-8 tracking-wider">
-              <CipherText mode="auto" delay={3000}>
-                LABORATORY MANIFESTO
-              </CipherText>
-            </h2>
-            <div className="text-lg text-concrete-gray max-w-4xl mx-auto leading-relaxed">
-              We are not bound by traditional methods. Every stitch is questioned, every seam reconsidered,
-              every technique deconstructed and rebuilt. This laboratory exists to push the boundaries of
-              what garments can be, how they can be made, and what fashion can become.
-            </div>
-            <div className="text-sm font-mono mt-8 text-concrete-gray">
-              "Fashion is not about following rules. It's about breaking them intelligently."
-            </div>
-          </motion.div>
-        </div>
-      </div>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-off-white max-w-4xl w-full max-h-[90vh] overflow-auto"
+              onClick={e => e.stopPropagation()}
+            >
+              <ExposedSeam showMeasurements={false} showStitching={true} className="p-8">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-8">
+                  <div>
+                    <span className="text-xs font-mono text-steel">
+                      {selectedExperiment.id} / {selectedExperiment.date}
+                    </span>
+                    <h2 className="text-3xl font-bold mt-2">
+                      {selectedExperiment.title}
+                    </h2>
+                    <span className={`
+                      inline-block mt-2 text-xs font-mono px-3 py-1
+                      ${selectedExperiment.status === 'ACTIVE' ? 'bg-accent-blood text-off-white' :
+                        selectedExperiment.status === 'COMPLETE' ? 'bg-accent-sage text-off-white' :
+                        'bg-steel text-off-white'}
+                    `}>
+                      {selectedExperiment.status}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setSelectedExperiment(null)}
+                    className="text-2xl hover:text-accent-blood transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
 
-      {/* Floating Lab Stats */}
-      <motion.div
-        className="fixed bottom-8 right-8 bg-off-black text-white p-4 text-micro font-mono min-w-48"
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 2 }}
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Left Column */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-label mb-3">DESCRIPTION</h3>
+                      <p className="text-body leading-relaxed">
+                        {selectedExperiment.description}
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-label mb-3">TECHNIQUES</h3>
+                      <ul className="space-y-2">
+                        {selectedExperiment.techniques.map((technique, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-accent-blood">→</span>
+                            <span className="text-sm">{technique}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-label mb-3">MATERIALS</h3>
+                      <ul className="space-y-2">
+                        {selectedExperiment.materials.map((material, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-accent-blood">→</span>
+                            <span className="text-sm">{material}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-label mb-3">RESEARCH NOTES</h3>
+                      <div className="bg-carbon/5 p-4 font-mono text-xs leading-relaxed">
+                        <p>Process documentation in progress...</p>
+                        <p className="mt-2">Temperature: 23°C</p>
+                        <p>Humidity: 45%</p>
+                        <p>Pressure: 1013 hPa</p>
+                        <p className="mt-2">Next iteration scheduled.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 mt-8">
+                  <RawEdgeButton variant="primary" size="medium">
+                    View Documentation
+                  </RawEdgeButton>
+                  <RawEdgeButton variant="secondary" size="medium">
+                    Download Research
+                  </RawEdgeButton>
+                </div>
+              </ExposedSeam>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ==========================================================================
+         RESEARCH METHODOLOGY
+         ========================================================================== */}
+
+      <EditorialSection
+        lineNumber="METHOD"
+        title="Research Methodology"
+        subtitle="Our approach to experimental fashion"
+        className="py-24 px-8 bg-ivory"
       >
-        <div className="space-y-1">
-          <div>EXPERIMENTS_ACTIVE: {experiments.filter(e => e.status === 'IN_PROGRESS').length}</div>
-          <div>TECHNIQUES_ARCHIVED: 347</div>
-          <div>PATTERNS_GENERATED: 1,247</div>
-          <div>HOURS_RESEARCHED: 12,847</div>
-          <div className="pt-2 border-t border-concrete-gray text-warning-yellow">
-            STATUS: {labStatus}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Deconstruction */}
+            <MaterialCard material="paper" className="p-6">
+              <h3 className="text-xl font-bold mb-4">01. DECONSTRUCTION</h3>
+              <p className="text-sm text-steel mb-4">
+                Breaking down existing garments to understand their fundamental construction.
+                Every seam is examined, every pattern piece documented.
+              </p>
+              <ul className="space-y-2 text-xs">
+                <li>• Pattern extraction</li>
+                <li>• Seam analysis</li>
+                <li>• Material documentation</li>
+                <li>• Construction mapping</li>
+              </ul>
+            </MaterialCard>
+
+            {/* Experimentation */}
+            <MaterialCard material="fabric" className="p-6">
+              <h3 className="text-xl font-bold mb-4">02. EXPERIMENTATION</h3>
+              <p className="text-sm text-steel mb-4">
+                Testing new combinations, techniques, and materials.
+                Failure is data, success is temporary.
+              </p>
+              <ul className="space-y-2 text-xs">
+                <li>• Material testing</li>
+                <li>• Technique development</li>
+                <li>• Form exploration</li>
+                <li>• Process iteration</li>
+              </ul>
+            </MaterialCard>
+
+            {/* Documentation */}
+            <MaterialCard material="concrete" className="p-6">
+              <h3 className="text-xl font-bold mb-4">03. DOCUMENTATION</h3>
+              <p className="text-sm text-steel mb-4">
+                Recording every step, every decision, every failure.
+                Knowledge preserved for future exploration.
+              </p>
+              <ul className="space-y-2 text-xs">
+                <li>• Process photography</li>
+                <li>• Technical drawings</li>
+                <li>• Material samples</li>
+                <li>• Written analysis</li>
+              </ul>
+            </MaterialCard>
           </div>
         </div>
-      </motion.div>
+      </EditorialSection>
+
+      {/* ==========================================================================
+         EQUIPMENT & TOOLS
+         ========================================================================== */}
+
+      <section className="py-24 px-8 bg-carbon text-off-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12">Laboratory Equipment</h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { name: 'Industrial Overlock', status: 'OPERATIONAL' },
+              { name: 'Ultrasonic Welder', status: 'OPERATIONAL' },
+              { name: 'Heat Press 3000', status: 'MAINTENANCE' },
+              { name: 'Laser Cutter Pro', status: 'OPERATIONAL' },
+              { name: 'Pattern Digitizer', status: 'OPERATIONAL' },
+              { name: '3D Body Scanner', status: 'OFFLINE' },
+              { name: 'Chemical Bath', status: 'OPERATIONAL' },
+              { name: 'Pressure Former', status: 'OPERATIONAL' }
+            ].map((equipment, i) => (
+              <div key={i} className="space-y-2">
+                <h4 className="text-sm font-bold">{equipment.name}</h4>
+                <div className="flex items-center gap-2">
+                  <span className={`
+                    w-2 h-2 rounded-full
+                    ${equipment.status === 'OPERATIONAL' ? 'bg-accent-sage animate-pulse' :
+                      equipment.status === 'MAINTENANCE' ? 'bg-accent-ochre' :
+                      'bg-steel'}
+                  `} />
+                  <span className="text-2xs font-mono text-steel">
+                    {equipment.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         FOOTER CALL TO ACTION
+         ========================================================================== */}
+
+      <section className="py-16 px-8 bg-off-white border-t border-carbon/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-2xl font-bold mb-4">
+            Research Collaboration
+          </h3>
+          <p className="text-steel mb-8">
+            We collaborate with institutions and individuals on experimental fashion research.
+            No commercial projects.
+          </p>
+          <RawEdgeButton variant="primary" size="large">
+            Propose Research Project
+          </RawEdgeButton>
+        </div>
+      </section>
     </div>
   )
 }

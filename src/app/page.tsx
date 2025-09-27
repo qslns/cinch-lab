@@ -3,28 +3,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
-import CipherText from '@/components/CipherText'
+import Image from 'next/image'
 import {
-  DeconstructedHover,
-  SacaiLayer,
-  FragmentMosaic,
-  ExposedStructure,
-  AsymmetricTransform
-} from '@/components/HybridLayerEffects'
+  DeconstructedText,
+  LayeredCard,
+  ExposedSeam,
+  MaterialCard,
+  AsymmetricGridItem,
+  EditorialSection,
+  RawEdgeButton,
+  ConstructionMarker
+} from '@/components/MargielaSacaiComponents'
 
 // ==========================================================================
-// CINCH LAB HOME - Margiela × Sacai Philosophy
-// NO SALES • ONLY CREATION
+// CINCH LAB HOME - Professional Experimental Fashion Laboratory
+// Margiela × Sacai Philosophy - Rich, Dense, Functional
 // ==========================================================================
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
-
-  // State management for experimental elements
-  const [phase, setPhase] = useState<'CINCH' | 'RELEASE' | 'REPEAT'>('CINCH')
-  const [deconstructMode, setDeconstructMode] = useState(false)
-  const [currentLine, setCurrentLine] = useState('0')
 
   // Mouse tracking for parallax
   const mouseX = useMotionValue(0)
@@ -35,42 +33,39 @@ export default function HomePage() {
   const ySpring = useSpring(mouseY, springConfig)
 
   // Parallax transforms
-  const yParallax = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
-  const scaleParallax = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.02, 1])
-  const rotateParallax = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const heroParallax = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const scaleProgress = useTransform(scrollYProgress, [0, 0.5], [1, 0.95])
 
-  // Phase cycling effect
+  // Current time for laboratory status
+  const [currentTime, setCurrentTime] = useState(new Date())
+  const [activeExperiment, setActiveExperiment] = useState('PATTERN_DECONSTRUCTION')
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPhase(prev => {
-        if (prev === 'CINCH') return 'RELEASE'
-        if (prev === 'RELEASE') return 'REPEAT'
-        return 'CINCH'
-      })
-    }, 3000)
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 1000)
 
-    return () => clearInterval(interval)
-  }, [])
+    const experimentTimer = setInterval(() => {
+      const experiments = [
+        'PATTERN_DECONSTRUCTION',
+        'FABRIC_MANIPULATION',
+        'HYBRID_LAYERING',
+        'VOLUME_STUDIES'
+      ]
+      setActiveExperiment(experiments[Math.floor(Math.random() * experiments.length)])
+    }, 5000)
 
-  // Random deconstruction
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.9) {
-        setDeconstructMode(true)
-        setTimeout(() => setDeconstructMode(false), 500)
-      }
-    }, 4000)
-
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(timer)
+      clearInterval(experimentTimer)
+    }
   }, [])
 
   // Mouse tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const x = e.clientX / window.innerWidth
-      const y = e.clientY / window.innerHeight
-      mouseX.set(x)
-      mouseY.set(y)
+      mouseX.set(e.clientX / window.innerWidth - 0.5)
+      mouseY.set(e.clientY / window.innerHeight - 0.5)
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -78,203 +73,172 @@ export default function HomePage() {
   }, [mouseX, mouseY])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white-0 text-black-100 overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-off-white text-carbon overflow-hidden">
 
       {/* ==========================================================================
-         HERO SECTION - SLOGAN FOCUSED
+         HERO SECTION - Editorial Opening
          ========================================================================== */}
 
-      <section className="min-h-screen relative flex items-center justify-center">
-        {/* Background Layers */}
-        <div className="fixed inset-0">
-          <div className="absolute inset-0 texture-muslin opacity-[0.02]" />
-          <div className="absolute inset-0 texture-canvas opacity-[0.01]" />
-        </div>
+      <section className="relative min-h-screen flex items-center">
+        {/* Background Texture */}
+        <div className="absolute inset-0 material-fabric opacity-30" />
 
-        {/* Exposed Grid Structure */}
-        <motion.div
-          className="fixed inset-0 pointer-events-none"
-          style={{ opacity: deconstructMode ? 0.1 : 0.02 }}
-        >
-          {/* Construction Grid */}
-          {Array.from({ length: 10 }).map((_, i) => (
-            <motion.div
-              key={`v-${i}`}
-              className="absolute top-0 bottom-0 w-px bg-gray-plaster"
-              style={{ left: `${i * 10}%` }}
-              animate={{ opacity: deconstructMode ? 0.2 : 0.05 }}
-              transition={{ delay: i * 0.02 }}
-            />
-          ))}
-          {Array.from({ length: 10 }).map((_, i) => (
-            <motion.div
-              key={`h-${i}`}
-              className="absolute left-0 right-0 h-px bg-gray-plaster"
-              style={{ top: `${i * 10}%` }}
-              animate={{ opacity: deconstructMode ? 0.2 : 0.05 }}
-              transition={{ delay: i * 0.02 }}
-            />
-          ))}
-        </motion.div>
+        {/* Technical Grid Overlay */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `
+                linear-gradient(90deg, var(--accent-blood) 0.5px, transparent 0.5px),
+                linear-gradient(180deg, var(--accent-blood) 0.5px, transparent 0.5px)
+              `,
+              backgroundSize: '100px 100px',
+              opacity: 0.03
+            }}
+          />
+        </div>
 
         {/* Main Content */}
         <motion.div
-          className="relative z-10 text-center px-8"
+          className="relative z-10 container max-w-7xl mx-auto px-8 py-24"
           style={{
-            y: yParallax,
-            scale: scaleParallax,
-            x: useTransform(xSpring, x => (x - 0.5) * 20),
-            rotateY: useTransform(xSpring, x => (x - 0.5) * 5),
+            y: heroParallax,
+            scale: scaleProgress
           }}
         >
-          {/* Pattern Mark */}
+          {/* Laboratory Status Bar */}
           <motion.div
-            className="text-micro font-mono text-hybrid-red opacity-40 mb-8"
-            animate={{ opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            PATTERN № 001 — EXPERIMENTAL LABORATORY
-          </motion.div>
-
-          {/* Main Slogan - Deconstructed Typography with Cipher Effect */}
-          <ExposedStructure showGrid={deconstructMode} className="inline-block">
-            <motion.h1
-              className="text-[clamp(60px,10vw,180px)] font-black leading-[0.85] tracking-tightest uppercase"
-              animate={{
-                rotateX: deconstructMode ? [0, 1, -1, 0] : 0,
-              }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* CINCH */}
-              <motion.div
-                className="relative"
-                animate={{
-                  x: phase === 'CINCH' ? 0 : phase === 'RELEASE' ? -10 : 10,
-                  opacity: phase === 'CINCH' ? 1 : 0.3,
-                }}
-                transition={{ duration: 0.8 }}
-              >
-                <SacaiLayer layers={2} color1="hybrid-blue" color2="hybrid-red">
-                  <CipherText mode="auto" interval={8000}>
-                    CINCH
-                  </CipherText>
-                </SacaiLayer>
-              </motion.div>
-
-              {/* Separator */}
-              <motion.div
-                className="text-[clamp(20px,3vw,40px)] my-2 opacity-40"
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              >
-                •
-              </motion.div>
-
-              {/* RELEASE */}
-              <motion.div
-                className="relative"
-                animate={{
-                  x: phase === 'RELEASE' ? 0 : phase === 'REPEAT' ? -10 : 10,
-                  opacity: phase === 'RELEASE' ? 1 : 0.3,
-                }}
-                transition={{ duration: 0.8 }}
-              >
-                <DeconstructedHover intensity={1.5}>
-                  <CipherText mode="auto" interval={8000} delay={200}>
-                    RELEASE
-                  </CipherText>
-                </DeconstructedHover>
-              </motion.div>
-
-              {/* Separator */}
-              <motion.div
-                className="text-[clamp(20px,3vw,40px)] my-2 opacity-40"
-                animate={{ rotate: [360, 0] }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              >
-                •
-              </motion.div>
-
-              {/* REPEAT */}
-              <motion.div
-                className="relative"
-                animate={{
-                  x: phase === 'REPEAT' ? 0 : phase === 'CINCH' ? -10 : 10,
-                  opacity: phase === 'REPEAT' ? 1 : 0.3,
-                }}
-                transition={{ duration: 0.8 }}
-              >
-                <AsymmetricTransform intensity={0.5}>
-                  <CipherText mode="auto" interval={8000} delay={400}>
-                    REPEAT
-                  </CipherText>
-                </AsymmetricTransform>
-              </motion.div>
-            </motion.h1>
-          </ExposedStructure>
-
-          {/* Laboratory Subtitle */}
-          <motion.div
-            className="mt-12 mb-8"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
           >
-            <div className="text-sm font-mono tracking-widest text-gray-steel mb-2">
-              LINE_0 / ARTISANAL
-            </div>
-            <h2 className="text-2xl font-black tracking-wider">
-              <CipherText>CINCH LABORATORY</CipherText>
-            </h2>
-            <div className="text-xs font-mono mt-2 opacity-60">
-              EXPERIMENTAL FASHION RESEARCH FACILITY
+            <div className="flex items-center justify-between text-2xs font-mono text-steel">
+              <div className="flex items-center gap-6">
+                <span>LAB_STATUS: OPERATIONAL</span>
+                <span className="w-2 h-2 bg-accent-blood rounded-full animate-pulse" />
+                <span>{currentTime.toLocaleTimeString('en-US', { hour12: false })}</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <span>EXPERIMENT: {activeExperiment}</span>
+                <span>TOKYO / PARIS</span>
+              </div>
             </div>
           </motion.div>
 
-          {/* Philosophy Statement */}
-          <motion.div
-            className="max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-          >
-            <p className="text-sm leading-relaxed tracking-wide">
-              <CipherText>NO SALES • ONLY CREATION</CipherText>
-            </p>
-            <p className="text-xs font-mono mt-4 opacity-60">
-              <CipherText delay={500}>판매하지 않습니다. 창조합니다.</CipherText>
-            </p>
-            <p className="text-lg font-black mt-6 text-hybrid-red">
-              <CipherText mode="auto" interval={10000}>
-                난 천재야, CINCH LAB은 최고야
-              </CipherText>
-            </p>
-          </motion.div>
+          {/* Main Typography */}
+          <div className="grid grid-cols-12 gap-6">
+            <motion.div
+              className="col-span-12 lg:col-span-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              {/* Slogan */}
+              <h1 className="text-hero font-black leading-none tracking-compressed mb-8">
+                <motion.span
+                  className="block"
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <DeconstructedText intensity={2} hover={false}>
+                    CINCH
+                  </DeconstructedText>
+                </motion.span>
+                <motion.span
+                  className="block text-steel"
+                  initial={{ x: 100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                >
+                  <DeconstructedText intensity={2} hover={false}>
+                    RELEASE
+                  </DeconstructedText>
+                </motion.span>
+                <motion.span
+                  className="block"
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <DeconstructedText intensity={2} hover={false}>
+                    REPEAT
+                  </DeconstructedText>
+                </motion.span>
+              </h1>
 
-          {/* Phase Indicator */}
-          <motion.div
-            className="mt-16 flex items-center justify-center gap-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-          >
-            {['CINCH', 'RELEASE', 'REPEAT'].map((p) => (
+              {/* Description */}
               <motion.div
-                key={p}
-                className="relative"
-                animate={{
-                  scale: phase === p ? 1.2 : 1,
-                  opacity: phase === p ? 1 : 0.3,
-                }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="space-y-4 max-w-2xl"
               >
-                <div className="w-2 h-2 bg-black-100 rounded-full" />
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-micro font-mono whitespace-nowrap">
-                  {p === phase && p}
-                </div>
+                <p className="text-lg leading-relaxed">
+                  Experimental fashion laboratory where commerce doesn't exist.
+                  We deconstruct, layer, and reconstruct the boundaries of what clothing can be.
+                </p>
+                <p className="text-body text-steel">
+                  每件作品都是实验的结果。没有产品，只有过程。
+                  <br />
+                  Each piece is a result of experimentation. No products, only process.
+                </p>
               </motion.div>
-            ))}
-          </motion.div>
+
+              {/* CTA Buttons */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="flex gap-4 mt-12"
+              >
+                <RawEdgeButton
+                  variant="primary"
+                  size="large"
+                  onClick={() => document.getElementById('experiments')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Enter Laboratory
+                </RawEdgeButton>
+                <RawEdgeButton
+                  variant="secondary"
+                  size="large"
+                  onClick={() => {}}
+                >
+                  View Archive
+                </RawEdgeButton>
+              </motion.div>
+            </motion.div>
+
+            {/* Side Information */}
+            <motion.div
+              className="col-span-12 lg:col-span-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              <ExposedSeam showMeasurements={false}>
+                <MaterialCard material="paper" className="p-8">
+                  <h3 className="text-label mb-4">Current Research</h3>
+                  <ul className="space-y-3 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent-blood">01</span>
+                      <span>Deconstructive pattern making inspired by Margiela's artisanal techniques</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent-blood">02</span>
+                      <span>Hybrid garment splicing following Sacai's layering philosophy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-accent-blood">03</span>
+                      <span>Material manipulation through heat, pressure, and chemical processes</span>
+                    </li>
+                  </ul>
+                  <ConstructionMarker label="RESEARCH_001" position="top-right" />
+                </MaterialCard>
+              </ExposedSeam>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Scroll Indicator */}
@@ -283,341 +247,288 @@ export default function HomePage() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="text-micro font-mono text-gray-steel">
-            EXPLORE ↓
-          </div>
+          <span className="text-2xs font-mono text-steel tracking-widest">
+            SCROLL TO EXPLORE
+          </span>
         </motion.div>
       </section>
 
       {/* ==========================================================================
-         LABORATORY SECTIONS - Asymmetric Grid
+         EXPERIMENTS SECTION - Laboratory Departments
          ========================================================================== */}
 
-      <section className="py-24 px-8 relative bg-white-1">
-        {/* Section Header */}
-        <div className="max-w-7xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-micro font-mono text-hybrid-red opacity-40 mb-4">
-              SECTION_01 / NAVIGATION
-            </div>
-            <h2 className="text-4xl font-black tracking-tighter mb-4">
-              LABORATORY DEPARTMENTS
-            </h2>
-            <p className="text-sm text-gray-steel max-w-xl">
-              각 부서는 독립적인 실험 공간입니다. 판매 목적이 아닌 순수한 창작과 연구를 위한 구역입니다.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Grid Layout - Margiela Inspired */}
-        <div className="max-w-7xl mx-auto grid grid-margiela gap-4">
-
-          {/* LAB - Line 1 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="col-span-2"
-          >
-            <Link href="/lab">
-              <DeconstructedHover className="block h-full" intensity={1.2}>
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  {/* Pattern Mark */}
-                  <div className="absolute top-2 right-2 text-micro font-mono text-hybrid-red opacity-30">
-                    LINE_1
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4 group-hover:text-hybrid-red transition-all">
-                    <CipherText>LAB</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    실험적 기술과 프로세스. 해체와 재구성의 작업장.
-                    패턴 제작, 소재 연구, 구조 실험.
-                  </p>
-                  <div className="text-micro font-mono">
-                    EXPERIMENTS_ACTIVE
-                  </div>
-
-                  {/* Hover Indicator */}
-                  <div className="absolute bottom-0 left-0 right-0 h-px bg-hybrid-red transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-                </div>
-              </DeconstructedHover>
-            </Link>
-          </motion.div>
-
-          {/* COLLECTIONS - Line 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/collections">
-              <SacaiLayer className="block h-full" layers={3}>
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  <div className="absolute top-2 right-2 text-micro font-mono text-hybrid-blue opacity-30">
-                    LINE_3
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4">
-                    <CipherText>COLLECTIONS</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    시각적 기록. 가격 없는 비전.
-                    전시를 위한 문서화.
-                  </p>
-                  <div className="text-micro font-mono">
-                    LOOKBOOKS_AVAILABLE
-                  </div>
-                </div>
-              </SacaiLayer>
-            </Link>
-          </motion.div>
-
-          {/* ARCHIVE - Line 10 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="col-span-2"
-          >
-            <Link href="/archive">
-              <ExposedStructure showMeasurements={false} className="block h-full">
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  <div className="absolute top-2 right-2 text-micro font-mono text-gray-steel opacity-30">
-                    LINE_10
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4">
-                    <CipherText>ARCHIVE</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    철학과 프로세스의 기록.
-                    실패와 성공의 문서화. 사고의 흔적.
-                  </p>
-                  <div className="text-micro font-mono">
-                    THOUGHTS_DOCUMENTED
-                  </div>
-                </div>
-              </ExposedStructure>
-            </Link>
-          </motion.div>
-
-          {/* ANALYSIS - Line 11 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/analysis">
-              <AsymmetricTransform className="block h-full">
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  <div className="absolute top-2 right-2 text-micro font-mono opacity-30">
-                    LINE_11
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4">
-                    <CipherText>ANALYSIS</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    타 브랜드 해체. 기술적 분석.
-                    패션계의 비평적 시각.
-                  </p>
-                  <div className="text-micro font-mono">
-                    CRITIQUE_MODE
-                  </div>
-                </div>
-              </AsymmetricTransform>
-            </Link>
-          </motion.div>
-
-          {/* ABOUT - Line 13 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/about">
-              <FragmentMosaic fragments={4} className="block h-full">
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  <div className="absolute top-2 right-2 text-micro font-mono opacity-30">
-                    LINE_13
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4">
-                    <CipherText>ABOUT</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    정체성 선언. 창작 철학.
-                    하이엔드 장인정신.
-                  </p>
-                  <div className="text-micro font-mono">
-                    MANIFESTO_READY
-                  </div>
-                </div>
-              </FragmentMosaic>
-            </Link>
-          </motion.div>
-
-          {/* CONTACT - Line 22 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/contact">
-              <DeconstructedHover className="block h-full">
-                <div className="bg-white-0 border border-gray-plaster p-8 h-full relative group">
-                  <div className="absolute top-2 right-2 text-micro font-mono opacity-30">
-                    LINE_22
-                  </div>
-
-                  <h3 className="text-2xl font-black mb-4">
-                    <CipherText>CONTACT</CipherText>
-                  </h3>
-                  <p className="text-xs leading-relaxed opacity-60 mb-4">
-                    전시 문의. 협업 제안.
-                    판매 문의 불가.
-                  </p>
-                  <div className="text-micro font-mono">
-                    COLLABORATION_ONLY
-                  </div>
-                </div>
-              </DeconstructedHover>
-            </Link>
-          </motion.div>
-
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         PHILOSOPHY SECTION - Sacai Layering
-         ========================================================================== */}
-
-      <section className="py-24 px-8 bg-black-100 text-white-0 relative overflow-hidden">
-        {/* Layered Background */}
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.05) 35px, rgba(255,255,255,0.05) 70px)',
-            }}
-            animate={{ x: [0, 70] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-
-        <div className="max-w-4xl mx-auto relative z-10">
-          {/* Philosophy Header */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            viewport={{ once: true }}
-            className="mb-16"
-          >
-            <div className="text-micro font-mono text-hybrid-yellow opacity-60 mb-4">
-              PHILOSOPHY / 철학
-            </div>
-            <h2 className="text-[clamp(40px,6vw,80px)] font-black leading-[0.9] mb-8">
-              <SacaiLayer layers={2} color1="hybrid-yellow" color2="white-4">
-                <span>FASHION WITHOUT</span>
-                <br />
-                <span className="text-gray-plaster">COMMERCE</span>
-              </SacaiLayer>
-            </h2>
-          </motion.div>
-
-          {/* Philosophy Text */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
-            <p className="text-sm leading-loose">
-              우리는 판매하지 않습니다. 우리는 창조합니다.
-              <br />
-              전시 이후, 문서화 이후, 어쩌면 한 작품이 주인을 찾습니다.
-              <br />
-              장바구니를 통해서가 아니라, 이해를 통해서.
-            </p>
-            <p className="text-xs font-mono opacity-60">
-              We don't sell. We create.
-              <br />
-              After exhibitions, after documentation, maybe one piece finds an owner.
-              <br />
-              Not through carts, through understanding.
-            </p>
-            <p className="text-sm leading-loose font-bold">
-              이것은 상점이 아닙니다. 이것은 실험실입니다.
-              <br />
-              This is not a store. This is a laboratory.
-            </p>
-          </motion.div>
-
-          {/* Signature */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            viewport={{ once: true }}
-            className="mt-16 pt-8 border-t border-gray-steel"
-          >
-            <div className="text-micro font-mono opacity-40">
-              CINCH LABORATORY © 2025
-            </div>
-            <div className="text-micro font-mono opacity-40 mt-1">
-              EXPERIMENTAL FASHION RESEARCH FACILITY
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         BOTTOM STATUS BAR - Laboratory Monitoring
-         ========================================================================== */}
-
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 bg-white-0/90 backdrop-blur-sm border-t border-gray-plaster p-4 z-50"
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, delay: 1 }}
+      <EditorialSection
+        id="experiments"
+        lineNumber="00"
+        title="Laboratory Departments"
+        subtitle="Experimental zones for fashion research"
+        description="Each department operates as an independent research facility, focused on pushing the boundaries of garment construction and material innovation."
+        className="py-24 px-8"
       >
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Status */}
-          <div className="flex items-center gap-4">
-            <div className={`w-2 h-2 rounded-full ${deconstructMode ? 'bg-hybrid-red' : 'bg-hybrid-blue'} animate-pulse`} />
-            <span className="text-micro font-mono text-gray-steel">
-              {deconstructMode ? 'DECONSTRUCTING' : 'OPERATIONAL'}
-            </span>
-          </div>
+        <div className="grid-chaos max-w-7xl mx-auto">
+          {/* LAB Department */}
+          <AsymmetricGridItem span={2} offset={0}>
+            <Link href="/lab">
+              <LayeredCard layers={3} className="h-full cursor-pointer group">
+                <MaterialCard material="concrete" className="p-8 h-full">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-bold">LAB</h3>
+                    <span className="text-2xs font-mono text-accent-blood">LINE_01</span>
+                  </div>
+                  <p className="text-sm text-steel mb-6">
+                    Pattern experiments, material research, construction techniques.
+                    Where garments are born and deconstructed.
+                  </p>
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <span className="w-2 h-2 bg-accent-blood rounded-full animate-pulse" />
+                    <span>EXPERIMENTS ACTIVE</span>
+                  </div>
+                </MaterialCard>
+              </LayeredCard>
+            </Link>
+          </AsymmetricGridItem>
 
-          {/* Current Phase */}
-          <div className="text-micro font-mono">
-            CURRENT_PHASE: {phase}
-          </div>
+          {/* COLLECTIONS Department */}
+          <AsymmetricGridItem span={3} offset={40}>
+            <Link href="/collections">
+              <LayeredCard layers={2} className="h-full cursor-pointer group">
+                <MaterialCard material="fabric" className="p-8 h-full">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-bold">COLLECTIONS</h3>
+                    <span className="text-2xs font-mono text-accent-ink">LINE_03</span>
+                  </div>
+                  <p className="text-sm text-steel mb-6">
+                    Seasonal documentation of experiments.
+                    Visual archives without commerce.
+                  </p>
+                  <div className="text-xs font-mono">
+                    24 EXPERIMENTS DOCUMENTED
+                  </div>
+                </MaterialCard>
+              </LayeredCard>
+            </Link>
+          </AsymmetricGridItem>
 
-          {/* No Sales Reminder */}
-          <div className="flex items-center gap-4 text-micro font-mono text-gray-steel">
-            <span>NO_PRODUCTS</span>
-            <span>NO_PRICES</span>
-            <span className="text-black-100 font-bold">ONLY_CREATION</span>
+          {/* ARCHIVE Department */}
+          <AsymmetricGridItem span={2} offset={-20}>
+            <Link href="/archive">
+              <LayeredCard layers={4} className="h-full cursor-pointer group">
+                <MaterialCard material="paper" className="p-8 h-full">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-bold">ARCHIVE</h3>
+                    <span className="text-2xs font-mono text-steel">LINE_10</span>
+                  </div>
+                  <p className="text-sm text-steel mb-6">
+                    Process documentation. Failed experiments.
+                    The beauty of imperfection.
+                  </p>
+                  <div className="text-xs font-mono">
+                    ∞ THOUGHTS PRESERVED
+                  </div>
+                </MaterialCard>
+              </LayeredCard>
+            </Link>
+          </AsymmetricGridItem>
+
+          {/* ANALYSIS Department */}
+          <AsymmetricGridItem span={2} offset={20}>
+            <Link href="/analysis">
+              <LayeredCard layers={2} className="h-full cursor-pointer group">
+                <MaterialCard material="glass" className="p-8 h-full">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-2xl font-bold">ANALYSIS</h3>
+                    <span className="text-2xs font-mono text-accent-ochre">LINE_11</span>
+                  </div>
+                  <p className="text-sm text-steel mb-6">
+                    Deconstructing other brands.
+                    Technical critique and examination.
+                  </p>
+                  <div className="text-xs font-mono">
+                    CRITIQUE MODE ENABLED
+                  </div>
+                </MaterialCard>
+              </LayeredCard>
+            </Link>
+          </AsymmetricGridItem>
+
+          {/* ABOUT Department */}
+          <AsymmetricGridItem span={1} offset={-40}>
+            <Link href="/about">
+              <LayeredCard layers={2} className="h-full cursor-pointer group">
+                <MaterialCard material="metal" className="p-8 h-full">
+                  <div className="mb-4">
+                    <h3 className="text-2xl font-bold">ABOUT</h3>
+                    <span className="text-2xs font-mono text-titanium">LINE_13</span>
+                  </div>
+                  <p className="text-sm text-steel">
+                    Philosophy and manifesto.
+                  </p>
+                </MaterialCard>
+              </LayeredCard>
+            </Link>
+          </AsymmetricGridItem>
+        </div>
+      </EditorialSection>
+
+      {/* ==========================================================================
+         PHILOSOPHY SECTION - Brand Manifesto
+         ========================================================================== */}
+
+      <section className="py-24 px-8 bg-carbon text-off-white">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            {/* Header */}
+            <div className="mb-12">
+              <span className="text-2xs font-mono text-steel tracking-widest">
+                MANIFESTO / 宣言
+              </span>
+              <h2 className="text-5xl font-black mt-4 mb-8">
+                Fashion Without Commerce
+              </h2>
+            </div>
+
+            {/* Philosophy Text */}
+            <div className="space-y-8 text-lg leading-relaxed">
+              <p>
+                We don't sell. We create.
+                In an industry obsessed with seasons and sales,
+                we choose permanence through process.
+              </p>
+
+              <p className="text-steel">
+                Every stitch is a decision. Every cut is a philosophy.
+                We document not products, but possibilities—
+                the space between what clothing is and what it could become.
+              </p>
+
+              <p>
+                Inspired by Margiela's deconstruction and Sacai's hybridization,
+                we operate at the intersection of destruction and creation,
+                where garments exist in perpetual transformation.
+              </p>
+
+              <div className="pt-8 border-t border-steel/20">
+                <p className="text-sm font-mono">
+                  NO SALES • NO SIZES • NO SEASONS
+                  <br />
+                  ONLY EXPERIMENTATION
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         RECENT EXPERIMENTS - Gallery Preview
+         ========================================================================== */}
+
+      <EditorialSection
+        lineNumber="22"
+        title="Recent Experiments"
+        subtitle="Latest research from the laboratory"
+        className="py-24 px-8 bg-ivory"
+      >
+        <div className="grid grid-sacai max-w-7xl mx-auto">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+            >
+              <MaterialCard material={i % 2 === 0 ? 'fabric' : 'paper'} className="aspect-[3/4] relative group overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/50" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <p className="text-2xs font-mono text-off-white mb-1">
+                    EXP_{String(i).padStart(3, '0')}
+                  </p>
+                  <p className="text-sm text-off-white">
+                    {i % 3 === 0 ? 'Volume Study' : i % 2 === 0 ? 'Pattern Deconstruction' : 'Material Experiment'}
+                  </p>
+                </div>
+                <ConstructionMarker label={`TEST_${i}`} position="top-left" />
+              </MaterialCard>
+            </motion.div>
+          ))}
+        </div>
+      </EditorialSection>
+
+      {/* ==========================================================================
+         CONTACT SECTION - Collaboration Only
+         ========================================================================== */}
+
+      <section className="py-24 px-8 bg-off-white border-t border-carbon/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Collaboration Inquiries Only
+          </h2>
+          <p className="text-steel mb-8">
+            We don't sell. We collaborate on exhibitions, research, and experimental projects.
+          </p>
+          <Link href="/contact">
+            <RawEdgeButton variant="primary" size="large">
+              Propose Collaboration
+            </RawEdgeButton>
+          </Link>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         FOOTER - Laboratory Information
+         ========================================================================== */}
+
+      <footer className="py-12 px-8 bg-carbon text-off-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Brand */}
+            <div>
+              <h3 className="text-label mb-4">CINCH LABORATORY</h3>
+              <p className="text-xs text-steel">
+                Experimental Fashion Research
+                <br />
+                Est. 2024
+              </p>
+            </div>
+
+            {/* Locations */}
+            <div>
+              <h3 className="text-label mb-4">LOCATIONS</h3>
+              <p className="text-xs text-steel">
+                Tokyo Research Facility
+                <br />
+                Paris Archive Center
+              </p>
+            </div>
+
+            {/* Status */}
+            <div>
+              <h3 className="text-label mb-4">STATUS</h3>
+              <p className="text-xs text-steel">
+                Laboratory: OPERATIONAL
+                <br />
+                Commerce: DISABLED
+              </p>
+            </div>
+
+            {/* Copyright */}
+            <div>
+              <h3 className="text-label mb-4">© 2024</h3>
+              <p className="text-xs text-steel">
+                All experiments documented.
+                <br />
+                No rights reserved.
+              </p>
+            </div>
           </div>
         </div>
-      </motion.div>
-
+      </footer>
     </div>
   )
 }
