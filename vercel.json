@@ -3,12 +3,6 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "regions": ["icn1"],
-  "functions": {
-    "app/**/*.tsx": {
-      "runtime": "nodejs20",
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
