@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import SophisticatedNav from '@/components/SophisticatedNav'
 import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
@@ -12,6 +13,26 @@ import '@/styles/brutalism.css'
 import '@/styles/deconstructed-system.css'
 import '@/styles/responsive-system.css'
 import '@/styles/animations-optimized.css'
+import '@/styles/margiela-sacai-redesign.css'
+
+// Typography System - Margiela × Sacai inspired
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'CINCH LAB — Experimental Fashion Laboratory',
@@ -90,7 +111,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
-      <body>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <CipherProvider>
           <LenisProvider>
             <SkipToMain />

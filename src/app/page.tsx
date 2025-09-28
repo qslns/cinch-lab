@@ -24,6 +24,10 @@ export default function HomePage() {
   const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 20 })
   const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 20 })
 
+  // Cursor interaction for sophisticated hover
+  const cursorX = useTransform(smoothMouseX, (x) => x - 16)
+  const cursorY = useTransform(smoothMouseY, (y) => y - 16)
+
   // State
   const [isLoading, setIsLoading] = useState(true)
   const [activeSection, setActiveSection] = useState(0)
