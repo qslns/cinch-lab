@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
-import BrutalistNavigation from '@/components/BrutalistNavigation'
+import SophisticatedNav from '@/components/SophisticatedNav'
 import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
 import LenisProvider from '@/hooks/useLenis'
 import { CipherProvider } from '@/contexts/CipherContext'
@@ -14,7 +14,7 @@ import '@/styles/responsive-system.css'
 import '@/styles/animations-optimized.css'
 
 export const metadata: Metadata = {
-  title: 'CINCH LAB — 최고이자 난 천재야',
+  title: 'CINCH LAB — Experimental Fashion Laboratory',
   description: 'NO SALES. ONLY CREATION. Experimental fashion laboratory where genius manifests without commerce. CINCH•RELEASE•REPEAT.',
   keywords: 'experimental fashion, no commerce, fashion laboratory, cinch lab, avant-garde, pure creation, fashion experiment, genius',
   authors: [{ name: 'CINCH LAB' }],
@@ -95,7 +95,7 @@ export default function RootLayout({
           <LenisProvider>
             <SkipToMain />
             <KeyboardNavigationIndicator />
-            <BrutalistNavigation />
+            <SophisticatedNav />
             <CipherToggle />
             <main id="main-content" className="pt-20">
               {children}

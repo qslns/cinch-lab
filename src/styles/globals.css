@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 /* Import Design Systems */
+@import './margiela-sacai-redesign.css';
 @import './margiela-sacai-system.css';
 @import './deconstructed-system.css';
 @import './cinch-laboratory.css';
