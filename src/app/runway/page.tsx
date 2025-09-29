@@ -59,7 +59,6 @@ export default function RunwayPage() {
   ]
 
   useEffect(() => {
-    // Auto-walk sequence
     const walkInterval = setInterval(() => {
       setIsWalking(true)
       setTimeout(() => {
@@ -68,18 +67,15 @@ export default function RunwayPage() {
       }, 3000)
     }, 5000)
 
-    // Strobe effect
     const strobeInterval = setInterval(() => {
       setStrobeActive(true)
       setTimeout(() => setStrobeActive(false), 100)
     }, 8000)
 
-    // Camera movement
     const cameraInterval = setInterval(() => {
       setCameraAngle((prev) => (prev + 1) % 360)
     }, 50)
 
-    // Simulated audio levels
     const audioInterval = setInterval(() => {
       setAudioLevel(Math.random() * 100)
     }, 100)
@@ -93,10 +89,9 @@ export default function RunwayPage() {
   }, [models.length])
 
   return (
-    <div ref={runwayRef} className="relative min-h-screen bg-black overflow-hidden">
-      {/* Strobe Effect */}
+    <div ref={runwayRef} className="relative min-h-screen overflow-hidden" style={{ backgroundColor: 'var(--margiela-carbon)' }}>
       {strobeActive && (
-        <div className="fixed inset-0 bg-white z-[9999] pointer-events-none animate-pulse" />
+        <div className="fixed inset-0 z-[9999] pointer-events-none animate-pulse" style={{ backgroundColor: 'var(--white-label)' }} />
       )}
 
       {/* Audio Visualizer Background */}
@@ -105,11 +100,12 @@ export default function RunwayPage() {
           {[...Array(50)].map((_, i) => (
             <div
               key={i}
-              className="w-[2%] bg-gradient-to-t from-cyan-500 to-magenta-500 mx-px"
+              className="w-[2%] mx-px"
               style={{
                 height: `${(Math.sin(i * 0.5 + audioLevel * 0.1) + 1) * 50}%`,
                 opacity: 0.3,
-                transition: 'height 0.1s ease-out'
+                transition: 'height 0.1s ease-out',
+                background: `linear-gradient(to top, var(--sacai-burnt-orange), var(--cdg-blood-red))`
               }}
             />
           ))}
@@ -128,8 +124,9 @@ export default function RunwayPage() {
                 transform: `rotate(${Math.sin(cameraAngle * 0.1 + i) * 30}deg)`
               }}
             >
-              <div className="w-16 h-16 bg-white rounded-full opacity-50 animate-pulse"
+              <div className="w-16 h-16 rounded-full opacity-50 animate-pulse"
                    style={{
+                     backgroundColor: 'var(--white-label)',
                      boxShadow: `0 0 100px 50px rgba(255,255,255,0.5)`,
                      animationDelay: `${i * 0.1}s`
                    }} />
@@ -141,32 +138,31 @@ export default function RunwayPage() {
       {/* Runway Title */}
       <section className="relative h-screen flex items-center justify-center">
         <div className="text-center z-30">
-          <h1 className="text-9xl md:text-[20rem] font-black tracking-tighter">
-            <span className="block" style={{
-              background: 'linear-gradient(90deg, #FF0000, #FF00FF, #00FFFF)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              transform: `perspective(1000px) rotateY(${cameraAngle}deg)`,
-              animation: 'text-warp 3s ease-in-out infinite'
-            }}>
-              RUNWAY
-            </span>
+          <h1 className="text-display-1 font-black tracking-tightest"
+              style={{
+                background: `linear-gradient(90deg, var(--cdg-blood-red), var(--sacai-burnt-orange), var(--margiela-platinum))`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                transform: `perspective(1000px) rotateY(${cameraAngle}deg)`,
+                animation: 'text-warp 3s ease-in-out infinite'
+              }}>
+            RUNWAY
           </h1>
-          <p className="text-2xl md:text-4xl text-white/50 tracking-[1em] mt-4">
+          <p className="text-heading-4 tracking-[1em] mt-4" style={{ color: 'var(--margiela-platinum)', opacity: 0.5 }}>
             EXTREME FASHION SHOW
           </p>
         </div>
 
-        {/* Floating runway markers */}
         <div className="absolute bottom-0 left-0 right-0 h-32">
           <div className="relative h-full">
             {[...Array(20)].map((_, i) => (
               <div
                 key={i}
-                className="absolute bottom-0 w-1 h-full bg-gradient-to-t from-white to-transparent opacity-20"
+                className="absolute bottom-0 w-1 h-full opacity-20"
                 style={{
                   left: `${i * 5}%`,
+                  background: `linear-gradient(to top, var(--white-label), transparent)`,
                   transform: `scaleY(${Math.sin(cameraAngle * 0.05 + i) * 0.5 + 0.5})`
                 }}
               />
@@ -176,11 +172,12 @@ export default function RunwayPage() {
       </section>
 
       {/* The Runway */}
-      <section className="relative min-h-[150vh] perspective-1000">
+      <section className="relative min-h-[150vh]">
         <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
           {/* Runway Floor */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white/10 to-transparent"
+          <div className="absolute bottom-0 left-0 right-0 h-1/2"
                style={{
+                 background: `linear-gradient(to top, rgba(255,255,255,0.1), transparent)`,
                  transform: `perspective(500px) rotateX(70deg) translateZ(-100px)`,
                  transformOrigin: 'bottom center'
                }}>
@@ -188,9 +185,10 @@ export default function RunwayPage() {
               {[...Array(30)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute left-0 right-0 h-px bg-cyan-500/30"
+                  className="absolute left-0 right-0 h-px opacity-30"
                   style={{
                     top: `${i * 3.33}%`,
+                    backgroundColor: 'var(--sacai-burnt-orange)',
                     transform: `translateZ(${i * 10}px)`
                   }}
                 />
@@ -213,7 +211,8 @@ export default function RunwayPage() {
                     rotateY(${index === currentModel ? 0 : 180}deg)
                     ${isWalking && index === currentModel ? 'translateX(100vw)' : ''}
                   `,
-                  transition: isWalking ? 'all 3s linear' : 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
+                  transition: isWalking ? 'all 3s linear' : 'all 1s cubic-bezier(0.4, 0, 0.2, 1)',
+                  rotate: `${index * 2 - 2}deg`
                 }}
               >
                 <div className="relative w-96 h-[600px]">
@@ -229,11 +228,14 @@ export default function RunwayPage() {
                   />
 
                   {/* Model Info */}
-                  <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black to-transparent">
-                    <h3 className="text-3xl font-black text-white mb-2 glitch-text">
+                  <div className="absolute bottom-0 left-0 right-0 p-8"
+                       style={{
+                         background: `linear-gradient(to top, var(--margiela-carbon), transparent)`
+                       }}>
+                    <h3 className="text-heading-3 font-black mb-2" style={{ color: 'var(--white-label)' }}>
                       {model.name}
                     </h3>
-                    <p className="text-sm uppercase tracking-[0.3em] text-cyan-500">
+                    <p className="text-label tracking-[0.3em]" style={{ color: 'var(--sacai-burnt-orange)' }}>
                       {model.look}
                     </p>
                   </div>
@@ -241,8 +243,9 @@ export default function RunwayPage() {
                   {/* Glitch overlay */}
                   {index === currentModel && (
                     <div className="absolute inset-0 mix-blend-screen opacity-50">
-                      <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-transparent to-cyan-500"
+                      <div className="absolute inset-0"
                            style={{
+                             background: `linear-gradient(to right, var(--cdg-blood-red), transparent, var(--sacai-burnt-orange))`,
                              animation: 'glitch-slide 0.5s infinite',
                              backgroundSize: '200% 100%'
                            }} />
@@ -255,9 +258,9 @@ export default function RunwayPage() {
 
           {/* Model Counter */}
           <div className="absolute top-8 left-8 z-30">
-            <div className="text-6xl font-black text-white/20">
+            <div className="text-display-2 font-black" style={{ color: 'rgba(255,255,255,0.2)' }}>
               {String(currentModel + 1).padStart(2, '0')}
-              <span className="text-2xl">/{String(models.length).padStart(2, '0')}</span>
+              <span className="text-heading-4">/{String(models.length).padStart(2, '0')}</span>
             </div>
           </div>
 
@@ -267,9 +270,11 @@ export default function RunwayPage() {
               <button
                 key={index}
                 onClick={() => setCurrentModel(index)}
-                className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-                  index === currentModel ? 'border-cyan-500 bg-cyan-500' : 'border-white/50'
-                }`}
+                className={`w-3 h-3 rounded-full border-2 transition-all duration-300`}
+                style={{
+                  borderColor: index === currentModel ? 'var(--sacai-burnt-orange)' : 'rgba(255,255,255,0.5)',
+                  backgroundColor: index === currentModel ? 'var(--sacai-burnt-orange)' : 'transparent'
+                }}
               />
             ))}
           </div>
@@ -279,15 +284,15 @@ export default function RunwayPage() {
       {/* After Party */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          {/* Chaos background */}
           <div className="absolute inset-0">
             {[...Array(100)].map((_, i) => (
               <div
                 key={i}
-                className="absolute w-2 h-2 bg-white rounded-full"
+                className="absolute w-2 h-2 rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
+                  backgroundColor: 'var(--white-label)',
                   animation: `chaos-particle ${2 + Math.random() * 3}s infinite`,
                   animationDelay: `${Math.random() * 2}s`
                 }}
@@ -297,15 +302,20 @@ export default function RunwayPage() {
         </div>
 
         <div className="relative z-10 text-center">
-          <h2 className="text-6xl md:text-9xl font-black mb-8">
-            <span className="block text-red-500">SHOW</span>
-            <span className="block text-cyan-500">NEVER</span>
-            <span className="block text-white">ENDS</span>
+          <h2 className="text-display-2 font-black mb-8">
+            <span className="block" style={{ color: 'var(--cdg-blood-red)' }}>SHOW</span>
+            <span className="block" style={{ color: 'var(--sacai-burnt-orange)' }}>NEVER</span>
+            <span className="block" style={{ color: 'var(--white-label)' }}>ENDS</span>
           </h2>
 
           <Link
             href="/chaos"
-            className="inline-block px-12 py-6 text-2xl font-bold border-4 border-white hover:bg-white hover:text-black transition-all duration-500 transform hover:scale-110 hover:rotate-3"
+            className="inline-block px-12 py-6 text-heading-5 font-bold border-4 transition-all duration-500 transform hover:scale-110"
+            style={{
+              borderColor: 'var(--white-label)',
+              color: 'var(--white-label)',
+              rotate: '2deg'
+            }}
           >
             ENTER AFTERPARTY
           </Link>

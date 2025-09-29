@@ -1,0 +1,511 @@
+/* ==========================================================================
+   CINCH LAB - Responsive Design Enhancements
+   Complete responsive system for all breakpoints
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   MOBILE FIRST APPROACH (375px+)
+   ------------------------------------------------------------------ */
+
+/* Base mobile styles */
+.responsive-container {
+  width: 100%;
+  padding-left: var(--space-8);
+  padding-right: var(--space-8);
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.responsive-text-display {
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+
+.responsive-text-heading {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.responsive-text-body {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+/* Hide on mobile */
+.hide-mobile {
+  display: none;
+}
+
+/* Show only on mobile */
+.show-mobile {
+  display: block;
+}
+
+/* Stack on mobile */
+.stack-mobile {
+  flex-direction: column;
+}
+
+/* ------------------------------------------------------------------
+   SMALL MOBILE (320px - 374px)
+   ------------------------------------------------------------------ */
+
+@media (max-width: 374px) {
+  .responsive-container {
+    padding-left: var(--space-5);
+    padding-right: var(--space-5);
+  }
+
+  .responsive-text-display {
+    font-size: clamp(1.75rem, 7vw, 3.5rem);
+  }
+
+  /* Reduce grid gaps */
+  .margiela-grid,
+  .sacai-grid,
+  .hybrid-grid {
+    gap: var(--space-5);
+  }
+
+  /* Single column layouts */
+  .cdg-grid,
+  .diagonal-flow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------------
+   TABLET (640px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding-left: var(--space-13);
+    padding-right: var(--space-13);
+  }
+
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-13);
+  }
+
+  /* Show on tablet */
+  .hide-mobile {
+    display: block;
+  }
+
+  .show-mobile {
+    display: none;
+  }
+
+  /* Restore flex direction */
+  .stack-mobile {
+    flex-direction: row;
+  }
+
+  /* Two column grids */
+  .hybrid-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Reduce rotations slightly */
+  .margiela-grid > *:nth-child(odd) {
+    transform: rotate(calc(var(--rotate-subtle-left) * 0.7));
+  }
+
+  .margiela-grid > *:nth-child(even) {
+    transform: rotate(calc(var(--rotate-subtle-right) * 0.7));
+  }
+}
+
+/* ------------------------------------------------------------------
+   MEDIUM TABLET (768px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 768px) {
+  .responsive-container {
+    padding-left: var(--space-21);
+    padding-right: var(--space-21);
+  }
+
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Three column grids */
+  .hybrid-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Restore full rotations */
+  .margiela-grid > *:nth-child(odd) {
+    transform: rotate(var(--rotate-subtle-left));
+  }
+
+  .margiela-grid > *:nth-child(even) {
+    transform: rotate(var(--rotate-subtle-right));
+  }
+
+  /* Allow overlaps */
+  .sacai-grid-layer-2,
+  .sacai-grid-layer-3 {
+    margin-left: var(--overlap-moderate);
+    margin-top: var(--overlap-moderate);
+  }
+}
+
+/* ------------------------------------------------------------------
+   LAPTOP (1024px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding-left: var(--space-34);
+    padding-right: var(--space-34);
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .responsive-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-21);
+  }
+
+  /* Full grid system */
+  .hybrid-grid {
+    grid-template-columns:
+      minmax(0, 0.5fr)
+      minmax(150px, 1fr)
+      minmax(200px, 1.618fr)
+      minmax(100px, 0.8fr)
+      minmax(250px, 2fr)
+      minmax(0, 1fr);
+  }
+
+  /* CDG extreme spacing */
+  .cdg-grid {
+    gap: var(--space-55);
+  }
+
+  /* Full overlaps */
+  .sacai-grid-layer-2 {
+    margin-left: var(--overlap-moderate);
+    margin-top: var(--overlap-moderate);
+  }
+
+  .sacai-grid-layer-3 {
+    margin-left: var(--overlap-dramatic);
+  }
+
+  /* Show desktop elements */
+  .hide-laptop {
+    display: none;
+  }
+
+  .show-laptop {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------------
+   DESKTOP (1280px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 1280px) {
+  .responsive-container {
+    padding-left: var(--space-55);
+    padding-right: var(--space-55);
+    max-width: 1600px;
+  }
+
+  .responsive-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* Enhanced typography */
+  .responsive-text-display {
+    font-size: clamp(3rem, 10vw, 8rem);
+  }
+
+  .responsive-text-heading {
+    font-size: clamp(2rem, 5vw, 4rem);
+  }
+
+  /* Full asymmetric rotations */
+  .rotate-left-2,
+  .rotate-right-2 {
+    transform: rotate(var(--rotate-moderate-left));
+  }
+
+  .rotate-left-3,
+  .rotate-right-3 {
+    transform: rotate(var(--rotate-dramatic-left));
+  }
+}
+
+/* ------------------------------------------------------------------
+   LARGE DESKTOP (1536px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 1536px) {
+  .responsive-container {
+    max-width: 1800px;
+    padding-left: var(--space-89);
+    padding-right: var(--space-89);
+  }
+
+  /* Maximum gaps */
+  .cdg-grid {
+    gap: var(--space-89);
+  }
+
+  .hybrid-grid {
+    gap: var(--space-21);
+  }
+
+  /* Enhanced margiela grid */
+  .margiela-grid {
+    grid-template-columns:
+      minmax(2rem, 1fr)
+      minmax(300px, 1fr)
+      minmax(250px, 1.618fr)
+      minmax(200px, 1fr)
+      minmax(400px, 2fr)
+      minmax(2rem, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------------
+   ULTRA WIDE (1920px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 1920px) {
+  .responsive-container {
+    max-width: 2000px;
+  }
+
+  /* Ultra-large typography */
+  .responsive-text-display {
+    font-size: clamp(4rem, 12vw, 12rem);
+  }
+
+  /* Maximum spacing */
+  .responsive-grid {
+    gap: var(--space-34);
+  }
+}
+
+/* ------------------------------------------------------------------
+   4K (2560px+)
+   ------------------------------------------------------------------ */
+
+@media (min-width: 2560px) {
+  .responsive-container {
+    max-width: 2400px;
+  }
+
+  html {
+    font-size: 18px;
+  }
+
+  .responsive-text-display {
+    font-size: clamp(5rem, 15vw, 14rem);
+  }
+}
+
+/* ------------------------------------------------------------------
+   LANDSCAPE MOBILE
+   ------------------------------------------------------------------ */
+
+@media (max-width: 896px) and (orientation: landscape) {
+  /* Reduce vertical spacing */
+  section {
+    padding-top: var(--space-13);
+    padding-bottom: var(--space-13);
+  }
+
+  /* Reduce min heights */
+  .min-h-screen {
+    min-height: auto;
+    padding-top: var(--space-21);
+    padding-bottom: var(--space-21);
+  }
+
+  /* Stack navigation */
+  nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   PORTRAIT TABLET
+   ------------------------------------------------------------------ */
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hybrid-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------------
+   TOUCH DEVICE OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button,
+  a,
+  input,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects */
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-rotate:hover {
+    transform: none;
+  }
+
+  /* Tap highlights */
+  button,
+  a {
+    -webkit-tap-highlight-color: rgba(232, 93, 44, 0.2);
+  }
+
+  /* Disable complex animations */
+  .text-glitch::before,
+  .text-glitch::after {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   HIGH DPI DISPLAYS
+   ------------------------------------------------------------------ */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders */
+  .border {
+    border-width: 0.5px;
+  }
+
+  /* Enhanced shadows */
+  .shadow-lg {
+    box-shadow: var(--shadow-2xl);
+  }
+}
+
+/* ------------------------------------------------------------------
+   DARK MODE RESPONSIVE
+   ------------------------------------------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+  @media (max-width: 640px) {
+    /* Increase contrast on mobile dark mode */
+    .responsive-text-body {
+      color: var(--margiela-paper);
+    }
+
+    /* Reduce image brightness on mobile */
+    img {
+      opacity: 0.9;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+   PRINT RESPONSIVE
+   ------------------------------------------------------------------ */
+
+@media print {
+  /* Single column for print */
+  .responsive-grid,
+  .margiela-grid,
+  .sacai-grid,
+  .hybrid-grid,
+  .cdg-grid {
+    display: block;
+  }
+
+  .responsive-container {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  /* Remove transformations */
+  * {
+    transform: none !important;
+  }
+
+  /* Page breaks */
+  section {
+    page-break-inside: avoid;
+  }
+}
+
+/* ------------------------------------------------------------------
+   ACCESSIBILITY RESPONSIVE
+   ------------------------------------------------------------------ */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  @media (max-width: 640px) {
+    /* Increase font weight on mobile */
+    body {
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* Thicker borders */
+    .border {
+      border-width: 2px;
+    }
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all transforms on mobile */
+  @media (max-width: 640px) {
+    .margiela-grid > *,
+    .sacai-grid > *,
+    .rotate-left-1,
+    .rotate-right-1 {
+      transform: none !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+   UTILITY RESPONSIVE CLASSES
+   ------------------------------------------------------------------ */
+
+/* Responsive display */
+.sm\:block { @media (min-width: 640px) { display: block; } }
+.md\:block { @media (min-width: 768px) { display: block; } }
+.lg\:block { @media (min-width: 1024px) { display: block; } }
+.xl\:block { @media (min-width: 1280px) { display: block; } }
+
+.sm\:hidden { @media (min-width: 640px) { display: none; } }
+.md\:hidden { @media (min-width: 768px) { display: none; } }
+.lg\:hidden { @media (min-width: 1024px) { display: none; } }
+.xl\:hidden { @media (min-width: 1280px) { display: none; } }
+
+/* Responsive flex direction */
+.sm\:flex-row { @media (min-width: 640px) { flex-direction: row; } }
+.md\:flex-row { @media (min-width: 768px) { flex-direction: row; } }
+.lg\:flex-row { @media (min-width: 1024px) { flex-direction: row; } }
+
+/* Responsive grid columns */
+.sm\:grid-cols-2 { @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); } }
+.md\:grid-cols-3 { @media (min-width: 768px) { grid-template-columns: repeat(3, 1fr); } }
+.lg\:grid-cols-4 { @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); } }
+.xl\:grid-cols-6 { @media (min-width: 1280px) { grid-template-columns: repeat(6, 1fr); } }

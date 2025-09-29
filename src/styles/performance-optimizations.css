@@ -1,0 +1,519 @@
+/* ==========================================================================
+   CINCH LAB - Performance Optimizations
+   Critical rendering path, lazy loading, and GPU acceleration
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   GPU ACCELERATION
+   ------------------------------------------------------------------ */
+
+/* Force GPU rendering for smooth animations */
+.gpu-layer {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize specific animations */
+.gpu-animation {
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+/* Smooth scrolling with GPU */
+.gpu-scroll {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+}
+
+/* ------------------------------------------------------------------
+   WILL-CHANGE OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+/* Only use will-change on elements that will animate */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+.will-scroll {
+  will-change: scroll-position;
+}
+
+.will-composite {
+  will-change: transform;
+}
+
+/* Remove will-change after animation completes */
+.animation-complete {
+  will-change: auto;
+}
+
+/* ------------------------------------------------------------------
+   CONTAIN PROPERTY FOR ISOLATION
+   ------------------------------------------------------------------ */
+
+/* Layout containment */
+.contain-layout {
+  contain: layout;
+}
+
+/* Paint containment */
+.contain-paint {
+  contain: paint;
+}
+
+/* Size containment */
+.contain-size {
+  contain: size;
+}
+
+/* Strict containment (all) */
+.contain-strict {
+  contain: strict;
+}
+
+/* Content containment (layout + paint) */
+.contain-content {
+  contain: content;
+}
+
+/* ------------------------------------------------------------------
+   LAZY LOADING PLACEHOLDERS
+   ------------------------------------------------------------------ */
+
+/* Image loading skeleton */
+.img-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--margiela-silver) 0%,
+    var(--margiela-platinum) 50%,
+    var(--margiela-silver) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Blur-up technique for images */
+.img-blur-up {
+  filter: blur(10px);
+  transition: filter 0.3s ease-in-out;
+}
+
+.img-blur-up.loaded {
+  filter: blur(0);
+}
+
+/* Progressive JPEG loading */
+.img-progressive {
+  background: var(--margiela-paper);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.img-progressive.loaded {
+  image-rendering: auto;
+}
+
+/* ------------------------------------------------------------------
+   CONTENT VISIBILITY (EXPERIMENTAL)
+   ------------------------------------------------------------------ */
+
+/* Auto content visibility for off-screen elements */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* Hidden until visible */
+.content-hidden {
+  content-visibility: hidden;
+}
+
+/* Always visible */
+.content-visible {
+  content-visibility: visible;
+}
+
+/* ------------------------------------------------------------------
+   CRITICAL CSS INLINING
+   ------------------------------------------------------------------ */
+
+/* Above-the-fold critical styles */
+.critical-section {
+  /* These styles should be inlined in <head> */
+  background: var(--margiela-raw-canvas);
+  color: var(--margiela-carbon);
+}
+
+/* Non-critical styles can load later */
+.non-critical {
+  /* Defer loading via media="print" then swap to all */
+}
+
+/* ------------------------------------------------------------------
+   FONT LOADING OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+/* Font display swap for performance */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap; /* FOUT instead of FOIT */
+}
+
+/* Preload critical fonts */
+.font-preload {
+  /* Use <link rel="preload" as="font"> in HTML */
+}
+
+/* Font loading states */
+.fonts-loading {
+  /* Use system font while loading */
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.fonts-loaded {
+  /* Switch to custom font */
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ------------------------------------------------------------------
+   IMAGE OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+/* Native lazy loading */
+img[loading="lazy"] {
+  /* Browser handles lazy loading */
+}
+
+/* Responsive images */
+.img-responsive {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Aspect ratio boxes */
+.aspect-ratio-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.aspect-ratio-box::before {
+  content: '';
+  display: block;
+  padding-top: 56.25%; /* 16:9 */
+}
+
+.aspect-ratio-box > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* WebP with fallback */
+.img-webp {
+  /* Use picture element with source for WebP support */
+  /* <picture>
+       <source srcset="image.webp" type="image/webp">
+       <img src="image.jpg" alt="">
+     </picture> */
+}
+
+/* ------------------------------------------------------------------
+   REDUCE LAYOUT SHIFTS (CLS)
+   ------------------------------------------------------------------ */
+
+/* Reserve space for dynamic content */
+.reserve-space {
+  min-height: 200px;
+}
+
+/* Fixed dimensions for ads/embeds */
+.fixed-embed {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Prevent layout shift from fonts */
+.size-adjust {
+  font-size-adjust: 0.5;
+}
+
+/* ------------------------------------------------------------------
+   DEBOUNCE & THROTTLE CLASSES
+   ------------------------------------------------------------------ */
+
+/* Visual indicator for debounced actions */
+.debounced {
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.debounced.ready {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------
+   REDUCE PAINT AREAS
+   ------------------------------------------------------------------ */
+
+/* Isolate animated elements */
+.isolate {
+  isolation: isolate;
+}
+
+/* Prevent paint on parent */
+.no-paint {
+  contain: paint layout;
+}
+
+/* Compositor-friendly transforms */
+.composite-transform {
+  transform: translate3d(0, 0, 0);
+}
+
+/* ------------------------------------------------------------------
+   PASSIVE EVENT LISTENERS
+   ------------------------------------------------------------------ */
+
+/* Smooth scroll with passive listeners */
+.passive-scroll {
+  /* Add { passive: true } to JS event listeners */
+  touch-action: pan-y;
+}
+
+/* ------------------------------------------------------------------
+   CODE SPLITTING INDICATORS
+   ------------------------------------------------------------------ */
+
+/* Loading chunk indicator */
+.chunk-loading {
+  position: relative;
+}
+
+.chunk-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--margiela-carbon);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ------------------------------------------------------------------
+   INTERSECTION OBSERVER CLASSES
+   ------------------------------------------------------------------ */
+
+/* Elements waiting to be observed */
+.observe-lazy {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+/* Elements in viewport */
+.observe-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------
+   RENDERING LAYERS
+   ------------------------------------------------------------------ */
+
+/* Create new composite layer */
+.composite-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Promote to own layer */
+.promote-layer {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------------
+   MEMORY OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+/* Remove transforms when not needed */
+@media (prefers-reduced-motion: reduce) {
+  .gpu-layer,
+  .gpu-animation {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* Reduce layers on low-end devices */
+@media (max-width: 640px) {
+  .composite-layer,
+  .promote-layer {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   PREFETCH & PRELOAD
+   ------------------------------------------------------------------ */
+
+/* Prefetch next route */
+.prefetch-link {
+  /* Add rel="prefetch" to <link> */
+}
+
+/* Preload critical resources */
+.preload-critical {
+  /* Add rel="preload" to <link> */
+}
+
+/* DNS prefetch for external resources */
+.dns-prefetch {
+  /* Add rel="dns-prefetch" to <link> */
+}
+
+/* ------------------------------------------------------------------
+   CACHE OPTIMIZATION
+   ------------------------------------------------------------------ */
+
+/* Static assets (cache forever) */
+.cache-forever {
+  /* Set Cache-Control: public, max-age=31536000, immutable */
+}
+
+/* Dynamic content (cache with validation) */
+.cache-dynamic {
+  /* Set Cache-Control: public, max-age=3600, must-revalidate */
+}
+
+/* ------------------------------------------------------------------
+   BUNDLE SIZE OPTIMIZATIONS
+   ------------------------------------------------------------------ */
+
+/* Tree-shakeable imports */
+.tree-shake {
+  /* Use named imports: import { function } from 'module' */
+}
+
+/* Code splitting at route level */
+.route-split {
+  /* Use dynamic import(): const Component = lazy(() => import('./Component')) */
+}
+
+/* ------------------------------------------------------------------
+   FIRST CONTENTFUL PAINT (FCP)
+   ------------------------------------------------------------------ */
+
+/* Critical content above fold */
+.above-fold {
+  /* Prioritize rendering */
+  content-visibility: visible;
+}
+
+/* Defer below-fold content */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+}
+
+/* ------------------------------------------------------------------
+   INTERACTION TO NEXT PAINT (INP)
+   ------------------------------------------------------------------ */
+
+/* Fast interaction feedback */
+.fast-feedback {
+  /* Provide immediate visual feedback */
+  transition: transform 0.1s ease-out;
+}
+
+.fast-feedback:active {
+  transform: scale(0.98);
+}
+
+/* ------------------------------------------------------------------
+   LARGEST CONTENTFUL PAINT (LCP)
+   ------------------------------------------------------------------ */
+
+/* Optimize hero images */
+.lcp-image {
+  /* Preload largest image */
+  /* <link rel="preload" as="image" href="hero.jpg"> */
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ------------------------------------------------------------------
+   CUMULATIVE LAYOUT SHIFT (CLS)
+   ------------------------------------------------------------------ */
+
+/* Fixed aspect ratios */
+.fixed-aspect {
+  aspect-ratio: 16 / 9;
+}
+
+/* Reserve font space */
+.font-reserve {
+  /* Use size-adjust in @font-face */
+}
+
+/* Reserve ad space */
+.ad-reserve {
+  min-height: 250px;
+  background: var(--margiela-silver);
+}
+
+/* ------------------------------------------------------------------
+   SERVICE WORKER CACHE
+   ------------------------------------------------------------------ */
+
+/* Cache-first strategy */
+.cache-first {
+  /* Cache static assets */
+}
+
+/* Network-first strategy */
+.network-first {
+  /* Always fetch fresh data */
+}
+
+/* Stale-while-revalidate */
+.stale-while-revalidate {
+  /* Serve cache, update in background */
+}
+
+/* ------------------------------------------------------------------
+   COMPRESSION
+   ------------------------------------------------------------------ */
+
+/* Brotli compression indicator */
+.brotli-compressed {
+  /* Server should send: Content-Encoding: br */
+}
+
+/* Gzip fallback */
+.gzip-compressed {
+  /* Server should send: Content-Encoding: gzip */
+}
