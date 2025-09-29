@@ -3,6 +3,8 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import SophisticatedNav from '@/components/SophisticatedNav'
 import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
+import BackToTop from '@/components/BackToTop'
+import ScrollProgress from '@/components/ScrollProgress'
 import LenisProvider from '@/hooks/useLenis'
 import { CipherProvider } from '@/contexts/CipherContext'
 import CipherToggle from '@/components/CipherToggle'
@@ -14,6 +16,9 @@ import '@/styles/deconstructed-system.css'
 import '@/styles/responsive-system.css'
 import '@/styles/animations-optimized.css'
 import '@/styles/margiela-sacai-redesign.css'
+import '@/styles/hover-effects.css'
+import '@/styles/micro-interactions.css'
+import '@/styles/readability.css'
 
 // Typography System - Margiela × Sacai inspired
 const inter = Inter({
@@ -36,8 +41,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'CINCH LAB — Experimental Fashion Laboratory',
-  description: 'NO SALES. ONLY CREATION. Experimental fashion laboratory where genius manifests without commerce. CINCH•RELEASE•REPEAT.',
-  keywords: 'experimental fashion, no commerce, fashion laboratory, cinch lab, avant-garde, pure creation, fashion experiment, genius',
+  description: 'NO SALES. ONLY CREATION. Experimental fashion laboratory dedicated to pure research without commerce. CINCH•RELEASE•REPEAT.',
+  keywords: 'experimental fashion, no commerce, fashion laboratory, cinch lab, avant-garde, pure creation, fashion experiment, research',
   authors: [{ name: 'CINCH LAB' }],
   creator: 'CINCH LAB',
   publisher: 'CINCH LAB',
@@ -114,6 +119,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <CipherProvider>
           <LenisProvider>
+            <ScrollProgress />
             <SkipToMain />
             <KeyboardNavigationIndicator />
             <SophisticatedNav />
@@ -123,6 +129,7 @@ export default function RootLayout({
             </main>
             <PWAInstaller />
             <PWAUpdateNotification />
+            <BackToTop />
           </LenisProvider>
         </CipherProvider>
       </body>

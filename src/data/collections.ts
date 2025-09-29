@@ -64,7 +64,7 @@ export const collections: Collection[] = [
     season: 'FALL',
     status: 'CURRENT',
     description: 'Time folded onto itself. Past and future collapsed into singular moments of creation.',
-    philosophy: 'Each garment is a timestamp of creative genius, not a commodity.',
+    philosophy: 'Each garment is a timestamp of experimental research, not a commodity.',
     lookbook: [
       {
         id: 'LOOK_004',

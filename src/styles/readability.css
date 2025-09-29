@@ -1,0 +1,498 @@
+/* ==========================================================================
+   CINCH LAB - Readability Utilities
+   Optimized for enhanced content consumption
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   Content Width & Line Length
+   ------------------------------------------------------------------ */
+
+.content-width {
+  max-width: 70ch; /* Optimal line length for readability */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-width-wide {
+  max-width: 90ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-width-narrow {
+  max-width: 50ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ------------------------------------------------------------------
+   Spacing Utilities for Breathing Room
+   ------------------------------------------------------------------ */
+
+.breathing-room {
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.breathing-room-sm {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.breathing-room-lg {
+  padding: clamp(3rem, 8vw, 6rem);
+}
+
+.section-spacing {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.section-spacing-sm {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.section-spacing-lg {
+  margin-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+/* ------------------------------------------------------------------
+   Paragraph Spacing
+   ------------------------------------------------------------------ */
+
+.paragraph-spacing p {
+  margin-bottom: 1.25em;
+}
+
+.paragraph-spacing p:last-child {
+  margin-bottom: 0;
+}
+
+.paragraph-spacing-comfortable p {
+  margin-bottom: 1.5em;
+}
+
+.paragraph-spacing-compact p {
+  margin-bottom: 1em;
+}
+
+/* ------------------------------------------------------------------
+   Text Sizing for Readability
+   ------------------------------------------------------------------ */
+
+.text-readable {
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.7;
+}
+
+.text-readable-lg {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.text-readable-sm {
+  font-size: clamp(0.875rem, 0.85rem + 0.125vw, 1rem);
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------------
+   Headings with Breathing Space
+   ------------------------------------------------------------------ */
+
+.heading-spaced {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.heading-spaced:first-child {
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------------------
+   High Contrast for Readability
+   ------------------------------------------------------------------ */
+
+.high-contrast {
+  color: var(--carbon);
+  background: var(--raw-canvas);
+}
+
+.high-contrast-inverse {
+  color: var(--raw-canvas);
+  background: var(--carbon);
+}
+
+/* ------------------------------------------------------------------
+   Focus Styles for Keyboard Navigation
+   ------------------------------------------------------------------ */
+
+.focus-visible-enhanced:focus-visible {
+  outline: 2px solid var(--specimen-red);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------------------
+   List Styling for Better Readability
+   ------------------------------------------------------------------ */
+
+.list-readable {
+  padding-left: 1.5rem;
+}
+
+.list-readable li {
+  margin-bottom: 0.75em;
+  line-height: 1.6;
+}
+
+.list-readable li:last-child {
+  margin-bottom: 0;
+}
+
+.list-readable ul,
+.list-readable ol {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Custom list markers */
+.list-custom li {
+  position: relative;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.list-custom li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--specimen-red);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------
+   Link Readability
+   ------------------------------------------------------------------ */
+
+.link-readable {
+  color: var(--specimen-red);
+  text-decoration: underline;
+  text-decoration-color: rgba(196, 30, 58, 0.3);
+  text-underline-offset: 3px;
+  transition: all 0.3s ease;
+}
+
+.link-readable:hover {
+  text-decoration-color: var(--specimen-red);
+  color: var(--splice-orange);
+}
+
+.link-subtle {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--platinum);
+  transition: border-color 0.3s ease;
+}
+
+.link-subtle:hover {
+  border-bottom-color: var(--specimen-red);
+}
+
+/* ------------------------------------------------------------------
+   Code Block Readability
+   ------------------------------------------------------------------ */
+
+.code-readable {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  background: var(--paper);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  border: 1px solid var(--platinum);
+}
+
+.code-block-readable {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: var(--paper);
+  padding: 1.5rem;
+  border-left: 3px solid var(--specimen-red);
+  overflow-x: auto;
+  border-radius: 0;
+}
+
+/* ------------------------------------------------------------------
+   Blockquote Styling
+   ------------------------------------------------------------------ */
+
+.blockquote-readable {
+  border-left: 4px solid var(--specimen-red);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(--steel);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.blockquote-readable cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-style: normal;
+  font-size: 0.875rem;
+  color: var(--aluminum);
+}
+
+/* ------------------------------------------------------------------
+   Table Readability
+   ------------------------------------------------------------------ */
+
+.table-readable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+.table-readable th,
+.table-readable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--platinum);
+}
+
+.table-readable th {
+  font-weight: 600;
+  background: var(--paper);
+  border-bottom: 2px solid var(--graphite);
+}
+
+.table-readable tr:hover {
+  background: var(--snow);
+}
+
+/* ------------------------------------------------------------------
+   Image Captions
+   ------------------------------------------------------------------ */
+
+.figure-readable {
+  margin: 2rem 0;
+}
+
+.figure-readable figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--aluminum);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------------
+   Dividers
+   ------------------------------------------------------------------ */
+
+.divider-readable {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--platinum),
+    transparent
+  );
+  margin: 3rem 0;
+}
+
+.divider-solid {
+  border: none;
+  height: 1px;
+  background: var(--platinum);
+  margin: 2rem 0;
+}
+
+/* ------------------------------------------------------------------
+   Sidebar / Aside
+   ------------------------------------------------------------------ */
+
+.aside-readable {
+  padding: 1.5rem;
+  background: var(--muslin);
+  border-left: 3px solid var(--specimen-red);
+  margin: 2rem 0;
+}
+
+.aside-readable-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--graphite);
+}
+
+/* ------------------------------------------------------------------
+   Definition List
+   ------------------------------------------------------------------ */
+
+.dl-readable dt {
+  font-weight: 600;
+  color: var(--graphite);
+  margin-top: 1rem;
+}
+
+.dl-readable dt:first-child {
+  margin-top: 0;
+}
+
+.dl-readable dd {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--steel);
+}
+
+/* ------------------------------------------------------------------
+   Drop Cap
+   ------------------------------------------------------------------ */
+
+.drop-cap::first-letter {
+  float: left;
+  font-size: 4em;
+  line-height: 0.85;
+  margin-right: 0.1em;
+  margin-top: 0.05em;
+  font-weight: 300;
+  color: var(--specimen-red);
+}
+
+/* ------------------------------------------------------------------
+   Reading Mode (Distraction Free)
+   ------------------------------------------------------------------ */
+
+.reading-mode {
+  max-width: 65ch;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: var(--raw-canvas);
+}
+
+.reading-mode h1,
+.reading-mode h2,
+.reading-mode h3 {
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.reading-mode p {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  margin-bottom: 1.5em;
+}
+
+/* ------------------------------------------------------------------
+   Skip Links (Accessibility)
+   ------------------------------------------------------------------ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--carbon);
+  color: var(--raw-canvas);
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ------------------------------------------------------------------
+   Print-Friendly Styles
+   ------------------------------------------------------------------ */
+
+@media print {
+  .content-width,
+  .content-width-wide,
+  .content-width-narrow {
+    max-width: 100%;
+  }
+
+  .breathing-room,
+  .breathing-room-sm,
+  .breathing-room-lg {
+    padding: 1rem;
+  }
+
+  .link-readable,
+  .link-subtle {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .code-block-readable {
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+
+  .blockquote-readable {
+    page-break-inside: avoid;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Responsive Adjustments
+   ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .content-width {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .text-readable {
+    font-size: 1rem;
+  }
+
+  .blockquote-readable {
+    font-size: 1rem;
+    padding-left: 1rem;
+  }
+
+  .reading-mode {
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+
+  .reading-mode p {
+    font-size: 1rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Dark Mode Support
+   ------------------------------------------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+  .high-contrast {
+    color: var(--raw-canvas);
+    background: var(--carbon);
+  }
+
+  .high-contrast-inverse {
+    color: var(--carbon);
+    background: var(--raw-canvas);
+  }
+
+  .code-readable,
+  .code-block-readable {
+    background: var(--graphite);
+    border-color: var(--steel);
+  }
+
+  .table-readable th {
+    background: var(--graphite);
+  }
+
+  .table-readable tr:hover {
+    background: var(--carbon);
+  }
+
+  .aside-readable {
+    background: var(--graphite);
+  }
+}

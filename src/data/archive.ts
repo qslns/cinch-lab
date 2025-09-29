@@ -29,12 +29,12 @@ export interface ArchiveEntry {
 export const philosophies: Philosophy[] = [
   {
     id: 'PHIL_001',
-    title: 'THE GENIUS MANIFESTO',
-    content: `Fashion is not commerce. Fashion is experiment. Fashion is the physical manifestation of genius.
+    title: 'THE LABORATORY MANIFESTO',
+    content: `Fashion is not commerce. Fashion is experiment. Fashion is the physical manifestation of creative research.
 
     We don't sell clothes. We create moments of transformation. Each piece is a timestamp of creative evolution, not a product.
 
-    CINCH LAB은 최고이자 난 천재야. This is not arrogance - this is fact. Genius recognizes itself and declares its presence without apology.
+    CINCH LAB is an experimental fashion laboratory. We pursue the limits of fashion through rigorous research and uncompromising methodology.
 
     The laboratory is where fashion meets science, where fabric meets philosophy, where destruction creates beauty.`,
     date: '2024-01-01',
@@ -183,7 +183,7 @@ export const archiveEntries: ArchiveEntry[] = [
     thoughts: [
       'Chemistry has its own agenda',
       'Respect the materials',
-      'Danger is part of genius'
+      'Danger is part of experimentation'
     ],
     tags: ['FAILURE', 'DANGER', 'CHEMISTRY'],
     significance: 3,
@@ -199,7 +199,7 @@ export const archiveEntries: ArchiveEntry[] = [
     subtitle: 'Fall Winter 2024 Collection',
     type: 'COLLECTION',
     category: 'REVELATION',
-    content: 'Time folded onto itself. Past and future collapsed into singular moments of creation. Each garment is a timestamp of creative genius.',
+    content: 'Time folded onto itself. Past and future collapsed into singular moments of creation. Each garment is a timestamp of experimental research.',
     thoughts: [
       'Time is not linear',
       'Fashion exists in multiple dimensions',
@@ -283,7 +283,7 @@ export const archiveEntries: ArchiveEntry[] = [
     content: 'First major exhibition. No sales booth. No price tags. Just pure fashion experiment. The audience was confused, then amazed.',
     thoughts: [
       'Confusion precedes understanding',
-      'Genius is often misunderstood initially',
+      'Experimental work is often misunderstood initially',
       'We are not here to be understood, we are here to create'
     ],
     tags: ['EXHIBITION', 'RECOGNITION', 'NO_SALES'],

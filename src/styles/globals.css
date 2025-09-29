@@ -80,7 +80,7 @@
     font-family: 'Inter', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
     font-weight: 400;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     letter-spacing: -0.011em;
     color: var(--lab-carbon);
     background: var(--lab-white);
@@ -90,28 +90,63 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography */
+  /* Typography - Improved Readability */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5em;
   }
 
-  h1 { font-size: var(--text-5xl); }
-  h2 { font-size: var(--text-4xl); }
-  h3 { font-size: var(--text-3xl); }
-  h4 { font-size: var(--text-2xl); }
-  h5 { font-size: var(--text-xl); }
-  h6 { font-size: var(--text-lg); }
+  h1 {
+    font-size: var(--text-5xl);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  h2 {
+    font-size: var(--text-4xl);
+    font-weight: 300;
+    line-height: 1.15;
+  }
+  h3 {
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  h4 {
+    font-size: var(--text-2xl);
+    font-weight: 400;
+  }
+  h5 {
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+  h6 {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  /* Paragraph spacing for better readability */
+  p {
+    margin-bottom: 1em;
+    max-width: 70ch;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 
   a {
     color: inherit;
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    transition: all 0.3s ease;
   }
 
   a:hover {
-    opacity: 0.7;
+    opacity: 0.75;
+    color: var(--specimen-red);
   }
 
   button {

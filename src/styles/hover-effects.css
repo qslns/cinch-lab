@@ -1,0 +1,505 @@
+/* ==========================================================================
+   CINCH LAB - Sophisticated Hover Effects System
+   Professional-grade micro-interactions
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   Card Hover Effects - Elevate on Hover
+   ------------------------------------------------------------------ */
+
+.card-hover {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+
+.card-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--carbon) 0%, var(--graphite) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 30px -10px rgba(10, 9, 8, 0.15),
+    0 20px 60px -15px rgba(10, 9, 8, 0.1);
+}
+
+.card-hover:hover::before {
+  opacity: 0.03;
+}
+
+/* ------------------------------------------------------------------
+   Button Hover Effects - Sophisticated Transformations
+   ------------------------------------------------------------------ */
+
+.btn-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-hover::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--carbon);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  z-index: -1;
+}
+
+.btn-hover:hover::before {
+  width: 300%;
+  height: 300%;
+}
+
+.btn-hover:hover {
+  color: var(--raw-canvas);
+  border-color: transparent;
+}
+
+/* ------------------------------------------------------------------
+   Link Hover Effects - Underline Animation
+   ------------------------------------------------------------------ */
+
+.link-hover {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}
+
+.link-hover:hover {
+  color: var(--specimen-red);
+}
+
+/* ------------------------------------------------------------------
+   Image Hover Effects - Zoom and Overlay
+   ------------------------------------------------------------------ */
+
+.image-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-hover img {
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.image-hover:hover img {
+  transform: scale(1.05);
+}
+
+.image-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(10, 9, 8, 0.3) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.image-hover:hover::after {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------
+   Nav Item Hover - Refined Interactions
+   ------------------------------------------------------------------ */
+
+.nav-item-hover {
+  position: relative;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.nav-item-hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--carbon);
+  transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.nav-item-hover:hover::before {
+  width: 100%;
+}
+
+.nav-item-hover:hover {
+  color: var(--specimen-red);
+}
+
+/* ------------------------------------------------------------------
+   Icon Hover - Rotate and Scale
+   ------------------------------------------------------------------ */
+
+.icon-hover {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.icon-hover:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* ------------------------------------------------------------------
+   Border Hover - Animated Border
+   ------------------------------------------------------------------ */
+
+.border-hover {
+  position: relative;
+  border: 1px solid var(--graphite);
+  transition: border-color 0.3s ease;
+}
+
+.border-hover::before,
+.border-hover::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  transition: all 0.4s ease;
+  opacity: 0;
+}
+
+.border-hover::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--specimen-red);
+  border-left: 1px solid var(--specimen-red);
+}
+
+.border-hover::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid var(--specimen-red);
+  border-right: 1px solid var(--specimen-red);
+}
+
+.border-hover:hover::before,
+.border-hover:hover::after {
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------
+   Text Hover - Glitch Effect (Subtle)
+   ------------------------------------------------------------------ */
+
+.text-hover {
+  position: relative;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.text-hover::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--specimen-red);
+  opacity: 0;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  transition: all 0.3s ease;
+}
+
+.text-hover:hover::before {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.3;
+  animation: subtle-glitch 0.3s ease;
+}
+
+@keyframes subtle-glitch {
+  0%, 100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(-2px, 0);
+  }
+  66% {
+    transform: translate(2px, 0);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Grid Item Hover - Deconstructed Effect
+   ------------------------------------------------------------------ */
+
+.grid-item-hover {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.grid-item-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent 48%,
+    var(--specimen-red) 49%,
+    var(--specimen-red) 51%,
+    transparent 52%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.grid-item-hover:hover {
+  transform: translateX(4px) translateY(-4px);
+}
+
+.grid-item-hover:hover::before {
+  opacity: 0.05;
+}
+
+/* ------------------------------------------------------------------
+   Ripple Effect on Click
+   ------------------------------------------------------------------ */
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  top: 50%;
+  left: 50%;
+  animation: ripple 0.6s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ripple-effect:active::after {
+  animation: ripple 0.6s;
+  opacity: 1;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Pull-out Effect - Drawer Style
+   ------------------------------------------------------------------ */
+
+.pullout-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.pullout-hover .pullout-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(10, 9, 8, 0.95) 20%
+  );
+  color: var(--raw-canvas);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.pullout-hover:hover .pullout-content {
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------
+   Tilt Effect - 3D Transform
+   ------------------------------------------------------------------ */
+
+.tilt-hover {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.tilt-hover:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg);
+}
+
+/* ------------------------------------------------------------------
+   Shadow Lift Effect
+   ------------------------------------------------------------------ */
+
+.shadow-lift {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 2px 8px rgba(10, 9, 8, 0.08);
+}
+
+.shadow-lift:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 12px 40px -10px rgba(10, 9, 8, 0.2),
+    0 20px 70px -15px rgba(10, 9, 8, 0.15);
+}
+
+/* ------------------------------------------------------------------
+   Stagger Hover - For Lists
+   ------------------------------------------------------------------ */
+
+.stagger-container:hover .stagger-item {
+  opacity: 0.5;
+  transform: scale(0.98);
+  transition: all 0.3s ease;
+}
+
+.stagger-container .stagger-item:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* ------------------------------------------------------------------
+   Magnetic Effect - Cursor Pull
+   ------------------------------------------------------------------ */
+
+.magnetic-hover {
+  transition: transform 0.15s ease-out;
+}
+
+/* Requires JavaScript for true magnetic effect */
+
+/* ------------------------------------------------------------------
+   Scale and Fade
+   ------------------------------------------------------------------ */
+
+.scale-fade {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.scale-fade:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+/* ------------------------------------------------------------------
+   Background Slide Effect
+   ------------------------------------------------------------------ */
+
+.bg-slide {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.bg-slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: var(--carbon);
+  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
+}
+
+.bg-slide:hover::before {
+  width: 100%;
+}
+
+.bg-slide:hover {
+  color: var(--raw-canvas);
+}
+
+/* ------------------------------------------------------------------
+   Slide-in Info
+   ------------------------------------------------------------------ */
+
+.slide-info {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-info .info-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 60%;
+  background: rgba(10, 9, 8, 0.95);
+  color: var(--raw-canvas);
+  padding: 1.5rem;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.slide-info:hover .info-panel {
+  transform: translateX(0);
+}
+
+/* ------------------------------------------------------------------
+   Reduced Motion Support
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
