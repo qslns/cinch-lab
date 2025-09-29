@@ -1,94 +1,88 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
 
 // ==========================================================================
-// CINCH LAB - Margiela × Sacai Digital Laboratory
-// Deconstructive Design, Hybrid Layering, Material Research
+// CINCH LAB - Complete Asymmetric Reconstruction
+// Margiela Deconstruction × Sacai Layering × CDG Minimalism
 // ==========================================================================
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const labRef = useRef<HTMLDivElement>(null)
-  const philosophyRef = useRef<HTMLDivElement>(null)
-
   const { scrollY, scrollYProgress } = useScroll()
 
-  // Mouse position for interactive effects
+  // Mouse interaction
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 20 })
   const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 20 })
 
-  // Cursor interaction for sophisticated hover
-  const cursorX = useTransform(smoothMouseX, (x) => x - 16)
-  const cursorY = useTransform(smoothMouseY, (y) => y - 16)
-
   // State
   const [isLoading, setIsLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState(0)
-  const [hoveredArea, setHoveredArea] = useState<string | null>(null)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
-  // Research areas - sophisticated presentation
+  // Research areas with asymmetric positioning
   const researchAreas = [
     {
       name: 'LABORATORY',
-      desc: 'Technical experiments in garment construction',
+      desc: 'Pattern deconstruction research',
       path: '/lab',
-      grid: 'col-span-5 row-span-2',
-      color: 'carbon'
+      color: 'var(--lab-chemical-blue)',
+      rotation: -1.2,
+      size: 'large'
     },
     {
       name: 'COLLECTIONS',
-      desc: 'Seasonal presentations',
+      desc: 'Seasonal experiments',
       path: '/collections',
-      grid: 'col-span-3 row-span-1',
-      color: 'graphite'
+      color: 'var(--sacai-burnt-orange)',
+      rotation: 2.5,
+      size: 'medium'
     },
     {
       name: 'ARCHIVE',
-      desc: 'Research documentation',
+      desc: 'Documentation & process',
       path: '/archive',
-      grid: 'col-span-4 row-span-2',
-      color: 'steel'
+      color: 'var(--margiela-tabi-brown)',
+      rotation: -2,
+      size: 'large'
     },
     {
       name: 'ANALYSIS',
-      desc: 'Fashion critique & deconstruction',
+      desc: 'Critical fashion study',
       path: '/analysis',
-      grid: 'col-span-4 row-span-1',
-      color: 'concrete'
+      color: 'var(--lab-petri-blue)',
+      rotation: 1.5,
+      size: 'small'
     },
     {
       name: 'PHILOSOPHY',
       desc: 'Design manifesto',
       path: '/about',
-      grid: 'col-span-3 row-span-1',
-      color: 'aluminum'
+      color: 'var(--cdg-blood-red)',
+      rotation: -1.8,
+      size: 'medium'
     },
     {
       name: 'CONTACT',
-      desc: 'Professional inquiries',
+      desc: 'Collaboration gateway',
       path: '/contact',
-      grid: 'col-span-2 row-span-1',
-      color: 'titanium'
+      color: 'var(--margiela-steel)',
+      rotation: 0.8,
+      size: 'small'
     }
   ]
 
   // Parallax transforms
-  const heroY = useTransform(scrollY, [0, 1000], [0, -200])
-  const heroScale = useTransform(scrollY, [0, 500], [1, 0.9])
-  const textY = useTransform(scrollY, [0, 500], [0, 100])
-  const opacity = useTransform(scrollY, [0, 300], [1, 0])
-  const progressBar = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+  const heroY = useTransform(scrollY, [0, 1000], [0, -300])
+  const textOpacity = useTransform(scrollY, [0, 400], [1, 0])
+  const sloganY = useTransform(scrollY, [0, 600], [0, 150])
 
   // Initialize
   useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoading(false), 1200)
+    const loadTimer = setTimeout(() => setIsLoading(false), 1500)
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX)
@@ -96,35 +90,36 @@ export default function HomePage() {
     }
 
     window.addEventListener('mousemove', handleMouseMove)
-
     return () => {
       clearTimeout(loadTimer)
       window.removeEventListener('mousemove', handleMouseMove)
     }
   }, [mouseX, mouseY])
 
-  // Loading Screen - Minimal
+  // Loading Screen
   if (isLoading) {
     return (
       <AnimatePresence>
         <motion.div
-          className="fixed inset-0 z-50 bg-raw-canvas flex items-center justify-center"
-          exit={{ opacity: 0, transition: { duration: 0.6 } }}
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ backgroundColor: 'var(--margiela-raw-canvas)' }}
+          exit={{ opacity: 0, transition: { duration: 0.8 } }}
         >
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <div className="text-carbon text-xs font-mono tracking-[0.3em] uppercase">
-              Loading Laboratory
+            <div className="text-xs uppercase tracking-[0.4em]" style={{ color: 'var(--margiela-carbon)' }}>
+              Experimental Fashion Laboratory
             </div>
             <motion.div
-              className="w-32 h-px bg-carbon mt-4 origin-left"
+              className="w-48 h-[1px] mt-6 mx-auto origin-left"
+              style={{ backgroundColor: 'var(--margiela-carbon)' }}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1, ease: "easeInOut" }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
             />
           </motion.div>
         </motion.div>
@@ -133,95 +128,187 @@ export default function HomePage() {
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-raw-canvas text-carbon">
+    <div ref={containerRef} className="min-h-screen relative" style={{ backgroundColor: 'var(--zone-home-surface)' }}>
 
-      {/* Subtle Noise Texture */}
+      {/* Noise Overlay */}
       <div className="noise-overlay" />
 
-      {/* Progress Indicator */}
+      {/* Progress Bar - Top */}
       <motion.div
-        className="fixed top-0 left-0 h-px bg-specimen-red z-50"
-        style={{ width: progressBar }}
+        className="fixed top-0 left-0 h-[2px] z-50"
+        style={{
+          width: useTransform(scrollYProgress, [0, 1], ['0%', '100%']),
+          backgroundColor: 'var(--zone-home-accent-1)'
+        }}
       />
 
-      {/* Hero Section - Asymmetric Layout */}
-      <motion.section
-        ref={heroRef}
-        className="relative min-h-screen overflow-hidden"
-        style={{ scale: heroScale }}
-      >
+      {/* ========== SECTION 1: HERO - RADICAL ASYMMETRY ========== */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
         <motion.div
           className="absolute inset-0"
           style={{ y: heroY }}
         >
-          {/* Background Gradient - Subtle */}
-          <div className="absolute inset-0 bg-gradient-to-br from-raw-canvas via-paper to-raw-canvas opacity-50" />
+          {/* Background gradient */}
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: `radial-gradient(circle at 30% 50%, var(--sacai-burnt-orange), transparent 70%),
+                          radial-gradient(circle at 70% 40%, var(--lab-petri-blue), transparent 60%)`
+            }}
+          />
         </motion.div>
 
-        <div className="relative z-10 min-h-screen flex items-center">
-          <div className="deconstructed-grid w-full px-8 md:px-16 lg:px-24">
+        {/* Margiela Deconstructed Grid */}
+        <div className="margiela-grid w-full px-8 md:px-16 lg:px-24 relative z-10">
 
-            {/* Main Title - Refined Typography */}
-            <motion.div
-              className="col-span-3"
-              style={{ y: textY, opacity }}
-            >
-              <motion.h1
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="kinetic-text"
+          {/* Main Title - Ultra Large */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            style={{ opacity: textOpacity }}
+            className="relative"
+          >
+            <h1 className="text-display-1 kinetic-text leading-none">
+              <motion.span
+                className="block"
+                style={{
+                  color: 'var(--margiela-void)',
+                  fontWeight: 200
+                }}
               >
-                <span className="block text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[0.85]">
-                  CINCH
-                </span>
-                <span className="block text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[0.85] ml-12 md:ml-24">
-                  LAB
-                </span>
-              </motion.h1>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="mt-8"
+                CINCH
+              </motion.span>
+              <motion.span
+                className="block ml-[15%]"
+                style={{
+                  color: 'var(--margiela-graphite)',
+                  fontWeight: 300
+                }}
               >
-                <div className="text-xs uppercase tracking-[0.3em] text-concrete mb-2">
-                  Experimental Fashion Laboratory
-                </div>
-                <div className="w-16 h-px bg-carbon" />
-              </motion.div>
-            </motion.div>
+                LAB
+              </motion.span>
+            </h1>
 
-            {/* Slogan - Sophisticated */}
+            {/* White Label Tag - Margiela Signature */}
             <motion.div
-              className="col-span-2 self-end"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="text-white-label mt-8 inline-block"
+              style={{ transform: 'rotate(-0.5deg)' }}
             >
-              <div className="mb-8">
-                <span className="text-lg md:text-xl font-light">Cinch</span>
-                <span className="mx-2 text-specimen-red">•</span>
-                <span className="text-lg md:text-xl font-light">Release</span>
-                <span className="mx-2 text-specimen-red">•</span>
-                <span className="text-lg md:text-xl font-light">Repeat</span>
-              </div>
+              0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
             </motion.div>
-          </div>
+          </motion.div>
+
+          {/* Slogan - Offset Position */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            style={{ y: sloganY }}
+            className="relative mt-16"
+          >
+            <div className="text-splice">
+              <span className="text-heading-4 font-light block">
+                Cinch • Release • Repeat
+              </span>
+            </div>
+            <div className="text-overline mt-4" style={{ color: 'var(--margiela-aluminum)' }}>
+              Experimental Fashion Laboratory
+            </div>
+          </motion.div>
+
+          {/* Exposed Structure Corner */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="absolute top-8 right-8 text-number-tag"
+          >
+            <div className="text-right">
+              <div>EST. 2024</div>
+              <div className="mt-1">NO SALES</div>
+              <div className="mt-1">ONLY CREATION</div>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Scroll Indicator - Minimal */}
+        {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 12, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
         >
-          <div className="w-px h-12 bg-carbon opacity-30" />
+          <div
+            className="w-[1px] h-16 opacity-30"
+            style={{ backgroundColor: 'var(--margiela-carbon)' }}
+          />
         </motion.div>
-      </motion.section>
+      </section>
 
-      {/* Research Areas - Asymmetric Grid */}
+      {/* ========== SECTION 2: PHILOSOPHY - LAYERED TEXT ========== */}
+      <section className="py-32 px-8 md:px-16 lg:px-24 relative">
+        <div className="sacai-grid">
+          {/* Layer 1: Main Statement */}
+          <motion.div
+            className="sacai-grid-layer-1"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="text-overline mb-8" style={{ color: 'var(--margiela-aluminum)' }}>
+              Laboratory Manifesto
+            </div>
+            <h2 className="text-display-3 font-light leading-tight">
+              Fashion is not commerce.
+              <br />
+              Fashion is experiment.
+              <br />
+              Fashion is research.
+            </h2>
+          </motion.div>
+
+          {/* Layer 2: Contrasting Accent */}
+          <motion.div
+            className="sacai-grid-layer-2"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <p className="text-body-large leading-relaxed">
+              We deconstruct patterns to understand construction.
+              We layer materials to create new possibilities.
+              We expose process as the final product.
+            </p>
+            <div className="mt-8 h-[1px] w-24 bg-current opacity-30" />
+          </motion.div>
+
+          {/* Layer 3: Accent Block */}
+          <motion.div
+            className="sacai-grid-layer-3"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="text-heading-6">
+              NO PRODUCTS
+            </div>
+            <div className="text-heading-6 mt-2">
+              NO PRICES
+            </div>
+            <div className="text-heading-6 mt-2">
+              ONLY PURE CREATION
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ========== SECTION 3: RESEARCH AREAS - BROKEN GRID ========== */}
       <section className="py-24 px-8 md:px-16 lg:px-24">
         <motion.div
           initial={{ opacity: 0 }}
@@ -229,54 +316,96 @@ export default function HomePage() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Research Areas</h2>
-            <div className="w-24 h-px bg-carbon" />
+          <div className="mb-24">
+            <h2 className="text-display-2 font-light">Research Areas</h2>
+            <div className="mt-4 h-[1px] w-32" style={{ backgroundColor: 'var(--margiela-carbon)' }} />
           </div>
 
-          <div className="grid grid-cols-12 gap-4 auto-rows-[200px]">
+          {/* Hybrid Irregular Grid */}
+          <div className="hybrid-grid">
             {researchAreas.map((area, index) => (
               <motion.div
                 key={area.path}
-                className={`${area.grid} relative group`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                className={`
+                  relative group cursor-pointer
+                  ${area.size === 'large' ? 'col-span-2 row-span-2' : ''}
+                  ${area.size === 'medium' ? 'col-span-1 row-span-2' : ''}
+                  ${area.size === 'small' ? 'col-span-1 row-span-1' : ''}
+                `}
+                initial={{ opacity: 0, y: 50, rotate: 0 }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  rotate: area.rotation
+                }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onMouseEnter={() => setHoveredArea(area.name)}
-                onMouseLeave={() => setHoveredArea(null)}
+                transition={{
+                  duration: 0.8,
+                  delay: index * 0.15,
+                  type: 'spring',
+                  stiffness: 100
+                }}
+                whileHover={{
+                  scale: 1.03,
+                  rotate: 0,
+                  transition: { duration: 0.4 }
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <Link href={area.path} className="block h-full">
-                  <div className={`
-                    h-full p-6
-                    border border-graphite/20
-                    transition-all duration-500 ease-out
-                    hover:border-carbon
-                    hover:shadow-xl
-                    relative overflow-hidden
-                    ${hoveredArea === area.name ? 'bg-carbon text-raw-canvas' : 'bg-paper'}
-                  `}>
-                    {/* Exposed Structure Effect */}
-                    <div className="absolute top-2 right-2 text-[10px] font-mono opacity-40">
+                <Link href={area.path} className="block h-full min-h-[300px]">
+                  <div
+                    className="h-full p-8 md:p-12 border transition-all duration-500 relative overflow-hidden"
+                    style={{
+                      backgroundColor: hoveredIndex === index
+                        ? area.color
+                        : 'var(--margiela-paper)',
+                      borderColor: hoveredIndex === index
+                        ? area.color
+                        : 'var(--margiela-exposed-seam)',
+                      color: hoveredIndex === index
+                        ? 'var(--margiela-snow)'
+                        : 'var(--margiela-graphite)'
+                    }}
+                  >
+                    {/* Number Tag */}
+                    <div
+                      className="text-number-tag absolute top-4 right-4"
+                      style={{
+                        opacity: 0.4,
+                        color: hoveredIndex === index ? 'currentColor' : 'inherit'
+                      }}
+                    >
                       {String(index + 1).padStart(3, '0')}
                     </div>
 
+                    {/* Content */}
                     <div className="flex flex-col justify-between h-full">
                       <div>
-                        <h3 className="text-xl md:text-2xl font-light mb-2">
+                        <h3 className="text-heading-4 font-light mb-4">
                           {area.name}
                         </h3>
-                        <div className="w-8 h-px bg-current opacity-30 mb-3" />
+                        <div
+                          className="w-12 h-[1px] opacity-30"
+                          style={{ backgroundColor: 'currentColor' }}
+                        />
                       </div>
 
-                      <p className="text-xs uppercase tracking-wider opacity-60">
-                        {area.desc}
-                      </p>
+                      <div>
+                        <p className="text-label mt-8 opacity-70">
+                          {area.desc}
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Hover Effect - Sophisticated */}
+                    {/* Hover Effect */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-transparent to-carbon/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      className="absolute inset-0 pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: hoveredIndex === index ? 0.1 : 0 }}
+                      style={{
+                        background: 'radial-gradient(circle at center, white 0%, transparent 70%)'
+                      }}
                     />
                   </div>
                 </Link>
@@ -286,125 +415,172 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Philosophy Section - Minimal Statement */}
-      <section ref={philosophyRef} className="py-32 px-8 md:px-16 lg:px-24 bg-paper">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl"
-        >
-          <h2 className="text-xs uppercase tracking-[0.3em] text-concrete mb-8">
-            Design Philosophy
-          </h2>
+      {/* ========== SECTION 4: CURRENT EXPERIMENTS - CDG MINIMAL ========== */}
+      <section
+        className="py-32 px-8 md:px-16 lg:px-24"
+        style={{ backgroundColor: 'var(--margiela-paper)' }}
+      >
+        <div className="cdg-grid">
+          <motion.div
+            className="cdg-grid-item-1"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-display-2 font-light">
+              Current
+              <br />
+              Experiments
+            </h2>
+          </motion.div>
 
-          <div className="space-y-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+          <motion.div
+            className="cdg-grid-item-2"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div
+              className="border p-8"
+              style={{ borderColor: 'var(--margiela-exposed-seam)' }}
             >
-              <p className="text-2xl md:text-3xl font-light leading-relaxed">
-                We deconstruct to understand.
-                <br />
-                We layer to create complexity.
-                <br />
-                We expose process as product.
-              </p>
-            </motion.div>
+              <div className="text-overline mb-4" style={{ color: 'var(--lab-specimen-red)' }}>
+                ACTIVE
+              </div>
+              <h3 className="text-heading-4 mb-4">Pattern Deconstruction</h3>
+              <div className="mt-6">
+                <div className="flex justify-between text-caption mb-2">
+                  <span>Progress</span>
+                  <span>78%</span>
+                </div>
+                <div
+                  className="w-full h-[2px]"
+                  style={{ backgroundColor: 'var(--margiela-silver)' }}
+                >
+                  <motion.div
+                    className="h-full"
+                    style={{ backgroundColor: 'var(--lab-chemical-blue)' }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '78%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.5 }}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex items-center space-x-4"
+          <motion.div
+            className="cdg-grid-item-3"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <div
+              className="border p-8"
+              style={{ borderColor: 'var(--margiela-exposed-seam)' }}
             >
-              <div className="w-16 h-px bg-carbon" />
-              <span className="text-xs uppercase tracking-wider text-concrete">
-                Established 2024
-              </span>
-            </motion.div>
-          </div>
-        </motion.div>
+              <div className="text-overline mb-4" style={{ color: 'var(--lab-caution-amber)' }}>
+                TESTING
+              </div>
+              <h3 className="text-heading-5 mb-4">Material Synthesis</h3>
+              <div className="mt-6">
+                <div className="flex justify-between text-caption mb-2">
+                  <span>Progress</span>
+                  <span>45%</span>
+                </div>
+                <div
+                  className="w-full h-[2px]"
+                  style={{ backgroundColor: 'var(--margiela-silver)' }}
+                >
+                  <motion.div
+                    className="h-full"
+                    style={{ backgroundColor: 'var(--lab-reaction-green)' }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '45%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.6 }}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="cdg-grid-item-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <div
+              className="p-8"
+              style={{
+                backgroundColor: 'var(--cdg-absolute-black)',
+                color: 'var(--margiela-paper)'
+              }}
+            >
+              <div className="text-overline mb-4" style={{ color: 'var(--lab-reaction-green)' }}>
+                COMPLETE
+              </div>
+              <h3 className="text-heading-5 mb-4">Hybrid Layering</h3>
+              <div className="mt-6">
+                <div className="flex justify-between text-caption mb-2">
+                  <span>Progress</span>
+                  <span>100%</span>
+                </div>
+                <div
+                  className="w-full h-[2px]"
+                  style={{ backgroundColor: 'var(--margiela-steel)' }}
+                >
+                  <motion.div
+                    className="h-full"
+                    style={{ backgroundColor: 'var(--lab-reaction-green)' }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.7 }}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Laboratory Status - Technical Display */}
-      <section className="py-24 px-8 md:px-16 lg:px-24">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Current Research</h2>
-            <div className="w-24 h-px bg-carbon" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { title: 'Pattern Deconstruction', status: 'Active', progress: 78 },
-              { title: 'Material Synthesis', status: 'Testing', progress: 45 },
-              { title: 'Hybrid Layering', status: 'Complete', progress: 100 },
-            ].map((research, index) => (
-              <motion.div
-                key={research.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="border border-graphite/20 p-6"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-light">{research.title}</h3>
-                  <span className="text-xs uppercase tracking-wider text-concrete">
-                    {research.status}
-                  </span>
-                </div>
-
-                <div className="mt-6">
-                  <div className="flex justify-between text-xs mb-2">
-                    <span>Progress</span>
-                    <span>{research.progress}%</span>
-                  </div>
-                  <div className="w-full h-px bg-graphite/20">
-                    <motion.div
-                      className="h-full bg-carbon"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${research.progress}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: 0.5 }}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Footer - Minimal */}
-      <footer className="border-t border-graphite/20 py-12 px-8 md:px-16 lg:px-24">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div className="mb-4 md:mb-0">
-            <div className="text-sm font-light">CINCH LAB</div>
-            <div className="text-xs text-concrete mt-1">
+      {/* ========== SECTION 5: FOOTER - EXPOSED STRUCTURE ========== */}
+      <footer
+        className="border-t py-16 px-8 md:px-16 lg:px-24"
+        style={{ borderColor: 'var(--margiela-exposed-seam)' }}
+      >
+        <div className="broken-symmetry-left">
+          <div>
+            <div className="text-heading-6 mb-2">CINCH LAB</div>
+            <div className="text-caption">
               Experimental Fashion Laboratory
+              <br />
+              Est. 2024 — No Sales, Only Creation
             </div>
           </div>
 
-          <div className="flex space-x-8">
-            <Link href="/privacy" className="text-xs hover:text-carbon/60 transition-colors">
+          <div className="flex flex-col md:flex-row gap-8 justify-end">
+            <Link
+              href="/privacy"
+              className="text-label transition-opacity hover:opacity-60"
+            >
               Privacy
             </Link>
-            <Link href="/terms" className="text-xs hover:text-carbon/60 transition-colors">
+            <Link
+              href="/terms"
+              className="text-label transition-opacity hover:opacity-60"
+            >
               Terms
             </Link>
-            <span className="text-xs text-concrete">
-              © 2024
+            <span className="text-caption">
+              © 2024 CINCH LAB
             </span>
           </div>
         </div>

@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm run build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nComplete professional website transformation - Margiela × Sacai inspired\n\nMajor improvements:\n- Removed all childish expressions (''천재야'', etc.) - professional tone\n- Expanded color system with Margiela & Sacai inspired palettes\n- Enhanced typography hierarchy for superior readability\n- Added comprehensive hover effects system (20+ interactions)\n- Implemented micro-interactions (loading, progress, feedback)\n- Created BackToTop and ScrollProgress components\n- Added readability utility classes for optimal content consumption\n- Improved contrast, spacing, and breathing room throughout\n- Build verified successfully - zero errors\n\nDesign philosophy:\n- Laboratory Brutalism meets Deconstructed Fashion\n- Asymmetrical harmony with balanced composition\n- Sophisticated minimalism with rich interactions\n- Vogue-level quality and polish\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
