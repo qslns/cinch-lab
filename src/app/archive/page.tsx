@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
-import Link from 'next/link'
+import { useState, useRef } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 
 // ==========================================================================
-// ARCHIVE PAGE - Failed Experiments & Process Documentation
-// The Beauty of Failure, The Aesthetics of Incompletion
+// ARCHIVE PAGE - CDG Extreme Asymmetry
+// Timeline × Philosophy × Manifesto
 // ==========================================================================
 
 interface ArchivedItem {
@@ -20,8 +19,6 @@ interface ArchivedItem {
   learnings?: string[]
   iterations?: number
   timeSpent?: string
-  materials?: string[]
-  images?: string[]
 }
 
 const archivedItems: ArchivedItem[] = [
@@ -39,8 +36,7 @@ const archivedItems: ArchivedItem[] = [
       'Modular systems require structural integrity'
     ],
     iterations: 23,
-    timeSpent: '320 hours',
-    materials: ['N52 magnets', 'Steel mesh', 'Kevlar thread']
+    timeSpent: '320 hours'
   },
   {
     id: 'ARC_002',
@@ -52,8 +48,7 @@ const archivedItems: ArchivedItem[] = [
     reason: 'Unpredictable dissolution rates. Environmental factors too variable.',
     learnings: [
       'Biodegradation requires controlled conditions',
-      'Fashion temporality vs. practical durability',
-      'User experience conflicts with experimental goals'
+      'Fashion temporality vs. practical durability'
     ],
     iterations: 15,
     timeSpent: '180 hours'
@@ -68,366 +63,535 @@ const archivedItems: ArchivedItem[] = [
     reason: 'Mathematical complexity exceeds current capability. Requires algorithmic solution.',
     learnings: [
       'Fibonacci sequences applicable to pattern cutting',
-      'Computational design necessary for optimization',
-      'Traditional pattern making has limitations'
+      'Computational design necessary for optimization'
     ],
     iterations: 31,
     timeSpent: '450 hours'
   },
   {
     id: 'ARC_004',
-    type: 'ITERATION',
-    date: '2024.06.05',
-    title: 'Liquid Metal Hemlines',
-    description: 'Gallium-based liquid metal integrated into hem weights for dynamic draping.',
-    status: 'FAILED',
-    reason: 'Material cost prohibitive. Safety concerns with skin contact.',
-    learnings: [
-      'Innovation must consider accessibility',
-      'Safety paramount in wearable experiments',
-      'Alternative weight systems needed'
-    ],
-    iterations: 8,
-    timeSpent: '120 hours',
-    materials: ['Gallium alloy', 'Silicone tubing', 'Medical grade sealant']
-  },
-  {
-    id: 'ARC_005',
-    type: 'EXPERIMENT',
-    date: '2024.05.12',
-    title: 'Bacterial Dye Growth',
-    description: 'Living bacterial cultures creating evolving color patterns on fabric.',
-    status: 'ARCHIVED',
-    reason: 'Successfully documented. Too unpredictable for replication.',
-    learnings: [
-      'Living materials create unique aesthetics',
-      'Controlled chaos has artistic value',
-      'Documentation more valuable than production'
-    ],
-    iterations: 12,
-    timeSpent: '200 hours'
-  },
-  {
-    id: 'ARC_006',
     type: 'FAILURE',
-    date: '2024.04.18',
+    date: '2024.06.05',
     title: 'Pneumatic Structure Jacket',
     description: 'Air-filled chambers creating variable silhouette through pressure adjustment.',
     status: 'FAILED',
     reason: 'Puncture vulnerability. Pump system too bulky.',
     learnings: [
       'Inflatable structures need redundancy',
-      'Wearable tech must be truly wearable',
-      'Simple solutions often superior'
+      'Wearable tech must be truly wearable'
     ],
     iterations: 19,
     timeSpent: '280 hours'
   }
 ]
 
-const filterCategories = ['ALL', 'EXPERIMENT', 'PROTOTYPE', 'ITERATION', 'FAILURE']
-const statusColors = {
-  ABANDONED: 'text-warning-yellow',
-  PAUSED: 'text-centrifuge-blue',
-  FAILED: 'text-thread-red',
-  ARCHIVED: 'text-lab-carbon/50'
-}
-
 export default function ArchivePage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollY } = useScroll()
-  const [selectedFilter, setSelectedFilter] = useState('ALL')
+  const { scrollYProgress } = useScroll()
   const [selectedItem, setSelectedItem] = useState<ArchivedItem | null>(null)
-  const [viewMode, setViewMode] = useState<'CARDS' | 'TIMELINE'>('CARDS')
 
-  // Mouse tracking
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 20 })
-  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 20 })
-
-  // Parallax
-  const bgY = useTransform(scrollY, [0, 1000], [0, -200])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
-
-  const filteredItems = selectedFilter === 'ALL'
-    ? archivedItems
-    : archivedItems.filter(item => item.type === selectedFilter)
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-lab-white">
-      {/* Background */}
-      <div className="fixed inset-0 texture-graph opacity-5 pointer-events-none" />
-      <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{ y: bgY }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-thread-red/5 to-transparent" />
-      </motion.div>
+    <div ref={containerRef} style={{
+      backgroundColor: 'var(--zone-archive-surface)',
+      minHeight: '100vh'
+    }}>
 
-      {/* Interactive Gradient */}
-      <motion.div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle 600px at ${smoothMouseX}px ${smoothMouseY}px,
-            rgba(220, 20, 60, 0.03) 0%, transparent 50%)`,
-        }}
-      />
+      {/* Floating Background */}
+      <motion.div style={{
+        position: 'fixed',
+        inset: 0,
+        y: parallaxY,
+        opacity: 0.04,
+        pointerEvents: 'none',
+        backgroundImage: 'repeating-linear-gradient(45deg, var(--margiela-exposed-seam) 0px, transparent 2px, transparent 60px)'
+      }} />
 
-      {/* Header */}
-      <header className="relative pt-24 pb-12 px-6 border-b border-lab-carbon/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h1 className="text-6xl font-black mb-4">
-              <span className="text-deconstructed" data-text="ARCHIVE">
-                ARCHIVE
-              </span>
-            </h1>
-            <p className="text-lg font-light opacity-70">
-              Failed Experiments • Abandoned Prototypes • Learning Through Failure
-            </p>
-          </motion.div>
+      {/* ==========================================================================
+         MANIFESTO HEADER - CDG Grid with Ultra Large Typography
+         ========================================================================== */}
 
-          {/* Filters */}
-          <div className="mt-8 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {filterCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedFilter(cat)}
-                  className={`px-3 py-1 text-xs font-medium tracking-wider transition-all
-                    ${selectedFilter === cat
-                      ? 'bg-thread-red text-lab-white'
-                      : 'hover:bg-lab-carbon/10'
-                    }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+      <section className="cdg-grid" style={{ padding: '6rem 2rem', position: 'relative' }}>
 
-            {/* View Toggle */}
-            <div className="flex items-center gap-2">
-              {['CARDS', 'TIMELINE'].map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode as any)}
-                  className={`px-3 py-1 text-xs font-mono tracking-wider transition-all
-                    ${viewMode === mode ? 'text-thread-red' : 'opacity-50 hover:opacity-100'}`}
-                >
-                  {mode}
-                </button>
-              ))}
-            </div>
+        {/* Number Tags floating around */}
+        <motion.div
+          initial={{ opacity: 0, rotate: -5 }}
+          animate={{ opacity: 1, rotate: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-number-tag"
+          style={{
+            position: 'absolute',
+            top: '2rem',
+            right: '10%',
+            transform: 'rotate(12deg)',
+            fontSize: 'var(--type-xl)',
+            color: 'var(--margiela-aluminum)'
+          }}
+        >
+          002
+        </motion.div>
+
+        {/* Main Manifesto - CDG Item 1 */}
+        <motion.div
+          className="cdg-grid-item-1"
+          initial={{ opacity: 0, x: -80 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <h1 className="text-cdg-black" style={{
+            color: 'var(--zone-archive-contrast)',
+            lineHeight: '0.85',
+            marginBottom: 'var(--space-21)'
+          }}>
+            ARCH
+            <br />
+            <span style={{ color: 'var(--cdg-blood-red)' }}>IVE</span>
+          </h1>
+        </motion.div>
+
+        {/* Philosophy Block - CDG Item 2 */}
+        <motion.div
+          className="cdg-grid-item-2"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          style={{
+            backgroundColor: 'var(--margiela-paper)',
+            padding: 'var(--space-34)',
+            border: '2px solid var(--margiela-exposed-seam)',
+            transform: 'rotate(-1deg)'
+          }}
+        >
+          <div className="text-white-label" style={{ marginBottom: 'var(--space-8)' }}>
+            FAILURE PHILOSOPHY
           </div>
+
+          <p className="text-display-3" style={{
+            color: 'var(--margiela-void)',
+            fontWeight: 'var(--font-weight-light)',
+            lineHeight: 'var(--leading-snug)',
+            fontStyle: 'italic'
+          }}>
+            "Every failed experiment is a successful learning"
+          </p>
+
+          <p className="text-body" style={{
+            color: 'var(--margiela-steel)',
+            marginTop: 'var(--space-13)'
+          }}>
+            We archive our failures not as defeats, but as essential steps
+            in the evolution of our practice. The beauty of the incomplete,
+            the aesthetics of the abandoned.
+          </p>
+        </motion.div>
+
+        {/* Subtitle - CDG Item 3 */}
+        <motion.div
+          className="cdg-grid-item-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          style={{
+            borderLeft: '4px solid var(--zone-archive-accent-1)',
+            paddingLeft: 'var(--space-8)'
+          }}
+        >
+          <p className="text-label" style={{
+            color: 'var(--zone-archive-accent-1)',
+            marginBottom: 'var(--space-3)'
+          }}>
+            DOCUMENTATION ARCHIVE
+          </p>
+          <p className="text-heading-5" style={{
+            color: 'var(--margiela-steel)',
+            fontWeight: 'var(--font-weight-regular)'
+          }}>
+            Failed Experiments<br />
+            Abandoned Prototypes<br />
+            Learning Through Failure
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ==========================================================================
+         TIMELINE - Diagonal Flow with Extreme Asymmetry
+         ========================================================================== */}
+
+      <section className="diagonal-flow" style={{ padding: '4rem 2rem', minHeight: '120vh' }}>
+        {archivedItems.map((item, index) => {
+          const rotations = ['-2.5deg', '1.8deg', '-1.2deg', '2.2deg']
+          const sizes = ['xlarge', 'medium', 'large', 'medium']
+          const colors = [
+            'var(--cdg-blood-red)',
+            'var(--zone-archive-accent-1)',
+            'var(--zone-archive-accent-2)',
+            'var(--margiela-tabi-brown)'
+          ]
+
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.85, rotate: rotations[index] }}
+              whileInView={{ opacity: 1, scale: 1, rotate: rotations[index] }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ delay: index * 0.2, duration: 0.6 }}
+              whileHover={{
+                scale: 1.05,
+                rotate: '0deg',
+                zIndex: 20,
+                transition: { duration: 0.3 }
+              }}
+              onClick={() => setSelectedItem(item)}
+              style={{
+                backgroundColor: 'var(--margiela-snow)',
+                padding: sizes[index] === 'xlarge' ? 'var(--space-34)' :
+                         sizes[index] === 'large' ? 'var(--space-21)' : 'var(--space-13)',
+                border: `3px solid ${colors[index]}`,
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-xl)',
+                position: 'relative'
+              }}
+            >
+              {/* Status Badge */}
+              <div style={{
+                position: 'absolute',
+                top: 'var(--space-5)',
+                right: 'var(--space-5)',
+                backgroundColor: colors[index],
+                color: 'white',
+                padding: 'var(--space-2) var(--space-5)',
+                fontSize: 'var(--type-2xs)',
+                fontWeight: 'var(--font-weight-bold)',
+                letterSpacing: 'var(--tracking-widest)',
+                textTransform: 'uppercase'
+              }}>
+                {item.status}
+              </div>
+
+              {/* Archive ID */}
+              <span className="text-number-tag" style={{
+                color: colors[index],
+                fontSize: 'var(--type-xs)'
+              }}>
+                {item.id}
+              </span>
+
+              {/* Type & Date */}
+              <p className="text-overline" style={{
+                color: 'var(--margiela-aluminum)',
+                marginTop: 'var(--space-3)',
+                marginBottom: 'var(--space-5)'
+              }}>
+                {item.type} • {item.date}
+              </p>
+
+              {/* Title */}
+              <h3 style={{
+                fontSize: sizes[index] === 'xlarge' ? 'var(--type-5xl)' :
+                          sizes[index] === 'large' ? 'var(--type-4xl)' : 'var(--type-3xl)',
+                fontWeight: 'var(--font-weight-black)',
+                color: 'var(--margiela-void)',
+                lineHeight: 'var(--leading-tight)',
+                marginBottom: 'var(--space-8)'
+              }}>
+                {item.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-body" style={{
+                color: 'var(--margiela-steel)',
+                marginBottom: 'var(--space-13)'
+              }}>
+                {item.description}
+              </p>
+
+              {/* Failure Reason */}
+              {item.reason && (
+                <div style={{
+                  backgroundColor: `${colors[index]}15`,
+                  borderLeft: `4px solid ${colors[index]}`,
+                  padding: 'var(--space-8)',
+                  marginBottom: 'var(--space-8)'
+                }}>
+                  <p className="text-label" style={{
+                    color: colors[index],
+                    marginBottom: 'var(--space-3)'
+                  }}>
+                    REASON
+                  </p>
+                  <p className="text-body-small" style={{ color: 'var(--margiela-graphite)' }}>
+                    {item.reason}
+                  </p>
+                </div>
+              )}
+
+              {/* Stats */}
+              <div style={{
+                display: 'flex',
+                gap: 'var(--space-13)',
+                borderTop: '1px solid var(--margiela-exposed-seam)',
+                paddingTop: 'var(--space-8)',
+                marginTop: 'var(--space-13)'
+              }}>
+                {item.iterations && (
+                  <div>
+                    <p className="text-label" style={{
+                      color: 'var(--margiela-aluminum)',
+                      marginBottom: 'var(--space-2)'
+                    }}>
+                      ITERATIONS
+                    </p>
+                    <p className="text-heading-4" style={{ color: colors[index] }}>
+                      {item.iterations}
+                    </p>
+                  </div>
+                )}
+                {item.timeSpent && (
+                  <div>
+                    <p className="text-label" style={{
+                      color: 'var(--margiela-aluminum)',
+                      marginBottom: 'var(--space-2)'
+                    }}>
+                      TIME SPENT
+                    </p>
+                    <p className="text-body-small" style={{ color: 'var(--margiela-graphite)' }}>
+                      {item.timeSpent}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )
+        })}
+      </section>
+
+      {/* ==========================================================================
+         LEARNINGS SECTION - Sacai Overlapping Layers
+         ========================================================================== */}
+
+      <section className="sacai-grid" style={{ padding: '8rem 2rem' }}>
+        <div className="sacai-grid-layer-1">
+          <span className="text-number-tag">003</span>
+          <h2 className="text-display-2" style={{
+            color: 'var(--margiela-void)',
+            marginTop: 'var(--space-8)',
+            marginBottom: 'var(--space-13)'
+          }}>
+            Key Learnings
+          </h2>
+          <p className="text-lead" style={{ color: 'var(--margiela-steel)' }}>
+            Documentation more valuable than production. Controlled chaos has artistic value.
+          </p>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <section className="py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          {viewMode === 'CARDS' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="group cursor-pointer"
-                  onClick={() => setSelectedItem(item)}
-                >
-                  <div className="h-full p-6 bg-lab-white border border-lab-carbon/20
-                    hover:border-thread-red/30 transition-all duration-300 raw-edge">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <p className="text-xs font-mono text-thread-red mb-1">{item.id}</p>
-                        <p className="text-xs opacity-50">{item.date}</p>
-                      </div>
-                      <span className={`text-xs font-mono ${statusColors[item.status]}`}>
-                        {item.status}
-                      </span>
-                    </div>
+        <div className="sacai-grid-layer-2" style={{
+          backgroundColor: 'var(--cdg-charcoal)',
+          color: 'var(--margiela-paper)'
+        }}>
+          <p className="text-overline" style={{
+            color: 'var(--zone-archive-accent-1)',
+            marginBottom: 'var(--space-8)'
+          }}>
+            PHILOSOPHY
+          </p>
+          <p className="text-heading-5" style={{
+            fontWeight: 'var(--font-weight-light)',
+            lineHeight: 'var(--leading-relaxed)'
+          }}>
+            "In failure, we find truth. The incomplete teaches us more than the finished."
+          </p>
+        </div>
 
-                    {/* Content */}
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-thread-red transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm opacity-70 mb-4 line-clamp-2">
-                      {item.description}
-                    </p>
-
-                    {/* Stats */}
-                    <div className="flex items-center gap-4 text-xs font-mono opacity-50">
-                      {item.iterations && <span>{item.iterations} iterations</span>}
-                      {item.timeSpent && <span>{item.timeSpent}</span>}
-                    </div>
-
-                    {/* Type Badge */}
-                    <div className="mt-4">
-                      <span className="text-xs px-2 py-1 bg-lab-carbon/5 rounded">
-                        {item.type}
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-8 top-0 bottom-0 w-[1px] bg-thread-red/20" />
-
-              {filteredItems.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="relative flex items-start gap-8 mb-12"
-                >
-                  {/* Node */}
-                  <div className="relative z-10 w-16 flex-shrink-0">
-                    <div className={`w-4 h-4 rounded-full border-2 border-thread-red bg-lab-white
-                      ${item.status === 'FAILED' ? 'bg-thread-red' : ''}`} />
-                    <p className="mt-2 text-xs font-mono opacity-50 -rotate-45 origin-top-left">
-                      {item.date.slice(5)}
-                    </p>
-                  </div>
-
-                  {/* Content */}
-                  <div
-                    className="flex-1 p-6 bg-lab-white border border-lab-carbon/20
-                      hover:border-thread-red/30 transition-all cursor-pointer"
-                    onClick={() => setSelectedItem(item)}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <p className="text-xs font-mono text-thread-red mb-1">
-                          {item.id} • {item.type}
-                        </p>
-                        <h3 className="text-xl font-bold">{item.title}</h3>
-                      </div>
-                      <span className={`text-xs font-mono ${statusColors[item.status]}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                    <p className="text-sm opacity-70">{item.description}</p>
-                    {item.reason && (
-                      <p className="mt-3 text-xs font-mono text-thread-red/70">
-                        REASON: {item.reason}
-                      </p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+        <div className="sacai-grid-layer-3" style={{
+          backgroundColor: 'var(--zone-archive-accent-1)',
+          color: 'white'
+        }}>
+          <p className="text-heading-6">
+            {archivedItems.length}
+          </p>
+          <p className="text-label" style={{ color: 'white' }}>
+            ARCHIVED EXPERIMENTS
+          </p>
         </div>
       </section>
 
-      {/* Detail Modal */}
+      {/* ==========================================================================
+         DETAIL MODAL
+         ========================================================================== */}
+
       <AnimatePresence>
         {selectedItem && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-lab-carbon/80 backdrop-blur-sm flex items-center justify-center p-6"
             onClick={() => setSelectedItem(null)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.95)',
+              backdropFilter: 'blur(12px)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '2rem',
+              overflow: 'auto'
+            }}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-lab-white p-8"
+              initial={{ scale: 0.85, rotate: -3 }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0.85, rotate: 3 }}
               onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: 'var(--margiela-snow)',
+                maxWidth: '1000px',
+                width: '100%',
+                padding: 'var(--space-55)',
+                position: 'relative',
+                border: '4px solid var(--cdg-blood-red)'
+              }}
             >
-              {/* Close */}
+              {/* Close Button */}
               <button
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-6 right-6 text-2xl hover:text-thread-red transition-colors"
+                style={{
+                  position: 'absolute',
+                  top: 'var(--space-13)',
+                  right: 'var(--space-13)',
+                  fontSize: 'var(--type-6xl)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--cdg-blood-red)',
+                  lineHeight: 1
+                }}
               >
                 ×
               </button>
 
               {/* Header */}
-              <div className="mb-6">
-                <div className="flex items-center gap-4 mb-3">
-                  <span className="text-xs font-mono text-thread-red">{selectedItem.id}</span>
-                  <span className={`text-xs font-mono ${statusColors[selectedItem.status]}`}>
-                    {selectedItem.status}
-                  </span>
-                  <span className="text-xs font-mono opacity-50">{selectedItem.date}</span>
-                </div>
-                <h2 className="text-3xl font-bold mb-2">{selectedItem.title}</h2>
-                <p className="text-sm font-mono uppercase tracking-wider opacity-50">
-                  {selectedItem.type}
-                </p>
-              </div>
+              <span className="text-number-tag" style={{
+                color: 'var(--cdg-blood-red)',
+                fontSize: 'var(--type-sm)'
+              }}>
+                {selectedItem.id}
+              </span>
+
+              <h2 className="text-display-2" style={{
+                color: 'var(--margiela-void)',
+                marginTop: 'var(--space-8)',
+                marginBottom: 'var(--space-5)'
+              }}>
+                {selectedItem.title}
+              </h2>
+
+              <p className="text-overline" style={{
+                color: 'var(--margiela-aluminum)',
+                marginBottom: 'var(--space-21)'
+              }}>
+                {selectedItem.type} • {selectedItem.date} • {selectedItem.status}
+              </p>
 
               {/* Description */}
-              <div className="mb-6">
-                <p className="text-base leading-relaxed">{selectedItem.description}</p>
-              </div>
+              <p className="text-lead" style={{
+                color: 'var(--margiela-steel)',
+                marginBottom: 'var(--space-21)'
+              }}>
+                {selectedItem.description}
+              </p>
 
               {/* Failure Reason */}
               {selectedItem.reason && (
-                <div className="p-4 bg-thread-red/10 border-l-2 border-thread-red mb-6">
-                  <h3 className="text-xs font-mono uppercase tracking-widest mb-2 text-thread-red">
-                    REASON FOR {selectedItem.status}
+                <div style={{
+                  backgroundColor: 'var(--cdg-blood-red)',
+                  color: 'white',
+                  padding: 'var(--space-21)',
+                  marginBottom: 'var(--space-21)',
+                  transform: 'rotate(-0.5deg)'
+                }}>
+                  <h3 className="text-heading-5" style={{
+                    color: 'white',
+                    marginBottom: 'var(--space-8)'
+                  }}>
+                    Why It Failed
                   </h3>
-                  <p className="text-sm">{selectedItem.reason}</p>
+                  <p className="text-body" style={{ color: 'white' }}>
+                    {selectedItem.reason}
+                  </p>
                 </div>
               )}
 
               {/* Learnings */}
               {selectedItem.learnings && (
-                <div className="mb-6">
-                  <h3 className="text-xs font-mono uppercase tracking-widest mb-3 text-thread-blue">
-                    KEY LEARNINGS
+                <div style={{ marginBottom: 'var(--space-21)' }}>
+                  <h3 className="text-heading-5" style={{
+                    color: 'var(--margiela-void)',
+                    marginBottom: 'var(--space-13)'
+                  }}>
+                    Key Learnings
                   </h3>
-                  <ul className="space-y-2">
+                  <div style={{
+                    display: 'grid',
+                    gap: 'var(--space-8)'
+                  }}>
                     {selectedItem.learnings.map((learning, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <span className="text-thread-red">→</span>
-                        {learning}
-                      </li>
+                      <div key={i} style={{
+                        display: 'flex',
+                        gap: 'var(--space-5)',
+                        alignItems: 'start'
+                      }}>
+                        <span style={{
+                          fontSize: 'var(--type-3xl)',
+                          color: 'var(--zone-archive-accent-1)',
+                          lineHeight: 1
+                        }}>
+                          →
+                        </span>
+                        <p className="text-body" style={{ color: 'var(--margiela-graphite)' }}>
+                          {learning}
+                        </p>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-lab-carbon/5">
+              {/* Stats Grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 'var(--space-21)',
+                backgroundColor: 'var(--margiela-paper)',
+                padding: 'var(--space-21)',
+                borderTop: '2px solid var(--margiela-exposed-seam)'
+              }}>
                 {selectedItem.iterations && (
                   <div>
-                    <p className="text-xs font-mono opacity-50 mb-1">ITERATIONS</p>
-                    <p className="text-lg font-bold">{selectedItem.iterations}</p>
+                    <p className="text-label" style={{
+                      color: 'var(--margiela-aluminum)',
+                      marginBottom: 'var(--space-3)'
+                    }}>
+                      ITERATIONS
+                    </p>
+                    <p className="text-display-3" style={{ color: 'var(--cdg-blood-red)' }}>
+                      {selectedItem.iterations}
+                    </p>
                   </div>
                 )}
                 {selectedItem.timeSpent && (
                   <div>
-                    <p className="text-xs font-mono opacity-50 mb-1">TIME SPENT</p>
-                    <p className="text-lg font-bold">{selectedItem.timeSpent}</p>
-                  </div>
-                )}
-                {selectedItem.materials && (
-                  <div className="col-span-2">
-                    <p className="text-xs font-mono opacity-50 mb-1">MATERIALS</p>
-                    <p className="text-sm">{selectedItem.materials.join(', ')}</p>
+                    <p className="text-label" style={{
+                      color: 'var(--margiela-aluminum)',
+                      marginBottom: 'var(--space-3)'
+                    }}>
+                      TIME SPENT
+                    </p>
+                    <p className="text-heading-4" style={{ color: 'var(--margiela-graphite)' }}>
+                      {selectedItem.timeSpent}
+                    </p>
                   </div>
                 )}
               </div>
@@ -436,29 +600,18 @@ export default function ArchivePage() {
         )}
       </AnimatePresence>
 
-      {/* Philosophy Section */}
-      <section className="py-12 px-6 border-t border-lab-carbon/20">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6">FAILURE PHILOSOPHY</h2>
-          <div className="stitching py-4">
-            <p className="text-sm font-mono opacity-70">
-              Every failed experiment is a successful learning. We archive our failures
-              not as defeats, but as essential steps in the evolution of our practice.
-              The beauty of the incomplete, the aesthetics of the abandoned — these are
-              as valuable as any finished piece. In failure, we find truth.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ==========================================================================
+         FOOTER
+         ========================================================================== */}
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-lab-carbon/20">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between text-xs font-mono opacity-50">
-            <span>CINCH LAB ARCHIVE • FAILED EXPERIMENTS</span>
-            <span>LEARNING THROUGH FAILURE</span>
-          </div>
-        </div>
+      <footer style={{
+        padding: 'var(--space-34) var(--space-21)',
+        borderTop: '2px solid var(--margiela-exposed-seam)',
+        textAlign: 'center'
+      }}>
+        <p className="text-label" style={{ color: 'var(--margiela-aluminum)' }}>
+          CINCH LAB ARCHIVE • LEARNING THROUGH FAILURE • {archivedItems.length} DOCUMENTED
+        </p>
       </footer>
     </div>
   )
