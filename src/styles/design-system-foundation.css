@@ -94,6 +94,116 @@
   --accent-pewter: #96A09B;
   --accent-terracotta: #A0635D;
 
+  /* ====== Y2K REVIVAL PALETTE ====== */
+  /* Neon & Cyber Colors */
+  --y2k-cyber-lime: #CCFF00;
+  --y2k-electric-blue: #00D9FF;
+  --y2k-hot-pink: #FF10F0;
+  --y2k-neon-green: #39FF14;
+  --y2k-laser-purple: #BC13FE;
+  --y2k-toxic-yellow: #DFFF00;
+  --y2k-bubblegum: #FF69B4;
+  --y2k-plasma-orange: #FF4500;
+  --y2k-acid-green: #B0FF00;
+  --y2k-ultraviolet: #645AFF;
+
+  /* Metallic & Chrome */
+  --y2k-chrome-silver: #C0C0C0;
+  --y2k-holographic: #E0E7FF;
+  --y2k-iridescent-blue: #9FA8DA;
+  --y2k-mirror-gold: #FFD700;
+  --y2k-foil-pink: #FFB6C1;
+  --y2k-metallic-purple: #AA98A9;
+  --y2k-tin-grey: #7C8A99;
+  --y2k-pearl-white: #FDFEFE;
+  --y2k-copper: #B87333;
+  --y2k-bronze: #CD7F32;
+
+  /* Dopamine Dressing - Vibrant Joy */
+  --dopamine-coral: #FF6F61;
+  --dopamine-sunshine: #FFD700;
+  --dopamine-sky: #87CEEB;
+  --dopamine-mint: #98FF98;
+  --dopamine-lavender: #E6E6FA;
+  --dopamine-peach: #FFDAB9;
+  --dopamine-rose: #FF007F;
+  --dopamine-turquoise: #40E0D0;
+  --dopamine-lemon: #FFF44F;
+  --dopamine-orchid: #DA70D6;
+
+  /* ====== EXPANDED MARGIELA PALETTE ====== */
+  /* Archive Colors - Deconstructed Details */
+  --margiela-dust: #BCB8B1;
+  --margiela-cement: #A8A29E;
+  --margiela-chalk: #F5F5F0;
+  --margiela-ash-grey: #9A9691;
+  --margiela-bone: #E3DAC9;
+  --margiela-putty: #C1B5A8;
+  --margiela-slate: #708090;
+  --margiela-fog: #D3D3D3;
+  --margiela-smoke: #848884;
+  --margiela-taupe: #483C32;
+
+  /* White Label Variations */
+  --margiela-label-cream: #FFFDD0;
+  --margiela-label-ivory: #FFFFF0;
+  --margiela-label-eggshell: #F0EAD6;
+  --margiela-label-porcelain: #F8F8FF;
+  --margiela-tag-grey: #D3D3D3;
+
+  /* ====== EXPANDED SACAI PALETTE ====== */
+  /* Layering & Splice Colors */
+  --sacai-khaki-blend: #8B7E66;
+  --sacai-military-green: #4B5320;
+  --sacai-denim-blue: #1560BD;
+  --sacai-pinstripe-navy: #000080;
+  --sacai-oxford-blue: #002147;
+  --sacai-camel: #C19A6B;
+  --sacai-tan: #D2B48C;
+  --sacai-rust: #B7410E;
+  --sacai-maroon: #800000;
+  --sacai-burgundy: #800020;
+
+  /* Textile Fusion */
+  --sacai-tweed-brown: #8B7355;
+  --sacai-flannel-grey: #85929E;
+  --sacai-corduroy-tan: #D2691E;
+  --sacai-wool-navy: #1C2833;
+  --sacai-silk-white: #FFF9E6;
+
+  /* ====== EXPANDED CDG PALETTE ====== */
+  /* Radical Spectrum */
+  --cdg-deep-black: #0D0D0D;
+  --cdg-carbon-black: #050505;
+  --cdg-scarlet: #FF2400;
+  --cdg-ruby: #E0115F;
+  --cdg-wine: #722F37;
+  --cdg-midnight: #191970;
+  --cdg-steel-grey: #43464B;
+  --cdg-slate-black: #2B2B2B;
+  --cdg-bone-white: #F9F6EE;
+  --cdg-porcelain: #FAFAFA;
+
+  /* ====== LABORATORY EXPANSION ====== */
+  /* Scientific Equipment Colors */
+  --lab-beaker-clear: #F0FFFF;
+  --lab-culture-pink: #FFE4E1;
+  --lab-specimen-amber: #FFBF00;
+  --lab-slide-blue: #B0E0E6;
+  --lab-litmus-red: #ED1C24;
+  --lab-litmus-blue: #0033CC;
+  --lab-pipette-grey: #C0C0C0;
+  --lab-microscope-black: #1C1C1C;
+  --lab-centrifuge-silver: #AAA9AD;
+  --lab-incubator-warm: #FFF8DC;
+
+  /* Bio-Tech Glow */
+  --lab-biotech-cyan: #00FFFF;
+  --lab-biotech-magenta: #FF00FF;
+  --lab-biotech-yellow: #FFFF00;
+  --lab-dna-helix: #4169E1;
+  --lab-protein-purple: #9370DB;
+
   /* ====== ZONE-SPECIFIC COLOR MAPPING ====== */
   /* Homepage - Hybrid Energy */
   --zone-home-primary: var(--margiela-carbon);

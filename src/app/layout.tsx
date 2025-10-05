@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
-import SophisticatedNav from '@/components/SophisticatedNav'
+import DeconstructivistNav from '@/components/DeconstructivistNav'
 import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
@@ -129,7 +129,7 @@ export default function RootLayout({
             <ScrollProgress />
             <SkipToMain />
             <KeyboardNavigationIndicator />
-            <SophisticatedNav />
+            <DeconstructivistNav />
             <CipherToggle />
             <main id="main-content" className="pt-20">
               {children}
