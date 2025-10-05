@@ -62,26 +62,38 @@ const collections: Collection[] = [
 export default function CollectionsPage() {
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
 
-  return (
-    <div className="min-h-screen bg-orange-50">
+  const statusColors = {
+    CURRENT: 'var(--margiela-sage)',
+    UPCOMING: 'var(--sacai-burnt-orange)',
+    ARCHIVED: 'var(--margiela-slate)'
+  }
 
-      {/* HEADER */}
-      <header className="relative pt-32 pb-16 px-8 md:px-16 lg:px-24">
+  const statusClasses = {
+    CURRENT: 'bg-[var(--margiela-sage)]',
+    UPCOMING: 'bg-[var(--sacai-burnt-orange)]',
+    ARCHIVED: 'bg-[var(--margiela-slate)]'
+  }
+
+  return (
+    <div className="min-h-screen bg-[var(--margiela-off-white)]">
+
+      {/* HEADER with margiela-grid */}
+      <header className="margiela-grid pt-32 pb-16 px-8 md:px-16 lg:px-24">
         <motion.div
-          className="text-xs absolute top-8 right-8 transform rotate-12 text-gray-500"
+          className="text-xs absolute top-8 right-8 transform rotate-12 text-[var(--margiela-slate)]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          001
+          <div className="margiela-number-tag">01</div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="transform -rotate-2"
+          className="transform -rotate-2 grid-item-large"
         >
-          <h1 className="text-9xl font-extralight text-black leading-none">
+          <h1 className="text-display-1 font-extralight text-[var(--margiela-carbon)] leading-none">
             COLL
           </h1>
         </motion.div>
@@ -90,9 +102,9 @@ export default function CollectionsPage() {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="transform rotate-1 ml-16"
+          className="transform rotate-1 ml-16 grid-item-large"
         >
-          <h1 className="text-9xl font-light text-orange-500 leading-none">
+          <h1 className="text-display-1 font-light text-[var(--sacai-burnt-orange)] leading-none">
             ECTIONS
           </h1>
         </motion.div>
@@ -101,23 +113,28 @@ export default function CollectionsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-16"
+          className="mt-16 grid-item-large"
         >
-          <p className="text-2xl text-gray-700 font-light">
+          <p className="text-heading-2 text-[var(--margiela-carbon)] font-light">
             Seasonal Archives • Visual Documentation • No Commerce
           </p>
 
-          <div className="text-xs tracking-widest mt-8 inline-block bg-white px-4 py-2">
+          <div className="margiela-tag mt-8 inline-block bg-[var(--margiela-white)] px-4 py-2">
             EXPERIMENTAL COLLECTION
           </div>
         </motion.div>
       </header>
 
-      {/* COLLECTION CARDS */}
+      {/* COLLECTION CARDS with rotations */}
       <section className="py-16 px-8 md:px-16 lg:px-24 space-y-16">
         {collections.map((collection, index) => {
           const rotations = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2']
-          const bgColors = ['bg-white', 'bg-gray-50', 'bg-orange-100', 'bg-blue-50']
+          const bgColors = [
+            'bg-[var(--margiela-white)]',
+            'bg-[var(--margiela-off-white)]',
+            'bg-[var(--sacai-warm-beige)]',
+            'bg-[var(--margiela-off-white)]'
+          ]
 
           return (
             <motion.div
@@ -128,51 +145,51 @@ export default function CollectionsPage() {
               transition={{ delay: index * 0.15 }}
               whileHover={{ scale: 1.02, rotate: 0 }}
               onClick={() => setSelectedCollection(collection)}
-              className={`transform ${rotations[index]} cursor-pointer p-12 border-2 border-gray-300 ${bgColors[index]} hover:border-orange-500 hover:shadow-2xl transition-all duration-500`}
+              className={`transform ${rotations[index]} cursor-pointer p-12 border-2 border-[var(--margiela-slate)] ${bgColors[index]} hover:border-[var(--sacai-burnt-orange)] hover:shadow-2xl transition-all duration-500 exposed-seam`}
             >
-              {/* Number Tag */}
-              <div className="text-xs text-gray-500 mb-4">
+              {/* Margiela Number Tag */}
+              <div className="margiela-number-tag mb-4">
                 {collection.id}
               </div>
 
-              {/* Status Indicator */}
-              <div className={`text-xs inline-block px-3 py-1 mb-6 ${
-                collection.status === 'CURRENT' ? 'bg-green-600' :
-                collection.status === 'UPCOMING' ? 'bg-yellow-500' : 'bg-gray-500'
-              } text-white tracking-widest`}>
+              {/* Status Badge */}
+              <div
+                className={`text-xs inline-block px-3 py-1 mb-6 ${statusClasses[collection.status]} text-[var(--margiela-white)] tracking-widest`}
+                style={{ backgroundColor: statusColors[collection.status] }}
+              >
                 {collection.status}
               </div>
 
-              {/* Season/Year */}
-              <p className="text-xs tracking-widest text-orange-600 mb-4">
+              {/* Season/Year with exposed seam */}
+              <p className="margiela-tag text-[var(--sacai-burnt-orange)] mb-4 exposed-seam-vertical inline-block px-3 py-1">
                 {collection.season} {collection.year}
               </p>
 
               {/* Title */}
-              <h2 className="text-5xl font-black text-black mb-6">
+              <h2 className="text-heading-1 font-black text-[var(--margiela-carbon)] mb-6">
                 {collection.title}
               </h2>
 
               {/* Concept */}
-              <p className="text-lg text-gray-700 italic mb-8">
+              <p className="text-body-large text-[var(--margiela-carbon)] italic mb-8">
                 {collection.concept}
               </p>
 
               {/* Details Grid */}
-              <div className="grid grid-cols-2 gap-8 border-t border-gray-300 pt-8">
+              <div className="grid grid-cols-2 gap-8 border-t border-[var(--margiela-slate)] pt-8">
                 <div>
-                  <p className="text-xs tracking-widest text-gray-500 mb-2">
+                  <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
                     LOOKS
                   </p>
-                  <p className="text-3xl font-bold text-black">
+                  <p className="text-4xl font-bold text-[var(--margiela-carbon)]">
                     {collection.lookCount}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs tracking-widest text-gray-500 mb-2">
+                  <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
                     DATE
                   </p>
-                  <p className="text-sm text-black">
+                  <p className="text-sm text-[var(--margiela-carbon)]">
                     {collection.date}
                   </p>
                 </div>
@@ -181,12 +198,12 @@ export default function CollectionsPage() {
               {/* Techniques Tags */}
               {collection.techniques && (
                 <div className="mt-8">
-                  <p className="text-xs tracking-widest text-orange-600 mb-4">
+                  <p className="margiela-tag text-[var(--sacai-burnt-orange)] mb-4">
                     TECHNIQUES
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {collection.techniques.map((tech, i) => (
-                      <span key={i} className="text-xs px-3 py-1 bg-gray-200 text-gray-700">
+                      <span key={i} className="text-xs px-3 py-1 bg-[var(--margiela-off-white)] text-[var(--margiela-carbon)]">
                         {tech}
                       </span>
                     ))}
@@ -198,7 +215,7 @@ export default function CollectionsPage() {
         })}
       </section>
 
-      {/* DETAIL MODAL */}
+      {/* DETAIL MODAL with sacai-grid layers */}
       <AnimatePresence>
         {selectedCollection && (
           <motion.div
@@ -206,35 +223,36 @@ export default function CollectionsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedCollection(null)}
-            className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-8"
+            className="fixed inset-0 bg-[var(--cdg-void)] bg-opacity-95 z-50 flex items-center justify-center p-8"
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white max-w-5xl w-full max-h-[90vh] overflow-auto transform -rotate-1"
+              className="bg-[var(--margiela-white)] max-w-5xl w-full max-h-[90vh] overflow-auto transform -rotate-1 sacai-grid-layer"
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedCollection(null)}
-                className="absolute top-8 right-8 text-5xl text-black hover:text-gray-500 transition-colors"
+                className="absolute top-8 right-8 text-5xl text-[var(--margiela-carbon)] hover:text-[var(--margiela-slate)] transition-colors"
               >
                 ×
               </button>
 
               {/* Modal Content */}
               <div className="p-16">
-                <span className="text-xs text-gray-500">{selectedCollection.id}</span>
-                <h2 className="text-6xl font-black text-black mt-4 mb-4">
+                <span className="margiela-number-tag">{selectedCollection.id}</span>
+                <h2 className="text-display-2 font-black text-[var(--margiela-carbon)] mt-4 mb-4">
                   {selectedCollection.title}
                 </h2>
-                <p className="text-xl text-gray-700 mb-12">
+                <p className="text-heading-3 text-[var(--margiela-carbon)] mb-12">
                   {selectedCollection.concept}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                  <div className="bg-orange-500 p-8 text-white transform rotate-1">
+                  {/* Materials Layer */}
+                  <div className="bg-[var(--sacai-burnt-orange)] p-8 text-[var(--margiela-white)] transform rotate-1 sacai-grid-layer">
                     <p className="text-xs tracking-widest mb-4">
                       MATERIALS
                     </p>
@@ -243,12 +261,13 @@ export default function CollectionsPage() {
                     ))}
                   </div>
 
+                  {/* Location Layer */}
                   {selectedCollection.location && (
-                    <div className="bg-black p-8 text-white transform -rotate-1">
+                    <div className="bg-[var(--margiela-carbon)] p-8 text-[var(--margiela-white)] transform -rotate-1 sacai-grid-layer">
                       <p className="text-xs tracking-widest mb-4">
                         LOCATION
                       </p>
-                      <p className="text-2xl font-bold">
+                      <p className="text-heading-2 font-bold">
                         {selectedCollection.location}
                       </p>
                     </div>
@@ -261,8 +280,8 @@ export default function CollectionsPage() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="border-t border-gray-300 py-16 px-8 text-center bg-white">
-        <p className="text-sm text-gray-500">
+      <footer className="border-t border-[var(--margiela-slate)] py-16 px-8 text-center bg-[var(--margiela-white)]">
+        <p className="text-sm text-[var(--margiela-slate)]">
           CINCH LAB COLLECTIONS • NO COMMERCE • DOCUMENTATION ONLY
         </p>
       </footer>

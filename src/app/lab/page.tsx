@@ -61,32 +61,40 @@ export default function LabPage() {
     : experiments.filter(exp => exp.category === selectedCategory)
 
   const statusColors = {
-    IN_PROGRESS: 'bg-orange-500',
-    TESTING: 'bg-blue-500',
-    COMPLETE: 'bg-green-600',
-    FAILED: 'bg-red-600'
+    IN_PROGRESS: 'var(--sacai-burnt-orange)',
+    TESTING: 'var(--sacai-layer-navy)',
+    COMPLETE: 'var(--margiela-sage)',
+    FAILED: 'var(--cdg-blood-red)'
+  }
+
+  const statusClasses = {
+    IN_PROGRESS: 'bg-[var(--sacai-burnt-orange)]',
+    TESTING: 'bg-[var(--sacai-layer-navy)]',
+    COMPLETE: 'bg-[var(--margiela-sage)]',
+    FAILED: 'bg-[var(--cdg-blood-red)]'
   }
 
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="min-h-screen bg-[var(--margiela-off-white)]">
 
-      {/* HEADER */}
-      <header className="relative pt-32 pb-16 px-8 md:px-16 lg:px-24">
+      {/* HEADER with hybrid-grid */}
+      <header className="hybrid-grid pt-32 pb-16 px-8 md:px-16 lg:px-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="grid-item-large"
         >
-          <div className="text-xs tracking-widest mb-8 text-gray-600 inline-block transform -rotate-1">
-            LABORATORY • TECHNICAL RESEARCH DIVISION
+          <div className="margiela-tag -rotate-1 mb-8">
+            00 • LABORATORY • TECHNICAL RESEARCH DIVISION
           </div>
 
-          <h1 className="text-9xl font-extralight text-blue-600 transform rotate-2">
+          <h1 className="text-display-1 font-extralight text-[var(--margiela-carbon)] rotate-2">
             <span className="block">LABOR</span>
             <span className="block ml-24">ATORY</span>
           </h1>
 
-          <p className="text-xl mt-8 max-w-2xl text-gray-700">
+          <p className="text-body-large mt-8 max-w-2xl text-[var(--margiela-carbon)]">
             Pattern Deconstruction • Material Innovation • Process Documentation
           </p>
         </motion.div>
@@ -95,16 +103,18 @@ export default function LabPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="absolute top-8 right-8 text-xs text-right text-gray-500"
+          className="grid-item-small absolute top-8 right-8 text-xs text-right text-[var(--margiela-slate)]"
         >
-          <div>{filteredExperiments.filter(e => e.status === 'IN_PROGRESS').length} ACTIVE</div>
-          <div className="mt-1">{filteredExperiments.filter(e => e.status === 'TESTING').length} TESTING</div>
-          <div className="mt-1">{filteredExperiments.filter(e => e.status === 'COMPLETE').length} COMPLETE</div>
+          <div className="exposed-seam-vertical p-4 bg-[var(--margiela-white)]">
+            <div>{filteredExperiments.filter(e => e.status === 'IN_PROGRESS').length} ACTIVE</div>
+            <div className="mt-1">{filteredExperiments.filter(e => e.status === 'TESTING').length} TESTING</div>
+            <div className="mt-1">{filteredExperiments.filter(e => e.status === 'COMPLETE').length} COMPLETE</div>
+          </div>
         </motion.div>
 
         {/* Category Filter */}
         <motion.div
-          className="mt-16 flex flex-wrap gap-3"
+          className="mt-16 flex flex-wrap gap-3 grid-item-large"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -115,8 +125,8 @@ export default function LabPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`text-sm px-4 py-2 border-2 transition-all duration-300 hover:scale-105 ${
                 selectedCategory === cat
-                  ? 'bg-blue-600 border-blue-600 text-white'
-                  : 'bg-white border-gray-300 text-gray-700 hover:border-blue-600'
+                  ? 'bg-[var(--sacai-burnt-orange)] border-[var(--sacai-burnt-orange)] text-[var(--margiela-white)]'
+                  : 'bg-[var(--margiela-white)] border-[var(--margiela-slate)] text-[var(--margiela-carbon)] hover:border-[var(--sacai-burnt-orange)]'
               }`}
             >
               {cat}
@@ -125,131 +135,137 @@ export default function LabPage() {
         </motion.div>
       </header>
 
-      {/* EXPERIMENTS GRID */}
-      <section className="py-24 px-8 md:px-16 lg:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredExperiments.map((exp, i) => {
-            const rotations = ['-rotate-1', 'rotate-2', '-rotate-2', 'rotate-1', '-rotate-2', 'rotate-2']
-            const rotation = rotations[i % rotations.length]
+      {/* EXPERIMENTS GRID with hybrid-grid */}
+      <section className="hybrid-grid py-24 px-8 md:px-16 lg:px-24">
+        {filteredExperiments.map((exp, i) => {
+          const rotations = ['-rotate-1', 'rotate-2', '-rotate-2', 'rotate-1', '-rotate-2', 'rotate-2']
+          const rotation = rotations[i % rotations.length]
+          const sizes = ['grid-item-large', 'grid-item-medium', 'grid-item-small']
+          const size = sizes[i % sizes.length]
 
-            return (
-              <motion.div
-                key={exp.id}
-                className={`transform ${rotation} hover:rotate-0 transition-all duration-500`}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: i * 0.1 }}
-                whileHover={{ scale: 1.03 }}
-                onClick={() => setSelectedExperiment(exp)}
-              >
-                <div className="h-full min-h-80 p-8 border-2 border-gray-300 bg-white cursor-pointer hover:border-blue-600 hover:shadow-2xl transition-all">
-                  {/* Status Indicator */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className={`w-3 h-3 rounded-full ${statusColors[exp.status]} ${exp.status === 'IN_PROGRESS' ? 'animate-pulse' : ''}`} />
-                    <span className="text-xs font-bold">{exp.status.replace('_', ' ')}</span>
+          return (
+            <motion.div
+              key={exp.id}
+              className={`${size} transform ${rotation} hover:rotate-0 transition-all duration-500`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: i * 0.1 }}
+              whileHover={{ scale: 1.03 }}
+              onClick={() => setSelectedExperiment(exp)}
+            >
+              <div className="h-full min-h-80 p-8 border-2 border-[var(--margiela-slate)] bg-[var(--margiela-white)] cursor-pointer hover:border-[var(--sacai-burnt-orange)] hover:shadow-2xl transition-all exposed-seam">
+                {/* Status Indicator */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div
+                    className={`w-3 h-3 rounded-full ${statusClasses[exp.status]} ${exp.status === 'IN_PROGRESS' ? 'animate-pulse' : ''}`}
+                    style={{ backgroundColor: statusColors[exp.status] }}
+                  />
+                  <span className="text-xs font-bold margiela-tag">{exp.status.replace('_', ' ')}</span>
+                </div>
+
+                {/* Margiela Number Tag */}
+                <div className="margiela-number-tag mb-4">
+                  EXP_{exp.id}
+                </div>
+
+                {/* Content */}
+                <div className="mt-8">
+                  <div className="text-xs tracking-widest mb-3 text-[var(--sacai-burnt-orange)]">
+                    {exp.category}
                   </div>
 
-                  {/* Experiment ID */}
-                  <div className="text-xs text-gray-500 mb-4">
-                    EXP_{exp.id}
+                  <h3 className="text-heading-2 font-light mb-4 text-[var(--margiela-carbon)]">
+                    {exp.title}
+                  </h3>
+
+                  <p className="text-sm opacity-70 line-clamp-3">
+                    {exp.description}
+                  </p>
+
+                  {/* Techniques */}
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {exp.techniques.slice(0, 2).map((tech, j) => (
+                      <span
+                        key={j}
+                        className="text-xs px-2 py-1 bg-[var(--margiela-off-white)] text-[var(--margiela-carbon)]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {exp.techniques.length > 2 && (
+                      <span className="text-xs opacity-50">
+                        +{exp.techniques.length - 2}
+                      </span>
+                    )}
                   </div>
 
-                  {/* Content */}
-                  <div className="mt-8">
-                    <div className="text-xs tracking-widest mb-3 text-blue-600">
-                      {exp.category}
-                    </div>
-
-                    <h3 className="text-2xl font-light mb-4 text-black">
-                      {exp.title}
-                    </h3>
-
-                    <p className="text-sm opacity-70 line-clamp-3">
-                      {exp.description}
-                    </p>
-
-                    {/* Techniques */}
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {exp.techniques.slice(0, 2).map((tech, j) => (
-                        <span
-                          key={j}
-                          className="text-xs px-2 py-1 bg-gray-200 text-gray-700"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {exp.techniques.length > 2 && (
-                        <span className="text-xs opacity-50">
-                          +{exp.techniques.length - 2}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Date */}
-                    <div className="mt-6 text-xs opacity-50">
-                      {exp.date}
-                    </div>
+                  {/* Date */}
+                  <div className="mt-6 text-xs opacity-50">
+                    {exp.date}
                   </div>
                 </div>
-              </motion.div>
-            )
-          })}
-        </div>
+              </div>
+            </motion.div>
+          )
+        })}
       </section>
 
-      {/* EXPERIMENT DETAIL MODAL */}
+      {/* EXPERIMENT DETAIL MODAL with sacai-grid layers */}
       <AnimatePresence>
         {selectedExperiment && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black bg-opacity-90"
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[var(--cdg-void)] bg-opacity-90"
             onClick={() => setSelectedExperiment(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
-              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto p-12 bg-white transform -rotate-1"
+              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto p-12 bg-[var(--margiela-white)] transform -rotate-1 sacai-grid-layer"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedExperiment(null)}
-                className="absolute top-6 right-6 text-4xl text-gray-500 hover:text-black transition-colors"
+                className="absolute top-6 right-6 text-4xl text-[var(--margiela-slate)] hover:text-[var(--margiela-carbon)] transition-colors"
               >
                 ×
               </button>
 
               {/* Header */}
               <div className="mb-8">
-                <div className="text-xs text-gray-500 mb-2">
+                <div className="margiela-number-tag mb-2">
                   EXP_{selectedExperiment.id}
                 </div>
-                <div className={`text-xs tracking-widest mb-4 inline-block px-3 py-1 text-white ${statusColors[selectedExperiment.status]}`}>
+                <div
+                  className={`text-xs tracking-widest mb-4 inline-block px-3 py-1 text-[var(--margiela-white)] ${statusClasses[selectedExperiment.status]}`}
+                  style={{ backgroundColor: statusColors[selectedExperiment.status] }}
+                >
                   {selectedExperiment.status.replace('_', ' ')} • {selectedExperiment.category}
                 </div>
-                <h2 className="text-5xl font-light mb-4 text-black">
+                <h2 className="text-heading-1 font-light mb-4 text-[var(--margiela-carbon)]">
                   {selectedExperiment.title}
                 </h2>
-                <p className="text-lg opacity-70">
+                <p className="text-body-large opacity-70">
                   {selectedExperiment.description}
                 </p>
               </div>
 
-              {/* Details Grid */}
+              {/* Details Grid with sacai layers */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 {/* Techniques */}
-                <div className="transform -rotate-1 bg-blue-50 p-6">
-                  <div className="text-xs tracking-widest mb-4 text-blue-600">
+                <div className="transform -rotate-1 bg-[var(--sacai-burnt-orange)] p-6 text-[var(--margiela-white)] sacai-grid-layer">
+                  <div className="text-xs tracking-widest mb-4">
                     TECHNIQUES APPLIED
                   </div>
                   <ul className="space-y-2">
                     {selectedExperiment.techniques.map((tech, i) => (
                       <li key={i} className="text-base flex items-start gap-2">
-                        <span className="text-red-600">→</span>
+                        <span className="text-[var(--cdg-blood-red)]">→</span>
                         {tech}
                       </li>
                     ))}
@@ -257,14 +273,14 @@ export default function LabPage() {
                 </div>
 
                 {/* Materials */}
-                <div className="transform rotate-1 bg-green-50 p-6">
-                  <div className="text-xs tracking-widest mb-4 text-green-600">
+                <div className="transform rotate-1 bg-[var(--margiela-sage)] p-6 text-[var(--margiela-white)] sacai-grid-layer">
+                  <div className="text-xs tracking-widest mb-4">
                     MATERIALS USED
                   </div>
                   <ul className="space-y-2">
                     {selectedExperiment.materials.map((mat, i) => (
                       <li key={i} className="text-base flex items-start gap-2">
-                        <span className="text-orange-600">→</span>
+                        <span className="text-[var(--sacai-burnt-orange)]">→</span>
                         {mat}
                       </li>
                     ))}
@@ -274,8 +290,8 @@ export default function LabPage() {
 
               {/* Result */}
               {selectedExperiment.result && (
-                <div className="p-6 border-l-4 border-red-600 bg-gray-50">
-                  <div className="text-xs tracking-widest mb-2 text-red-600">
+                <div className="p-6 border-l-4 border-[var(--cdg-blood-red)] bg-[var(--margiela-off-white)]">
+                  <div className="text-xs tracking-widest mb-2 text-[var(--cdg-blood-red)]">
                     RESULT
                   </div>
                   <p className="text-base">{selectedExperiment.result}</p>
@@ -292,7 +308,7 @@ export default function LabPage() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="border-t border-gray-300 py-12 px-8 md:px-16 lg:px-24 mt-32 bg-white">
+      <footer className="border-t border-[var(--margiela-slate)] py-12 px-8 md:px-16 lg:px-24 mt-32 bg-[var(--margiela-white)]">
         <div className="text-sm opacity-50 text-center">
           CINCH LAB • TECHNICAL RESEARCH DIVISION • NO COMMERCIAL APPLICATION
         </div>

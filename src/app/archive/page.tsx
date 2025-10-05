@@ -54,28 +54,29 @@ export default function ArchivePage() {
   const [selectedItem, setSelectedItem] = useState<ArchivedItem | null>(null)
 
   return (
-    <div className="min-h-screen bg-red-50">
+    <div className="min-h-screen bg-[var(--margiela-off-white)]">
 
-      {/* MANIFESTO HEADER */}
-      <section className="relative py-24 px-8 md:px-16 lg:px-24">
+      {/* MANIFESTO HEADER with cdg-grid */}
+      <section className="cdg-grid py-24 px-8 md:px-16 lg:px-24 bg-[var(--cdg-void)]">
         <motion.div
-          className="text-xs absolute top-8 right-24 transform rotate-12 text-gray-500"
+          className="text-xs absolute top-8 right-24 transform rotate-12 text-[var(--margiela-slate)]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          002
+          <div className="margiela-number-tag bg-[var(--margiela-white)]">02</div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: -80 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
+          className="grid-item-large"
         >
-          <h1 className="text-9xl font-black leading-none text-black">
+          <h1 className="text-display-1 font-black leading-none text-[var(--margiela-white)]">
             ARCH
             <br />
-            <span className="text-red-600">IVE</span>
+            <span className="text-[var(--cdg-blood-red)]">IVE</span>
           </h1>
         </motion.div>
 
@@ -83,17 +84,17 @@ export default function ArchivePage() {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mt-16 bg-white p-12 border-4 border-gray-900 transform -rotate-1 max-w-3xl"
+          className="mt-16 bg-[var(--margiela-white)] p-12 border-4 border-[var(--cdg-void)] transform -rotate-1 max-w-3xl exposed-seam"
         >
-          <div className="text-xs tracking-widest mb-6 text-gray-500">
+          <div className="margiela-tag mb-6 text-[var(--margiela-slate)]">
             FAILURE PHILOSOPHY
           </div>
 
-          <p className="text-4xl font-light leading-snug italic text-black mb-8">
+          <p className="text-heading-1 font-light leading-snug italic text-[var(--margiela-carbon)] mb-8">
             "Every failed experiment is a successful learning"
           </p>
 
-          <p className="text-base text-gray-700">
+          <p className="text-base text-[var(--margiela-carbon)]">
             We archive our failures not as defeats, but as essential steps
             in the evolution of our practice. The beauty of the incomplete,
             the aesthetics of the abandoned.
@@ -104,12 +105,12 @@ export default function ArchivePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-12 border-l-4 border-red-600 pl-8"
+          className="mt-12 border-l-4 border-[var(--cdg-blood-red)] pl-8"
         >
-          <p className="text-xs tracking-widest text-red-600 mb-3">
+          <p className="margiela-tag text-[var(--cdg-blood-red)] mb-3">
             DOCUMENTATION ARCHIVE
           </p>
-          <p className="text-2xl text-gray-700">
+          <p className="text-heading-2 text-[var(--margiela-white)]">
             Failed Experiments<br />
             Abandoned Prototypes<br />
             Learning Through Failure
@@ -117,15 +118,15 @@ export default function ArchivePage() {
         </motion.div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="py-16 px-8 md:px-16 lg:px-24 space-y-16">
+      {/* TIMELINE with diagonal-flow for failures */}
+      <section className="diagonal-flow py-16 px-8 md:px-16 lg:px-24 space-y-16">
         {archivedItems.map((item, index) => {
           const rotations = ['-rotate-3', 'rotate-2', '-rotate-1', 'rotate-2']
           const colors = [
-            { bg: 'bg-red-600', border: 'border-red-600' },
-            { bg: 'bg-gray-800', border: 'border-gray-800' },
-            { bg: 'bg-orange-500', border: 'border-orange-500' },
-            { bg: 'bg-purple-600', border: 'border-purple-600' }
+            { bg: 'var(--cdg-blood-red)', border: 'border-[var(--cdg-blood-red)]', text: 'text-[var(--cdg-blood-red)]' },
+            { bg: 'var(--margiela-carbon)', border: 'border-[var(--margiela-carbon)]', text: 'text-[var(--margiela-carbon)]' },
+            { bg: 'var(--sacai-burnt-orange)', border: 'border-[var(--sacai-burnt-orange)]', text: 'text-[var(--sacai-burnt-orange)]' },
+            { bg: 'var(--cdg-deep-purple)', border: 'border-[var(--cdg-deep-purple)]', text: 'text-[var(--cdg-deep-purple)]' }
           ]
 
           return (
@@ -137,61 +138,67 @@ export default function ArchivePage() {
               transition={{ delay: index * 0.2, duration: 0.6 }}
               whileHover={{ scale: 1.05, rotate: 0 }}
               onClick={() => setSelectedItem(item)}
-              className={`transform ${rotations[index]} bg-white p-12 border-4 ${colors[index].border} cursor-pointer shadow-2xl hover:shadow-3xl transition-all duration-500`}
+              className={`transform ${rotations[index]} bg-[var(--margiela-white)] p-12 border-4 ${colors[index].border} cursor-pointer shadow-2xl hover:shadow-3xl transition-all duration-500 exposed-seam`}
             >
               {/* Status Badge */}
-              <div className={`inline-block px-4 py-2 ${colors[index].bg} text-white text-xs font-bold tracking-widest mb-6`}>
+              <div
+                className={`inline-block px-4 py-2 text-[var(--margiela-white)] text-xs font-bold tracking-widest mb-6`}
+                style={{ backgroundColor: colors[index].bg }}
+              >
                 {item.status}
               </div>
 
-              {/* Archive ID */}
-              <span className={`text-xs ${colors[index].bg.replace('bg-', 'text-')}`}>
+              {/* Archive ID - Margiela style */}
+              <span className={`margiela-number-tag ${colors[index].text}`}>
                 {item.id}
               </span>
 
               {/* Type & Date */}
-              <p className="text-xs text-gray-500 mt-2 mb-4">
+              <p className="text-xs text-[var(--margiela-slate)] mt-2 mb-4">
                 {item.type} • {item.date}
               </p>
 
               {/* Title */}
-              <h3 className="text-5xl font-black text-black leading-tight mb-6">
+              <h3 className="text-heading-1 font-black text-[var(--margiela-carbon)] leading-tight mb-6">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-lg text-gray-700 mb-8">
+              <p className="text-body-large text-[var(--margiela-carbon)] mb-8">
                 {item.description}
               </p>
 
               {/* Failure Reason */}
               {item.reason && (
-                <div className={`${colors[index].bg} bg-opacity-10 border-l-4 ${colors[index].border} p-6 mb-6`}>
-                  <p className={`text-xs tracking-widest ${colors[index].bg.replace('bg-', 'text-')} mb-3`}>
+                <div
+                  className={`bg-opacity-10 border-l-4 ${colors[index].border} p-6 mb-6`}
+                  style={{ backgroundColor: `${colors[index].bg}15` }}
+                >
+                  <p className={`margiela-tag ${colors[index].text} mb-3`}>
                     REASON
                   </p>
-                  <p className="text-base text-gray-900">{item.reason}</p>
+                  <p className="text-base text-[var(--margiela-carbon)]">{item.reason}</p>
                 </div>
               )}
 
               {/* Stats */}
-              <div className="flex gap-12 border-t border-gray-300 pt-8 mt-8">
+              <div className="flex gap-12 border-t border-[var(--margiela-slate)] pt-8 mt-8">
                 {item.iterations && (
                   <div>
-                    <p className="text-xs tracking-widest text-gray-500 mb-2">
+                    <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
                       ITERATIONS
                     </p>
-                    <p className={`text-4xl font-black ${colors[index].bg.replace('bg-', 'text-')}`}>
+                    <p className={`text-5xl font-black ${colors[index].text}`}>
                       {item.iterations}
                     </p>
                   </div>
                 )}
                 {item.timeSpent && (
                   <div>
-                    <p className="text-xs tracking-widest text-gray-500 mb-2">
+                    <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
                       TIME SPENT
                     </p>
-                    <p className="text-base text-gray-900">
+                    <p className="text-base text-[var(--margiela-carbon)]">
                       {item.timeSpent}
                     </p>
                   </div>
@@ -210,41 +217,41 @@ export default function ArchivePage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedItem(null)}
-            className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-8"
+            className="fixed inset-0 bg-[var(--cdg-void)] bg-opacity-95 z-50 flex items-center justify-center p-8"
           >
             <motion.div
               initial={{ scale: 0.85, rotate: -3 }}
               animate={{ scale: 1, rotate: 0 }}
               exit={{ scale: 0.85, rotate: 3 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white max-w-4xl w-full p-16 relative border-4 border-red-600"
+              className="bg-[var(--margiela-white)] max-w-4xl w-full p-16 relative border-4 border-[var(--cdg-blood-red)] sacai-grid-layer"
             >
               <button
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-8 right-8 text-6xl text-red-600 hover:text-black transition-colors"
+                className="absolute top-8 right-8 text-6xl text-[var(--cdg-blood-red)] hover:text-[var(--margiela-carbon)] transition-colors"
               >
                 ×
               </button>
 
-              <span className="text-xs text-red-600">
+              <span className="margiela-number-tag text-[var(--cdg-blood-red)]">
                 {selectedItem.id}
               </span>
 
-              <h2 className="text-6xl font-black text-black mt-4 mb-4">
+              <h2 className="text-display-2 font-black text-[var(--margiela-carbon)] mt-4 mb-4">
                 {selectedItem.title}
               </h2>
 
-              <p className="text-xs tracking-widest text-gray-500 mb-12">
+              <p className="margiela-tag text-[var(--margiela-slate)] mb-12">
                 {selectedItem.type} • {selectedItem.date} • {selectedItem.status}
               </p>
 
-              <p className="text-xl text-gray-700 mb-12">
+              <p className="text-heading-3 text-[var(--margiela-carbon)] mb-12">
                 {selectedItem.description}
               </p>
 
               {selectedItem.reason && (
-                <div className="bg-red-600 text-white p-8 mb-12 transform -rotate-1">
-                  <h3 className="text-2xl font-bold mb-6">
+                <div className="bg-[var(--cdg-blood-red)] text-[var(--margiela-white)] p-8 mb-12 transform -rotate-1 sacai-grid-layer">
+                  <h3 className="text-heading-2 font-bold mb-6">
                     Why It Failed
                   </h3>
                   <p className="text-base">{selectedItem.reason}</p>
@@ -253,14 +260,14 @@ export default function ArchivePage() {
 
               {selectedItem.learnings && (
                 <div className="mb-12">
-                  <h3 className="text-2xl font-bold text-black mb-8">
+                  <h3 className="text-heading-2 font-bold text-[var(--margiela-carbon)] mb-8">
                     Key Learnings
                   </h3>
                   <div className="space-y-6">
                     {selectedItem.learnings.map((learning, i) => (
                       <div key={i} className="flex gap-4 items-start">
-                        <span className="text-4xl text-red-600">→</span>
-                        <p className="text-base text-gray-700">{learning}</p>
+                        <span className="text-4xl text-[var(--cdg-blood-red)]">→</span>
+                        <p className="text-base text-[var(--margiela-carbon)]">{learning}</p>
                       </div>
                     ))}
                   </div>
@@ -272,8 +279,8 @@ export default function ArchivePage() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="border-t-2 border-gray-900 py-16 px-8 text-center bg-white">
-        <p className="text-sm text-gray-500">
+      <footer className="border-t-2 border-[var(--margiela-carbon)] py-16 px-8 text-center bg-[var(--margiela-white)]">
+        <p className="text-sm text-[var(--margiela-slate)]">
           CINCH LAB ARCHIVE • LEARNING THROUGH FAILURE • {archivedItems.length} DOCUMENTED
         </p>
       </footer>
