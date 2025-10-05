@@ -3,11 +3,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-// ==========================================================================
-// CONTACT PAGE - Minimal CDG Aesthetic
-// Asymmetric Form Layout × Professional Tone
-// ==========================================================================
-
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     type: 'COLLABORATION',
@@ -41,89 +36,49 @@ export default function ContactPage() {
   }
 
   return (
-    <div style={{
-      backgroundColor: 'var(--zone-contact-surface)',
-      minHeight: '100vh'
-    }}>
+    <div className="min-h-screen bg-slate-50">
 
-      {/* ==========================================================================
-         HEADER - CDG Minimal
-         ========================================================================== */}
-
-      <header className="cdg-grid" style={{ padding: '8rem 2rem 4rem', position: 'relative' }}>
-
-        {/* Number Tag */}
+      {/* HEADER */}
+      <header className="relative pt-32 pb-16 px-8 md:px-16 lg:px-24">
         <motion.div
+          className="text-xs absolute top-8 right-8 transform -rotate-6 text-gray-500"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-number-tag"
-          style={{
-            position: 'absolute',
-            top: '2rem',
-            right: '2rem',
-            transform: 'rotate(-4deg)',
-            fontSize: 'var(--type-xl)',
-            color: 'var(--zone-contact-accent-1)'
-          }}
         >
           005
         </motion.div>
 
-        {/* Title - CDG Item 1 */}
         <motion.div
-          className="cdg-grid-item-1"
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-cdg-black" style={{
-            color: 'var(--zone-contact-contrast)',
-            lineHeight: '0.85',
-            marginBottom: 'var(--space-21)',
-            fontSize: 'clamp(var(--type-6xl), 12vw, var(--type-9xl))'
-          }}>
+          <h1 className="text-9xl font-black leading-none text-black">
             CONT
             <br />
-            <span style={{ color: 'var(--zone-contact-accent-1)' }}>ACT</span>
+            <span className="text-slate-700">ACT</span>
           </h1>
         </motion.div>
 
-        {/* Subtitle - CDG Item 2 */}
         <motion.div
-          className="cdg-grid-item-2"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          style={{
-            backgroundColor: 'var(--margiela-paper)',
-            padding: 'var(--space-34)',
-            border: '2px solid var(--zone-contact-accent-2)',
-            transform: 'rotate(-1deg)'
-          }}
+          className="mt-16 bg-white p-12 border-2 border-slate-900 transform -rotate-1 max-w-2xl"
         >
-          <div className="text-white-label" style={{ marginBottom: 'var(--space-8)' }}>
+          <div className="text-xs tracking-widest mb-6 text-gray-500">
             PROFESSIONAL INQUIRIES ONLY
           </div>
 
-          <p className="text-heading-5" style={{
-            color: 'var(--margiela-graphite)',
-            fontWeight: 'var(--font-weight-light)',
-            lineHeight: 'var(--leading-relaxed)',
-            marginBottom: 'var(--space-13)'
-          }}>
+          <p className="text-2xl font-light text-gray-900 leading-relaxed mb-8">
             For collaboration, exhibition, and research inquiries.
             <br />
             We do not sell products.
           </p>
 
-          <div style={{
-            backgroundColor: 'var(--cdg-blood-red)',
-            color: 'white',
-            padding: 'var(--space-8)',
-            marginTop: 'var(--space-13)'
-          }}>
-            <p className="text-body-small" style={{ color: 'white' }}>
+          <div className="bg-red-600 text-white p-6">
+            <p className="text-sm">
               Note: Commercial product requests will not receive responses.
               This laboratory exists for experimentation, not commerce.
             </p>
@@ -131,238 +86,122 @@ export default function ContactPage() {
         </motion.div>
       </header>
 
-      {/* ==========================================================================
-         FORM SECTION - Broken Grid with Asymmetric Fields
-         ========================================================================== */}
-
-      <section style={{ padding: '4rem 2rem 8rem' }}>
-
+      {/* FORM SECTION */}
+      <section className="py-16 px-8 md:px-16 lg:px-24">
         {!isSubmitted ? (
           <motion.form
             onSubmit={handleSubmit}
-            className="broken-symmetry-right"
-            style={{
-              maxWidth: '1400px',
-              margin: '0 auto',
-              gap: 'var(--space-55)'
-            }}
+            className="max-w-5xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Left Column - Type & Organization */}
-            <div style={{
-              display: 'grid',
-              gap: 'var(--space-21)',
-              transform: 'rotate(-0.8deg)'
-            }}>
-              {/* Inquiry Type */}
-              <div>
-                <label className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  display: 'block',
-                  marginBottom: 'var(--space-5)'
-                }}>
-                  INQUIRY TYPE
-                </label>
-                <select
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'transparent',
-                    border: '2px solid var(--zone-contact-accent-2)',
-                    color: 'var(--margiela-graphite)',
-                    fontSize: 'var(--type-base)',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    transition: 'border-color var(--duration-normal)'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--zone-contact-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--zone-contact-accent-2)'}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Left Column */}
+              <div className="space-y-8 transform -rotate-1 bg-white p-8 border-2 border-gray-300">
+                {/* Inquiry Type */}
+                <div>
+                  <label className="text-xs tracking-widest text-gray-700 block mb-3">
+                    INQUIRY TYPE
+                  </label>
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                    className="w-full p-4 bg-transparent border-2 border-gray-300 text-gray-900 text-base focus:border-black outline-none transition-colors"
+                  >
+                    {inquiryTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Organization */}
+                <div>
+                  <label className="text-xs tracking-widest text-gray-700 block mb-3">
+                    ORGANIZATION / INSTITUTION
+                  </label>
+                  <input
+                    type="text"
+                    name="organization"
+                    value={formData.organization}
+                    onChange={handleChange}
+                    className="w-full p-4 bg-transparent border-2 border-gray-300 text-gray-900 text-base focus:border-black outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-black text-white p-8 transform rotate-1">
+                  <p className="text-xs tracking-widest mb-4">
+                    RESPONSE TIME
+                  </p>
+                  <p className="text-base">
+                    5-7 business days
+                    <br />
+                    High-resolution images available upon request
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-8 transform rotate-1 bg-white p-8 border-2 border-gray-300">
+                {/* Name */}
+                <div>
+                  <label className="text-xs tracking-widest text-gray-700 block mb-3">
+                    NAME
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-4 bg-transparent border-2 border-gray-300 text-gray-900 text-base focus:border-black outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="text-xs tracking-widest text-gray-700 block mb-3">
+                    EMAIL
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-4 bg-transparent border-2 border-gray-300 text-gray-900 text-base focus:border-black outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className="text-xs tracking-widest text-gray-700 block mb-3">
+                    MESSAGE
+                  </label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={6}
+                    className="w-full p-4 bg-transparent border-2 border-gray-300 text-gray-900 text-base focus:border-black outline-none resize-vertical transition-colors"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 0.98 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full p-6 bg-black text-white border-2 border-black text-base font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all"
                 >
-                  {inquiryTypes.map(type => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
+                  Submit Inquiry
+                </motion.button>
               </div>
-
-              {/* Organization */}
-              <div>
-                <label className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  display: 'block',
-                  marginBottom: 'var(--space-5)'
-                }}>
-                  ORGANIZATION / INSTITUTION
-                </label>
-                <input
-                  type="text"
-                  name="organization"
-                  value={formData.organization}
-                  onChange={handleChange}
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'transparent',
-                    border: '2px solid var(--zone-contact-accent-2)',
-                    color: 'var(--margiela-graphite)',
-                    fontSize: 'var(--type-base)',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    transition: 'border-color var(--duration-normal)'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--zone-contact-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--zone-contact-accent-2)'}
-                />
-              </div>
-
-              {/* Info Box */}
-              <div style={{
-                backgroundColor: 'var(--zone-contact-primary)',
-                color: 'var(--zone-contact-accent-1)',
-                padding: 'var(--space-21)',
-                transform: 'rotate(1deg)'
-              }}>
-                <p className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  marginBottom: 'var(--space-8)'
-                }}>
-                  RESPONSE TIME
-                </p>
-                <p className="text-body" style={{ color: 'var(--zone-contact-accent-1)' }}>
-                  5-7 business days
-                  <br />
-                  High-resolution images available upon request
-                </p>
-              </div>
-            </div>
-
-            {/* Right Column - Contact Info & Message */}
-            <div style={{
-              display: 'grid',
-              gap: 'var(--space-21)',
-              transform: 'rotate(0.5deg)'
-            }}>
-              {/* Name */}
-              <div>
-                <label className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  display: 'block',
-                  marginBottom: 'var(--space-5)'
-                }}>
-                  NAME
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'transparent',
-                    border: '2px solid var(--zone-contact-accent-2)',
-                    color: 'var(--margiela-graphite)',
-                    fontSize: 'var(--type-base)',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    transition: 'border-color var(--duration-normal)'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--zone-contact-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--zone-contact-accent-2)'}
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  display: 'block',
-                  marginBottom: 'var(--space-5)'
-                }}>
-                  EMAIL
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'transparent',
-                    border: '2px solid var(--zone-contact-accent-2)',
-                    color: 'var(--margiela-graphite)',
-                    fontSize: 'var(--type-base)',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    transition: 'border-color var(--duration-normal)'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--zone-contact-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--zone-contact-accent-2)'}
-                />
-              </div>
-
-              {/* Message */}
-              <div>
-                <label className="text-label" style={{
-                  color: 'var(--zone-contact-accent-1)',
-                  display: 'block',
-                  marginBottom: 'var(--space-5)'
-                }}>
-                  MESSAGE
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={8}
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-8)',
-                    backgroundColor: 'transparent',
-                    border: '2px solid var(--zone-contact-accent-2)',
-                    color: 'var(--margiela-graphite)',
-                    fontSize: 'var(--type-base)',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    resize: 'vertical',
-                    transition: 'border-color var(--duration-normal)'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--zone-contact-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--zone-contact-accent-2)'}
-                />
-              </div>
-
-              {/* Submit Button */}
-              <motion.button
-                type="submit"
-                whileHover={{ scale: 0.98 }}
-                whileTap={{ scale: 0.95 }}
-                style={{
-                  width: '100%',
-                  padding: 'var(--space-13)',
-                  backgroundColor: 'var(--zone-contact-primary)',
-                  color: 'var(--zone-contact-accent-1)',
-                  border: '2px solid var(--zone-contact-primary)',
-                  fontSize: 'var(--type-base)',
-                  fontWeight: 'var(--font-weight-bold)',
-                  letterSpacing: 'var(--tracking-wider)',
-                  cursor: 'pointer',
-                  transition: 'all var(--duration-normal)',
-                  textTransform: 'uppercase'
-                }}
-              >
-                Submit Inquiry
-              </motion.button>
             </div>
           </motion.form>
 
@@ -372,139 +211,83 @@ export default function ContactPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            style={{
-              maxWidth: '800px',
-              margin: '0 auto',
-              textAlign: 'center',
-              padding: 'var(--space-55)',
-              backgroundColor: 'var(--margiela-snow)',
-              border: '4px solid var(--lab-reaction-green)',
-              transform: 'rotate(-1deg)'
-            }}
+            className="max-w-3xl mx-auto text-center p-16 bg-white border-4 border-green-600 transform -rotate-1"
           >
-            <div style={{
-              width: '80px',
-              height: '80px',
-              backgroundColor: 'var(--lab-reaction-green)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto var(--space-21)'
-            }}>
+            <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                 <path d="M5 13l4 4L19 7" />
               </svg>
             </div>
 
-            <h2 className="text-display-3" style={{
-              color: 'var(--margiela-void)',
-              marginBottom: 'var(--space-13)'
-            }}>
+            <h2 className="text-5xl font-black text-black mb-8">
               Inquiry Received
             </h2>
 
-            <p className="text-body" style={{
-              color: 'var(--margiela-steel)',
-              marginBottom: 'var(--space-21)'
-            }}>
+            <p className="text-base text-gray-700 mb-8">
               We will review your submission and respond if appropriate.
               Commercial requests will not receive responses.
             </p>
 
-            <div className="text-white-label" style={{ display: 'inline-block' }}>
+            <div className="text-xs tracking-widest bg-black text-white px-6 py-3 inline-block">
               RESPONSE WITHIN 5-7 DAYS
             </div>
           </motion.div>
         )}
       </section>
 
-      {/* ==========================================================================
-         CONTACT INFORMATION - Sacai Grid
-         ========================================================================== */}
-
-      <section className="sacai-grid" style={{ padding: '8rem 2rem' }}>
-        <div className="sacai-grid-layer-1">
-          <span className="text-number-tag">006</span>
-          <h2 className="text-display-3" style={{
-            color: 'var(--margiela-void)',
-            marginTop: 'var(--space-8)',
-            marginBottom: 'var(--space-13)'
-          }}>
-            Direct Contact
-          </h2>
-          <div style={{ display: 'grid', gap: 'var(--space-13)' }}>
-            <div>
-              <p className="text-label" style={{
-                color: 'var(--zone-contact-accent-1)',
-                marginBottom: 'var(--space-3)'
-              }}>
-                GENERAL INQUIRIES
-              </p>
-              <p className="text-body" style={{ color: 'var(--margiela-graphite)' }}>
-                inquiries@cinchlab.com
-              </p>
-            </div>
-            <div>
-              <p className="text-label" style={{
-                color: 'var(--zone-contact-accent-1)',
-                marginBottom: 'var(--space-3)'
-              }}>
-                PRESS
-              </p>
-              <p className="text-body" style={{ color: 'var(--margiela-graphite)' }}>
-                press@cinchlab.com
-              </p>
+      {/* CONTACT INFORMATION */}
+      <section className="py-24 px-8 md:px-16 lg:px-24 bg-white">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
+          <div className="transform -rotate-1 bg-gray-100 p-8">
+            <span className="text-xs text-gray-500">006</span>
+            <h2 className="text-3xl font-bold text-black my-6">
+              Direct Contact
+            </h2>
+            <div className="space-y-6">
+              <div>
+                <p className="text-xs tracking-widest text-gray-600 mb-2">
+                  GENERAL INQUIRIES
+                </p>
+                <p className="text-base text-black">
+                  inquiries@cinchlab.com
+                </p>
+              </div>
+              <div>
+                <p className="text-xs tracking-widest text-gray-600 mb-2">
+                  PRESS
+                </p>
+                <p className="text-base text-black">
+                  press@cinchlab.com
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="sacai-grid-layer-2" style={{
-          backgroundColor: 'var(--zone-contact-primary)',
-          color: 'var(--zone-contact-accent-1)'
-        }}>
-          <p className="text-label" style={{
-            color: 'var(--zone-contact-accent-1)',
-            marginBottom: 'var(--space-8)'
-          }}>
-            LOCATION
-          </p>
-          <p className="text-heading-5" style={{
-            color: 'var(--zone-contact-accent-1)',
-            fontWeight: 'var(--font-weight-regular)'
-          }}>
-            Seoul, South Korea
-            <br />
-            <span className="text-body" style={{ color: 'var(--zone-contact-accent-1)' }}>
+          <div className="bg-black text-white p-8 transform rotate-1">
+            <p className="text-xs tracking-widest mb-4">
+              LOCATION
+            </p>
+            <p className="text-2xl font-bold mb-2">
+              Seoul, South Korea
+            </p>
+            <p className="text-sm text-gray-400">
               Laboratory visits by appointment
-            </span>
-          </p>
-        </div>
+            </p>
+          </div>
 
-        <div className="sacai-grid-layer-3" style={{
-          backgroundColor: 'var(--zone-contact-accent-1)',
-          color: 'var(--margiela-graphite)'
-        }}>
-          <p className="text-heading-6" style={{ color: 'var(--margiela-graphite)' }}>
-            COLLABORATION
-            <br />
-            NOT SALES
-          </p>
+          <div className="bg-slate-700 text-white p-8 transform -rotate-1">
+            <p className="text-3xl font-black">
+              COLLABORATION
+              <br />
+              NOT SALES
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ==========================================================================
-         FOOTER
-         ========================================================================== */}
-
-      <footer style={{
-        padding: 'var(--space-34) var(--space-21)',
-        borderTop: '2px solid var(--zone-contact-accent-2)',
-        textAlign: 'center',
-        backgroundColor: 'var(--margiela-void)',
-        color: 'white'
-      }}>
-        <p className="text-label" style={{ color: 'var(--zone-contact-accent-1)' }}>
+      {/* FOOTER */}
+      <footer className="border-t-2 border-gray-900 py-16 px-8 bg-black text-white text-center">
+        <p className="text-sm text-gray-500">
           CINCH LAB • PROFESSIONAL INQUIRIES ONLY • NO COMMERCE
         </p>
       </footer>
