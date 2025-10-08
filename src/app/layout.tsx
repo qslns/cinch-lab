@@ -6,8 +6,9 @@ import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
 import LenisProvider from '@/hooks/useLenis'
-import { CipherProvider } from '@/contexts/CipherContext'
-import CipherToggle from '@/components/CipherToggle'
+// Temporarily disabled: CipherProvider causes runtime error
+// import { CipherProvider } from '@/contexts/CipherContext'
+// import CipherToggle from '@/components/CipherToggle'
 import '@/styles/globals.css'
 import '@/styles/design-system-foundation.css'
 import '@/styles/asymmetric-grids.css'
@@ -110,21 +111,18 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <CipherProvider>
-          <LenisProvider>
-            <ScrollProgress />
-            <SkipToMain />
-            <KeyboardNavigationIndicator />
-            <DeconstructivistNav />
-            <CipherToggle />
-            <main id="main-content" className="pt-20">
-              {children}
-            </main>
-            <PWAInstaller />
-            <PWAUpdateNotification />
-            <BackToTop />
-          </LenisProvider>
-        </CipherProvider>
+        <LenisProvider>
+          <ScrollProgress />
+          <SkipToMain />
+          <KeyboardNavigationIndicator />
+          <DeconstructivistNav />
+          <main id="main-content" className="pt-20">
+            {children}
+          </main>
+          <PWAInstaller />
+          <PWAUpdateNotification />
+          <BackToTop />
+        </LenisProvider>
       </body>
     </html>
   )

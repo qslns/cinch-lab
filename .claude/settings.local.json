@@ -16,7 +16,8 @@
       "Bash(npm run typecheck:*)",
       "Bash(dir srclib)",
       "Bash(test:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
