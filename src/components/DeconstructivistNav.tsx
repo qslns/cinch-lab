@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import SearchModal from './SearchModal'
 
 interface NavSection {
   title: string
@@ -53,6 +54,7 @@ export default function DeconstructivistNav() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [hoveredSection, setHoveredSection] = useState<number | null>(null)
   const { scrollY } = useScroll()
 
@@ -72,7 +74,21 @@ export default function DeconstructivistNav() {
   useEffect(() => {
     setIsMegaMenuOpen(false)
     setIsMobileMenuOpen(false)
+    setIsSearchOpen(false)
   }, [pathname])
+
+  // Keyboard shortcut for search (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setIsSearchOpen(true)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <>
@@ -177,6 +193,21 @@ export default function DeconstructivistNav() {
                   </Link>
                 )
               })}
+
+              {/* Search Button */}
+              <motion.button
+                onClick={() => setIsSearchOpen(true)}
+                className="relative group"
+                whileHover={{ scale: 1.02 }}
+                aria-label="Open search"
+              >
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-margiela-steel group-hover:text-margiela-carbon transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <span className="text-xs text-margiela-aluminum group-hover:text-margiela-steel transition-colors">⌘K</span>
+                </div>
+              </motion.button>
 
               {/* Contact - Sacai Orange Accent */}
               <Link
@@ -446,6 +477,9 @@ export default function DeconstructivistNav() {
 
       {/* Spacer to prevent content overlap */}
       <div className="h-20" />
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   )
 }

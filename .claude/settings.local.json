@@ -12,7 +12,10 @@
       "Bash(npm run dev:*)",
       "Bash(npx sanity:*)",
       "Bash(cat:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(dir srclib)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

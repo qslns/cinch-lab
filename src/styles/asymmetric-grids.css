@@ -480,6 +480,128 @@
 }
 
 /* ------------------------------------------------------------------
+   UTILITY CLASSES FOR COMPONENTS
+   ------------------------------------------------------------------ */
+
+/* Exposed Seam Effect */
+.exposed-seam {
+  position: relative;
+}
+
+.exposed-seam::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--margiela-exposed-seam) 0px,
+    var(--margiela-exposed-seam) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.exposed-seam-vertical {
+  position: relative;
+}
+
+.exposed-seam-vertical::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--margiela-exposed-seam) 0px,
+    var(--margiela-exposed-seam) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+/* Sacai Grid Layer - for individual elements */
+.sacai-grid-layer {
+  position: relative;
+  padding: var(--space-13);
+}
+
+/* Broken Symmetry - single container version */
+.broken-symmetry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-13);
+  position: relative;
+}
+
+.broken-symmetry > *:nth-child(odd) {
+  justify-self: start;
+  transform: rotate(var(--rotate-subtle-left));
+}
+
+.broken-symmetry > *:nth-child(even) {
+  justify-self: end;
+  transform: rotate(var(--rotate-subtle-right));
+}
+
+/* Margiela Number Tag */
+.margiela-number-tag {
+  font-family: 'Courier New', monospace;
+  font-size: var(--type-2xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--margiela-aluminum);
+  font-weight: var(--font-weight-regular);
+  display: inline-block;
+}
+
+/* Margiela Tag (Label Style) */
+.margiela-tag {
+  font-family: 'Courier New', monospace;
+  font-size: var(--type-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-semibold);
+  display: inline-block;
+}
+
+/* Grid Item Size Variants */
+.grid-item-large {
+  grid-column: span 2;
+}
+
+.grid-item-medium {
+  grid-column: span 1;
+}
+
+.grid-item-small {
+  grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+  .grid-item-large {
+    grid-column: span 3;
+  }
+
+  .grid-item-medium {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-item-large {
+    grid-column: span 4;
+  }
+
+  .grid-item-medium {
+    grid-column: span 2;
+  }
+}
+
+/* ------------------------------------------------------------------
    ACCESSIBILITY
    ------------------------------------------------------------------ */
 
