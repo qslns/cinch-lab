@@ -61,21 +61,21 @@ export default function LabPage() {
     : experiments.filter(exp => exp.category === selectedCategory)
 
   const statusColors = {
-    IN_PROGRESS: 'var(--sacai-burnt-orange)',
-    TESTING: 'var(--sacai-layer-navy)',
-    COMPLETE: 'var(--margiela-sage)',
-    FAILED: 'var(--cdg-blood-red)'
+    IN_PROGRESS: '#CC5500',
+    TESTING: '#1F2937',
+    COMPLETE: '#9CAF88',
+    FAILED: '#DC143C'
   }
 
   const statusClasses = {
-    IN_PROGRESS: 'bg-[var(--sacai-burnt-orange)]',
-    TESTING: 'bg-[var(--sacai-layer-navy)]',
-    COMPLETE: 'bg-[var(--margiela-sage)]',
-    FAILED: 'bg-[var(--cdg-blood-red)]'
+    IN_PROGRESS: 'bg-sacai-burnt-orange',
+    TESTING: 'bg-sacai-layer-navy',
+    COMPLETE: 'bg-sage',
+    FAILED: 'bg-cdg-blood-red'
   }
 
   return (
-    <div className="min-h-screen bg-[var(--margiela-off-white)]">
+    <div className="min-h-screen bg-margiela-off-white">
 
       {/* HEADER with hybrid-grid */}
       <header className="hybrid-grid pt-32 pb-16 px-8 md:px-16 lg:px-24">
@@ -89,12 +89,12 @@ export default function LabPage() {
             00 • LABORATORY • TECHNICAL RESEARCH DIVISION
           </div>
 
-          <h1 className="text-display-1 font-extralight text-[var(--margiela-carbon)] rotate-2">
+          <h1 className="text-display-1 font-extralight text-margiela-carbon rotate-2">
             <span className="block">LABOR</span>
             <span className="block ml-24">ATORY</span>
           </h1>
 
-          <p className="text-body-large mt-8 max-w-2xl text-[var(--margiela-carbon)]">
+          <p className="text-body-large mt-8 max-w-2xl text-margiela-carbon">
             Pattern Deconstruction • Material Innovation • Process Documentation
           </p>
         </motion.div>
@@ -103,9 +103,9 @@ export default function LabPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="grid-item-small absolute top-8 right-8 text-xs text-right text-[var(--margiela-slate)]"
+          className="grid-item-small absolute top-8 right-8 text-xs text-right text-margiela-slate"
         >
-          <div className="exposed-seam-vertical p-4 bg-[var(--margiela-white)]">
+          <div className="exposed-seam-vertical p-4 bg-white">
             <div>{filteredExperiments.filter(e => e.status === 'IN_PROGRESS').length} ACTIVE</div>
             <div className="mt-1">{filteredExperiments.filter(e => e.status === 'TESTING').length} TESTING</div>
             <div className="mt-1">{filteredExperiments.filter(e => e.status === 'COMPLETE').length} COMPLETE</div>
@@ -125,8 +125,8 @@ export default function LabPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`text-sm px-4 py-2 border-2 transition-all duration-300 hover:scale-105 ${
                 selectedCategory === cat
-                  ? 'bg-[var(--sacai-burnt-orange)] border-[var(--sacai-burnt-orange)] text-[var(--margiela-white)]'
-                  : 'bg-[var(--margiela-white)] border-[var(--margiela-slate)] text-[var(--margiela-carbon)] hover:border-[var(--sacai-burnt-orange)]'
+                  ? 'bg-sacai-burnt-orange border-sacai-burnt-orange text-white'
+                  : 'bg-white border-margiela-slate text-margiela-carbon hover:border-sacai-burnt-orange'
               }`}
             >
               {cat}
@@ -154,7 +154,7 @@ export default function LabPage() {
               whileHover={{ scale: 1.03 }}
               onClick={() => setSelectedExperiment(exp)}
             >
-              <div className="h-full min-h-80 p-8 border-2 border-[var(--margiela-slate)] bg-[var(--margiela-white)] cursor-pointer hover:border-[var(--sacai-burnt-orange)] hover:shadow-2xl transition-all exposed-seam">
+              <div className="h-full min-h-80 p-8 border-2 border-margiela-slate bg-white cursor-pointer hover:border-sacai-burnt-orange hover:shadow-2xl transition-all exposed-seam">
                 {/* Status Indicator */}
                 <div className="flex items-center gap-2 mb-4">
                   <div
@@ -171,11 +171,11 @@ export default function LabPage() {
 
                 {/* Content */}
                 <div className="mt-8">
-                  <div className="text-xs tracking-widest mb-3 text-[var(--sacai-burnt-orange)]">
+                  <div className="text-xs tracking-widest mb-3 text-sacai-burnt-orange">
                     {exp.category}
                   </div>
 
-                  <h3 className="text-heading-2 font-light mb-4 text-[var(--margiela-carbon)]">
+                  <h3 className="text-heading-2 font-light mb-4 text-margiela-carbon">
                     {exp.title}
                   </h3>
 
@@ -188,7 +188,7 @@ export default function LabPage() {
                     {exp.techniques.slice(0, 2).map((tech, j) => (
                       <span
                         key={j}
-                        className="text-xs px-2 py-1 bg-[var(--margiela-off-white)] text-[var(--margiela-carbon)]"
+                        className="text-xs px-2 py-1 bg-margiela-off-white text-margiela-carbon"
                       >
                         {tech}
                       </span>
@@ -218,20 +218,20 @@ export default function LabPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[var(--cdg-void)] bg-opacity-90"
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-cdg-void bg-opacity-90"
             onClick={() => setSelectedExperiment(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
-              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto p-12 bg-[var(--margiela-white)] transform -rotate-1 sacai-grid-layer"
+              className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto p-12 bg-white transform -rotate-1 sacai-grid-layer"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedExperiment(null)}
-                className="absolute top-6 right-6 text-4xl text-[var(--margiela-slate)] hover:text-[var(--margiela-carbon)] transition-colors"
+                className="absolute top-6 right-6 text-4xl text-margiela-slate hover:text-margiela-carbon transition-colors"
               >
                 ×
               </button>
@@ -242,12 +242,11 @@ export default function LabPage() {
                   EXP_{selectedExperiment.id}
                 </div>
                 <div
-                  className={`text-xs tracking-widest mb-4 inline-block px-3 py-1 text-[var(--margiela-white)] ${statusClasses[selectedExperiment.status]}`}
-                  style={{ backgroundColor: statusColors[selectedExperiment.status] }}
+                  className={`text-xs tracking-widest mb-4 inline-block px-3 py-1 text-white ${statusClasses[selectedExperiment.status]}`}
                 >
                   {selectedExperiment.status.replace('_', ' ')} • {selectedExperiment.category}
                 </div>
-                <h2 className="text-heading-1 font-light mb-4 text-[var(--margiela-carbon)]">
+                <h2 className="text-heading-1 font-light mb-4 text-margiela-carbon">
                   {selectedExperiment.title}
                 </h2>
                 <p className="text-body-large opacity-70">
@@ -258,14 +257,14 @@ export default function LabPage() {
               {/* Details Grid with sacai layers */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 {/* Techniques */}
-                <div className="transform -rotate-1 bg-[var(--sacai-burnt-orange)] p-6 text-[var(--margiela-white)] sacai-grid-layer">
+                <div className="transform -rotate-1 bg-sacai-burnt-orange p-6 text-white sacai-grid-layer">
                   <div className="text-xs tracking-widest mb-4">
                     TECHNIQUES APPLIED
                   </div>
                   <ul className="space-y-2">
                     {selectedExperiment.techniques.map((tech, i) => (
                       <li key={i} className="text-base flex items-start gap-2">
-                        <span className="text-[var(--cdg-blood-red)]">→</span>
+                        <span className="text-cdg-blood-red">→</span>
                         {tech}
                       </li>
                     ))}
@@ -273,14 +272,14 @@ export default function LabPage() {
                 </div>
 
                 {/* Materials */}
-                <div className="transform rotate-1 bg-[var(--margiela-sage)] p-6 text-[var(--margiela-white)] sacai-grid-layer">
+                <div className="transform rotate-1 bg-sage p-6 text-white sacai-grid-layer">
                   <div className="text-xs tracking-widest mb-4">
                     MATERIALS USED
                   </div>
                   <ul className="space-y-2">
                     {selectedExperiment.materials.map((mat, i) => (
                       <li key={i} className="text-base flex items-start gap-2">
-                        <span className="text-[var(--sacai-burnt-orange)]">→</span>
+                        <span className="text-sacai-burnt-orange">→</span>
                         {mat}
                       </li>
                     ))}
@@ -290,8 +289,8 @@ export default function LabPage() {
 
               {/* Result */}
               {selectedExperiment.result && (
-                <div className="p-6 border-l-4 border-[var(--cdg-blood-red)] bg-[var(--margiela-off-white)]">
-                  <div className="text-xs tracking-widest mb-2 text-[var(--cdg-blood-red)]">
+                <div className="p-6 border-l-4 border-cdg-blood-red bg-margiela-off-white">
+                  <div className="text-xs tracking-widest mb-2 text-cdg-blood-red">
                     RESULT
                   </div>
                   <p className="text-base">{selectedExperiment.result}</p>
@@ -308,7 +307,7 @@ export default function LabPage() {
       </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="border-t border-[var(--margiela-slate)] py-12 px-8 md:px-16 lg:px-24 mt-32 bg-[var(--margiela-white)]">
+      <footer className="border-t border-margiela-slate py-12 px-8 md:px-16 lg:px-24 mt-32 bg-white">
         <div className="text-sm opacity-50 text-center">
           CINCH LAB • TECHNICAL RESEARCH DIVISION • NO COMMERCIAL APPLICATION
         </div>

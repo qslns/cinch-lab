@@ -36,12 +36,12 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--margiela-off-white)]">
+    <div className="min-h-screen bg-margiela-off-white">
 
       {/* HEADER with cdg-grid minimal layout */}
       <header className="cdg-grid pt-32 pb-16 px-8 md:px-16 lg:px-24">
         <motion.div
-          className="text-xs absolute top-8 right-8 transform -rotate-6 text-[var(--margiela-slate)]"
+          className="text-xs absolute top-8 right-8 transform -rotate-6 text-margiela-slate"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
@@ -55,10 +55,10 @@ export default function ContactPage() {
           transition={{ duration: 1 }}
           className="grid-item-large"
         >
-          <h1 className="text-display-1 font-black leading-none text-[var(--margiela-carbon)]">
+          <h1 className="text-display-1 font-black leading-none text-margiela-carbon">
             CONT
             <br />
-            <span className="text-[var(--sacai-layer-navy)]">ACT</span>
+            <span className="text-sacai-layer-navy">ACT</span>
           </h1>
         </motion.div>
 
@@ -66,19 +66,19 @@ export default function ContactPage() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mt-16 bg-[var(--margiela-white)] p-12 border-2 border-[var(--margiela-carbon)] transform -rotate-1 max-w-2xl exposed-seam"
+          className="mt-16 bg-white p-12 border-2 border-margiela-carbon transform -rotate-1 max-w-2xl exposed-seam"
         >
-          <div className="margiela-tag mb-6 text-[var(--margiela-slate)]">
+          <div className="margiela-tag mb-6 text-margiela-slate">
             PROFESSIONAL INQUIRIES ONLY
           </div>
 
-          <p className="text-heading-3 font-light text-[var(--margiela-carbon)] leading-relaxed mb-8">
+          <p className="text-heading-3 font-light text-margiela-carbon leading-relaxed mb-8">
             For collaboration, exhibition, and research inquiries.
             <br />
             We do not sell products.
           </p>
 
-          <div className="bg-[var(--cdg-blood-red)] text-[var(--margiela-white)] p-6">
+          <div className="bg-cdg-blood-red text-white p-6">
             <p className="text-sm">
               Note: Commercial product requests will not receive responses.
               This laboratory exists for experimentation, not commerce.
@@ -99,17 +99,17 @@ export default function ContactPage() {
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Left Column - Rotated */}
-              <div className="space-y-8 transform -rotate-1 bg-[var(--margiela-white)] p-8 border-2 border-[var(--margiela-slate)] exposed-seam">
+              <div className="space-y-8 transform -rotate-1 bg-white p-8 border-2 border-margiela-slate exposed-seam">
                 {/* Inquiry Type */}
                 <div>
-                  <label className="margiela-tag text-[var(--margiela-carbon)] block mb-3">
+                  <label className="margiela-tag text-margiela-carbon block mb-3">
                     INQUIRY TYPE
                   </label>
                   <select
                     name="type"
                     value={formData.type}
                     onChange={handleChange}
-                    className="w-full p-4 bg-transparent border-2 border-[var(--margiela-slate)] text-[var(--margiela-carbon)] text-base focus:border-[var(--margiela-carbon)] outline-none transition-colors"
+                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
                   >
                     {inquiryTypes.map(type => (
                       <option key={type.value} value={type.value}>
@@ -121,7 +121,7 @@ export default function ContactPage() {
 
                 {/* Organization */}
                 <div>
-                  <label className="margiela-tag text-[var(--margiela-carbon)] block mb-3">
+                  <label className="margiela-tag text-margiela-carbon block mb-3">
                     ORGANIZATION / INSTITUTION
                   </label>
                   <input
@@ -129,12 +129,12 @@ export default function ContactPage() {
                     name="organization"
                     value={formData.organization}
                     onChange={handleChange}
-                    className="w-full p-4 bg-transparent border-2 border-[var(--margiela-slate)] text-[var(--margiela-carbon)] text-base focus:border-[var(--margiela-carbon)] outline-none transition-colors"
+                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
                   />
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-[var(--sacai-layer-navy)] text-[var(--margiela-white)] p-8 transform rotate-1 sacai-grid-layer">
+                <div className="bg-sacai-layer-navy text-white p-8 transform rotate-1 sacai-grid-layer">
                   <p className="margiela-tag mb-4">
                     RESPONSE TIME
                   </p>
@@ -147,10 +147,10 @@ export default function ContactPage() {
               </div>
 
               {/* Right Column - Rotated Opposite */}
-              <div className="space-y-8 transform rotate-1 bg-[var(--margiela-white)] p-8 border-2 border-[var(--margiela-slate)] exposed-seam-vertical">
+              <div className="space-y-8 transform rotate-1 bg-white p-8 border-2 border-margiela-slate exposed-seam-vertical">
                 {/* Name */}
                 <div>
-                  <label className="margiela-tag text-[var(--margiela-carbon)] block mb-3">
+                  <label className="margiela-tag text-margiela-carbon block mb-3">
                     NAME
                   </label>
                   <input
@@ -159,13 +159,13 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full p-4 bg-transparent border-2 border-[var(--margiela-slate)] text-[var(--margiela-carbon)] text-base focus:border-[var(--margiela-carbon)] outline-none transition-colors"
+                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="margiela-tag text-[var(--margiela-carbon)] block mb-3">
+                  <label className="margiela-tag text-margiela-carbon block mb-3">
                     EMAIL
                   </label>
                   <input
@@ -174,13 +174,13 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full p-4 bg-transparent border-2 border-[var(--margiela-slate)] text-[var(--margiela-carbon)] text-base focus:border-[var(--margiela-carbon)] outline-none transition-colors"
+                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
                   />
                 </div>
 
                 {/* Message */}
                 <div>
-                  <label className="margiela-tag text-[var(--margiela-carbon)] block mb-3">
+                  <label className="margiela-tag text-margiela-carbon block mb-3">
                     MESSAGE
                   </label>
                   <textarea
@@ -189,7 +189,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full p-4 bg-transparent border-2 border-[var(--margiela-slate)] text-[var(--margiela-carbon)] text-base focus:border-[var(--margiela-carbon)] outline-none resize-vertical transition-colors"
+                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none resize-vertical transition-colors"
                   />
                 </div>
 
@@ -198,7 +198,7 @@ export default function ContactPage() {
                   type="submit"
                   whileHover={{ scale: 0.98 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full p-6 bg-[var(--margiela-carbon)] text-[var(--margiela-white)] border-2 border-[var(--margiela-carbon)] text-base font-bold tracking-widest uppercase hover:bg-[var(--margiela-white)] hover:text-[var(--margiela-carbon)] transition-all"
+                  className="w-full p-6 bg-margiela-carbon text-white border-2 border-margiela-carbon text-base font-bold tracking-widest uppercase hover:bg-white hover:text-margiela-carbon transition-all"
                 >
                   Submit Inquiry
                 </motion.button>
@@ -212,24 +212,24 @@ export default function ContactPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center p-16 bg-[var(--margiela-white)] border-4 border-[var(--margiela-sage)] transform -rotate-1 exposed-seam"
+            className="max-w-3xl mx-auto text-center p-16 bg-white border-4 border-sage transform -rotate-1 exposed-seam"
           >
-            <div className="w-20 h-20 bg-[var(--margiela-sage)] rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-20 h-20 bg-sage rounded-full flex items-center justify-center mx-auto mb-8">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                 <path d="M5 13l4 4L19 7" />
               </svg>
             </div>
 
-            <h2 className="text-heading-1 font-black text-[var(--margiela-carbon)] mb-8">
+            <h2 className="text-heading-1 font-black text-margiela-carbon mb-8">
               Inquiry Received
             </h2>
 
-            <p className="text-base text-[var(--margiela-carbon)] mb-8">
+            <p className="text-base text-margiela-carbon mb-8">
               We will review your submission and respond if appropriate.
               Commercial requests will not receive responses.
             </p>
 
-            <div className="margiela-tag bg-[var(--margiela-carbon)] text-[var(--margiela-white)] px-6 py-3 inline-block">
+            <div className="margiela-tag bg-margiela-carbon text-white px-6 py-3 inline-block">
               RESPONSE WITHIN 5-7 DAYS
             </div>
           </motion.div>
@@ -237,46 +237,46 @@ export default function ContactPage() {
       </section>
 
       {/* CONTACT INFORMATION - Asymmetric Layout */}
-      <section className="py-24 px-8 md:px-16 lg:px-24 bg-[var(--margiela-white)]">
+      <section className="py-24 px-8 md:px-16 lg:px-24 bg-white">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          <div className="transform -rotate-1 bg-[var(--margiela-off-white)] p-8 exposed-seam-vertical">
-            <span className="margiela-number-tag text-[var(--margiela-slate)]">06</span>
-            <h2 className="text-heading-2 font-bold text-[var(--margiela-carbon)] my-6">
+          <div className="transform -rotate-1 bg-margiela-off-white p-8 exposed-seam-vertical">
+            <span className="margiela-number-tag text-margiela-slate">06</span>
+            <h2 className="text-heading-2 font-bold text-margiela-carbon my-6">
               Direct Contact
             </h2>
             <div className="space-y-6">
               <div>
-                <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
+                <p className="margiela-tag text-margiela-slate mb-2">
                   GENERAL INQUIRIES
                 </p>
-                <p className="text-base text-[var(--margiela-carbon)]">
+                <p className="text-base text-margiela-carbon">
                   inquiries@cinchlab.com
                 </p>
               </div>
               <div>
-                <p className="margiela-tag text-[var(--margiela-slate)] mb-2">
+                <p className="margiela-tag text-margiela-slate mb-2">
                   PRESS
                 </p>
-                <p className="text-base text-[var(--margiela-carbon)]">
+                <p className="text-base text-margiela-carbon">
                   press@cinchlab.com
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-[var(--sacai-layer-navy)] text-[var(--margiela-white)] p-8 transform rotate-1 sacai-grid-layer">
+          <div className="bg-sacai-layer-navy text-white p-8 transform rotate-1 sacai-grid-layer">
             <p className="margiela-tag mb-4">
               LOCATION
             </p>
             <p className="text-heading-3 font-bold mb-2">
               Seoul, South Korea
             </p>
-            <p className="text-sm text-[var(--margiela-off-white)]">
+            <p className="text-sm text-margiela-off-white">
               Laboratory visits by appointment
             </p>
           </div>
 
-          <div className="bg-[var(--margiela-carbon)] text-[var(--margiela-white)] p-8 transform -rotate-1 exposed-seam">
+          <div className="bg-margiela-carbon text-white p-8 transform -rotate-1 exposed-seam">
             <p className="text-heading-2 font-black">
               COLLABORATION
               <br />
@@ -287,8 +287,8 @@ export default function ContactPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t-2 border-[var(--margiela-carbon)] py-16 px-8 bg-[var(--cdg-void)] text-[var(--margiela-white)] text-center">
-        <p className="text-sm text-[var(--margiela-slate)]">
+      <footer className="border-t-2 border-margiela-carbon py-16 px-8 bg-cdg-void text-white text-center">
+        <p className="text-sm text-margiela-slate">
           CINCH LAB • PROFESSIONAL INQUIRIES ONLY • NO COMMERCE
         </p>
       </footer>

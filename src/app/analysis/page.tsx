@@ -59,21 +59,21 @@ export default function AnalysisPage() {
   const [selectedAnalysis, setSelectedAnalysis] = useState<BrandAnalysis | null>(null)
 
   const verdictColors = {
-    GENIUS: { bg: 'var(--cdg-blood-red)', text: 'text-[var(--cdg-blood-red)]' },
-    PROGRESSIVE: { bg: 'var(--sacai-burnt-orange)', text: 'text-[var(--sacai-burnt-orange)]' },
-    ETERNAL: { bg: 'var(--margiela-carbon)', text: 'text-[var(--margiela-carbon)]' },
-    REFINED: { bg: 'var(--sacai-layer-navy)', text: 'text-[var(--sacai-layer-navy)]' },
-    INTELLIGENT: { bg: 'var(--margiela-sage)', text: 'text-[var(--margiela-sage)]' },
-    COMMERCIAL: { bg: 'var(--margiela-slate)', text: 'text-[var(--margiela-slate)]' }
+    GENIUS: { bg: '#DC143C', text: 'text-cdg-blood-red' },
+    PROGRESSIVE: { bg: '#CC5500', text: 'text-sacai-burnt-orange' },
+    ETERNAL: { bg: '#0A0908', text: 'text-margiela-carbon' },
+    REFINED: { bg: '#1F2937', text: 'text-sacai-layer-navy' },
+    INTELLIGENT: { bg: '#9CAF88', text: 'text-sage' },
+    COMMERCIAL: { bg: '#708090', text: 'text-margiela-slate' }
   }
 
   return (
-    <div className="min-h-screen bg-[var(--margiela-off-white)]">
+    <div className="min-h-screen bg-margiela-off-white">
 
       {/* HEADER with exposed-grid */}
       <header className="relative pt-32 pb-16 px-8 md:px-16 lg:px-24 exposed-grid">
         <motion.div
-          className="text-xs absolute top-8 right-8 transform rotate-3 text-[var(--margiela-slate)]"
+          className="text-xs absolute top-8 right-8 transform rotate-3 text-margiela-slate"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
@@ -87,16 +87,16 @@ export default function AnalysisPage() {
           transition={{ duration: 0.8 }}
           className="transform -rotate-1"
         >
-          <h1 className="text-display-1 font-black text-[var(--margiela-carbon)] leading-none">
+          <h1 className="text-display-1 font-black text-margiela-carbon leading-none">
             ANALYSIS
           </h1>
 
-          <p className="text-heading-2 text-[var(--margiela-carbon)] font-light max-w-3xl mt-8">
+          <p className="text-heading-2 text-margiela-carbon font-light max-w-3xl mt-8">
             Honest critique of contemporary fashion. No brand is sacred.
             We analyze, dissect, and judge without mercy or commercial bias.
           </p>
 
-          <div className="margiela-tag mt-8 inline-block bg-[var(--margiela-white)] px-4 py-2">
+          <div className="margiela-tag mt-8 inline-block bg-white px-4 py-2">
             CRITICAL PERSPECTIVE
           </div>
         </motion.div>
@@ -117,7 +117,7 @@ export default function AnalysisPage() {
               transition={{ delay: index * 0.15, duration: 0.6 }}
               whileHover={{ scale: 1.03, rotate: 0 }}
               onClick={() => setSelectedAnalysis(analysis)}
-              className={`transform ${rotations[index]} bg-[var(--margiela-white)] p-12 border-2 border-[var(--margiela-slate)] cursor-pointer shadow-xl hover:shadow-3xl hover:border-[var(--margiela-carbon)] transition-all duration-500 exposed-seam`}
+              className={`transform ${rotations[index]} bg-white p-12 border-2 border-margiela-slate cursor-pointer shadow-xl hover:shadow-3xl hover:border-margiela-carbon transition-all duration-500 exposed-seam`}
             >
               {/* Header Row */}
               <div className="flex justify-between items-start mb-8">
@@ -126,14 +126,14 @@ export default function AnalysisPage() {
                     ANALYSIS_{analysis.id}
                   </span>
 
-                  <p className="text-xs text-[var(--margiela-slate)] mt-2 mb-4">
+                  <p className="text-xs text-margiela-slate mt-2 mb-4">
                     {analysis.season} • {analysis.category}
                   </p>
                 </div>
 
                 {/* Rating Box */}
                 <div
-                  className={`text-[var(--margiela-white)] p-4 min-w-24 text-center transform rotate-3`}
+                  className={`text-white p-4 min-w-24 text-center transform rotate-3`}
                   style={{ backgroundColor: colors.bg }}
                 >
                   <p className="text-5xl font-black leading-none">
@@ -146,52 +146,52 @@ export default function AnalysisPage() {
               </div>
 
               {/* Brand Name */}
-              <h2 className="text-display-2 font-black text-[var(--margiela-carbon)] leading-none mb-8">
+              <h2 className="text-display-2 font-black text-margiela-carbon leading-none mb-8">
                 {analysis.brand}
               </h2>
 
               {/* Verdict Badge */}
               <div
-                className={`inline-block text-[var(--margiela-white)] px-4 py-2 mb-8 text-xs font-bold tracking-widest`}
+                className={`inline-block text-white px-4 py-2 mb-8 text-xs font-bold tracking-widest`}
                 style={{ backgroundColor: colors.bg }}
               >
                 {analysis.verdict}
               </div>
 
               {/* Analysis Quote */}
-              <p className="text-body-large italic text-[var(--margiela-carbon)] mb-8">
+              <p className="text-body-large italic text-margiela-carbon mb-8">
                 "{analysis.analysis}"
               </p>
 
               {/* Philosophy */}
               <div className={`border-l-4 pl-6 mb-8`} style={{ borderColor: colors.bg }}>
-                <p className="text-base italic text-[var(--margiela-carbon)]">
+                <p className="text-base italic text-margiela-carbon">
                   {analysis.philosophy}
                 </p>
               </div>
 
               {/* Strengths & Weaknesses Preview */}
-              <div className="grid grid-cols-2 gap-8 border-t border-[var(--margiela-slate)] pt-8">
+              <div className="grid grid-cols-2 gap-8 border-t border-margiela-slate pt-8">
                 <div>
-                  <p className="margiela-tag text-[var(--margiela-sage)] mb-3">
+                  <p className="margiela-tag text-sage mb-3">
                     STRENGTHS
                   </p>
-                  <p className="text-sm text-[var(--margiela-carbon)]">
+                  <p className="text-sm text-margiela-carbon">
                     {analysis.strengths.length} identified
                   </p>
                 </div>
                 <div>
-                  <p className="margiela-tag text-[var(--cdg-blood-red)] mb-3">
+                  <p className="margiela-tag text-cdg-blood-red mb-3">
                     WEAKNESSES
                   </p>
-                  <p className="text-sm text-[var(--margiela-carbon)]">
+                  <p className="text-sm text-margiela-carbon">
                     {analysis.weaknesses.length} identified
                   </p>
                 </div>
               </div>
 
               {/* Click Hint */}
-              <p className="text-xs text-[var(--margiela-slate)] mt-8 text-center">
+              <p className="text-xs text-margiela-slate mt-8 text-center">
                 CLICK FOR FULL CRITIQUE →
               </p>
             </motion.div>
@@ -207,39 +207,39 @@ export default function AnalysisPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedAnalysis(null)}
-            className="fixed inset-0 bg-[var(--cdg-void)] bg-opacity-95 z-50 flex items-center justify-center p-8"
+            className="fixed inset-0 bg-cdg-void bg-opacity-95 z-50 flex items-center justify-center p-8"
           >
             <motion.div
               initial={{ scale: 0.9, rotate: -2 }}
               animate={{ scale: 1, rotate: 0 }}
               exit={{ scale: 0.9, rotate: 2 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[var(--margiela-white)] max-w-5xl w-full p-16 relative border-4 border-[var(--margiela-carbon)] sacai-grid-layer"
+              className="bg-white max-w-5xl w-full p-16 relative border-4 border-margiela-carbon sacai-grid-layer"
             >
               <button
                 onClick={() => setSelectedAnalysis(null)}
-                className="absolute top-8 right-8 text-6xl text-[var(--margiela-carbon)] hover:text-[var(--margiela-slate)] transition-colors"
+                className="absolute top-8 right-8 text-6xl text-margiela-carbon hover:text-margiela-slate transition-colors"
               >
                 ×
               </button>
 
-              <span className="margiela-number-tag text-[var(--margiela-slate)]">
+              <span className="margiela-number-tag text-margiela-slate">
                 ANALYSIS_{selectedAnalysis.id}
               </span>
 
-              <h2 className="text-display-2 font-black text-[var(--margiela-carbon)] mt-4 mb-4">
+              <h2 className="text-display-2 font-black text-margiela-carbon mt-4 mb-4">
                 {selectedAnalysis.brand}
               </h2>
 
               <div className="flex gap-4 mb-12">
-                <span className="text-xs px-3 py-1 bg-[var(--margiela-carbon)] text-[var(--margiela-white)]">
+                <span className="text-xs px-3 py-1 bg-margiela-carbon text-white">
                   {selectedAnalysis.season}
                 </span>
-                <span className="text-xs px-3 py-1 bg-[var(--margiela-carbon)] text-[var(--margiela-white)]">
+                <span className="text-xs px-3 py-1 bg-margiela-carbon text-white">
                   {selectedAnalysis.category}
                 </span>
                 <span
-                  className="text-xs px-3 py-1 text-[var(--margiela-white)]"
+                  className="text-xs px-3 py-1 text-white"
                   style={{ backgroundColor: verdictColors[selectedAnalysis.verdict].bg }}
                 >
                   {selectedAnalysis.verdict}
@@ -247,28 +247,28 @@ export default function AnalysisPage() {
               </div>
 
               {/* Rating Display */}
-              <div className="text-center p-12 bg-[var(--margiela-off-white)] mb-12 transform -rotate-1">
-                <p className="text-9xl text-[var(--margiela-carbon)] font-black leading-none kinetic-number">
+              <div className="text-center p-12 bg-margiela-off-white mb-12 transform -rotate-1">
+                <p className="text-9xl text-margiela-carbon font-black leading-none kinetic-number">
                   {selectedAnalysis.rating}
                 </p>
-                <p className="margiela-tag text-[var(--margiela-slate)] mt-4">
+                <p className="margiela-tag text-margiela-slate mt-4">
                   OUT OF 10
                 </p>
               </div>
 
               {/* Full Analysis */}
               <div className="mb-12">
-                <h3 className="text-heading-2 font-bold text-[var(--margiela-carbon)] mb-6">
+                <h3 className="text-heading-2 font-bold text-margiela-carbon mb-6">
                   Full Critique
                 </h3>
-                <p className="text-body-large italic text-[var(--margiela-carbon)] leading-relaxed">
+                <p className="text-body-large italic text-margiela-carbon leading-relaxed">
                   "{selectedAnalysis.analysis}"
                 </p>
               </div>
 
               {/* Philosophy */}
               <div
-                className="text-[var(--margiela-white)] p-8 mb-12 transform -rotate-1 sacai-grid-layer"
+                className="text-white p-8 mb-12 transform -rotate-1 sacai-grid-layer"
                 style={{ backgroundColor: verdictColors[selectedAnalysis.verdict].bg }}
               >
                 <p className="text-xs tracking-widest mb-4">
@@ -282,28 +282,28 @@ export default function AnalysisPage() {
               {/* Strengths & Weaknesses */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div>
-                  <h3 className="text-heading-2 font-bold text-[var(--margiela-sage)] mb-8">
+                  <h3 className="text-heading-2 font-bold text-sage mb-8">
                     What Works
                   </h3>
                   <div className="space-y-4">
                     {selectedAnalysis.strengths.map((strength, i) => (
                       <div key={i} className="flex gap-3 items-start">
-                        <span className="text-2xl text-[var(--margiela-sage)]">+</span>
-                        <p className="text-base text-[var(--margiela-carbon)]">{strength}</p>
+                        <span className="text-2xl text-sage">+</span>
+                        <p className="text-base text-margiela-carbon">{strength}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-heading-2 font-bold text-[var(--cdg-blood-red)] mb-8">
+                  <h3 className="text-heading-2 font-bold text-cdg-blood-red mb-8">
                     What Fails
                   </h3>
                   <div className="space-y-4">
                     {selectedAnalysis.weaknesses.map((weakness, i) => (
                       <div key={i} className="flex gap-3 items-start">
-                        <span className="text-2xl text-[var(--cdg-blood-red)]">−</span>
-                        <p className="text-base text-[var(--margiela-carbon)]">{weakness}</p>
+                        <span className="text-2xl text-cdg-blood-red">−</span>
+                        <p className="text-base text-margiela-carbon">{weakness}</p>
                       </div>
                     ))}
                   </div>
@@ -315,11 +315,11 @@ export default function AnalysisPage() {
       </AnimatePresence>
 
       {/* FOOTER STATEMENT */}
-      <footer className="py-24 px-8 bg-[var(--margiela-carbon)] text-[var(--margiela-white)] text-center">
+      <footer className="py-24 px-8 bg-margiela-carbon text-white text-center">
         <p className="text-heading-2 font-light mb-8">
           TRUTH OVER COMMERCE
         </p>
-        <p className="text-base text-[var(--margiela-slate)]">
+        <p className="text-base text-margiela-slate">
           We analyze without bias, critique without mercy, and judge without commercial influence.
           Fashion needs honest voices, not paid opinions.
         </p>
