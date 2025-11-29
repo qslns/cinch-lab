@@ -269,26 +269,47 @@ export default function HomePage() {
             </h2>
           </motion.div>
 
-          {/* Collection Cards - Asymmetric but readable */}
-          <div className="space-y-16 md:space-y-0">
+          {/* Collection Cards - Varied sizes for visual rhythm */}
+          <div className="space-y-12 md:space-y-0">
             {collections.map((collection, index) => {
+              // More varied layout configurations: large, medium, small
               const configs = [
-                { wrapper: 'md:w-[60%] md:ml-0', rotation: -1 },
-                { wrapper: 'md:w-[55%] md:ml-auto md:-mt-20', rotation: 1.5 },
-                { wrapper: 'md:w-[50%] md:ml-[12%] md:-mt-12', rotation: -0.5 },
+                {
+                  wrapper: 'md:w-[72%] md:ml-0',
+                  aspectRatio: 'aspect-[4/5]',
+                  rotation: -1.5,
+                  variant: 'large',
+                  entryX: -40,
+                },
+                {
+                  wrapper: 'md:w-[48%] md:ml-auto md:-mt-32',
+                  aspectRatio: 'aspect-[3/4]',
+                  rotation: 2,
+                  variant: 'medium',
+                  entryX: 40,
+                },
+                {
+                  wrapper: 'md:w-[40%] md:ml-[8%] md:-mt-16',
+                  aspectRatio: 'aspect-[1/1]',
+                  rotation: -0.5,
+                  variant: 'small',
+                  entryX: 0,
+                },
               ]
               const config = configs[index % configs.length]
+              const bgVariants = ['bg-yon-platinum', 'bg-yon-silver', 'bg-yon-charcoal']
+              const textVariants = ['text-yon-grey', 'text-yon-graphite', 'text-yon-silver']
 
               return (
                 <motion.div
                   key={collection.id}
                   className={config.wrapper}
-                  initial={{ opacity: 0, y: 60 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
+                  initial={{ opacity: 0, x: config.entryX, y: 60 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, margin: '-80px' }}
                   transition={{
-                    duration: 0.8,
-                    delay: index * 0.1,
+                    duration: 0.9,
+                    delay: index * 0.12,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
@@ -297,25 +318,30 @@ export default function HomePage() {
                     className="group block outline-none"
                   >
                     <motion.div
-                      className="relative aspect-[4/5] bg-yon-platinum overflow-hidden transition-all duration-500 group-hover:shadow-xl group-focus-visible:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-yon-black group-focus-visible:ring-offset-4"
+                      className={`relative ${config.aspectRatio} ${bgVariants[index % 3]} overflow-hidden transition-all duration-500 group-hover:shadow-2xl group-focus-visible:shadow-2xl group-focus-visible:ring-2 group-focus-visible:ring-yon-black group-focus-visible:ring-offset-4`}
                       style={{ transform: `rotate(${config.rotation}deg)` }}
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.03, rotate: config.rotation * 0.5 }}
                       whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     >
                       {/* Placeholder */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-mono text-sm text-yon-grey tracking-widest">
+                        <span className={`font-mono text-sm tracking-widest ${textVariants[index % 3]}`}>
                           {collection.title}
                         </span>
                       </div>
 
-                      {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/5 group-focus-visible:bg-yon-black/5" />
+                      {/* Hover overlay with gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-yon-black/10 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500" />
 
                       {/* Index number */}
-                      <span className="absolute top-6 left-6 font-mono text-xs text-yon-grey">
+                      <span className={`absolute top-6 left-6 font-mono text-xs ${textVariants[index % 3]}`}>
                         {String(index + 1).padStart(2, '0')}
+                      </span>
+
+                      {/* Season tag - appears on hover */}
+                      <span className={`absolute bottom-6 right-6 font-mono text-[10px] tracking-[0.15em] uppercase ${textVariants[index % 3]} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
+                        {collection.season}
                       </span>
                     </motion.div>
 
@@ -329,9 +355,16 @@ export default function HomePage() {
                           {collection.season}
                         </p>
                       </div>
-                      <span className="font-mono text-xs text-yon-grey opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 group-focus-visible:translate-x-0">
-                        VIEW →
-                      </span>
+                      <motion.span
+                        className="font-mono text-xs text-yon-grey"
+                        initial={{ opacity: 0, x: 8 }}
+                        whileInView={{ opacity: 0, x: 8 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <span className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-300 inline-block transform translate-x-2 group-hover:translate-x-0 group-focus-visible:translate-x-0">
+                          VIEW →
+                        </span>
+                      </motion.span>
                     </div>
                   </Link>
                 </motion.div>
@@ -349,9 +382,14 @@ export default function HomePage() {
           >
             <Link
               href="/collections"
-              className="inline-block font-mono text-sm text-yon-black border-b border-yon-black pb-1 hover:text-yon-accent hover:border-yon-accent transition-colors duration-300"
+              className="group inline-flex items-center gap-3 font-mono text-sm text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
             >
-              View All Collections
+              <span className="border-b border-yon-black group-hover:border-yon-accent group-focus-visible:border-yon-accent pb-0.5 transition-colors duration-300">
+                View All Collections
+              </span>
+              <span className="transform group-hover:translate-x-1 group-focus-visible:translate-x-1 transition-transform duration-300">
+                →
+              </span>
             </Link>
           </motion.div>
         </div>

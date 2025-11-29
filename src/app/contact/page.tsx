@@ -130,11 +130,10 @@ export default function ContactPage() {
                   </span>
                   <a
                     href="mailto:hello@theyon.com"
-                    className="font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent transition-colors duration-300 inline-block"
+                    className="group/link font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 inline-flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
                   >
-                    <span className="transform inline-block group-hover:rotate-[-0.5deg] transition-transform duration-300">
-                      hello@theyon.com
-                    </span>
+                    <span>hello@theyon.com</span>
+                    <span className="opacity-0 group-hover/link:opacity-100 transform -translate-x-2 group-hover/link:translate-x-0 transition-all duration-300">→</span>
                   </a>
                 </motion.div>
 
@@ -152,11 +151,12 @@ export default function ContactPage() {
                     href="https://instagram.com/theyon_studio"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent transition-colors duration-300 inline-block"
+                    className="group/link font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 inline-flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
                   >
-                    <span className="transform inline-block group-hover:rotate-[0.5deg] transition-transform duration-300">
-                      @theyon_studio
-                    </span>
+                    <span>@theyon_studio</span>
+                    <svg className="w-4 h-4 opacity-50 group-hover/link:opacity-100 transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
                   </a>
                 </motion.div>
 
@@ -170,8 +170,8 @@ export default function ContactPage() {
                     03 — Based in
                   </span>
                   <p className="font-serif text-2xl md:text-3xl text-yon-black">
-                    <span className="block transform rotate-[-0.3deg]">Seoul &</span>
-                    <span className="block transform rotate-[0.2deg] ml-[5%]">Tokyo</span>
+                    <span className="block">Seoul &</span>
+                    <span className="block ml-[5%]">Tokyo</span>
                   </p>
                 </motion.div>
               </div>
@@ -188,7 +188,7 @@ export default function ContactPage() {
             {/* Decorative line */}
             <div className="w-16 h-px bg-yon-silver mb-8" />
 
-            <p className="text-sm text-yon-grey max-w-md leading-relaxed transform rotate-[-0.3deg]">
+            <p className="text-sm text-yon-grey max-w-md leading-relaxed">
               THE YON is not a commercial brand. We focus on experimental fashion research
               and creative collaborations. For exhibition or partnership inquiries, please
               reach out via email.
@@ -215,8 +215,8 @@ export default function ContactPage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-white leading-[1.3]">
-              <span className="block transform rotate-[-0.5deg]">Every conversation</span>
-              <span className="block transform rotate-[0.3deg]">is a new possibility</span>
+              <span className="block">Every conversation</span>
+              <span className="block">is a new possibility</span>
             </p>
             <p className="mt-8 font-mono text-xs text-yon-silver tracking-[0.2em] uppercase">
               THE YON — Beyond Fashion

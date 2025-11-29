@@ -162,9 +162,9 @@ export default function AboutPage() {
                 Philosophy
               </span>
               <h2 className="mt-4 font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-[1.1]">
-                <span className="block transform rotate-[-0.5deg]">Twisted</span>
-                <span className="block transform rotate-[0.3deg] ml-[10%]">yet</span>
-                <span className="block transform rotate-[-0.2deg]">harmonious</span>
+                <span className="block">Twisted</span>
+                <span className="block ml-[10%]">yet</span>
+                <span className="block">harmonious</span>
               </h2>
             </motion.div>
 
@@ -233,8 +233,8 @@ export default function AboutPage() {
                 Designer
               </span>
               <h2 className="mt-4 font-serif text-4xl md:text-5xl text-yon-black">
-                <span className="block transform rotate-[-0.3deg]">Taehyun</span>
-                <span className="block transform rotate-[0.2deg] ml-[5%]">Lee</span>
+                <span className="block">Taehyun</span>
+                <span className="block ml-[5%]">Lee</span>
               </h2>
               <p className="mt-8 text-lg text-yon-steel leading-relaxed">
                 사사다 패션스쿨에서 패션 디자인을 공부하고 있습니다.
@@ -273,8 +273,8 @@ export default function AboutPage() {
               Approach
             </span>
             <h2 className="mt-4 font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.1]">
-              <span className="block transform rotate-[-0.3deg]">How</span>
-              <span className="block transform rotate-[0.2deg] ml-[8%]">we work</span>
+              <span className="block">How</span>
+              <span className="block ml-[8%]">we work</span>
             </h2>
           </motion.div>
 
@@ -328,8 +328,8 @@ export default function AboutPage() {
             </span>
 
             <p className="relative font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-[1.3] max-w-2xl mx-auto">
-              <span className="block transform rotate-[-0.3deg]">The journey matters</span>
-              <span className="block transform rotate-[0.2deg]">as much as the destination</span>
+              <span className="block">The journey matters</span>
+              <span className="block">as much as the destination</span>
             </p>
 
             <div className="mt-16">
@@ -338,10 +338,10 @@ export default function AboutPage() {
               </span>
               <Link
                 href="/contact"
-                className="inline-block font-serif text-3xl md:text-4xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
+                className="group inline-flex items-center gap-4 font-serif text-3xl md:text-4xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
               >
-                <span className="transform inline-block rotate-[-0.5deg]">Get in touch</span>
-                <span className="inline-block ml-4">→</span>
+                <span>Get in touch</span>
+                <span className="transform group-hover:translate-x-2 group-focus-visible:translate-x-2 transition-transform duration-300">→</span>
               </Link>
             </div>
           </motion.div>

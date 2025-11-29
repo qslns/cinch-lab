@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Footer from '@/components/Footer'
 
 // Pinboard items - scattered like a designer's mood board
+// More varied sizes and restrained rotations for professional look
 const pinboardItems = [
   {
     id: 1,
@@ -13,9 +14,9 @@ const pinboardItems = [
     category: 'TECHNIQUE',
     description: 'Breaking down traditional pattern blocks to understand and reimagine garment construction.',
     status: 'ongoing',
-    position: { top: '5%', left: '8%' },
-    size: 'w-[35vw] md:w-[22vw]',
-    rotation: -3,
+    position: { top: '5%', left: '5%' },
+    size: 'w-[42vw] md:w-[28vw]', // Large
+    rotation: -2,
     variant: 'light' as const,
     aspectRatio: '4/5',
     hasTape: true,
@@ -27,9 +28,9 @@ const pinboardItems = [
     category: 'RESEARCH',
     description: 'Exploring how fabrics respond to unconventional treatments.',
     status: 'completed',
-    position: { top: '2%', right: '15%' },
-    size: 'w-[28vw] md:w-[18vw]',
-    rotation: 4,
+    position: { top: '3%', right: '10%' },
+    size: 'w-[30vw] md:w-[18vw]', // Medium
+    rotation: 1.5,
     variant: 'dark' as const,
     aspectRatio: '3/4',
     hasTape: true,
@@ -41,9 +42,9 @@ const pinboardItems = [
     category: 'EXPERIMENT',
     description: 'Investigating the relationship between body and space.',
     status: 'ongoing',
-    position: { top: '22%', left: '35%' },
-    size: 'w-[40vw] md:w-[28vw]',
-    rotation: -1.5,
+    position: { top: '25%', left: '38%' },
+    size: 'w-[48vw] md:w-[32vw]', // Extra Large - Hero piece
+    rotation: -1,
     variant: 'medium' as const,
     aspectRatio: '1/1',
     hasTape: false,
@@ -54,9 +55,9 @@ const pinboardItems = [
     category: 'PROCESS',
     description: 'Every prototype tells a story. The muslin iterations preserved as artifacts.',
     status: 'archive',
-    position: { top: '35%', right: '5%' },
-    size: 'w-[30vw] md:w-[20vw]',
-    rotation: 2.5,
+    position: { top: '38%', right: '5%' },
+    size: 'w-[28vw] md:w-[16vw]', // Small
+    rotation: 2,
     variant: 'light' as const,
     aspectRatio: '4/3',
     hasTape: true,
@@ -68,9 +69,9 @@ const pinboardItems = [
     category: 'LEARNING',
     description: 'Documented failures—each one teaches something essential.',
     status: 'archive',
-    position: { top: '55%', left: '12%' },
-    size: 'w-[32vw] md:w-[18vw]',
-    rotation: -4,
+    position: { top: '55%', left: '8%' },
+    size: 'w-[35vw] md:w-[20vw]', // Medium
+    rotation: -1.5,
     variant: 'dark' as const,
     aspectRatio: '3/4',
     hasTape: true,
@@ -82,9 +83,9 @@ const pinboardItems = [
     category: 'TECHNIQUE',
     description: 'Treating seams as design elements. Exposed, exaggerated, celebrated.',
     status: 'ongoing',
-    position: { top: '48%', left: '45%' },
-    size: 'w-[35vw] md:w-[24vw]',
-    rotation: 1,
+    position: { top: '52%', left: '42%' },
+    size: 'w-[38vw] md:w-[24vw]', // Large
+    rotation: 0.5,
     variant: 'medium' as const,
     aspectRatio: '4/5',
     hasTape: false,
@@ -95,9 +96,9 @@ const pinboardItems = [
     category: 'DOCUMENTATION',
     description: 'Raw sketches and ideas that may never become garments.',
     status: 'ongoing',
-    position: { top: '65%', right: '18%' },
-    size: 'w-[25vw] md:w-[15vw]',
-    rotation: -2,
+    position: { top: '68%', right: '12%' },
+    size: 'w-[24vw] md:w-[14vw]', // Small
+    rotation: -1,
     variant: 'light' as const,
     aspectRatio: '1/1',
     hasTape: true,
@@ -109,9 +110,9 @@ const pinboardItems = [
     category: 'MATERIAL',
     description: 'Close-up studies of fabric surfaces and behaviors.',
     status: 'completed',
-    position: { top: '78%', left: '25%' },
-    size: 'w-[28vw] md:w-[16vw]',
-    rotation: 3,
+    position: { top: '78%', left: '22%' },
+    size: 'w-[32vw] md:w-[18vw]', // Medium
+    rotation: 1.5,
     variant: 'dark' as const,
     aspectRatio: '3/4',
     hasTape: false,
@@ -192,12 +193,12 @@ export default function ProcessPage() {
           {pinboardItems.map((item, index) => (
             <motion.div
               key={item.id}
-              className={`absolute ${item.size}`}
+              className={`absolute ${item.size} group cursor-pointer`}
               style={{
                 ...item.position,
                 zIndex: 10 + index,
               }}
-              initial={{ opacity: 0, scale: 0.9, rotate: item.rotation - 5 }}
+              initial={{ opacity: 0, scale: 0.9, rotate: item.rotation - 3 }}
               whileInView={{ opacity: 1, scale: 1, rotate: item.rotation }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{
@@ -206,9 +207,10 @@ export default function ProcessPage() {
                 ease: [0.16, 1, 0.3, 1],
               }}
               whileHover={{
-                scale: 1.05,
+                scale: 1.04,
+                rotate: item.rotation * 0.5,
                 zIndex: 100,
-                transition: { duration: 0.3 },
+                transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
               }}
             >
               {/* Tape effect */}
@@ -227,7 +229,7 @@ export default function ProcessPage() {
 
               {/* Card */}
               <div
-                className={`relative ${variantStyles[item.variant]} shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-2xl`}
+                className={`relative ${variantStyles[item.variant]} shadow-lg overflow-hidden transition-all duration-400 group-hover:shadow-2xl`}
                 style={{ aspectRatio: item.aspectRatio }}
               >
                 {/* Placeholder */}
@@ -237,6 +239,9 @@ export default function ProcessPage() {
                   </span>
                 </div>
 
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-yon-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+
                 {/* Category tag */}
                 <div className="absolute top-4 left-4">
                   <span className={`font-mono text-[9px] tracking-[0.15em] uppercase ${variantTextStyles[item.variant]}`}>
@@ -244,12 +249,12 @@ export default function ProcessPage() {
                   </span>
                 </div>
 
-                {/* Status indicator */}
+                {/* Status indicator with pulse on ongoing */}
                 <div className="absolute top-4 right-4">
                   <div
                     className={`w-2 h-2 rounded-full ${
                       item.status === 'ongoing'
-                        ? 'bg-yon-accent'
+                        ? 'bg-yon-accent animate-pulse'
                         : item.status === 'completed'
                         ? 'bg-yon-grey'
                         : 'bg-yon-silver'
@@ -260,7 +265,7 @@ export default function ProcessPage() {
 
               {/* Title and description - shown below card */}
               <div className="mt-3 max-w-full">
-                <h3 className="font-serif text-base md:text-lg text-yon-black leading-tight">
+                <h3 className="font-serif text-base md:text-lg text-yon-black leading-tight group-hover:text-yon-accent transition-colors duration-300">
                   {item.title}
                 </h3>
                 <p className="mt-1 text-xs text-yon-steel line-clamp-2 leading-relaxed">

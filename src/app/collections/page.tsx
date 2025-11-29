@@ -62,39 +62,43 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
   },
 ]
 
-// Exhibition-style layout configurations
+// Exhibition-style layout configurations - More varied sizes
 const layoutConfigs = [
   {
-    // Large, left aligned
-    wrapper: 'md:w-[70%] md:ml-0',
+    // Extra Large, left aligned - Hero piece
+    wrapper: 'md:w-[75%] md:ml-0',
     aspectRatio: 'aspect-[4/5]',
-    rotation: -2,
+    rotation: -1.5,
     variant: 'light' as const,
-    entryDirection: { x: -60, y: 0 },
+    entryDirection: { x: -50, y: 0 },
+    size: 'xl',
   },
   {
-    // Medium, right aligned, overlapping previous
-    wrapper: 'md:w-[55%] md:ml-auto md:-mt-32',
+    // Medium, right aligned, overlapping
+    wrapper: 'md:w-[50%] md:ml-auto md:-mt-40',
     aspectRatio: 'aspect-[3/4]',
-    rotation: 2.5,
+    rotation: 2,
     variant: 'medium' as const,
-    entryDirection: { x: 60, y: 0 },
+    entryDirection: { x: 50, y: 0 },
+    size: 'md',
   },
   {
-    // Small, left-center
-    wrapper: 'md:w-[45%] md:ml-[10%] md:-mt-16',
-    aspectRatio: 'aspect-[4/5]',
-    rotation: -1,
+    // Small, left-center - accent piece
+    wrapper: 'md:w-[38%] md:ml-[8%] md:-mt-20',
+    aspectRatio: 'aspect-[1/1]',
+    rotation: -0.5,
     variant: 'dark' as const,
-    entryDirection: { x: 0, y: 60 },
+    entryDirection: { x: 0, y: 50 },
+    size: 'sm',
   },
   {
-    // Medium, right aligned
-    wrapper: 'md:w-[60%] md:ml-auto md:-mt-24',
+    // Large, right aligned
+    wrapper: 'md:w-[62%] md:ml-auto md:-mt-28',
     aspectRatio: 'aspect-[3/4]',
-    rotation: 1.5,
+    rotation: 1,
     variant: 'light' as const,
-    entryDirection: { x: 40, y: 40 },
+    entryDirection: { x: 40, y: 30 },
+    size: 'lg',
   },
 ]
 
@@ -218,12 +222,15 @@ export default function CollectionsPage() {
                   >
                     <Link
                       href={`/collections/${collection.slug}`}
-                      className="group block"
+                      className="group block outline-none"
                     >
                       {/* Image container */}
-                      <div
-                        className={`relative ${config.aspectRatio} ${variantStyles[config.variant]} overflow-hidden transition-all duration-700 ease-out group-hover:shadow-2xl`}
+                      <motion.div
+                        className={`relative ${config.aspectRatio} ${variantStyles[config.variant]} overflow-hidden transition-shadow duration-500 group-hover:shadow-2xl group-focus-visible:shadow-2xl group-focus-visible:ring-2 group-focus-visible:ring-yon-black group-focus-visible:ring-offset-4`}
                         style={{ transform: `rotate(${config.rotation}deg)` }}
+                        whileHover={{ scale: 1.02, rotate: config.rotation * 0.6 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {collection.mainImage ? (
                           <Image
@@ -240,8 +247,8 @@ export default function CollectionsPage() {
                           </div>
                         )}
 
-                        {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/5" />
+                        {/* Hover overlay with gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-yon-black/15 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500" />
 
                         {/* Index number */}
                         <div className="absolute top-6 left-6">
@@ -250,18 +257,18 @@ export default function CollectionsPage() {
                           </span>
                         </div>
 
-                        {/* Season tag */}
+                        {/* Season tag - more visible on hover */}
                         <div className="absolute bottom-6 right-6">
-                          <span className={`font-mono text-[10px] tracking-[0.2em] uppercase ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'}`}>
+                          <span className={`font-mono text-[10px] tracking-[0.2em] uppercase transition-opacity duration-300 ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'} group-hover:opacity-100`}>
                             {collection.season?.toUpperCase()} {collection.year}
                           </span>
                         </div>
-                      </div>
+                      </motion.div>
 
                       {/* Info */}
                       <div className="mt-8 md:mt-10 flex justify-between items-start">
                         <div className="max-w-md">
-                          <h2 className="font-serif text-3xl md:text-4xl text-yon-black group-hover:text-yon-accent transition-colors duration-300">
+                          <h2 className="font-serif text-3xl md:text-4xl text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors duration-300">
                             {collection.title}
                           </h2>
                           {collection.description && (
@@ -270,7 +277,7 @@ export default function CollectionsPage() {
                             </p>
                           )}
                         </div>
-                        <span className="font-mono text-xs text-yon-grey opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                        <span className="font-mono text-xs text-yon-grey opacity-0 translate-x-4 group-hover:opacity-100 group-focus-visible:opacity-100 group-hover:translate-x-0 group-focus-visible:translate-x-0 transition-all duration-300">
                           VIEW →
                         </span>
                       </div>
