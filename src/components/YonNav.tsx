@@ -19,7 +19,7 @@ export default function YonNav() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      setScrolled(window.scrollY > 20)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -44,104 +44,109 @@ export default function YonNav() {
 
   return (
     <>
-      {/* Navigation Bar */}
+      {/* Navigation Bar - Always visible with clear background */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[500] transition-all duration-500 ${
-          scrolled || isOpen
-            ? 'bg-yon-white/95 backdrop-blur-sm'
-            : 'bg-transparent'
+        className={`fixed top-0 left-0 right-0 z-[500] transition-all duration-300 ${
+          scrolled
+            ? 'bg-yon-white/98 backdrop-blur-md shadow-sm'
+            : 'bg-yon-white/95 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-between px-6 md:px-12 h-20">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="relative z-[600] group outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
-            onClick={() => setIsOpen(false)}
-          >
-            <span className="font-serif text-2xl md:text-3xl tracking-tight text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors duration-300">
-              THE YON
-            </span>
-          </Link>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between px-6 md:px-8 lg:px-12 h-16 md:h-20">
+            {/* Logo */}
+            <Link
+              href="/"
+              className="relative z-[600] group outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="font-serif text-xl md:text-2xl tracking-tight text-yon-black group-hover:text-yon-accent transition-colors duration-300">
+                THE YON
+              </span>
+            </Link>
 
-          {/* Desktop Navigation - visible on md and above */}
-          <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href ||
-                (item.href !== '/' && pathname.startsWith(item.href))
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-10">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href ||
+                  (item.href !== '/' && pathname.startsWith(item.href))
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group relative outline-none"
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <span
-                    className={`font-mono text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
-                      isActive
-                        ? 'text-yon-black'
-                        : 'text-yon-grey hover:text-yon-black group-focus-visible:text-yon-black'
-                    }`}
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group relative py-2 outline-none"
+                    aria-current={isActive ? 'page' : undefined}
                   >
-                    {item.label}
-                  </span>
-                  {/* Hover & Focus underline */}
-                  <span
-                    className={`absolute left-0 -bottom-1 h-[1px] bg-yon-black transition-all duration-300 ${
-                      isActive ? 'w-full' : 'w-0 group-hover:w-full group-focus-visible:w-full'
-                    }`}
-                  />
-                </Link>
-              )
-            })}
-          </div>
+                    <span
+                      className={`font-mono text-[11px] tracking-[0.12em] uppercase transition-colors duration-300 ${
+                        isActive
+                          ? 'text-yon-black'
+                          : 'text-yon-steel hover:text-yon-black'
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                    {/* Active/Hover underline */}
+                    <span
+                      className={`absolute left-0 bottom-0 h-[1px] bg-yon-black transition-all duration-300 ${
+                        isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
+                    />
+                  </Link>
+                )
+              })}
+            </div>
 
-          {/* Mobile Hamburger Button - visible below md */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="relative z-[600] w-10 h-10 flex md:hidden flex-col items-center justify-center gap-1.5"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isOpen}
-          >
-            <motion.span
-              className="block w-6 h-[1.5px] bg-yon-black origin-center"
-              animate={{
-                rotate: isOpen ? 45 : 0,
-                y: isOpen ? 4 : 0,
-              }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            />
-            <motion.span
-              className="block w-6 h-[1.5px] bg-yon-black origin-center"
-              animate={{
-                rotate: isOpen ? -45 : 0,
-                y: isOpen ? -4 : 0,
-              }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </button>
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="relative z-[600] w-10 h-10 flex md:hidden flex-col items-center justify-center gap-1.5 -mr-2"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+            >
+              <motion.span
+                className="block w-5 h-[1.5px] bg-yon-black origin-center"
+                animate={{
+                  rotate: isOpen ? 45 : 0,
+                  y: isOpen ? 3.5 : 0,
+                }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              />
+              <motion.span
+                className="block w-5 h-[1.5px] bg-yon-black origin-center"
+                animate={{
+                  rotate: isOpen ? -45 : 0,
+                  y: isOpen ? -3.5 : 0,
+                }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </button>
+          </div>
         </div>
+
+        {/* Subtle bottom border */}
+        <div className={`h-px bg-yon-platinum transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-50'}`} />
       </nav>
 
       {/* Mobile Fullscreen Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[400] bg-yon-white flex items-center justify-center md:hidden"
+            className="fixed inset-0 z-[400] bg-yon-white flex flex-col md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <nav className="w-full max-w-sm px-8">
-              <ul className="space-y-6">
-                {/* Home link for mobile */}
+            <nav className="flex-1 flex flex-col justify-center px-8">
+              <ul className="space-y-8">
+                {/* Home link */}
                 <motion.li
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.4, delay: 0, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, delay: 0, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <Link
                     href="/"
@@ -149,7 +154,7 @@ export default function YonNav() {
                     onClick={() => setIsOpen(false)}
                   >
                     <span
-                      className={`font-serif text-4xl tracking-tight transition-colors duration-300 ${
+                      className={`font-serif text-3xl tracking-tight transition-colors duration-300 ${
                         pathname === '/'
                           ? 'text-yon-black'
                           : 'text-yon-grey group-hover:text-yon-black'
@@ -167,11 +172,11 @@ export default function YonNav() {
                   return (
                     <motion.li
                       key={item.href}
-                      initial={{ opacity: 0, x: -30 }}
+                      initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -30 }}
+                      exit={{ opacity: 0, x: -20 }}
                       transition={{
-                        duration: 0.4,
+                        duration: 0.3,
                         delay: (index + 1) * 0.05,
                         ease: [0.16, 1, 0.3, 1],
                       }}
@@ -182,7 +187,7 @@ export default function YonNav() {
                         onClick={() => setIsOpen(false)}
                       >
                         <span
-                          className={`font-serif text-4xl tracking-tight transition-colors duration-300 ${
+                          className={`font-serif text-3xl tracking-tight transition-colors duration-300 ${
                             isActive
                               ? 'text-yon-black'
                               : 'text-yon-grey group-hover:text-yon-black'
@@ -196,18 +201,18 @@ export default function YonNav() {
                 })}
               </ul>
 
-              {/* Footer info in mobile menu */}
+              {/* Footer info */}
               <motion.div
                 className="mt-16 pt-8 border-t border-yon-platinum"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <p className="font-mono text-xs text-yon-grey tracking-[0.15em] uppercase">
-                  Experimental Fashion
+                <p className="font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
+                  Experimental Fashion Portfolio
                 </p>
-                <p className="mt-1 font-mono text-xs text-yon-grey tracking-[0.15em] uppercase">
-                  Beyond the Horizon
+                <p className="mt-2 font-mono text-[10px] text-yon-grey tracking-[0.15em]">
+                  By Taehyun Lee
                 </p>
               </motion.div>
             </nav>

@@ -451,10 +451,10 @@ export default function CollectionDetailPage() {
                 </Link>
               ) : (
                 <Link
-                  href="/process"
+                  href="/archive"
                   className="font-mono text-sm text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4 rounded"
                 >
-                  View Process →
+                  View Archive →
                 </Link>
               )}
             </div>
