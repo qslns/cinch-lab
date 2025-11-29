@@ -18,7 +18,8 @@
       "Bash(test:*)",
       "Bash(awk:*)",
       "Bash(curl:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []

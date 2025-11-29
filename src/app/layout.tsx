@@ -6,9 +6,6 @@ import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
 import LenisProvider from '@/hooks/useLenis'
 import '@/styles/globals.css'
-import '@/styles/design-system-foundation.css'
-import '@/styles/asymmetric-grids.css'
-import '@/styles/kinetic-typography.css'
 
 // Typography System - THE YON
 // Cormorant Garamond: Elegant serif for titles
@@ -22,7 +19,7 @@ const inter = Inter({
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '600'],
   variable: '--font-serif',
   display: 'swap',
 })

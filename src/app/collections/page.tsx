@@ -61,6 +61,54 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
   },
 ]
 
+// Exhibition-style layout configurations
+const layoutConfigs = [
+  {
+    // Large, left aligned
+    wrapper: 'md:w-[70%] md:ml-0',
+    aspectRatio: 'aspect-[4/5]',
+    rotation: -2,
+    variant: 'light' as const,
+    entryDirection: { x: -60, y: 0 },
+  },
+  {
+    // Medium, right aligned, overlapping previous
+    wrapper: 'md:w-[55%] md:ml-auto md:-mt-32',
+    aspectRatio: 'aspect-[3/4]',
+    rotation: 2.5,
+    variant: 'medium' as const,
+    entryDirection: { x: 60, y: 0 },
+  },
+  {
+    // Small, left-center
+    wrapper: 'md:w-[45%] md:ml-[10%] md:-mt-16',
+    aspectRatio: 'aspect-[4/5]',
+    rotation: -1,
+    variant: 'dark' as const,
+    entryDirection: { x: 0, y: 60 },
+  },
+  {
+    // Medium, right aligned
+    wrapper: 'md:w-[60%] md:ml-auto md:-mt-24',
+    aspectRatio: 'aspect-[3/4]',
+    rotation: 1.5,
+    variant: 'light' as const,
+    entryDirection: { x: 40, y: 40 },
+  },
+]
+
+const variantStyles = {
+  light: 'bg-yon-platinum',
+  medium: 'bg-yon-silver',
+  dark: 'bg-yon-charcoal',
+}
+
+const variantTextStyles = {
+  light: 'text-yon-grey',
+  medium: 'text-yon-graphite',
+  dark: 'text-yon-silver',
+}
+
 export default function CollectionsPage() {
   const [collections, setCollections] = useState<Collection[]>([])
   const [loading, setLoading] = useState(true)
@@ -86,70 +134,85 @@ export default function CollectionsPage() {
     fetchCollections()
   }, [])
 
-  // Grid configuration for asymmetric layout
-  const getGridConfig = (index: number) => {
-    const configs = [
-      { colSpan: 'md:col-span-7', rotation: '-1deg', marginTop: '0' },
-      { colSpan: 'md:col-span-5', rotation: '1.5deg', marginTop: 'md:mt-24' },
-      { colSpan: 'md:col-span-6', rotation: '-0.5deg', marginTop: 'md:-mt-12' },
-      { colSpan: 'md:col-span-6', rotation: '1deg', marginTop: 'md:mt-16' },
-      { colSpan: 'md:col-span-8', rotation: '-1.5deg', marginTop: '0' },
-      { colSpan: 'md:col-span-4', rotation: '2deg', marginTop: 'md:mt-32' },
-    ]
-    return configs[index % configs.length]
-  }
-
   return (
     <div className="min-h-screen bg-yon-white">
       {/* Header */}
-      <section className="pt-32 pb-16 md:pb-24 px-6 md:px-12">
+      <section className="pt-32 md:pt-40 pb-20 md:pb-32 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="relative"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
           >
-            <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
-              Portfolio
+            {/* Decorative number */}
+            <span className="absolute -top-8 -left-2 md:-left-8 font-mono text-[100px] md:text-[180px] text-yon-platinum/40 leading-none select-none pointer-events-none">
+              C
             </span>
-            <h1 className="mt-4 font-serif text-display text-yon-black transform rotate-[-0.5deg]">
-              Collections
-            </h1>
-            <p className="mt-6 text-body-lg text-yon-steel max-w-xl">
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="relative font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
+                Portfolio
+              </span>
+              <h1 className="relative mt-4 font-serif text-[12vw] md:text-[8vw] lg:text-[6vw] text-yon-black leading-[0.9]">
+                <span className="block transform rotate-[-0.5deg]">Collec</span>
+                <span className="block transform rotate-[0.3deg] ml-[8%]">tions</span>
+              </h1>
+            </motion.div>
+
+            <motion.p
+              className="mt-8 md:mt-12 text-lg md:text-xl text-yon-steel max-w-xl leading-relaxed ml-[5%] md:ml-[10%]"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
               Each collection is an experiment. A question posed to fabric, form, and tradition.
-              Twisted yet harmonious.
-            </p>
+            </motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* Collections Grid */}
-      <section className="pb-32 px-6 md:px-12">
+      {/* Collections - Exhibition Layout */}
+      <section className="pb-32 md:pb-48 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           {loading ? (
             <div className="flex items-center justify-center py-32">
               <motion.div
-                className="w-8 h-8 border-2 border-yon-grey border-t-yon-black rounded-full"
+                className="w-12 h-12 border border-yon-grey rounded-full"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              />
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              >
+                <div className="w-full h-full border-t border-yon-black rounded-full" />
+              </motion.div>
             </div>
           ) : (
-            <div className="grid grid-cols-12 gap-4 md:gap-8">
+            <div className="relative">
               {collections.map((collection, index) => {
-                const config = getGridConfig(index)
+                const config = layoutConfigs[index % layoutConfigs.length]
 
                 return (
                   <motion.div
                     key={collection._id}
-                    className={`col-span-12 ${config.colSpan} ${config.marginTop}`}
-                    initial={{ opacity: 0, y: 60 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    className={`mb-16 md:mb-0 ${config.wrapper}`}
+                    initial={{
+                      opacity: 0,
+                      x: config.entryDirection.x,
+                      y: config.entryDirection.y,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      x: 0,
+                      y: 0,
+                    }}
                     viewport={{ once: true, margin: '-100px' }}
                     transition={{
-                      duration: 0.8,
-                      delay: index * 0.1,
-                      ease: [0.16, 1, 0.3, 1]
+                      duration: 1,
+                      delay: 0.1,
+                      ease: [0.16, 1, 0.3, 1],
                     }}
                   >
                     <Link
@@ -158,53 +221,57 @@ export default function CollectionsPage() {
                     >
                       {/* Image container */}
                       <div
-                        className="relative aspect-[4/5] bg-yon-platinum overflow-hidden transition-transform duration-700 ease-out-expo group-hover:scale-[1.02]"
-                        style={{ transform: `rotate(${config.rotation})` }}
+                        className={`relative ${config.aspectRatio} ${variantStyles[config.variant]} overflow-hidden transition-all duration-700 ease-out group-hover:shadow-2xl`}
+                        style={{ transform: `rotate(${config.rotation}deg)` }}
                       >
                         {collection.mainImage ? (
                           <Image
-                            src={urlFor(collection.mainImage).width(800).height(1000).url()}
+                            src={urlFor(collection.mainImage).width(1000).height(1250).url()}
                             alt={collection.title}
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="font-mono text-sm text-yon-grey">
+                            <span className={`font-mono text-sm tracking-widest ${variantTextStyles[config.variant]}`}>
                               {collection.title}
                             </span>
                           </div>
                         )}
 
                         {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/10" />
+                        <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/5" />
 
                         {/* Index number */}
-                        <span className="absolute top-4 left-4 font-mono text-micro text-yon-white/80">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
+                        <div className="absolute top-6 left-6">
+                          <span className={`font-mono text-xs tracking-wider ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'}`}>
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                        </div>
+
+                        {/* Season tag */}
+                        <div className="absolute bottom-6 right-6">
+                          <span className={`font-mono text-[10px] tracking-[0.2em] uppercase ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'}`}>
+                            {collection.season?.toUpperCase()} {collection.year}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Info */}
-                      <div className="mt-6 flex justify-between items-start">
-                        <div>
-                          <h2 className="font-serif text-xl md:text-2xl text-yon-black group-hover:text-yon-accent transition-colors duration-300">
+                      <div className="mt-8 md:mt-10 flex justify-between items-start">
+                        <div className="max-w-md">
+                          <h2 className="font-serif text-3xl md:text-4xl text-yon-black group-hover:text-yon-accent transition-colors duration-300">
                             {collection.title}
                           </h2>
-                          <p className="mt-2 font-mono text-xs text-yon-grey uppercase tracking-wider">
-                            {collection.season?.toUpperCase()} {collection.year}
-                          </p>
                           {collection.description && (
-                            <p className="mt-3 text-caption text-yon-steel line-clamp-2 max-w-sm">
+                            <p className="mt-4 text-base text-yon-steel leading-relaxed line-clamp-2">
                               {collection.description}
                             </p>
                           )}
                         </div>
-                        <motion.span
-                          className="font-mono text-xs text-yon-grey opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-1"
-                        >
+                        <span className="font-mono text-xs text-yon-grey opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                           VIEW →
-                        </motion.span>
+                        </span>
                       </div>
                     </Link>
                   </motion.div>
