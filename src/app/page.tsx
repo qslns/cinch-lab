@@ -7,9 +7,9 @@ import Footer from '@/components/Footer'
 
 // Collection data
 const collections = [
-  { id: 1, title: 'DECONSTRUCTION', season: 'FW 2025', slug: 'deconstruction', description: 'Pattern deconstruction through experimental tailoring' },
-  { id: 2, title: 'FRAGMENTS', season: 'SS 2025', slug: 'fragments', description: 'Hybrid material construction with contrasting textures' },
-  { id: 3, title: 'VOID', season: 'FW 2024', slug: 'void', description: 'Architectural volume exploration' },
+  { id: 1, title: 'DECONSTRUCTION', season: 'AW25', slug: 'deconstruction', description: 'Where traditional pattern blocks dissolve into chaos' },
+  { id: 2, title: 'FRAGMENTS', season: 'SS25', slug: 'fragments', description: 'Beauty found in broken pieces, reconstructed' },
+  { id: 3, title: 'VOID', season: 'AW24', slug: 'void', description: 'The space between defines the form' },
 ]
 
 // Hero image configurations - Editorial scattered layout
@@ -115,7 +115,7 @@ export default function HomePage() {
             >
               <span className="w-8 md:w-12 h-px bg-yon-grey" />
               <span className="font-mono text-[10px] md:text-xs text-yon-grey tracking-[0.3em] uppercase">
-                Experimental Fashion Portfolio
+                Enter the World of THE YON
               </span>
             </motion.div>
 
@@ -157,7 +157,7 @@ export default function HomePage() {
                 animate={{ y: 0 }}
                 transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
               >
-                Beyond Fashion — 저 너머
+                Beyond — 저 너머
               </motion.p>
             </motion.div>
 
@@ -169,7 +169,7 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 1.1 }}
             >
               <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em]">
-                FW 2025 — SS 2025
+                AW25 — SS25 Collection
               </span>
             </motion.div>
           </motion.div>
@@ -319,8 +319,8 @@ export default function HomePage() {
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               >
-                Every element is slightly askew, yet together they form perfect beauty.
-                Fashion that transcends time and space — the pursuit of an ideal beyond reach.
+                THE YON exists where structure dissolves and reform begins.
+                A world beyond conventional fashion — elusive, unreachable, yet undeniably present.
               </motion.p>
 
               <motion.p
@@ -330,7 +330,7 @@ export default function HomePage() {
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               >
-                모든 요소가 약간씩 어긋나 있지만, 전체적으로는 하나의 아름다운 구성을 이룹니다.
+                손에 잡히지 않는, 도달하기 어려운 이상적인 아름다움을 추구합니다.
               </motion.p>
 
               <motion.div
@@ -345,7 +345,7 @@ export default function HomePage() {
                   className="group inline-flex items-center gap-4 font-mono text-xs tracking-[0.15em] uppercase text-yon-black"
                 >
                   <span className="relative pb-1">
-                    <span className="relative z-10">About the vision</span>
+                    <span className="relative z-10">Discover the World</span>
                     <span className="absolute bottom-0 left-0 w-full h-px bg-yon-black origin-left scale-x-100 group-hover:scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
                     <span className="absolute bottom-0 left-0 w-full h-px bg-yon-accent origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-100" />
                   </span>
@@ -381,7 +381,7 @@ export default function HomePage() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="w-6 h-px bg-yon-grey" />
                 <span className="font-mono text-[10px] text-yon-grey tracking-[0.2em] uppercase">
-                  Latest Work
+                  The Showroom
                 </span>
               </div>
               <h2 className="font-serif text-[10vw] md:text-[5vw] lg:text-[4vw] text-yon-black leading-[0.9]">
@@ -392,8 +392,8 @@ export default function HomePage() {
             </div>
             <div className="md:col-span-5 md:col-start-7 md:pt-8">
               <p className="text-sm md:text-base text-yon-steel leading-[1.8]">
-                Each collection is an experiment — a question posed to fabric, form, and tradition.
-                Exploring the boundaries between structure and deconstruction.
+                Each piece exists at the intersection of chaos and order.
+                Welcome to THE YON's evolving archive of experimental forms.
               </p>
             </div>
           </motion.div>
@@ -487,7 +487,7 @@ export default function HomePage() {
                       {/* View indicator */}
                       <div className="absolute bottom-5 left-5 md:bottom-6 md:left-6 overflow-hidden">
                         <span className={`block font-mono text-[9px] tracking-[0.1em] uppercase ${textVariants[index % 3]} translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]`}>
-                          View Project →
+                          Enter →
                         </span>
                       </div>
                     </motion.div>
@@ -525,7 +525,7 @@ export default function HomePage() {
               className="group inline-flex items-center gap-4 font-mono text-xs tracking-[0.15em] uppercase text-yon-black"
             >
               <span className="relative pb-1">
-                <span className="relative z-10">All Collections</span>
+                <span className="relative z-10">Enter the Showroom</span>
                 <span className="absolute bottom-0 left-0 w-full h-px bg-yon-black origin-left scale-x-100 group-hover:scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
                 <span className="absolute bottom-0 left-0 w-full h-px bg-yon-accent origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-100" />
               </span>
