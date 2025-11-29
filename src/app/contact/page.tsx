@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import Footer from '@/components/Footer'
 
 // Scattered decorative elements
 const decorativeElements = [
@@ -223,6 +224,8 @@ export default function ContactPage() {
           </motion.div>
         </div>
       </section>
+
+      <Footer />
     </div>
   )
 }

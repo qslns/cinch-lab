@@ -169,8 +169,10 @@
 }
 
 /* ============================================
-   Link Hover Effect - Underline Expand
+   Interactive Elements System
    ============================================ */
+
+/* Link Hover Effect - Underline Expand */
 .link-hover {
   position: relative;
   display: inline-block;
@@ -187,8 +189,194 @@
   transition: width var(--duration-normal) var(--ease-out-expo);
 }
 
-.link-hover:hover::after {
+.link-hover:hover::after,
+.link-hover:focus-visible::after {
   width: 100%;
+}
+
+/* Button Base Styles */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.btn:active::before {
+  opacity: 0.1;
+}
+
+/* Primary Button */
+.btn-primary {
+  background: var(--yon-black);
+  color: var(--yon-white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--yon-charcoal);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: transparent;
+  color: var(--yon-black);
+  border: 1px solid var(--yon-black);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background: var(--yon-black);
+  color: var(--yon-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background: transparent;
+  color: var(--yon-black);
+  padding: 0.5rem 0;
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  color: var(--yon-accent);
+}
+
+/* Card Interactive */
+.card-interactive {
+  transition: transform var(--duration-normal) var(--ease-out-expo),
+              box-shadow var(--duration-normal) var(--ease-out-expo);
+}
+
+.card-interactive:hover,
+.card-interactive:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-interactive:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Image Container with Hover Effect */
+.image-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--yon-black);
+  opacity: 0;
+  transition: opacity var(--duration-normal) ease;
+}
+
+.image-hover:hover::after,
+.image-hover:focus-within::after {
+  opacity: 0.05;
+}
+
+.image-hover img,
+.image-hover > div:first-child {
+  transition: transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.image-hover:hover img,
+.image-hover:focus-within img,
+.image-hover:hover > div:first-child,
+.image-hover:focus-within > div:first-child {
+  transform: scale(1.03);
+}
+
+/* Text Link with Arrow */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color var(--duration-normal) ease;
+}
+
+.link-arrow .arrow {
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.link-arrow:hover,
+.link-arrow:focus-visible {
+  color: var(--yon-accent);
+}
+
+.link-arrow:hover .arrow,
+.link-arrow:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+/* Nav Link Active State */
+.nav-link {
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width var(--duration-normal) var(--ease-out-expo);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Focus Ring Enhancement */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--yon-black);
+  outline-offset: 4px;
 }
 
 /* ============================================

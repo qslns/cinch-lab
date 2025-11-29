@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
+import Footer from '@/components/Footer'
 
 // Scattered image placeholders for the about page
 const scatteredImages = [
@@ -337,7 +338,7 @@ export default function AboutPage() {
               </span>
               <Link
                 href="/contact"
-                className="inline-block font-serif text-3xl md:text-4xl text-yon-black hover:text-yon-accent transition-colors duration-300"
+                className="inline-block font-serif text-3xl md:text-4xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
               >
                 <span className="transform inline-block rotate-[-0.5deg]">Get in touch</span>
                 <span className="inline-block ml-4">→</span>
@@ -346,6 +347,8 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+
+      <Footer />
     </div>
   )
 }

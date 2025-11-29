@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import Footer from '@/components/Footer'
 
 // Collection data
 const collections = [
@@ -291,10 +292,16 @@ export default function HomePage() {
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
-                  <Link href={`/collections/${collection.slug}`} className="group block">
-                    <div
-                      className="relative aspect-[4/5] bg-yon-platinum overflow-hidden transition-all duration-500 group-hover:shadow-xl"
+                  <Link
+                    href={`/collections/${collection.slug}`}
+                    className="group block outline-none"
+                  >
+                    <motion.div
+                      className="relative aspect-[4/5] bg-yon-platinum overflow-hidden transition-all duration-500 group-hover:shadow-xl group-focus-visible:shadow-xl group-focus-visible:ring-2 group-focus-visible:ring-yon-black group-focus-visible:ring-offset-4"
                       style={{ transform: `rotate(${config.rotation}deg)` }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.3 }}
                     >
                       {/* Placeholder */}
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -304,25 +311,25 @@ export default function HomePage() {
                       </div>
 
                       {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/5" />
+                      <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/5 group-focus-visible:bg-yon-black/5" />
 
                       {/* Index number */}
                       <span className="absolute top-6 left-6 font-mono text-xs text-yon-grey">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                    </div>
+                    </motion.div>
 
                     {/* Info */}
                     <div className="mt-6 flex justify-between items-end">
                       <div>
-                        <h3 className="font-serif text-2xl md:text-3xl text-yon-black group-hover:text-yon-accent transition-colors duration-300">
+                        <h3 className="font-serif text-2xl md:text-3xl text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors duration-300">
                           {collection.title}
                         </h3>
                         <p className="mt-2 font-mono text-xs text-yon-grey tracking-wider">
                           {collection.season}
                         </p>
                       </div>
-                      <span className="font-mono text-xs text-yon-grey opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                      <span className="font-mono text-xs text-yon-grey opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 group-focus-visible:translate-x-0">
                         VIEW →
                       </span>
                     </div>
@@ -350,81 +357,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============================================
-          FOOTER
-          ============================================ */}
-      <footer className="py-20 md:py-28 px-6 md:px-12 bg-yon-charcoal text-yon-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
-            {/* Brand */}
-            <div className="md:col-span-5">
-              <Link href="/" className="inline-block">
-                <span className="font-serif text-3xl md:text-4xl text-yon-white">THE YON</span>
-              </Link>
-              <p className="mt-6 text-base text-yon-silver leading-relaxed max-w-sm">
-                Experimental fashion that transcends time and space.
-                Every element twisted, yet perfectly harmonious.
-              </p>
-            </div>
-
-            {/* Navigation */}
-            <div className="md:col-span-3 md:col-start-7">
-              <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
-                Navigate
-              </h4>
-              <ul className="space-y-3">
-                {['Collections', 'Process', 'About', 'Contact'].map((item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase()}`}
-                      className="text-base text-yon-silver hover:text-yon-white transition-colors duration-300"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div className="md:col-span-3">
-              <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
-                Connect
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="mailto:hello@theyon.com"
-                    className="text-base text-yon-silver hover:text-yon-white transition-colors duration-300"
-                  >
-                    Email
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://instagram.com/theyon_studio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base text-yon-silver hover:text-yon-white transition-colors duration-300"
-                  >
-                    Instagram
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom */}
-          <div className="mt-16 pt-8 border-t border-yon-graphite flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="font-mono text-xs text-yon-grey">
-              © {new Date().getFullYear()} THE YON. All rights reserved.
-            </p>
-            <p className="font-mono text-xs text-yon-grey">
-              Designed by Taehyun Lee
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

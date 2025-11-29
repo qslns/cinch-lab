@@ -8,6 +8,7 @@ import { client } from '../../../sanity/lib/client'
 import { urlFor } from '../../../sanity/lib/image'
 import { collectionsQuery } from '@/lib/sanity/queries'
 import type { Collection } from '@/types/sanity'
+import Footer from '@/components/Footer'
 
 // Fallback data for THE YON
 const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
@@ -281,6 +282,8 @@ export default function CollectionsPage() {
           )}
         </div>
       </section>
+
+      <Footer />
     </div>
   )
 }

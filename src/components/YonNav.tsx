@@ -56,10 +56,10 @@ export default function YonNav() {
           {/* Logo */}
           <Link
             href="/"
-            className="relative z-[600] group"
+            className="relative z-[600] group outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
             onClick={() => setIsOpen(false)}
           >
-            <span className="font-serif text-2xl md:text-3xl tracking-tight text-yon-black">
+            <span className="font-serif text-2xl md:text-3xl tracking-tight text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors duration-300">
               THE YON
             </span>
           </Link>
@@ -74,21 +74,22 @@ export default function YonNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group relative"
+                  className="group relative outline-none"
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   <span
                     className={`font-mono text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
                       isActive
                         ? 'text-yon-black'
-                        : 'text-yon-grey hover:text-yon-black'
+                        : 'text-yon-grey hover:text-yon-black group-focus-visible:text-yon-black'
                     }`}
                   >
                     {item.label}
                   </span>
-                  {/* Hover underline */}
+                  {/* Hover & Focus underline */}
                   <span
                     className={`absolute left-0 -bottom-1 h-[1px] bg-yon-black transition-all duration-300 ${
-                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full group-focus-visible:w-full'
                     }`}
                   />
                 </Link>

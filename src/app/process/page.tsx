@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
+import Footer from '@/components/Footer'
 
 // Pinboard items - scattered like a designer's mood board
 const pinboardItems = [
@@ -320,7 +321,7 @@ export default function ProcessPage() {
             </span>
             <Link
               href="/collections"
-              className="block mt-6 font-serif text-4xl md:text-5xl lg:text-6xl text-yon-white hover:text-yon-platinum transition-colors duration-300"
+              className="block mt-6 font-serif text-4xl md:text-5xl lg:text-6xl text-yon-white hover:text-yon-platinum focus-visible:text-yon-platinum transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-yon-white focus-visible:ring-offset-4 focus-visible:ring-offset-yon-charcoal"
             >
               <span className="transform inline-block rotate-[-0.5deg]">View Collections</span>
               <span className="inline-block ml-4">→</span>
@@ -328,6 +329,8 @@ export default function ProcessPage() {
           </motion.div>
         </div>
       </section>
+
+      <Footer />
     </div>
   )
 }

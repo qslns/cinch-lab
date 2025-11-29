@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import Footer from '@/components/Footer'
 
 // Collection data with enhanced image layouts
 const collectionsData: Record<string, {
@@ -413,12 +414,12 @@ export default function CollectionDetailPage() {
               {collection.prevSlug ? (
                 <Link
                   href={`/collections/${collection.prevSlug}`}
-                  className="group flex items-center gap-4"
+                  className="group flex items-center gap-4 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4 rounded"
                 >
-                  <span className="font-mono text-xs text-yon-grey group-hover:text-yon-black transition-colors">←</span>
+                  <span className="font-mono text-xs text-yon-grey group-hover:text-yon-black group-focus-visible:text-yon-black transition-colors">←</span>
                   <div>
                     <span className="block font-mono text-[10px] text-yon-grey tracking-wider uppercase">Previous</span>
-                    <span className="block font-serif text-lg text-yon-black group-hover:text-yon-accent transition-colors">
+                    <span className="block font-serif text-lg text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors">
                       {collectionsData[collection.prevSlug]?.title}
                     </span>
                   </div>
@@ -426,7 +427,7 @@ export default function CollectionDetailPage() {
               ) : (
                 <Link
                   href="/collections"
-                  className="font-mono text-sm text-yon-grey hover:text-yon-black transition-colors"
+                  className="font-mono text-sm text-yon-grey hover:text-yon-black focus-visible:text-yon-black transition-colors outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4 rounded"
                 >
                   ← All Collections
                 </Link>
@@ -438,20 +439,20 @@ export default function CollectionDetailPage() {
               {collection.nextSlug ? (
                 <Link
                   href={`/collections/${collection.nextSlug}`}
-                  className="group flex items-center gap-4 text-right"
+                  className="group flex items-center gap-4 text-right outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4 rounded"
                 >
                   <div>
                     <span className="block font-mono text-[10px] text-yon-grey tracking-wider uppercase">Next</span>
-                    <span className="block font-serif text-lg text-yon-black group-hover:text-yon-accent transition-colors">
+                    <span className="block font-serif text-lg text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors">
                       {collectionsData[collection.nextSlug]?.title}
                     </span>
                   </div>
-                  <span className="font-mono text-xs text-yon-grey group-hover:text-yon-black transition-colors">→</span>
+                  <span className="font-mono text-xs text-yon-grey group-hover:text-yon-black group-focus-visible:text-yon-black transition-colors">→</span>
                 </Link>
               ) : (
                 <Link
                   href="/process"
-                  className="font-mono text-sm text-yon-black hover:text-yon-accent transition-colors"
+                  className="font-mono text-sm text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4 rounded"
                 >
                   View Process →
                 </Link>
@@ -460,6 +461,8 @@ export default function CollectionDetailPage() {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   )
 }
