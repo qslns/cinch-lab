@@ -62,43 +62,47 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
   },
 ]
 
-// Exhibition-style layout configurations - More varied sizes
+// Exhibition-style layout configurations - Professional editorial grid
 const layoutConfigs = [
   {
-    // Extra Large, left aligned - Hero piece
-    wrapper: 'md:w-[75%] md:ml-0',
+    // Hero piece - dominant
+    wrapper: 'md:w-[68%] md:ml-0',
     aspectRatio: 'aspect-[4/5]',
-    rotation: -1.5,
-    variant: 'light' as const,
-    entryDirection: { x: -50, y: 0 },
+    rotation: -2,
+    variant: 'dark' as const,
+    entryDirection: { x: -60, y: 0 },
     size: 'xl',
+    marginTop: '',
   },
   {
-    // Medium, right aligned, overlapping
-    wrapper: 'md:w-[50%] md:ml-auto md:-mt-40',
+    // Medium, right aligned - contrast
+    wrapper: 'md:w-[48%] md:ml-auto',
     aspectRatio: 'aspect-[3/4]',
-    rotation: 2,
-    variant: 'medium' as const,
-    entryDirection: { x: 50, y: 0 },
-    size: 'md',
+    rotation: 2.5,
+    variant: 'light' as const,
+    entryDirection: { x: 60, y: 0 },
+    size: 'lg',
+    marginTop: 'md:-mt-48',
   },
   {
-    // Small, left-center - accent piece
-    wrapper: 'md:w-[38%] md:ml-[8%] md:-mt-20',
+    // Small accent - square
+    wrapper: 'md:w-[35%] md:ml-[12%]',
     aspectRatio: 'aspect-[1/1]',
     rotation: -0.5,
-    variant: 'dark' as const,
+    variant: 'medium' as const,
     entryDirection: { x: 0, y: 50 },
-    size: 'sm',
+    size: 'md',
+    marginTop: 'md:-mt-28',
   },
   {
-    // Large, right aligned
-    wrapper: 'md:w-[62%] md:ml-auto md:-mt-28',
+    // Large, offset right
+    wrapper: 'md:w-[55%] md:ml-auto',
     aspectRatio: 'aspect-[3/4]',
-    rotation: 1,
-    variant: 'light' as const,
+    rotation: 1.5,
+    variant: 'dark' as const,
     entryDirection: { x: 40, y: 30 },
     size: 'lg',
+    marginTop: 'md:-mt-32',
   },
 ]
 
@@ -141,58 +145,104 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-yon-white">
-      {/* Header */}
-      <section className="pt-32 md:pt-40 pb-20 md:pb-32 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
-            {/* Decorative number */}
-            <span className="absolute -top-8 -left-2 md:-left-8 font-mono text-[100px] md:text-[180px] text-yon-platinum/40 leading-none select-none pointer-events-none">
-              C
-            </span>
+      {/* Header - Editorial Style */}
+      <section className="pt-28 md:pt-36 lg:pt-40 pb-16 md:pb-24 lg:pb-32 px-6 md:px-12 lg:px-16 relative overflow-hidden">
+        {/* Subtle grain texture */}
+        <div className="absolute inset-0 opacity-[0.012] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
 
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-12 gap-8 md:gap-12">
+            {/* Left column - Title */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-span-6 relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
             >
-              <span className="relative font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
-                Portfolio
+              {/* Decorative letter */}
+              <span className="absolute -top-6 -left-2 md:-left-6 font-mono text-[80px] md:text-[140px] text-yon-platinum/25 leading-none select-none pointer-events-none">
+                C
               </span>
-              <h1 className="relative mt-4 font-serif text-[12vw] md:text-[8vw] lg:text-[6vw] text-yon-black leading-[0.9]">
-                <span className="block transform rotate-[-0.5deg]">Collec</span>
-                <span className="block transform rotate-[0.3deg] ml-[8%]">tions</span>
-              </h1>
+
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="w-6 h-px bg-yon-grey" />
+                  <span className="font-mono text-[10px] text-yon-grey tracking-[0.25em] uppercase">
+                    Portfolio
+                  </span>
+                </div>
+                <h1 className="relative font-serif text-[14vw] md:text-[9vw] lg:text-[7vw] text-yon-black leading-[0.85]">
+                  <motion.span
+                    className="block"
+                    initial={{ opacity: 0, y: 60 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    Collec
+                  </motion.span>
+                  <motion.span
+                    className="block ml-[6%]"
+                    initial={{ opacity: 0, y: 60 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    tions
+                  </motion.span>
+                </h1>
+              </motion.div>
             </motion.div>
 
-            <motion.p
-              className="mt-8 md:mt-12 text-lg md:text-xl text-yon-steel max-w-xl leading-relaxed ml-[5%] md:ml-[10%]"
+            {/* Right column - Description */}
+            <motion.div
+              className="md:col-span-5 md:col-start-8 md:pt-20 lg:pt-28"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              Each collection is an experiment. A question posed to fabric, form, and tradition.
-            </motion.p>
-          </motion.div>
+              <p className="text-base md:text-lg text-yon-steel leading-[1.8]">
+                Each collection is an experiment — a question posed to fabric, form, and tradition.
+              </p>
+              <p className="mt-4 text-sm text-yon-grey leading-[1.8]">
+                실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                <span className="font-mono text-[10px] text-yon-grey/50 tracking-wider">
+                  {collections.length} Projects
+                </span>
+                <span className="w-4 h-px bg-yon-grey/30" />
+                <span className="font-mono text-[10px] text-yon-grey/50 tracking-wider">
+                  2024 — 2025
+                </span>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Collections - Exhibition Layout */}
-      <section className="pb-32 md:pb-48 px-6 md:px-12">
+      {/* Collections - Editorial Exhibition Grid */}
+      <section className="pb-32 md:pb-48 lg:pb-56 px-6 md:px-12 lg:px-16 relative">
+        {/* Background decoration */}
+        <span className="absolute top-1/4 -right-[8%] font-mono text-[30vw] md:text-[20vw] text-yon-platinum/8 leading-none select-none pointer-events-none">
+          W
+        </span>
+
         <div className="max-w-7xl mx-auto">
           {loading ? (
-            <div className="flex items-center justify-center py-32">
+            <div className="flex flex-col items-center justify-center py-32 gap-4">
               <motion.div
-                className="w-12 h-12 border border-yon-grey rounded-full"
+                className="w-10 h-10 border border-yon-grey/30"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
               >
-                <div className="w-full h-full border-t border-yon-black rounded-full" />
+                <div className="w-full h-full border-t border-yon-black" />
               </motion.div>
+              <span className="font-mono text-[10px] text-yon-grey tracking-[0.2em] uppercase">
+                Loading
+              </span>
             </div>
           ) : (
             <div className="relative">
@@ -202,7 +252,7 @@ export default function CollectionsPage() {
                 return (
                   <motion.div
                     key={collection._id}
-                    className={`mb-16 md:mb-0 ${config.wrapper}`}
+                    className={`mb-20 md:mb-0 ${config.wrapper} ${config.marginTop}`}
                     initial={{
                       opacity: 0,
                       x: config.entryDirection.x,
@@ -213,9 +263,9 @@ export default function CollectionsPage() {
                       x: 0,
                       y: 0,
                     }}
-                    viewport={{ once: true, margin: '-100px' }}
+                    viewport={{ once: true, margin: '-80px' }}
                     transition={{
-                      duration: 1,
+                      duration: 1.1,
                       delay: 0.1,
                       ease: [0.16, 1, 0.3, 1],
                     }}
@@ -226,59 +276,71 @@ export default function CollectionsPage() {
                     >
                       {/* Image container */}
                       <motion.div
-                        className={`relative ${config.aspectRatio} ${variantStyles[config.variant]} overflow-hidden transition-shadow duration-500 group-hover:shadow-2xl group-focus-visible:shadow-2xl group-focus-visible:ring-2 group-focus-visible:ring-yon-black group-focus-visible:ring-offset-4`}
+                        className={`relative ${config.aspectRatio} ${variantStyles[config.variant]} overflow-hidden`}
                         style={{ transform: `rotate(${config.rotation}deg)` }}
-                        whileHover={{ scale: 1.02, rotate: config.rotation * 0.6 }}
-                        whileTap={{ scale: 0.98 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        whileHover={{
+                          scale: 1.02,
+                          rotate: config.rotation * 0.4,
+                          transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+                        }}
                       >
                         {collection.mainImage ? (
                           <Image
                             src={urlFor(collection.mainImage).width(1000).height(1250).url()}
                             alt={collection.title}
                             fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
                           />
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className={`font-mono text-sm tracking-widest ${variantTextStyles[config.variant]}`}>
+                          <div className={`absolute inset-0 flex flex-col items-center justify-center ${variantTextStyles[config.variant]}`}>
+                            <span className="font-mono text-[10px] tracking-[0.2em] opacity-50">
                               {collection.title}
                             </span>
                           </div>
                         )}
 
-                        {/* Hover overlay with gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-yon-black/15 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500" />
+                        {/* Subtle border */}
+                        <div className="absolute inset-0 border border-current opacity-[0.04]" />
 
-                        {/* Index number */}
-                        <div className="absolute top-6 left-6">
-                          <span className={`font-mono text-xs tracking-wider ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'}`}>
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-yon-black/0 group-hover:bg-yon-black/5 transition-colors duration-700" />
+
+                        {/* Index - Top left */}
+                        <div className="absolute top-5 left-5 md:top-6 md:left-6">
+                          <span className={`font-mono text-[10px] tracking-wider ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'} opacity-60`}>
                             {String(index + 1).padStart(2, '0')}
                           </span>
                         </div>
 
-                        {/* Season tag - more visible on hover */}
-                        <div className="absolute bottom-6 right-6">
-                          <span className={`font-mono text-[10px] tracking-[0.2em] uppercase transition-opacity duration-300 ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'} group-hover:opacity-100`}>
+                        {/* Season - Bottom right */}
+                        <div className="absolute bottom-5 right-5 md:bottom-6 md:right-6">
+                          <span className={`font-mono text-[9px] tracking-[0.15em] uppercase ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'} opacity-0 group-hover:opacity-60 transition-opacity duration-500`}>
                             {collection.season?.toUpperCase()} {collection.year}
+                          </span>
+                        </div>
+
+                        {/* View indicator - Bottom left */}
+                        <div className="absolute bottom-5 left-5 md:bottom-6 md:left-6 overflow-hidden">
+                          <span className={`block font-mono text-[9px] tracking-[0.1em] uppercase ${config.variant === 'dark' ? 'text-yon-silver' : 'text-yon-grey'} translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]`}>
+                            View Project →
                           </span>
                         </div>
                       </motion.div>
 
-                      {/* Info */}
-                      <div className="mt-8 md:mt-10 flex justify-between items-start">
+                      {/* Info - Below card */}
+                      <div className="mt-6 md:mt-8 flex justify-between items-start">
                         <div className="max-w-md">
-                          <h2 className="font-serif text-3xl md:text-4xl text-yon-black group-hover:text-yon-accent group-focus-visible:text-yon-accent transition-colors duration-300">
+                          <h2 className="font-serif text-2xl md:text-3xl text-yon-black group-hover:text-yon-accent transition-colors duration-500">
                             {collection.title}
                           </h2>
                           {collection.description && (
-                            <p className="mt-4 text-base text-yon-steel leading-relaxed line-clamp-2">
+                            <p className="mt-3 text-sm text-yon-steel leading-[1.7] line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                               {collection.description}
                             </p>
                           )}
                         </div>
-                        <span className="font-mono text-xs text-yon-grey opacity-0 translate-x-4 group-hover:opacity-100 group-focus-visible:opacity-100 group-hover:translate-x-0 group-focus-visible:translate-x-0 transition-all duration-300">
-                          VIEW →
+                        <span className="font-mono text-[10px] text-yon-grey/40 tracking-wider mt-1">
+                          {collection.season?.toUpperCase()}
                         </span>
                       </div>
                     </Link>
