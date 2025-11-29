@@ -34,61 +34,59 @@ export default class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-margiela-raw-canvas flex items-center justify-center p-8">
+        <div className="min-h-screen bg-yon-white flex items-center justify-center px-6">
           <motion.div
-            className="max-w-2xl w-full bg-white border-2 border-cdg-blood-red transform -rotate-1 exposed-seam"
+            className="max-w-lg w-full text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="p-12">
-              <div className="margiela-number-tag absolute top-4 left-4 text-cdg-blood-red">
-                ERROR_001
-              </div>
+            {/* Error indicator */}
+            <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
+              System Error
+            </span>
 
-              <div className="mb-8">
-                <h1 className="text-display-2 font-black text-cdg-blood-red mb-4">
-                  SYSTEM
-                  <br />
-                  FAILURE
-                </h1>
-                <p className="text-margiela-steel text-lg">
-                  An unexpected error occurred in the laboratory.
+            {/* Title */}
+            <h1 className="mt-4 font-serif text-4xl md:text-5xl text-yon-black">
+              <span className="block transform rotate-[-0.5deg]">An error</span>
+              <span className="block transform rotate-[0.3deg] ml-[5%]">occurred</span>
+            </h1>
+
+            {/* Description */}
+            <p className="mt-8 text-yon-steel text-lg leading-relaxed">
+              Something unexpected happened. Please refresh the page or return home.
+            </p>
+
+            {/* Error message */}
+            {this.state.error?.message && (
+              <div className="mt-6 p-4 bg-yon-ivory text-left">
+                <p className="font-mono text-xs text-yon-grey mb-2">Details:</p>
+                <p className="font-mono text-sm text-yon-steel break-words">
+                  {this.state.error.message}
                 </p>
               </div>
+            )}
 
-              <div className="bg-margiela-paper p-6 mb-8 font-mono text-sm text-margiela-carbon">
-                <div className="text-xs text-margiela-aluminum mb-2">ERROR_TRACE:</div>
-                <div className="break-words">
-                  {this.state.error?.message || 'Unknown error'}
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => window.location.reload()}
-                  className="flex-1 px-6 py-3 bg-margiela-carbon text-white border-2 border-margiela-carbon
-                    hover:bg-white hover:text-margiela-carbon transition-colors duration-300
-                    uppercase tracking-widest text-sm font-semibold"
-                >
-                  Reload
-                </button>
-                <button
-                  onClick={() => window.location.href = '/'}
-                  className="flex-1 px-6 py-3 bg-white text-margiela-carbon border-2 border-margiela-carbon
-                    hover:bg-margiela-carbon hover:text-white transition-colors duration-300
-                    uppercase tracking-widest text-sm font-semibold"
-                >
-                  Return Home
-                </button>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-margiela-exposed-seam">
-                <p className="text-xs text-margiela-aluminum uppercase tracking-wider">
-                  CINCH LAB • EXPERIMENTAL FAILURE PROTOCOL
-                </p>
-              </div>
+            {/* Actions */}
+            <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => window.location.reload()}
+                className="px-8 py-4 bg-yon-black text-yon-white font-mono text-sm tracking-wider uppercase hover:bg-yon-charcoal transition-colors duration-300"
+              >
+                Reload page
+              </button>
+              <button
+                onClick={() => window.location.href = '/'}
+                className="px-8 py-4 border border-yon-black text-yon-black font-mono text-sm tracking-wider uppercase hover:bg-yon-black hover:text-yon-white transition-colors duration-300"
+              >
+                Go home
+              </button>
             </div>
+
+            {/* Footer */}
+            <p className="mt-16 font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
+              THE YON — Beyond Fashion
+            </p>
           </motion.div>
         </div>
       )

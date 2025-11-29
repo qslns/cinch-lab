@@ -6,11 +6,10 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const navItems = [
-  { href: '/', label: 'HOME' },
-  { href: '/collections', label: 'COLLECTIONS' },
-  { href: '/process', label: 'PROCESS' },
-  { href: '/about', label: 'ABOUT' },
-  { href: '/contact', label: 'CONTACT' },
+  { href: '/collections', label: 'Collections' },
+  { href: '/process', label: 'Process' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 export default function YonNav() {
@@ -47,7 +46,7 @@ export default function YonNav() {
     <>
       {/* Navigation Bar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[500] transition-all duration-500 ease-out-expo ${
+        className={`fixed top-0 left-0 right-0 z-[500] transition-all duration-500 ${
           scrolled || isOpen
             ? 'bg-yon-white/95 backdrop-blur-sm'
             : 'bg-transparent'
@@ -60,24 +59,52 @@ export default function YonNav() {
             className="relative z-[600] group"
             onClick={() => setIsOpen(false)}
           >
-            <motion.span
-              className="font-serif text-2xl md:text-3xl tracking-tight text-yon-black"
-              whileHover={{ x: 5 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <span className="font-serif text-2xl md:text-3xl tracking-tight text-yon-black">
               THE YON
-            </motion.span>
+            </span>
           </Link>
 
-          {/* Hamburger Button */}
+          {/* Desktop Navigation - visible on md and above */}
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href ||
+                (item.href !== '/' && pathname.startsWith(item.href))
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group relative"
+                >
+                  <span
+                    className={`font-mono text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
+                      isActive
+                        ? 'text-yon-black'
+                        : 'text-yon-grey hover:text-yon-black'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                  {/* Hover underline */}
+                  <span
+                    className={`absolute left-0 -bottom-1 h-[1px] bg-yon-black transition-all duration-300 ${
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                  />
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Mobile Hamburger Button - visible below md */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="relative z-[600] w-10 h-10 flex flex-col items-center justify-center gap-1.5 group"
+            className="relative z-[600] w-10 h-10 flex md:hidden flex-col items-center justify-center gap-1.5"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
             <motion.span
-              className="block w-6 h-[2px] bg-yon-black origin-center"
+              className="block w-6 h-[1.5px] bg-yon-black origin-center"
               animate={{
                 rotate: isOpen ? 45 : 0,
                 y: isOpen ? 4 : 0,
@@ -85,7 +112,7 @@ export default function YonNav() {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             />
             <motion.span
-              className="block w-6 h-[2px] bg-yon-black origin-center"
+              className="block w-6 h-[1.5px] bg-yon-black origin-center"
               animate={{
                 rotate: isOpen ? -45 : 0,
                 y: isOpen ? -4 : 0,
@@ -96,47 +123,55 @@ export default function YonNav() {
         </div>
       </nav>
 
-      {/* Fullscreen Menu */}
+      {/* Mobile Fullscreen Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[400] bg-yon-white flex items-center justify-center"
+            className="fixed inset-0 z-[400] bg-yon-white flex items-center justify-center md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Asymmetric Navigation Links */}
-            <nav className="relative w-full max-w-4xl px-8">
-              <ul className="space-y-4 md:space-y-6">
+            <nav className="w-full max-w-sm px-8">
+              <ul className="space-y-6">
+                {/* Home link for mobile */}
+                <motion.li
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ duration: 0.4, delay: 0, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Link
+                    href="/"
+                    className="group inline-block"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span
+                      className={`font-serif text-4xl tracking-tight transition-colors duration-300 ${
+                        pathname === '/'
+                          ? 'text-yon-black'
+                          : 'text-yon-grey group-hover:text-yon-black'
+                      }`}
+                    >
+                      Home
+                    </span>
+                  </Link>
+                </motion.li>
+
                 {navItems.map((item, index) => {
-                  const isActive = pathname === item.href
-                  // Asymmetric positioning
-                  const offsets = [
-                    'ml-0',
-                    'ml-8 md:ml-16',
-                    'ml-4 md:ml-8',
-                    'ml-12 md:ml-24',
-                    'ml-2 md:ml-4',
-                  ]
-                  const rotations = [
-                    'rotate-[-0.5deg]',
-                    'rotate-[1deg]',
-                    'rotate-[-1deg]',
-                    'rotate-[0.5deg]',
-                    'rotate-[-0.3deg]',
-                  ]
+                  const isActive = pathname === item.href ||
+                    (item.href !== '/' && pathname.startsWith(item.href))
 
                   return (
                     <motion.li
                       key={item.href}
-                      className={`${offsets[index]} ${rotations[index]}`}
-                      initial={{ opacity: 0, x: -50 }}
+                      initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
+                      exit={{ opacity: 0, x: -30 }}
                       transition={{
-                        duration: 0.5,
-                        delay: index * 0.1,
+                        duration: 0.4,
+                        delay: (index + 1) * 0.05,
                         ease: [0.16, 1, 0.3, 1],
                       }}
                     >
@@ -145,34 +180,14 @@ export default function YonNav() {
                         className="group inline-block"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="relative">
-                          {/* Index number */}
-                          <span className="absolute -left-8 md:-left-12 top-1/2 -translate-y-1/2 font-mono text-xs text-yon-grey">
-                            {String(index + 1).padStart(2, '0')}
-                          </span>
-
-                          {/* Link text */}
-                          <span
-                            className={`font-serif text-4xl md:text-6xl lg:text-7xl tracking-tight transition-colors duration-300 ${
-                              isActive
-                                ? 'text-yon-black'
-                                : 'text-yon-grey group-hover:text-yon-black'
-                            }`}
-                          >
-                            {item.label}
-                          </span>
-
-                          {/* Active indicator */}
-                          {isActive && (
-                            <motion.span
-                              className="absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 w-2 h-2 bg-yon-black rounded-full"
-                              layoutId="activeIndicator"
-                              transition={{ duration: 0.3 }}
-                            />
-                          )}
-
-                          {/* Hover underline */}
-                          <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-yon-black transition-all duration-500 ease-out-expo group-hover:w-full" />
+                        <span
+                          className={`font-serif text-4xl tracking-tight transition-colors duration-300 ${
+                            isActive
+                              ? 'text-yon-black'
+                              : 'text-yon-grey group-hover:text-yon-black'
+                          }`}
+                        >
+                          {item.label}
                         </span>
                       </Link>
                     </motion.li>
@@ -180,16 +195,19 @@ export default function YonNav() {
                 })}
               </ul>
 
-              {/* Footer info in menu */}
+              {/* Footer info in mobile menu */}
               <motion.div
-                className="absolute bottom-0 left-8 right-8 flex justify-between items-end text-xs text-yon-grey font-mono"
+                className="mt-16 pt-8 border-t border-yon-platinum"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                style={{ bottom: '-20vh' }}
+                transition={{ delay: 0.3 }}
               >
-                <span>EXPERIMENTAL FASHION</span>
-                <span>BEYOND THE HORIZON</span>
+                <p className="font-mono text-xs text-yon-grey tracking-[0.15em] uppercase">
+                  Experimental Fashion
+                </p>
+                <p className="mt-1 font-mono text-xs text-yon-grey tracking-[0.15em] uppercase">
+                  Beyond the Horizon
+                </p>
               </motion.div>
             </nav>
           </motion.div>
