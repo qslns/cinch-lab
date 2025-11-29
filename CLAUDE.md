@@ -1,110 +1,97 @@
-# CINCH LAB - Experimental Fashion Laboratory
+# THE YON - Beyond Fashion
 
 ## BRAND IDENTITY
-**"Cinch • Release • Repeat"**
+**"Twisted yet harmonious"**
 
-CINCH LAB은 판매를 위한 브랜드가 아닙니다.
-우리는 실험적 패션 연구소입니다.
-우리는 창작 과정의 디지털 아카이브입니다.
+THE YON (더 연) = "저 너머"
+시간과 공간을 초월한 패션. 손에 잡히지 않는, 도달하기 어려운 이상적인 아름다움.
 
 ## CORE PHILOSOPHY
-- **정체성**: 실험적 패션 연구소
-- **핵심 가치**: 패션의 극한 추구, 무한한 창작 자유
-- **제작 방식**: 하이엔드 장인정신, 핸드메이드
-- **작업 범위**: 모든 패션 카테고리, 모든 스타일, 모든 가능성
+- **정체성**: 실험적 패션 포트폴리오
+- **핵심 미학**: 뒤틀렸지만 조화로운 - 모든 요소가 약간씩 어긋나 있지만 전체적으로 아름다운 구성
+- **디자이너**: Taehyun Lee (이태현), 사사다 패션스쿨
+- **목적**: CSM, Parsons, Antwerp 대학원 포트폴리오
 
 ## WEBSITE STRUCTURE
 
 ### HOME (/)
-- Cinch • Release • Repeat 슬로건 중심
-- 실험실의 현재 상태 표시
-- 최신 실험 결과 프리뷰
-- 실험적 프로세스를 보여주는 인터랙티브 요소
-
-### LAB (/lab)
-- **목적**: 실험적 기술과 제작 방식 쇼케이스
-- 패턴 메이킹 실험
-- 소재 연구 및 조작
-- 구조적 실험
-- 제작 기법 아카이브
-- 프로세스 문서화
-- NO SALES - 순수한 기술 전시
+- 자유로운 이미지 배치 (Faerie 스타일)
+- 패럴랙스 스크롤 효과
+- "THE YON" 브랜드 타이포그래피
+- 최신 컬렉션 프리뷰
 
 ### COLLECTIONS (/collections)
-- **목적**: 시즌별/연간 룩 갤러리
-- 촬영된 실험착장 전시
-- 런웨이/프레젠테이션 아카이브
-- 비주얼 스토리텔링
-- NO PRODUCT DETAILS - 순수한 비주얼
+- 비대칭 그리드 갤러리
+- 다양한 크기와 회전의 카드들
+- 시즌별 프로젝트 전시
 
-### ARCHIVE (/archive)
-- **목적**: 정신세계와 창작 철학 표현
-- 영감의 원천
-- 사고 프로세스
-- 실험 기록
-- 실패와 성공의 문서화
+### COLLECTIONS/[SLUG] (/collections/[slug])
+- 풀스크린 히어로 이미지
+- 스크롤 기반 이미지 갤러리
+- 컨셉, 기법, 소재 정보
+
+### PROCESS (/process)
+- 작업 과정 쇼케이스
+- 실험, 연구, 실패 문서화
+- 타임라인 스타일 레이아웃
 
 ### ABOUT (/about)
-- **목적**: 비전과 정체성 선언
-- CINCH LAB의 선언문
-- 창작 철학
-- 실험적 접근 방식
-- 하이엔드 장인정신
+- 디자이너 인간적 소개
+- 철학: "뒤틀렸지만 조화로운"
+- 접근 방식 설명
 
 ### CONTACT (/contact)
-- **목적**: 비즈니스 협업 창구
-- 전시 문의
-- 협업 제안
-- 프레스 컨택
-- 커미션 작업 (극소수, 고가)
+- 극도로 미니멀
+- 이메일 + 인스타그램만
+- 협업/전시 문의용
 
-### ANALYSIS (/analysis) - NEW
-- **목적**: 타 브랜드/컬렉션 분석
-- 패션 비평
-- 기술적 분해
-- 트렌드가 아닌 기법 분석
-- 전문가적 시각으로 본 패션계
+## DESIGN PRINCIPLES
 
-## IMPORTANT NOTES
+### 비대칭 미학
+- 중앙 정렬 금지
+- 60:40, 70:30 비율 분할
+- 예상치 못한 요소 배치
 
-### 판매에 대한 입장
-- 제품 판매 페이지 없음
-- 장바구니 기능 없음
-- 사이즈/컬러 옵션 없음
-- 가격 표시 최소화
-- 2달 이후에도 판매는 전시 후 개별 연락
+### 기울기와 회전
+- 0.5° ~ 3° 미세한 회전
+- 정적인 화면에 생명력
+- 절제된 비대칭
 
-### 콘텐츠 우선순위
-1. 실험과 기술 전시
-2. 비주얼 임팩트
-3. 창작 철학
-4. 프로세스 문서화
+### 색상 팔레트
+- 흑백 베이스
+- yon-black (#0A0A0A) ~ yon-white (#FAFAFA)
+- 강조색: yon-accent (#8B7355) - Warm taupe
 
-### 디자인 원칙
-- 실험실 미학 유지
-- Brutalist 디자인 강화
-- 실험적 프로세스를 보여주는 UI
-- 판매가 아닌 전시 중심 레이아웃
+### 타이포그래피
+- Cormorant Garamond (세리프) - 타이틀
+- Inter (산세리프) - 본문
+- Space Mono (모노) - 기술 정보
 
-## TECHNICAL APPROACH
-- 이미지 중심 갤러리
-- 프로세스 애니메이션
-- 실험 데이터 시각화
-- 인터랙티브 기술 쇼케이스
-- NO E-COMMERCE FEATURES
+### 애니메이션
+- transform과 opacity만 사용
+- ease-out-expo 커브
+- 부드럽고 자연스러운 움직임
 
-## FUTURE VISION
-- 디지털 전시장
-- 실험 라이브 스트리밍
-- AR 착장 프리뷰 (판매 아님, 전시용)
-- 기술 워크샵 문서화
+## TECHNICAL STACK
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- Framer Motion (컴포넌트 애니메이션)
+- GSAP + Lenis (스크롤)
+- Sanity CMS (선택적)
 
-## SLOGAN IMPLEMENTATION
-모든 페이지에 "Cinch • Release • Repeat" 정신 반영
-- Cinch: 완벽한 장악
-- Release: 창조적 해방
-- Repeat: 끝없는 실험
+## PERFORMANCE TARGETS
+- Lighthouse 90점 이상
+- FCP 2초 이내
+- 60fps 스크롤
+- 모바일 완벽 대응
+
+## NOT ALLOWED
+- Three.js, WebGL
+- 무거운 파티클 시스템
+- E-commerce 기능
+- 복잡한 색상 팔레트
 
 ---
 
-CINCH LAB — Experimental Fashion Laboratory
+THE YON — Beyond Fashion

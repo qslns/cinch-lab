@@ -1,56 +1,102 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
-import { collections, type Collection, type Look } from '@/data/collections'
-import CipherText from '@/components/CipherText'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
 
-export default function BrutalistCollectionDetailPage() {
+// Placeholder collection data
+const collectionsData: Record<string, {
+  title: string
+  season: string
+  year: number
+  description: string
+  concept: string
+  images: { id: number; caption?: string }[]
+  techniques: string[]
+  materials: string[]
+}> = {
+  'deconstruction': {
+    title: 'DECONSTRUCTION',
+    season: 'FW',
+    year: 2025,
+    description: 'Exploring pattern deconstruction through experimental tailoring techniques. Every seam exposed, every structure questioned.',
+    concept: 'This collection questions the fundamental assumptions of garment construction. By exposing the hidden architecture of clothing, we reveal the beauty in structure itself. Seams become decorative elements, interfacing becomes visible texture, and the process of making becomes the final design.',
+    images: [
+      { id: 1, caption: 'Look 01' },
+      { id: 2, caption: 'Detail' },
+      { id: 3, caption: 'Look 02' },
+      { id: 4, caption: 'Process' },
+      { id: 5, caption: 'Look 03' },
+      { id: 6, caption: 'Material study' },
+    ],
+    techniques: ['Raw edge exposure', 'Inverted seaming', 'Visible interfacing', 'Deconstructed tailoring'],
+    materials: ['Japanese denim', 'Wool suiting', 'Cotton canvas', 'Horsehair interfacing'],
+  },
+  'fragments': {
+    title: 'FRAGMENTS',
+    season: 'SS',
+    year: 2025,
+    description: 'Hybrid material construction with contrasting textures. Beauty in the broken pieces.',
+    concept: 'Fragments explores the poetry of incompleteness. Each piece is constructed from seemingly disparate elements that find unexpected harmony. The collection celebrates the beauty of juxtaposition - rough against smooth, structured against fluid, opacity against transparency.',
+    images: [
+      { id: 1, caption: 'Look 01' },
+      { id: 2, caption: 'Texture detail' },
+      { id: 3, caption: 'Look 02' },
+      { id: 4, caption: 'Material splice' },
+    ],
+    techniques: ['Material splicing', 'Surface manipulation', 'Hybrid construction'],
+    materials: ['Nylon', 'Silk organza', 'Leather', 'Technical mesh'],
+  },
+  'void': {
+    title: 'VOID',
+    season: 'FW',
+    year: 2024,
+    description: 'Architectural volume exploration. The space between defines the form.',
+    concept: 'VOID investigates negative space as a design element. The collection is built around the idea that what is absent is as important as what is present. Sculptural volumes are created not by adding, but by careful subtraction and the strategic placement of emptiness.',
+    images: [
+      { id: 1, caption: 'Look 01' },
+      { id: 2, caption: 'Volume study' },
+      { id: 3, caption: 'Look 02' },
+    ],
+    techniques: ['Draping', 'Pattern cutting', 'Sculptural construction'],
+    materials: ['Cotton canvas', 'Horsehair', 'Organza'],
+  },
+  'origin': {
+    title: 'ORIGIN',
+    season: 'SS',
+    year: 2024,
+    description: 'Return to fundamental shapes. Where every collection begins.',
+    concept: 'ORIGIN strips away complexity to find the essential. This collection returns to the basic geometric forms that underlie all garment construction - the circle, the rectangle, the line. From these simple elements, we build towards complexity.',
+    images: [
+      { id: 1, caption: 'Look 01' },
+      { id: 2, caption: 'Form study' },
+    ],
+    techniques: ['Basic construction', 'Form studies', 'Minimal pattern making'],
+    materials: ['Muslin', 'Cotton', 'Linen'],
+  },
+}
+
+export default function CollectionDetailPage() {
   const params = useParams()
-  const router = useRouter()
-  const [view, setView] = useState<'LOOKBOOK' | 'RESEARCH' | 'MATERIALS'>('LOOKBOOK')
-  const [selectedLook, setSelectedLook] = useState(0)
-  const [systemAlert, setSystemAlert] = useState<string | null>(null)
-  const [glitchActive, setGlitchActive] = useState(false)
+  const slug = params.id as string
+  const collection = collectionsData[slug]
 
-  // Get collection data
-  const collectionData = collections.find(c => c.id === params.id)
+  // Image reveal on scroll
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set())
 
-  // Random system alerts
-  useEffect(() => {
-    if (!collectionData) return
-    const alertTimer = setInterval(() => {
-      if (Math.random() > 0.9) {
-        const alerts = [
-          `LOADING_${collectionData.code}_DATA`,
-          'ANALYZING_PATTERNS',
-          'EXPERIMENT_IN_PROGRESS',
-          'TEMPORAL_DISTORTION_DETECTED'
-        ]
-        const alert = alerts[Math.floor(Math.random() * alerts.length)]
-        setSystemAlert(alert)
-        setGlitchActive(true)
-        setTimeout(() => {
-          setSystemAlert(null)
-          setGlitchActive(false)
-        }, 2000)
-      }
-    }, 10000)
-
-    return () => clearInterval(alertTimer)
-  }, [collectionData?.code])
-
-  // Collection not found
-  if (!collectionData) {
+  if (!collection) {
     return (
-      <div className="min-h-screen bg-carbon-black flex items-center justify-center">
+      <div className="min-h-screen bg-yon-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-6xl font-black text-glitch-red mb-4">404</h1>
-          <p className="text-xl text-white mb-8">COLLECTION_NOT_FOUND</p>
-          <Link href="/collections" className="text-safety-orange font-mono text-sm hover:underline">
-            RETURN_TO_ARCHIVE →
+          <h1 className="font-serif text-6xl text-yon-black mb-4">404</h1>
+          <p className="text-body text-yon-grey mb-8">Collection not found</p>
+          <Link
+            href="/collections"
+            className="font-mono text-sm text-yon-black hover:text-yon-accent transition-colors border-b border-current pb-1"
+          >
+            ← Back to Collections
           </Link>
         </div>
       </div>
@@ -58,238 +104,189 @@ export default function BrutalistCollectionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper-white">
-      {/* Noise Overlay */}
-      <div className="noise-overlay" />
-
-      {/* System Alert Bar */}
-      <AnimatePresence>
-        {systemAlert && (
-          <motion.div
-            className="fixed top-20 left-0 right-0 z-50 bg-warning-yellow text-black p-2 text-center"
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            exit={{ y: -100 }}
-          >
-            <p className="text-xs font-mono">[SYSTEM] {systemAlert}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Header */}
-      <div className="lab-border bg-carbon-black text-white p-8">
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className={`text-6xl font-black mb-2 ${glitchActive ? 'glitch-text' : ''}`}>
-              <CipherText text={collectionData.title} />
-            </h1>
-            <p className="text-sm font-mono opacity-60">{collectionData.subtitle}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs font-mono opacity-60">COLLECTION_CODE</p>
-            <p className="text-2xl font-black">{collectionData.code}</p>
+    <div className="min-h-screen bg-yon-white">
+      {/* Hero Section - Fullscreen */}
+      <section className="relative h-screen flex items-end">
+        {/* Background placeholder */}
+        <div className="absolute inset-0 bg-yon-charcoal">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-mono text-sm text-yon-grey">HERO IMAGE</span>
           </div>
         </div>
 
-        <p className="text-sm leading-relaxed mb-6 max-w-3xl">
-          {collectionData.description}
-        </p>
-
-        {/* Status Indicators */}
-        <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 ${collectionData.status === 'CURRENT' ? 'bg-hazmat-green animate-pulse' : 'bg-concrete-gray'}`} />
-            <span className="text-[10px] font-mono">STATUS_{collectionData.status}</span>
-          </div>
-          <div className="text-[10px] font-mono opacity-60">
-            RELEASE_DATE_{collectionData.releaseDate}
-          </div>
-          <div className="text-[10px] font-mono opacity-60">
-            SEASON_{collectionData.season}_{collectionData.year}
-          </div>
-        </div>
-      </div>
-
-      {/* View Selector */}
-      <div className="bg-white border-y-3 border-carbon-black">
-        <div className="flex divide-x-3 divide-carbon-black">
-          {(['LOOKBOOK', 'RESEARCH', 'MATERIALS'] as const).map((v) => (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              className={`flex-1 p-4 text-xs font-mono tracking-wider transition-all ${
-                view === v
-                  ? 'bg-carbon-black text-white'
-                  : 'hover:bg-paper-white'
-              }`}
-            >
-              VIEW_{v}
-              {view === v && <span className="ml-2">●</span>}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div className="p-8">
-        {view === 'LOOKBOOK' && (
-          <div className="space-y-8">
-            <div className="brutalist-grid-asymmetric gap-8">
-              {/* Main Look Display */}
-              <div className="col-span-2">
-                <div className="aspect-[3/4] bg-concrete-gray relative overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedLook}
-                      className="absolute inset-0 flex items-center justify-center"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {collectionData.lookbook[selectedLook]?.imageUrl ? (
-                        <img
-                          src={collectionData.lookbook[selectedLook].imageUrl}
-                          alt={collectionData.lookbook[selectedLook].title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="text-center">
-                          <p className="text-6xl font-black text-white/20 mb-4">
-                            LOOK_{String(selectedLook + 1).padStart(2, '0')}
-                          </p>
-                          <p className="text-xs font-mono text-white/40">
-                            NO_VISUAL_DATA
-                          </p>
-                        </div>
-                      )}
-
-                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
-                        <h3 className="text-2xl font-bold mb-2">
-                          {collectionData.lookbook[selectedLook]?.title}
-                        </h3>
-                        <p className="text-xs opacity-80">
-                          {collectionData.lookbook[selectedLook]?.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Look Selector Grid */}
-              <div className="space-y-2">
-                {collectionData.lookbook.map((look: Look, index: number) => (
-                  <button
-                    key={look.id}
-                    onClick={() => setSelectedLook(index)}
-                    className={`w-full p-4 text-left transition-all ${
-                      selectedLook === index
-                        ? 'bg-safety-orange text-black'
-                        : 'bg-white hover:bg-paper-white lab-border'
-                    }`}
-                  >
-                    <p className="text-[10px] font-mono mb-1">{look.id}</p>
-                    <p className="text-sm font-bold">LOOK_{String(index + 1).padStart(2, '0')}</p>
-                    <p className="text-xs opacity-60 mt-1">{look.title}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Philosophy Section */}
-            <div className="lab-border p-8 bg-paper-white">
-              <h3 className="text-xs font-mono mb-4">COLLECTION_PHILOSOPHY</h3>
-              <p className="text-lg font-bold">{collectionData.philosophy}</p>
-            </div>
-          </div>
-        )}
-
-        {view === 'RESEARCH' && (
-          <div className="space-y-8">
-            {/* Research Data */}
-            <div className="brutalist-grid-asymmetric gap-2 bg-carbon-black p-2">
-              {/* Techniques */}
-              <div className="bg-paper-white p-6">
-                <h3 className="text-xs font-mono mb-4">TECHNIQUES_APPLIED</h3>
-                <ul className="space-y-2">
-                  {collectionData.techniques.map((technique: string, i: number) => (
-                    <li key={i} className="text-sm flex items-start gap-2">
-                      <span className="text-glitch-red">▪</span>
-                      <span>{technique}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Experimental Status */}
-              <div className="bg-carbon-black text-white p-6 col-span-2">
-                <h3 className="text-xs font-mono mb-4">EXPERIMENTAL_STATUS</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-[10px] font-mono opacity-60 mb-1">GENIUS_LEVEL</p>
-                    <div className="h-2 bg-white/20">
-                      <div className="h-full bg-hazmat-green" style={{ width: '95%' }} />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-mono opacity-60 mb-1">COMMERCIAL_COMPROMISE</p>
-                    <div className="h-2 bg-white/20">
-                      <div className="h-full bg-glitch-red" style={{ width: '0%' }} />
-                    </div>
-                  </div>
-                  <p className="text-xs mt-4 opacity-60">
-                    NO SALES. ONLY CREATION.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {view === 'MATERIALS' && (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {collectionData.materials.map((material: string, i: number) => (
-                <motion.div
-                  key={i}
-                  className="bg-white lab-border p-6"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl text-safety-orange">◆</span>
-                    <div>
-                      <h4 className="text-sm font-bold mb-2">{material}</h4>
-                      <p className="text-[10px] font-mono opacity-60">
-                        MATERIAL_{String(i + 1).padStart(3, '0')}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Material Philosophy */}
-            <div className="lab-border p-8 bg-carbon-black text-white">
-              <h3 className="text-xs font-mono mb-4">MATERIAL_PHILOSOPHY</h3>
-              <p className="text-sm leading-relaxed">
-                Each material selected not for market appeal but for experimental potential.
-                We work with substances that challenge conventional fashion construction.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Back Button */}
-      <div className="p-8">
-        <Link
-          href="/collections"
-          className="inline-flex items-center gap-2 text-sm font-mono hover:text-safety-orange transition-colors"
+        {/* Hero content */}
+        <motion.div
+          className="relative z-10 p-8 md:p-16 w-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          ← RETURN_TO_COLLECTIONS
-        </Link>
-      </div>
+          <div className="max-w-7xl mx-auto">
+            <span className="font-mono text-micro text-yon-silver tracking-widest uppercase">
+              {collection.season} {collection.year}
+            </span>
+            <h1 className="mt-4 font-serif text-display md:text-hero text-yon-white transform rotate-[-0.5deg]">
+              {collection.title}
+            </h1>
+          </div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          <motion.div
+            className="w-[1px] h-16 bg-yon-white/50"
+            animate={{ scaleY: [1, 0.5, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </motion.div>
+      </section>
+
+      {/* Description Section */}
+      <section className="py-24 md:py-32 px-6 md:px-12">
+        <div className="max-w-4xl mx-auto">
+          <motion.p
+            className="text-subheading md:text-heading text-yon-black leading-relaxed transform rotate-[-0.3deg]"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {collection.description}
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Image Gallery - Scroll-based reveal */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {collection.images.map((image, index) => {
+            // Alternate layout positions
+            const isEven = index % 2 === 0
+            const rotations = ['-1deg', '1.5deg', '-0.5deg', '2deg', '-1.5deg', '0.5deg']
+            const widths = ['w-full md:w-3/4', 'w-full md:w-2/3', 'w-full md:w-4/5', 'w-full md:w-1/2']
+
+            return (
+              <motion.div
+                key={image.id}
+                className={`mb-16 md:mb-32 ${isEven ? 'md:ml-0 md:mr-auto' : 'md:ml-auto md:mr-0'} ${widths[index % widths.length]}`}
+                initial={{ opacity: 0, y: 80 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div
+                  className="relative aspect-[3/4] bg-yon-platinum overflow-hidden"
+                  style={{ transform: `rotate(${rotations[index % rotations.length]})` }}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="font-mono text-sm text-yon-grey">
+                      IMAGE {String(image.id).padStart(2, '0')}
+                    </span>
+                  </div>
+                </div>
+                {image.caption && (
+                  <p className="mt-4 font-mono text-micro text-yon-grey">
+                    {image.caption}
+                  </p>
+                )}
+              </motion.div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Concept Section */}
+      <section className="py-24 md:py-32 px-6 md:px-12 bg-yon-ivory">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
+              Concept
+            </span>
+            <p className="mt-6 text-body-lg text-yon-steel leading-relaxed">
+              {collection.concept}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Details Section */}
+      <section className="py-24 md:py-32 px-6 md:px-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-16">
+            {/* Techniques */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
+                Techniques
+              </span>
+              <ul className="mt-6 space-y-3">
+                {collection.techniques.map((technique, index) => (
+                  <li key={index} className="text-body text-yon-black flex items-start gap-3">
+                    <span className="font-mono text-micro text-yon-grey mt-1.5">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {technique}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Materials */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
+                Materials
+              </span>
+              <ul className="mt-6 space-y-3">
+                {collection.materials.map((material, index) => (
+                  <li key={index} className="text-body text-yon-black flex items-start gap-3">
+                    <span className="font-mono text-micro text-yon-grey mt-1.5">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {material}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Navigation */}
+      <section className="py-16 px-6 md:px-12 border-t border-yon-platinum">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <Link
+            href="/collections"
+            className="font-mono text-sm text-yon-grey hover:text-yon-black transition-colors"
+          >
+            ← All Collections
+          </Link>
+          <Link
+            href="/process"
+            className="font-mono text-sm text-yon-black hover:text-yon-accent transition-colors"
+          >
+            View Process →
+          </Link>
+        </div>
+      </section>
     </div>
   )
 }

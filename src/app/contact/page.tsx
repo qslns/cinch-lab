@@ -1,297 +1,70 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    type: 'COLLABORATION',
-    name: '',
-    email: '',
-    organization: '',
-    message: ''
-  })
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const inquiryTypes = [
-    { value: 'COLLABORATION', label: 'Creative Collaboration' },
-    { value: 'EXHIBITION', label: 'Exhibition Request' },
-    { value: 'RESEARCH', label: 'Research Partnership' },
-    { value: 'PRESS', label: 'Press Inquiry' },
-    { value: 'OTHER', label: 'Other' }
-  ]
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setTimeout(() => {
-      setIsSubmitted(true)
-    }, 1000)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
-
   return (
-    <div className="min-h-screen bg-margiela-off-white">
+    <div className="min-h-screen bg-yon-white flex items-center justify-center px-6 md:px-12">
+      <motion.div
+        className="max-w-2xl w-full text-center py-32"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
+          Get in touch
+        </span>
+        <h1 className="mt-4 font-serif text-display text-yon-black transform rotate-[-0.5deg]">
+          Contact
+        </h1>
 
-      {/* HEADER with cdg-grid minimal layout */}
-      <header className="cdg-grid pt-32 pb-16 px-8 md:px-16 lg:px-24">
-        <motion.div
-          className="text-xs absolute top-8 right-8 transform -rotate-6 text-margiela-slate"
+        <p className="mt-8 text-body-lg text-yon-steel">
+          For collaborations, exhibitions, press inquiries, or just to say hello.
+        </p>
+
+        {/* Contact Info */}
+        <div className="mt-16 space-y-8">
+          {/* Email */}
+          <div>
+            <span className="font-mono text-micro text-yon-grey tracking-widest uppercase block mb-3">
+              Email
+            </span>
+            <a
+              href="mailto:hello@theyon.com"
+              className="font-serif text-heading text-yon-black hover:text-yon-accent transition-colors duration-300"
+            >
+              hello@theyon.com
+            </a>
+          </div>
+
+          {/* Instagram */}
+          <div>
+            <span className="font-mono text-micro text-yon-grey tracking-widest uppercase block mb-3">
+              Instagram
+            </span>
+            <a
+              href="https://instagram.com/theyon_studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-heading text-yon-black hover:text-yon-accent transition-colors duration-300"
+            >
+              @theyon_studio
+            </a>
+          </div>
+        </div>
+
+        {/* Note */}
+        <motion.p
+          className="mt-24 text-caption text-yon-grey max-w-md mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="margiela-number-tag">05</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: -60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1 }}
-          className="grid-item-large"
-        >
-          <h1 className="text-display-1 font-black leading-none text-margiela-carbon">
-            CONT
-            <br />
-            <span className="text-sacai-layer-navy">ACT</span>
-          </h1>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mt-16 bg-white p-12 border-2 border-margiela-carbon transform -rotate-1 max-w-2xl exposed-seam"
-        >
-          <div className="margiela-tag mb-6 text-margiela-slate">
-            PROFESSIONAL INQUIRIES ONLY
-          </div>
-
-          <p className="text-heading-3 font-light text-margiela-carbon leading-relaxed mb-8">
-            For collaboration, exhibition, and research inquiries.
-            <br />
-            We do not sell products.
-          </p>
-
-          <div className="bg-cdg-blood-red text-white p-6">
-            <p className="text-sm">
-              Note: Commercial product requests will not receive responses.
-              This laboratory exists for experimentation, not commerce.
-            </p>
-          </div>
-        </motion.div>
-      </header>
-
-      {/* FORM SECTION with broken-symmetry */}
-      <section className="broken-symmetry py-16 px-8 md:px-16 lg:px-24">
-        {!isSubmitted ? (
-          <motion.form
-            onSubmit={handleSubmit}
-            className="max-w-5xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Left Column - Rotated */}
-              <div className="space-y-8 transform -rotate-1 bg-white p-8 border-2 border-margiela-slate exposed-seam">
-                {/* Inquiry Type */}
-                <div>
-                  <label className="margiela-tag text-margiela-carbon block mb-3">
-                    INQUIRY TYPE
-                  </label>
-                  <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
-                  >
-                    {inquiryTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Organization */}
-                <div>
-                  <label className="margiela-tag text-margiela-carbon block mb-3">
-                    ORGANIZATION / INSTITUTION
-                  </label>
-                  <input
-                    type="text"
-                    name="organization"
-                    value={formData.organization}
-                    onChange={handleChange}
-                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Info Box */}
-                <div className="bg-sacai-layer-navy text-white p-8 transform rotate-1 sacai-grid-layer">
-                  <p className="margiela-tag mb-4">
-                    RESPONSE TIME
-                  </p>
-                  <p className="text-base">
-                    5-7 business days
-                    <br />
-                    High-resolution images available upon request
-                  </p>
-                </div>
-              </div>
-
-              {/* Right Column - Rotated Opposite */}
-              <div className="space-y-8 transform rotate-1 bg-white p-8 border-2 border-margiela-slate exposed-seam-vertical">
-                {/* Name */}
-                <div>
-                  <label className="margiela-tag text-margiela-carbon block mb-3">
-                    NAME
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="margiela-tag text-margiela-carbon block mb-3">
-                    EMAIL
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label className="margiela-tag text-margiela-carbon block mb-3">
-                    MESSAGE
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full p-4 bg-transparent border-2 border-margiela-slate text-margiela-carbon text-base focus:border-margiela-carbon outline-none resize-vertical transition-colors"
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 0.98 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full p-6 bg-margiela-carbon text-white border-2 border-margiela-carbon text-base font-bold tracking-widest uppercase hover:bg-white hover:text-margiela-carbon transition-all"
-                >
-                  Submit Inquiry
-                </motion.button>
-              </div>
-            </div>
-          </motion.form>
-
-        ) : (
-          /* Success State */
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto text-center p-16 bg-white border-4 border-sage transform -rotate-1 exposed-seam"
-          >
-            <div className="w-20 h-20 bg-sage rounded-full flex items-center justify-center mx-auto mb-8">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                <path d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-
-            <h2 className="text-heading-1 font-black text-margiela-carbon mb-8">
-              Inquiry Received
-            </h2>
-
-            <p className="text-base text-margiela-carbon mb-8">
-              We will review your submission and respond if appropriate.
-              Commercial requests will not receive responses.
-            </p>
-
-            <div className="margiela-tag bg-margiela-carbon text-white px-6 py-3 inline-block">
-              RESPONSE WITHIN 5-7 DAYS
-            </div>
-          </motion.div>
-        )}
-      </section>
-
-      {/* CONTACT INFORMATION - Asymmetric Layout */}
-      <section className="py-24 px-8 md:px-16 lg:px-24 bg-white">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          <div className="transform -rotate-1 bg-margiela-off-white p-8 exposed-seam-vertical">
-            <span className="margiela-number-tag text-margiela-slate">06</span>
-            <h2 className="text-heading-2 font-bold text-margiela-carbon my-6">
-              Direct Contact
-            </h2>
-            <div className="space-y-6">
-              <div>
-                <p className="margiela-tag text-margiela-slate mb-2">
-                  GENERAL INQUIRIES
-                </p>
-                <p className="text-base text-margiela-carbon">
-                  inquiries@cinchlab.com
-                </p>
-              </div>
-              <div>
-                <p className="margiela-tag text-margiela-slate mb-2">
-                  PRESS
-                </p>
-                <p className="text-base text-margiela-carbon">
-                  press@cinchlab.com
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-sacai-layer-navy text-white p-8 transform rotate-1 sacai-grid-layer">
-            <p className="margiela-tag mb-4">
-              LOCATION
-            </p>
-            <p className="text-heading-3 font-bold mb-2">
-              Seoul, South Korea
-            </p>
-            <p className="text-sm text-margiela-off-white">
-              Laboratory visits by appointment
-            </p>
-          </div>
-
-          <div className="bg-margiela-carbon text-white p-8 transform -rotate-1 exposed-seam">
-            <p className="text-heading-2 font-black">
-              COLLABORATION
-              <br />
-              NOT SALES
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t-2 border-margiela-carbon py-16 px-8 bg-cdg-void text-white text-center">
-        <p className="text-sm text-margiela-slate">
-          CINCH LAB • PROFESSIONAL INQUIRIES ONLY • NO COMMERCE
-        </p>
-      </footer>
+          THE YON is not a commercial brand. We focus on experimental fashion research
+          and creative collaborations. For exhibition or partnership inquiries, please
+          reach out via email.
+        </motion.p>
+      </motion.div>
     </div>
   )
 }

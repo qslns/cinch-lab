@@ -17,7 +17,8 @@
       "Bash(dir srclib)",
       "Bash(test:*)",
       "Bash(awk:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

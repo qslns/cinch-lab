@@ -1,500 +1,328 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import { useRef } from 'react'
 import Link from 'next/link'
+import { motion, useScroll, useTransform } from 'framer-motion'
+
+// Placeholder collections - replace with actual THE YON data
+const collections = [
+  { id: 1, title: 'DECONSTRUCTION', season: 'FW 2025', slug: 'deconstruction' },
+  { id: 2, title: 'FRAGMENTS', season: 'SS 2025', slug: 'fragments' },
+  { id: 3, title: 'VOID', season: 'FW 2024', slug: 'void' },
+]
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollY, scrollYProgress } = useScroll()
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  })
 
-  const heroRef = useRef(null)
-  const isHeroInView = useInView(heroRef, { once: true })
+  // Parallax transforms for hero images
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -200])
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -150])
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -250])
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100])
 
-  // Parallax effects
-  const heroY = useTransform(scrollY, [0, 1000], [0, -300])
-  const textOpacity = useTransform(scrollY, [0, 400], [1, 0])
-  const numberOpacity = useTransform(scrollY, [0, 200], [0.3, 0])
-
-  const researchAreas = [
-    {
-      name: 'LABORATORY',
-      desc: 'Pattern deconstruction research',
-      path: '/lab',
-      color: 'bg-lab-chemical-blue',
-      hoverColor: 'hover:bg-lab-petri-blue',
-      rotation: 'rotate-1',
-      number: '01',
-      size: 'large'
-    },
-    {
-      name: 'COLLECTIONS',
-      desc: 'Seasonal experiments',
-      path: '/collections',
-      color: 'bg-sacai-burnt-orange',
-      hoverColor: 'hover:bg-sacai-splice-orange',
-      rotation: '-rotate-2',
-      number: '02',
-      size: 'medium'
-    },
-    {
-      name: 'ARCHIVE',
-      desc: 'Documentation & process',
-      path: '/archive',
-      color: 'bg-cdg-blood-red',
-      hoverColor: 'hover:bg-cdg-crimson',
-      rotation: 'rotate-2',
-      number: '03',
-      size: 'small'
-    },
-    {
-      name: 'ANALYSIS',
-      desc: 'Critical fashion study',
-      path: '/analysis',
-      color: 'bg-margiela-steel',
-      hoverColor: 'hover:bg-margiela-aluminum',
-      rotation: '-rotate-1',
-      number: '04',
-      size: 'medium'
-    },
-    {
-      name: 'PHILOSOPHY',
-      desc: 'Design manifesto',
-      path: '/about',
-      color: 'bg-margiela-carbon',
-      hoverColor: 'hover:bg-margiela-graphite',
-      rotation: 'rotate-3',
-      number: '05',
-      size: 'large'
-    }
-  ]
+  // Opacity transforms for sections
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-margiela-raw-canvas">
+    <div ref={containerRef} className="relative">
+      {/* ============================================
+          HERO SECTION - Free-form image layout
+          ============================================ */}
+      <section className="relative min-h-[120vh] overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-yon-ivory to-yon-white" />
 
-      {/* Scroll Progress Indicator */}
-      <motion.div
-        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-sacai-burnt-orange via-cdg-blood-red to-lab-chemical-blue z-50"
-        style={{ width: useTransform(scrollYProgress, [0, 1], ['0%', '100%']) }}
-      />
-
-      {/* SECTION 1: HERO - Margiela White Label + Ultra Typography */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-margiela-paper via-margiela-raw-canvas to-margiela-snow"
-      >
-        {/* Animated Background with Radial Gradient */}
+        {/* Brand Name - Asymmetric position */}
         <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'radial-gradient(circle at 30% 50%, rgba(232, 93, 44, 0.15) 0%, transparent 50%)',
-            y: heroY
-          }}
-        />
+          className="absolute top-[15%] left-[8%] md:left-[12%] z-10"
+          style={{ opacity: heroOpacity }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h1 className="font-serif text-hero tracking-tight text-yon-black">
+            <span className="block transform rotate-[-1deg]">THE</span>
+            <span className="block transform rotate-[0.5deg] ml-4 md:ml-8">YON</span>
+          </h1>
+          <p className="mt-6 md:mt-8 font-mono text-xs md:text-sm text-yon-grey tracking-wider uppercase">
+            Beyond the horizon
+          </p>
+        </motion.div>
 
-        <div className="w-full px-6 md:px-12 lg:px-20 relative z-10">
-          {/* Margiela Number Tags - Floating */}
+        {/* Free-form Image Layout */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Image 1 - Large, top right */}
           <motion.div
-            className="absolute top-8 right-8 md:top-16 md:right-16 font-mono text-[10px] tracking-wider text-margiela-aluminum transform rotate-3"
-            initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: isHeroInView ? 0.6 : 0, rotate: 3 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
+            className="absolute top-[10%] right-[5%] md:right-[10%] w-[35vw] md:w-[28vw] max-w-[400px]"
+            style={{ y: y1 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div>0 1 2 3 4 5 6 7 8 9 10 11</div>
-            <div className="mt-1">12 13 14 15 16 17 18 19 20</div>
-            <div className="mt-1">21 22 23 • MARGIELA</div>
-          </motion.div>
-
-          {/* Main Logo - Deconstructed */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: isHeroInView ? 1 : 0, y: isHeroInView ? 0 : 50 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            style={{ opacity: textOpacity }}
-            className="relative"
-          >
-            {/* CINCH - Ultra Large, Extralight */}
-            <div className="relative transform -rotate-1">
-              <h1 className="text-[clamp(4rem,15vw,12rem)] font-extralight leading-none tracking-tighter text-margiela-carbon">
-                CINCH
-              </h1>
-              {/* Exposed Seam Effect */}
-              <div className="absolute -bottom-2 left-0 w-3/4 h-[2px] bg-margiela-exposed-seam opacity-40" />
-            </div>
-
-            {/* LAB - Offset, Lighter Weight */}
-            <div className="relative transform rotate-1 ml-8 md:ml-32 -mt-4 md:-mt-8">
-              <h1 className="text-[clamp(4rem,15vw,12rem)] font-light leading-none tracking-tight text-margiela-steel">
-                LAB
-              </h1>
-            </div>
-
-            {/* Margiela White Label Tag */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: isHeroInView ? 1 : 0, scale: isHeroInView ? 1 : 0.9 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="mt-8 inline-block bg-margiela-white-label border border-margiela-exposed-seam px-4 py-2 transform -rotate-1"
-            >
-              <div className="font-mono text-[10px] tracking-widest text-margiela-graphite">
-                0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+            <div className="relative aspect-[3/4] bg-yon-platinum transform rotate-[2deg] overflow-hidden shadow-lg">
+              <div className="absolute inset-0 flex items-center justify-center text-yon-grey font-mono text-xs">
+                IMAGE 01
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Tagline - Sacai Splice Typography */}
+          {/* Image 2 - Medium, center-left */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: isHeroInView ? 1 : 0, y: isHeroInView ? 0 : 30 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="relative mt-12 md:mt-16"
+            className="absolute top-[35%] left-[15%] md:left-[25%] w-[30vw] md:w-[22vw] max-w-[320px]"
+            style={{ y: y2 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight">
-              <span className="text-margiela-carbon">Cinch</span>
-              <span className="text-sacai-burnt-orange mx-2">•</span>
-              <span className="text-cdg-blood-red">Release</span>
-              <span className="text-lab-chemical-blue mx-2">•</span>
-              <span className="text-margiela-steel">Repeat</span>
-            </h2>
-
-            <p className="text-sm md:text-base mt-4 tracking-[0.3em] uppercase text-margiela-aluminum font-mono">
-              Experimental Fashion Laboratory
-            </p>
+            <div className="relative aspect-[3/4] bg-yon-silver transform rotate-[-1.5deg] overflow-hidden shadow-md">
+              <div className="absolute inset-0 flex items-center justify-center text-yon-grey font-mono text-xs">
+                IMAGE 02
+              </div>
+            </div>
           </motion.div>
 
-          {/* Status Info - Top Right, Rotated */}
+          {/* Image 3 - Small, bottom right */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHeroInView ? 1 : 0 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="absolute top-12 md:top-16 right-6 md:right-12 text-xs text-right font-mono transform rotate-2"
+            className="absolute top-[55%] right-[15%] md:right-[20%] w-[25vw] md:w-[18vw] max-w-[260px]"
+            style={{ y: y3 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="text-margiela-aluminum tracking-wider">EST. 2024</div>
-            <div className="mt-2 text-cdg-blood-red font-bold">NO SALES</div>
-            <div className="mt-1 text-margiela-steel">ONLY CREATION</div>
+            <div className="relative aspect-[3/4] bg-yon-grey transform rotate-[1deg] overflow-hidden shadow-sm">
+              <div className="absolute inset-0 flex items-center justify-center text-yon-platinum font-mono text-xs">
+                IMAGE 03
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Image 4 - Extra small, bottom left */}
+          <motion.div
+            className="absolute top-[70%] left-[8%] md:left-[12%] w-[20vw] md:w-[15vw] max-w-[220px]"
+            style={{ y: y4 }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="relative aspect-[4/5] bg-yon-charcoal transform rotate-[-2deg] overflow-hidden shadow-lg">
+              <div className="absolute inset-0 flex items-center justify-center text-yon-silver font-mono text-xs">
+                IMAGE 04
+              </div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Scroll Indicator - Minimal */}
+        {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 12, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
         >
-          <div className="w-[1px] h-16 bg-margiela-steel opacity-30" />
+          <motion.div
+            className="w-[1px] h-16 bg-yon-grey"
+            animate={{ scaleY: [1, 0.5, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          />
         </motion.div>
       </section>
 
-      {/* SECTION 2: PHILOSOPHY - Sacai Layered Grid */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-margiela-paper overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          {/* Sacai Grid - 3 Overlapping Sections */}
-          <div className="sacai-grid relative min-h-[600px]">
-
-            {/* Layer 1: Base - Margiela Neutral */}
-            <motion.div
-              className="sacai-grid-layer-1 bg-margiela-snow p-8 md:p-16 transform -rotate-1"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="font-mono text-[10px] tracking-wider text-margiela-aluminum mb-6">
-                LABORATORY MANIFESTO
-              </div>
-
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-light leading-tight text-margiela-carbon">
-                Fashion is not
-                <br />
-                commerce.
-                <br />
-                <span className="text-margiela-steel">Fashion is</span>
-                <br />
-                <span className="text-cdg-blood-red">experiment.</span>
-              </h2>
-            </motion.div>
-
-            {/* Layer 2: Contrasting Splice - Sacai Navy */}
-            <motion.div
-              className="sacai-grid-layer-2 bg-sacai-layer-navy text-margiela-paper p-8 md:p-16 transform rotate-2"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <p className="text-lg md:text-2xl leading-relaxed font-light">
-                We deconstruct patterns to understand construction.
-                <br />
-                We layer materials to create new possibilities.
-                <br />
-                We expose process as the final product.
-              </p>
-
-              <div className="mt-8 h-[2px] w-24 bg-sacai-burnt-orange" />
-            </motion.div>
-
-            {/* Layer 3: Accent - Sacai Orange */}
-            <motion.div
-              className="sacai-grid-layer-3 bg-sacai-burnt-orange text-margiela-snow p-6 md:p-8"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <div className="text-xl md:text-3xl font-bold tracking-tight leading-tight">
-                NO PRODUCTS
-                <br />
-                NO PRICES
-                <br />
-                ONLY PURE
-                <br />
-                CREATION
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: RESEARCH AREAS - Broken Symmetry Grid with Actual Rotations */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-margiela-raw-canvas">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header - Deconstructed */}
+      {/* ============================================
+          BRAND STATEMENT
+          ============================================ */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 md:px-12 py-32">
+        <motion.div
+          className="max-w-4xl mx-auto text-center"
+        >
+          <motion.h2
+            className="font-serif text-title md:text-display leading-tight text-yon-black transform rotate-[-0.5deg]"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Twisted yet harmonious
+          </motion.h2>
+          <motion.p
+            className="mt-8 md:mt-12 text-body-lg md:text-subheading text-yon-steel leading-relaxed max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Every element is slightly askew, yet together they form perfect beauty.
+            Fashion that transcends time and space. The pursuit of an ideal beyond reach.
+          </motion.p>
           <motion.div
-            className="mb-16 md:mb-24 transform -rotate-1"
+            className="mt-12 md:mt-16 font-mono text-micro text-yon-grey tracking-widest uppercase"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-light text-margiela-carbon">
-              Research Areas
+            Experimental Fashion Portfolio
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ============================================
+          COLLECTIONS PREVIEW
+          ============================================ */}
+      <section className="relative py-32 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          {/* Section header */}
+          <motion.div
+            className="mb-16 md:mb-24"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="font-mono text-micro text-yon-grey tracking-widest uppercase">
+              Latest Work
+            </span>
+            <h2 className="mt-4 font-serif text-heading md:text-title text-yon-black transform rotate-[-0.3deg]">
+              Collections
             </h2>
-            <div className="mt-4 w-32 h-[2px] bg-margiela-carbon" />
           </motion.div>
 
-          {/* Margiela Grid - Broken, Rotated Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {researchAreas.map((area, index) => {
-              const sizes = {
-                large: 'md:col-span-2 min-h-[400px]',
-                medium: 'md:col-span-1 min-h-[350px]',
-                small: 'md:col-span-1 min-h-[300px]'
-              }
+          {/* Asymmetric grid */}
+          <div className="grid grid-cols-12 gap-4 md:gap-8">
+            {collections.map((collection, index) => {
+              const colSpans = ['col-span-12 md:col-span-7', 'col-span-12 md:col-span-5', 'col-span-12 md:col-span-6']
+              const rotations = ['rotate-[-1deg]', 'rotate-[1.5deg]', 'rotate-[-0.5deg]']
+              const marginTops = ['mt-0', 'mt-0 md:mt-16', 'mt-0 md:-mt-8']
 
               return (
                 <motion.div
-                  key={area.path}
-                  className={`${sizes[area.size]} transform ${area.rotation} hover:rotate-0 transition-all duration-500`}
-                  initial={{ opacity: 0, y: 50 }}
+                  key={collection.id}
+                  className={`${colSpans[index]} ${marginTops[index]}`}
+                  initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <Link href={area.path} className="block h-full">
-                    <div
-                      className={`
-                        h-full p-8 md:p-12 border-2 transition-all duration-500
-                        ${hoveredIndex === index
-                          ? `${area.color} text-white border-transparent shadow-2xl`
-                          : 'bg-white text-margiela-carbon border-margiela-exposed-seam'}
-                      `}
-                    >
-                      {/* Margiela Number Tag */}
-                      <div className="font-mono text-[10px] text-margiela-aluminum mb-6 tracking-widest">
-                        {area.number}
+                  <Link href={`/collections/${collection.slug}`} className="group block">
+                    <div className={`relative aspect-[4/5] bg-yon-platinum overflow-hidden transform ${rotations[index]} transition-transform duration-500 ease-out-expo group-hover:rotate-0 group-hover:scale-[1.02]`}>
+                      {/* Placeholder for image */}
+                      <div className="absolute inset-0 flex items-center justify-center text-yon-grey font-mono text-sm">
+                        {collection.title}
                       </div>
-
-                      <div className="flex flex-col justify-between h-full">
-                        {/* Title */}
-                        <div>
-                          <h3 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 tracking-tight">
-                            {area.name}
-                          </h3>
-                          <div className="w-12 h-[1px] bg-current opacity-30" />
-                        </div>
-
-                        {/* Description */}
-                        <div>
-                          <p className="text-sm md:text-base mt-8 opacity-70 tracking-wide">
-                            {area.desc}
-                          </p>
-                        </div>
+                      {/* Overlay on hover */}
+                      <div className="absolute inset-0 bg-yon-black/0 transition-colors duration-500 group-hover:bg-yon-black/10" />
+                    </div>
+                    <div className="mt-4 md:mt-6 flex justify-between items-end">
+                      <div>
+                        <h3 className="font-serif text-xl md:text-2xl text-yon-black group-hover:text-yon-accent transition-colors duration-300">
+                          {collection.title}
+                        </h3>
+                        <p className="mt-1 font-mono text-xs text-yon-grey">
+                          {collection.season}
+                        </p>
                       </div>
+                      <motion.span
+                        className="font-mono text-xs text-yon-grey opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={false}
+                      >
+                        VIEW →
+                      </motion.span>
                     </div>
                   </Link>
                 </motion.div>
               )
             })}
           </div>
+
+          {/* View all link */}
+          <motion.div
+            className="mt-16 md:mt-24 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <Link
+              href="/collections"
+              className="inline-block font-mono text-sm text-yon-black hover:text-yon-accent transition-colors duration-300 border-b border-yon-black hover:border-yon-accent pb-1"
+            >
+              View All Collections
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* SECTION 4: CURRENT EXPERIMENTS - CDG Radical Minimal Grid */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-margiela-paper">
+      {/* ============================================
+          FOOTER
+          ============================================ */}
+      <footer className="py-16 md:py-24 px-6 md:px-12 border-t border-yon-platinum">
         <div className="max-w-7xl mx-auto">
-          {/* CDG Grid - Extreme Asymmetry */}
-          <div className="cdg-grid">
-
-            {/* Title - Massive, Bold */}
-            <motion.div
-              className="cdg-grid-item-1"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-margiela-carbon leading-none">
-                Current
-                <br />
-                Experiments
-              </h2>
-            </motion.div>
-
-            {/* Experiment 1 - Active (Rotated) */}
-            <motion.div
-              className="cdg-grid-item-2 transform -rotate-2"
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <div className="border-2 border-margiela-steel p-8 md:p-10 bg-white hover:bg-lab-chemical-blue hover:text-white hover:border-transparent transition-all duration-500">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-lab-warning-orange animate-pulse" />
-                  <span className="text-xs font-bold tracking-widest uppercase">ACTIVE</span>
-                </div>
-
-                <h3 className="text-2xl md:text-3xl mb-4 font-light">Pattern Deconstruction</h3>
-
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm mb-2 font-mono">
-                    <span>Progress</span>
-                    <span>78%</span>
-                  </div>
-                  <div className="w-full h-[2px] bg-margiela-exposed-seam">
-                    <motion.div
-                      className="h-full bg-lab-chemical-blue"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: '78%' }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, delay: 0.5 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Experiment 2 - Testing */}
-            <motion.div
-              className="cdg-grid-item-3 transform rotate-1"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <div className="border-2 border-margiela-steel p-8 bg-white hover:bg-sacai-olive hover:text-white hover:border-transparent transition-all duration-500">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-sacai-burnt-orange" />
-                  <span className="text-xs font-bold tracking-widest uppercase">TESTING</span>
-                </div>
-
-                <h3 className="text-xl md:text-2xl mb-4 font-light">Material Synthesis</h3>
-
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm mb-2 font-mono">
-                    <span>Progress</span>
-                    <span>45%</span>
-                  </div>
-                  <div className="w-full h-[2px] bg-margiela-exposed-seam">
-                    <motion.div
-                      className="h-full bg-sacai-burnt-orange"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: '45%' }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, delay: 0.6 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Experiment 3 - Complete (High Contrast) */}
-            <motion.div
-              className="cdg-grid-item-4 transform -rotate-1"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="p-8 bg-cdg-absolute-black text-margiela-paper hover:bg-cdg-blood-red transition-all duration-500">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-lab-reaction-green" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-lab-reaction-green">COMPLETE</span>
-                </div>
-
-                <h3 className="text-xl md:text-2xl mb-4 font-light">Hybrid Layering</h3>
-
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm mb-2 font-mono">
-                    <span>Progress</span>
-                    <span>100%</span>
-                  </div>
-                  <div className="w-full h-[2px] bg-margiela-steel">
-                    <motion.div
-                      className="h-full bg-lab-reaction-green"
-                      initial={{ width: 0 }}
-                      whileInView={{ width: '100%' }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, delay: 0.7 }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 5: FOOTER - Broken Symmetry */}
-      <footer className="border-t-2 border-margiela-exposed-seam py-16 md:py-20 px-6 md:px-12 lg:px-20 bg-margiela-snow">
-        <div className="max-w-7xl mx-auto">
-          <div className="broken-symmetry-left">
-            {/* Left - Logo */}
-            <div className="transform -rotate-1">
-              <div className="text-2xl md:text-3xl font-light mb-4 text-margiela-carbon tracking-tight">
-                CINCH LAB
-              </div>
-
-              <div className="text-sm text-margiela-steel font-mono tracking-wide">
-                Experimental Fashion Laboratory
-                <br />
-                Est. 2024 — No Sales, Only Creation
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
+            {/* Left - Brand */}
+            <div>
+              <Link href="/" className="inline-block">
+                <span className="font-serif text-3xl md:text-4xl text-yon-black">THE YON</span>
+              </Link>
+              <p className="mt-6 text-body text-yon-grey max-w-sm">
+                Experimental fashion that transcends time and space.
+                Every element twisted, yet perfectly harmonious.
+              </p>
             </div>
 
             {/* Right - Links */}
-            <div className="flex flex-col gap-6 transform rotate-1">
-              <Link
-                href="/about"
-                className="text-sm uppercase tracking-[0.3em] text-margiela-steel hover:text-cdg-blood-red transition-colors duration-300"
-              >
-                Philosophy
-              </Link>
-              <Link
-                href="/contact"
-                className="text-sm uppercase tracking-[0.3em] text-margiela-steel hover:text-cdg-blood-red transition-colors duration-300"
-              >
-                Collaboration
-              </Link>
-
-              <span className="text-xs font-mono text-margiela-aluminum mt-4">
-                © 2024 CINCH LAB
-              </span>
+            <div className="flex flex-col md:flex-row md:justify-end gap-12 md:gap-24">
+              <div>
+                <h4 className="font-mono text-micro text-yon-grey tracking-widest uppercase mb-4">Navigate</h4>
+                <ul className="space-y-2">
+                  {['Collections', 'Process', 'About', 'Contact'].map((item) => (
+                    <li key={item}>
+                      <Link
+                        href={`/${item.toLowerCase()}`}
+                        className="text-body text-yon-steel hover:text-yon-black transition-colors duration-300"
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-mono text-micro text-yon-grey tracking-widest uppercase mb-4">Connect</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a
+                      href="mailto:hello@theyon.com"
+                      className="text-body text-yon-steel hover:text-yon-black transition-colors duration-300"
+                    >
+                      Email
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://instagram.com/theyon_studio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-body text-yon-steel hover:text-yon-black transition-colors duration-300"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
+
+          {/* Bottom */}
+          <div className="mt-16 pt-8 border-t border-yon-platinum flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="font-mono text-micro text-yon-grey">
+              © {new Date().getFullYear()} THE YON. All rights reserved.
+            </p>
+            <p className="font-mono text-micro text-yon-grey">
+              Designed & Crafted by Taehyun Lee
+            </p>
           </div>
         </div>
       </footer>

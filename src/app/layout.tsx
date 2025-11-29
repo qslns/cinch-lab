@@ -1,62 +1,63 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { Inter, Cormorant_Garamond, Space_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
-import DeconstructivistNav from '@/components/DeconstructivistNav'
-import PWAInstaller, { PWAUpdateNotification } from '@/components/PWAInstaller'
+import YonNav from '@/components/YonNav'
 import BackToTop from '@/components/BackToTop'
 import ScrollProgress from '@/components/ScrollProgress'
 import LenisProvider from '@/hooks/useLenis'
-// Temporarily disabled: CipherProvider causes runtime error
-// import { CipherProvider } from '@/contexts/CipherContext'
-// import CipherToggle from '@/components/CipherToggle'
 import '@/styles/globals.css'
 import '@/styles/design-system-foundation.css'
 import '@/styles/asymmetric-grids.css'
 import '@/styles/kinetic-typography.css'
 
-// Typography System - Margiela × Sacai inspired
+// Typography System - THE YON
+// Cormorant Garamond: Elegant serif for titles
+// Inter: Clean sans-serif for body
+// Space Mono: Monospace for technical details
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans',
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  variable: '--font-space',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-serif',
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const spaceMono = Space_Mono({
   subsets: ['latin'],
+  weight: ['400', '700'],
   variable: '--font-mono',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'CINCH LAB — Experimental Fashion Laboratory',
-  description: 'NO SALES. ONLY CREATION. Experimental fashion laboratory dedicated to pure research without commerce. CINCH•RELEASE•REPEAT.',
-  keywords: 'experimental fashion, no commerce, fashion laboratory, cinch lab, avant-garde, pure creation, fashion experiment, research',
-  authors: [{ name: 'CINCH LAB' }],
-  creator: 'CINCH LAB',
-  publisher: 'CINCH LAB',
+  title: 'THE YON — Beyond Fashion',
+  description: 'Twisted yet harmonious. Experimental fashion portfolio by Taehyun Lee. Every element is slightly askew, yet together they form perfect beauty.',
+  keywords: 'THE YON, experimental fashion, avant-garde, fashion portfolio, Taehyun Lee, CSM, Parsons, Antwerp, deconstructed fashion, pattern magic',
+  authors: [{ name: 'THE YON' }],
+  creator: 'Taehyun Lee',
+  publisher: 'THE YON',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://cinchlab.vercel.app'),
+  metadataBase: new URL('https://theyon.vercel.app'),
   openGraph: {
-    title: 'CINCH LAB — Experimental Fashion Laboratory',
-    description: 'Where asymmetrical chaos meets scientific precision. Experimental fashion research facility.',
-    url: 'https://cinchlab.vercel.app',
-    siteName: 'CINCH LAB',
+    title: 'THE YON — Beyond Fashion',
+    description: 'Twisted yet harmonious. Experimental fashion that transcends time and space.',
+    url: 'https://theyon.vercel.app',
+    siteName: 'THE YON',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'CINCH LAB - Experimental Fashion Laboratory',
+        alt: 'THE YON - Beyond Fashion',
       },
     ],
     locale: 'en_US',
@@ -64,10 +65,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CINCH LAB — Experimental Fashion Laboratory',
-    description: 'Where asymmetrical chaos meets scientific precision.',
+    title: 'THE YON — Beyond Fashion',
+    description: 'Twisted yet harmonious. Fashion beyond the horizon.',
     images: ['/og-image.png'],
-    creator: '@cinchlab',
+    creator: '@theyon_studio',
   },
   robots: {
     index: true,
@@ -105,22 +106,20 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="CINCH LAB" />
+        <meta name="apple-mobile-web-app-title" content="THE YON" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-TileColor" content="#0A0A0A" />
         <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black`}>
         <LenisProvider>
           <ScrollProgress />
           <SkipToMain />
           <KeyboardNavigationIndicator />
-          <DeconstructivistNav />
+          <YonNav />
           <main id="main-content" className="pt-20">
             {children}
           </main>
-          <PWAInstaller />
-          <PWAUpdateNotification />
           <BackToTop />
         </LenisProvider>
       </body>
