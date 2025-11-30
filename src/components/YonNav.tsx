@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// Navigation structure with sub-items
+// Navigation structure with sub-items and IDs for accessibility
 const navItems = [
   {
+    id: 'nav-collections',
     href: '/collections',
     label: 'Collections',
     subItems: [
@@ -17,6 +18,7 @@ const navItems = [
     ],
   },
   {
+    id: 'nav-archive',
     href: '/archive',
     label: 'Archive',
     subItems: [
@@ -25,8 +27,8 @@ const navItems = [
       { href: '/archive#aw24', label: 'AW24 Research' },
     ],
   },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { id: 'nav-about', href: '/about', label: 'About' },
+  { id: 'nav-contact', href: '/contact', label: 'Contact' },
 ]
 
 export default function YonNav() {
@@ -77,6 +79,56 @@ export default function YonNav() {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null)
     }, 150)
+  }
+
+  // Keyboard navigation handlers
+  const handleKeyDown = (e: React.KeyboardEvent, href: string, hasSubItems: boolean) => {
+    if (!hasSubItems) return
+
+    switch (e.key) {
+      case 'Enter':
+      case ' ':
+        e.preventDefault()
+        setActiveDropdown(activeDropdown === href ? null : href)
+        break
+      case 'Escape':
+        setActiveDropdown(null)
+        break
+      case 'ArrowDown':
+        if (activeDropdown === href) {
+          e.preventDefault()
+          const firstItem = document.querySelector(`[data-dropdown="${href}"] a`) as HTMLElement
+          firstItem?.focus()
+        }
+        break
+    }
+  }
+
+  const handleDropdownKeyDown = (e: React.KeyboardEvent, itemHref: string) => {
+    const dropdown = document.querySelector(`[data-dropdown="${itemHref}"]`)
+    if (!dropdown) return
+
+    const links = Array.from(dropdown.querySelectorAll('a')) as HTMLElement[]
+    const currentIndex = links.indexOf(document.activeElement as HTMLElement)
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        const nextIndex = currentIndex + 1 < links.length ? currentIndex + 1 : 0
+        links[nextIndex]?.focus()
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        const prevIndex = currentIndex - 1 >= 0 ? currentIndex - 1 : links.length - 1
+        links[prevIndex]?.focus()
+        break
+      case 'Escape':
+        e.preventDefault()
+        setActiveDropdown(null)
+        const trigger = document.querySelector(`[aria-controls="dropdown-${itemHref.replace('/', '')}"]`) as HTMLElement
+        trigger?.focus()
+        break
+    }
   }
 
   // SSR guard
@@ -170,11 +222,13 @@ export default function YonNav() {
               gap: '32px',
             }}
             className="desktop-nav"
+            aria-label="Main navigation"
           >
             {navItems.map((item) => {
               const isActive = pathname === item.href ||
                 (item.href !== '/' && pathname.startsWith(item.href))
               const hasSubItems = item.subItems && item.subItems.length > 0
+              const dropdownId = `dropdown-${item.href.replace('/', '')}`
 
               return (
                 <div
@@ -197,8 +251,18 @@ export default function YonNav() {
                       display: 'block',
                       position: 'relative',
                     }}
+                    aria-current={isActive ? 'page' : undefined}
+                    aria-expanded={hasSubItems ? activeDropdown === item.href : undefined}
+                    aria-controls={hasSubItems ? dropdownId : undefined}
+                    aria-haspopup={hasSubItems ? 'menu' : undefined}
+                    onKeyDown={(e) => handleKeyDown(e, item.href, hasSubItems)}
                   >
                     {item.label}
+                    {hasSubItems && (
+                      <span aria-hidden="true" style={{ marginLeft: '4px', fontSize: '8px' }}>
+                        {activeDropdown === item.href ? '▲' : '▼'}
+                      </span>
+                    )}
                     {/* Active underline */}
                     <span
                       style={{
@@ -216,6 +280,10 @@ export default function YonNav() {
                   {/* Dropdown Menu */}
                   {hasSubItems && activeDropdown === item.href && (
                     <div
+                      id={dropdownId}
+                      role="menu"
+                      aria-label={`${item.label} submenu`}
+                      data-dropdown={item.href}
                       style={{
                         position: 'absolute',
                         top: '100%',
@@ -230,11 +298,13 @@ export default function YonNav() {
                       }}
                       onMouseEnter={() => handleMouseEnter(item.href)}
                       onMouseLeave={handleMouseLeave}
+                      onKeyDown={(e) => handleDropdownKeyDown(e, item.href)}
                     >
                       {item.subItems?.map((subItem) => (
                         <Link
                           key={subItem.href}
                           href={subItem.href}
+                          role="menuitem"
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -252,6 +322,14 @@ export default function YonNav() {
                             e.currentTarget.style.color = '#0A0A0A'
                           }}
                           onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent'
+                            e.currentTarget.style.color = '#4A4A4A'
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.backgroundColor = '#F0F0F0'
+                            e.currentTarget.style.color = '#0A0A0A'
+                          }}
+                          onBlur={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent'
                             e.currentTarget.style.color = '#4A4A4A'
                           }}
