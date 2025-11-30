@@ -1295,3 +1295,167 @@
 .gradient-shift:hover {
   background-position: -100% 0;
 }
+
+/* ============================================
+   Performance Optimizations
+   ============================================ */
+
+/* GPU Acceleration for animations */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --yon-grey: #555555;
+    --yon-silver: #888888;
+    --yon-platinum: #AAAAAA;
+  }
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  /* Reserved for dark mode implementation */
+}
+
+/* Print styles */
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  h2, h3 {
+    page-break-after: avoid;
+  }
+
+  nav, footer, .no-print {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  background: var(--yon-black);
+  color: var(--yon-white);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  z-index: 99999;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Focus ring utility */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--yon-accent);
+  outline-offset: 4px;
+}
+
+/* Touch target size */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Improved readability */
+.readable {
+  max-width: 65ch;
+  line-height: 1.7;
+}
+
+/* ============================================
+   Smooth Scroll
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--yon-platinum) 0%,
+    var(--yon-ivory) 50%,
+    var(--yon-platinum) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-loading 1.5s infinite;
+}
+
+@keyframes shimmer-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   Container Queries Support
+   ============================================ */
+
+@container (min-width: 640px) {
+  .container-responsive {
+    padding-inline: 2rem;
+  }
+}
+
+@container (min-width: 1024px) {
+  .container-responsive {
+    padding-inline: 4rem;
+  }
+}
