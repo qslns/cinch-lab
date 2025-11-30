@@ -1,59 +1,23 @@
 {
-  "name": "CINCH LAB — Experimental Fashion Laboratory",
-  "short_name": "CINCH LAB",
-  "description": "NO SALES. ONLY CREATION. Experimental fashion laboratory where genius manifests without commerce. CINCH•RELEASE•REPEAT.",
+  "name": "THE YON — Beyond Fashion",
+  "short_name": "THE YON",
+  "description": "Twisted yet harmonious. Experimental fashion portfolio by Taehyun Lee. Every element is slightly askew, yet together they form perfect beauty.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#F7F5F2",
-  "theme_color": "#0A0908",
+  "background_color": "#FAFAFA",
+  "theme_color": "#0A0A0A",
   "orientation": "any",
-  "id": "cinch-lab-pwa",
+  "id": "theyon-portfolio",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["fashion", "lifestyle", "shopping"],
+  "categories": ["fashion", "portfolio", "art"],
   "icons": [
-    {
-      "src": "/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
@@ -62,70 +26,27 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/desktop-home.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "platform": "wide",
-      "label": "CINCH LAB Homepage - Brutalist Design"
-    },
-    {
-      "src": "/screenshots/desktop-lab.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "platform": "wide",
-      "label": "Laboratory Experiments"
-    },
-    {
-      "src": "/screenshots/mobile-home.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "platform": "narrow",
-      "label": "Mobile Experience"
-    }
-  ],
   "shortcuts": [
     {
-      "name": "LAB",
-      "short_name": "Lab",
-      "url": "/lab",
-      "description": "Enter the experimental laboratory",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "COLLECTIONS",
+      "name": "Collections",
       "short_name": "Collections",
       "url": "/collections",
-      "description": "Browse experimental fashion collections",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "description": "Explore experimental fashion collections"
     },
     {
-      "name": "ARCHIVE",
+      "name": "Archive",
       "short_name": "Archive",
       "url": "/archive",
-      "description": "Explore the temporal archive",
-      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+      "description": "Research documentation and process archive"
+    },
+    {
+      "name": "About",
+      "short_name": "About",
+      "url": "/about",
+      "description": "About Taehyun Lee and THE YON"
     }
   ],
   "related_applications": [],
   "prefer_related_applications": false,
-  "protocol_handlers": [],
-  "display_override": ["standalone", "minimal-ui", "browser"],
-  "edge_side_panel": {
-    "preferred_width": 480
-  },
-  "launch_handler": {
-    "client_mode": ["navigate-existing", "auto"]
-  },
-  "scope_extensions": [],
-  "iarc_rating_id": "",
-  "features": [
-    "Cross Platform",
-    "Fast Loading",
-    "Offline Capable",
-    "WebGL Support",
-    "Experimental Design",
-    "Brutalist Aesthetic"
-  ]
+  "display_override": ["standalone", "minimal-ui", "browser"]
 }
