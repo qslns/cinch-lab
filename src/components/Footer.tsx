@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
 
           {/* Navigation */}
-          <div className="md:col-span-3 md:col-start-7">
+          <nav className="md:col-span-3 md:col-start-7" aria-label="Footer navigation">
             <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
               Navigate
             </h4>
@@ -57,10 +57,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Connect */}
-          <div className="md:col-span-3">
+          <nav className="md:col-span-3" aria-label="Social links">
             <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
               Connect
             </h4>
@@ -71,23 +71,28 @@ export default function Footer() {
                     href={item.href}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
+                    aria-label={item.external ? `${item.label} (opens in new tab)` : item.label}
                     className="group inline-flex items-center gap-2 text-base text-yon-silver hover:text-yon-white focus-visible:text-yon-white transition-colors duration-300 focus-ring"
                   >
                     <span>{item.label}</span>
                     {item.external && (
-                      <svg
-                        className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
+                      <>
+                        <svg
+                          className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                        <span className="sr-only">(opens in new tab)</span>
+                      </>
                     )}
                   </a>
                 </li>
@@ -101,7 +106,7 @@ export default function Footer() {
               </span>
               <span className="text-base text-yon-silver">Seoul & Tokyo</span>
             </div>
-          </div>
+          </nav>
         </div>
 
         {/* Bottom */}
