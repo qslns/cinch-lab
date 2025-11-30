@@ -301,7 +301,7 @@ export default function YonNav() {
                     aria-expanded={hasSubItems ? activeDropdown === item.href : undefined}
                     aria-controls={hasSubItems ? dropdownId : undefined}
                     aria-haspopup={hasSubItems ? 'menu' : undefined}
-                    onKeyDown={(e) => handleKeyDown(e, item.href, hasSubItems)}
+                    onKeyDown={(e) => handleKeyDown(e, item.href, hasSubItems ?? false)}
                   >
                     {item.label}
                     {hasSubItems && (

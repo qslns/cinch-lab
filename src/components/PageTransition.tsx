@@ -9,7 +9,7 @@ interface PageTransitionProps {
 }
 
 // THE YON custom easing - smoother, more luxurious feel
-const yonEase = [0.22, 1, 0.36, 1] // Custom ease-out-expo
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Standard page variants
 const pageVariants = {
@@ -197,7 +197,7 @@ export function PageLoadingOverlay({ isLoading }: { isLoading: boolean }) {
           className="fixed inset-0 z-[1000] bg-yon-white flex items-center justify-center"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
         >
           <motion.div
             className="text-center"
@@ -210,7 +210,7 @@ export function PageLoadingOverlay({ isLoading }: { isLoading: boolean }) {
               className="mt-4 w-12 h-px bg-yon-grey mx-auto origin-left"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
             />
           </motion.div>
         </motion.div>
@@ -238,7 +238,7 @@ export function SectionReveal({
       transition={{
         duration: 0.8,
         delay,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as const,
       }}
     >
       {children}
@@ -294,7 +294,7 @@ export function StaggerItem({
           y: 0,
           transition: {
             duration: 0.6,
-            ease: [0.16, 1, 0.3, 1],
+            ease: [0.16, 1, 0.3, 1] as const,
           },
         },
       }}

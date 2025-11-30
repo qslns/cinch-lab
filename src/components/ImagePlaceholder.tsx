@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, MotionValue } from 'framer-motion'
+import { motion, MotionValue, TargetAndTransition, VariantLabels, Transition, ViewportOptions } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 interface ImagePlaceholderProps {
@@ -15,11 +15,11 @@ interface ImagePlaceholderProps {
     scale?: MotionValue<number>
     rotate?: MotionValue<number>
   }
-  initial?: object
-  animate?: object
-  transition?: object
-  whileInView?: object
-  viewport?: object
+  initial?: TargetAndTransition | VariantLabels
+  animate?: TargetAndTransition | VariantLabels
+  transition?: Transition
+  whileInView?: TargetAndTransition | VariantLabels
+  viewport?: ViewportOptions
 }
 
 const variantStyles = {

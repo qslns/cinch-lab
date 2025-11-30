@@ -177,7 +177,7 @@ function ProcessItem({
       initial={{ opacity: 0, y: 40, rotate: -2 }}
       whileInView={{ opacity: 1, y: 0, rotate: index % 2 === 0 ? 1 : -1 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       data-cursor="image"
@@ -269,7 +269,7 @@ function ProcessStage({ stage, index }: { stage: typeof processStages[0]; index:
             initial={{ opacity: 0, x: isEven ? -40 : 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
             {/* Stage number & subtitle */}
             <div className={`flex items-center gap-3 mb-4 ${isEven ? '' : 'md:justify-end'}`}>
@@ -307,7 +307,7 @@ function ProcessStage({ stage, index }: { stage: typeof processStages[0]; index:
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <p className="text-base md:text-lg text-yon-steel leading-[1.8]">
               {stage.description}
@@ -574,7 +574,7 @@ export default function ProcessPage() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <span className="font-mono text-[10px] text-yon-silver/60 tracking-[0.25em] uppercase">
               Philosophy

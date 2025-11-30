@@ -24,7 +24,9 @@
       "Bash(npx lighthouse:*)",
       "Bash(cd:*)",
       "Bash(findstr:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(find:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

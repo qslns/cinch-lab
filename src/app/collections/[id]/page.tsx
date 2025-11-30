@@ -336,7 +336,7 @@ export default function CollectionDetailPage() {
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <span className="transform inline-block rotate-[-0.3deg]">
               {collection.description}
@@ -362,7 +362,7 @@ export default function CollectionDetailPage() {
                 initial={animation.initial}
                 whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, rotate: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
               >
                 <div
                   className={`relative ${sizeStyles[image.size]} ${variantStyles[image.variant]} overflow-hidden transition-shadow duration-500 hover:shadow-2xl`}
@@ -440,7 +440,7 @@ export default function CollectionDetailPage() {
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
                 Techniques
@@ -469,7 +469,7 @@ export default function CollectionDetailPage() {
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
                 Materials

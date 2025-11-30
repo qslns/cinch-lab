@@ -190,7 +190,7 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
               className="relative max-w-[90vw] max-h-[85vh] flex flex-col items-center"
               onClick={(e) => e.stopPropagation()}
             >
@@ -413,7 +413,7 @@ export function ImageGallery({
           transition={{
             duration: 0.6,
             delay: index * 0.1,
-            ease: [0.22, 1, 0.36, 1],
+            ease: [0.22, 1, 0.36, 1] as const,
           }}
         >
           <LightboxImage

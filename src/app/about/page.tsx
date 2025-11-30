@@ -128,7 +128,7 @@ function SkillBar({ skill, index }: { skill: typeof expertise[0]; index: number 
       initial={{ opacity: 0, x: -30 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -167,7 +167,7 @@ function SkillBar({ skill, index }: { skill: typeof expertise[0]; index: number 
               initial={{ width: 0 }}
               whileInView={{ width: `${skill.level}%` }}
               viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.3 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, delay: 0.3 + index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
             />
           </div>
           <span className="font-mono text-[10px] text-yon-grey/60 tracking-wider w-8">
@@ -189,7 +189,7 @@ function TimelineItem({ milestone, index, isLast }: { milestone: typeof mileston
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -258,7 +258,7 @@ function FloatingImage({
       transition={{
         duration: 1.2,
         delay: 0.3 + img.id * 0.15,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as const,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -483,7 +483,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <div className="flex items-center gap-3 mb-6">
                 <span className="w-8 h-px bg-yon-grey" />
@@ -509,7 +509,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <p className="text-lg md:text-xl text-yon-steel leading-[1.8]">
                 모든 요소가 약간씩 어긋나 있습니다.
@@ -563,7 +563,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <div
                 className="relative bg-yon-charcoal group cursor-pointer overflow-hidden"
@@ -606,7 +606,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <div className="flex items-center gap-3 mb-6">
                 <span className="w-8 h-px bg-yon-grey" />
@@ -702,7 +702,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <div className="md:col-span-5">
               <div className="flex items-center gap-3 mb-6">
@@ -739,7 +739,7 @@ export default function AboutPage() {
                 transition={{
                   duration: 0.7,
                   delay: index * 0.1,
-                  ease: [0.16, 1, 0.3, 1],
+                  ease: [0.16, 1, 0.3, 1] as const,
                 }}
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -818,7 +818,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <p className="font-serif text-[7vw] md:text-[4vw] lg:text-[3.2vw] text-yon-black leading-[1.2]">
               <span className="block">The journey matters</span>

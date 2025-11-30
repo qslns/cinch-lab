@@ -25,7 +25,7 @@ const socialLinks = [
 ]
 
 // Custom easing
-const yonEase = [0.22, 1, 0.36, 1]
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Overlay animation
 const overlayVariants = {

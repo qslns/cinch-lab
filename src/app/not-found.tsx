@@ -19,7 +19,7 @@ export default function NotFound() {
         className="relative z-10 text-center max-w-xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
       >
         {/* Label */}
         <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">

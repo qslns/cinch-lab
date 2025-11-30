@@ -610,7 +610,7 @@ export default function ContactPage() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <form onSubmit={handleSubmit} className="space-y-10">
                 <FormInput
@@ -676,7 +676,7 @@ export default function ContactPage() {
               className="lg:pt-8"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
             >
               <div className="flex items-center gap-3 mb-8">
                 <span className="w-8 h-px bg-yon-grey" />
@@ -742,7 +742,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <p className="font-serif text-2xl md:text-4xl lg:text-5xl text-yon-white leading-[1.3]">
               <span className="block">Every conversation</span>

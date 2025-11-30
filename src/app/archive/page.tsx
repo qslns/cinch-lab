@@ -840,7 +840,7 @@ export default function ArchivePage() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="w-8 h-px bg-yon-grey" />
@@ -879,7 +879,7 @@ export default function ArchivePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
           >
             <span className="font-mono text-[10px] text-yon-silver/60 tracking-[0.2em] uppercase">
               Continue exploring

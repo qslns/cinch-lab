@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, RefObject } from 'react'
+import React, { useEffect, useRef, RefObject, ElementType } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -364,13 +364,14 @@ export function ScrollReveal({
   children: React.ReactNode
   animation?: RevealAnimation
   className?: string
-  as?: keyof JSX.IntrinsicElements
+  as?: ElementType
 } & Partial<ScrollAnimationOptions>) {
   const ref = useScrollReveal<HTMLDivElement>({ animation, ...options })
+  const Tag = Component as ElementType
 
   return (
-    <Component ref={ref as React.Ref<HTMLDivElement>} className={className}>
+    <Tag ref={ref as React.Ref<HTMLDivElement>} className={className}>
       {children}
-    </Component>
+    </Tag>
   )
 }

@@ -1,9 +1,15 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { Easing } from "framer-motion"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+// THE YON custom easing - properly typed for Framer Motion
+export const yonEase: Easing = [0.22, 1, 0.36, 1]
+export const yonEaseOut: Easing = [0.16, 1, 0.3, 1]
+export const yonEaseIn: Easing = [0.4, 0, 1, 1]
 
 // Animation variants for Framer Motion
 export const fadeIn = {

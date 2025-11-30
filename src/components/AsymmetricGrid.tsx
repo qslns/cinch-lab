@@ -64,7 +64,7 @@ const itemVariants = {
     scale: 1,
     transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1], // Custom ease-out-expo
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 }
@@ -176,7 +176,7 @@ export function ScatteredGrid({ children, className = '' }: ScatteredGridProps) 
             transition={{
               duration: 1,
               delay: index * 0.1,
-              ease: [0.22, 1, 0.36, 1],
+              ease: [0.22, 1, 0.36, 1] as const,
             }}
             whileHover={{
               scale: pos.scale * 1.05,
