@@ -468,7 +468,7 @@ export default function ArchivePage() {
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
       {/* Hero Header */}
-      <section className="relative pt-8 md:pt-12 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
+      <section className="relative pt-6 md:pt-8 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
         {/* Background decoration */}
         <motion.span
           className="absolute top-[-5%] right-[-10%] font-mono text-[40vw] md:text-[30vw] text-yon-platinum/10 leading-none select-none pointer-events-none"
