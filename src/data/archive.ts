@@ -1,4 +1,4 @@
-// CINCH LAB Archive - 정신세계와 철학의 기록
+// THE YON Archive - 정신세계와 철학의 기록
 
 export interface Philosophy {
   id: string
@@ -34,7 +34,7 @@ export const philosophies: Philosophy[] = [
 
     We don't sell clothes. We create moments of transformation. Each piece is a timestamp of creative evolution, not a product.
 
-    CINCH LAB is an experimental fashion laboratory. We pursue the limits of fashion through rigorous research and uncompromising methodology.
+    THE YON is an experimental fashion laboratory. We pursue the limits of fashion through rigorous research and uncompromising methodology.
 
     The laboratory is where fashion meets science, where fabric meets philosophy, where destruction creates beauty.`,
     date: '2024-01-01',
@@ -69,7 +69,7 @@ export const philosophies: Philosophy[] = [
 
     In fashion, what we don't create is as important as what we do create. The absence defines the presence.
 
-    CINCH • RELEASE • REPEAT - The cinch creates tension, the release creates relief, the repeat creates rhythm.`,
+    TWIST • BALANCE • REPEAT - The twist creates tension, the balance creates harmony, the repeat creates rhythm.`,
     date: '2024-09-10',
     category: 'REFLECTION'
   },
@@ -238,7 +238,7 @@ export const archiveEntries: ArchiveEntry[] = [
     month: 'JUNE',
     day: 15,
     title: 'THE LABORATORY OPENS',
-    subtitle: 'CINCH LAB is born',
+    subtitle: 'THE YON is born',
     type: 'EVENT',
     category: 'CREATION',
     content: 'Today marks the beginning. No more commerce. No more compromise. Only pure creation. The laboratory is open.',

@@ -15,52 +15,47 @@ THE YON (더 연) = "저 너머"
 ## WEBSITE STRUCTURE
 
 ### HOME (/)
-- 자유로운 이미지 배치 (Faerie 스타일)
+- Faerie 스타일 자유로운 이미지 배치
 - 패럴랙스 스크롤 효과
 - "THE YON" 브랜드 타이포그래피
 - 최신 컬렉션 프리뷰
 
 ### COLLECTIONS (/collections)
 - 비대칭 그리드 갤러리
-- 다양한 크기와 회전의 카드들
-- 시즌별 프로젝트 전시
+- Sanity CMS 연동 (선택적)
+- 시즌별 필터링 (AW25, SS25, AW24, SS24)
 
 ### COLLECTIONS/[SLUG] (/collections/[slug])
+- 동적 라우팅
 - 풀스크린 히어로 이미지
-- 스크롤 기반 이미지 갤러리
 - 컨셉, 기법, 소재 정보
 
-### PROCESS (/process)
-- 작업 과정 쇼케이스
-- 실험, 연구, 실패 문서화
-- 타임라인 스타일 레이아웃
+### ARCHIVE (/archive)
+- 리서치/프로세스 문서화
+- 시즌별 필터링
+- 카테고리: Construction, Material, Form, Process
 
 ### ABOUT (/about)
-- 디자이너 인간적 소개
+- 디자이너 소개
 - 철학: "뒤틀렸지만 조화로운"
-- 접근 방식 설명
+- 스킬 시각화
 
 ### CONTACT (/contact)
-- 극도로 미니멀
-- 이메일 + 인스타그램만
-- 협업/전시 문의용
+- 미니멀 디자인
+- 문의 폼 (Name, Email, Type, Message)
+- 이메일 + 인스타그램 링크
 
 ## DESIGN PRINCIPLES
 
 ### 비대칭 미학
-- 중앙 정렬 금지
 - 60:40, 70:30 비율 분할
 - 예상치 못한 요소 배치
-
-### 기울기와 회전
 - 0.5° ~ 3° 미세한 회전
-- 정적인 화면에 생명력
-- 절제된 비대칭
 
 ### 색상 팔레트
 - 흑백 베이스
 - yon-black (#0A0A0A) ~ yon-white (#FAFAFA)
-- 강조색: yon-accent (#8B7355) - Warm taupe
+- 강조색: yon-accent (#8B7355)
 
 ### 타이포그래피
 - Cormorant Garamond (세리프) - 타이틀
@@ -70,21 +65,27 @@ THE YON (더 연) = "저 너머"
 ### 애니메이션
 - transform과 opacity만 사용
 - ease-out-expo 커브
-- 부드럽고 자연스러운 움직임
+- Framer Motion 사용
 
 ## TECHNICAL STACK
-- Next.js 14 App Router
+- Next.js 15.5 App Router
 - TypeScript
 - Tailwind CSS
-- Framer Motion (컴포넌트 애니메이션)
-- GSAP + Lenis (스크롤)
+- Framer Motion
+- Lenis (스무스 스크롤)
 - Sanity CMS (선택적)
 
-## PERFORMANCE TARGETS
-- Lighthouse 90점 이상
-- FCP 2초 이내
-- 60fps 스크롤
-- 모바일 완벽 대응
+## SEO & ACCESSIBILITY
+- 동적 sitemap.ts, robots.ts
+- 동적 OG 이미지 (opengraph-image.tsx)
+- 페이지별 메타데이터
+- Skip to main, focus-visible, aria 속성
+- AI 크롤러 허용 (GPTBot, ClaudeBot 등)
+
+## PERFORMANCE
+- Lighthouse 90점 이상 목표
+- LCP 이미지 priority
+- next/image 최적화
 
 ## NOT ALLOWED
 - Three.js, WebGL

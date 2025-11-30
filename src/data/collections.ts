@@ -1,4 +1,4 @@
-// CINCH LAB Collections - 순수 룩북 갤러리 (판매 없음)
+// THE YON Collections - 순수 룩북 갤러리 (판매 없음)
 
 export interface Look {
   id: string

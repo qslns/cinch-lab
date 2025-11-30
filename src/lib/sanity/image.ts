@@ -80,7 +80,7 @@ export function getBlurDataUrl(source: SanityImageSource | undefined | null): st
  * @param fallback - Fallback text if alt is not available
  * @returns Alt text string
  */
-export function getImageAlt(image: SanityImage | undefined | null, fallback: string = 'CINCH LAB Image'): string {
+export function getImageAlt(image: SanityImage | undefined | null, fallback: string = 'THE YON Image'): string {
   return image?.alt || fallback
 }
 

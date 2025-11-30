@@ -1,55 +1,49 @@
-# CINCH LAB - Experimental Fashion Laboratory
+# THE YON — Beyond Fashion
 
-> "We are not a brand. We are an experimental fashion laboratory."
+> "Twisted yet harmonious. Every element slightly askew, yet together they form perfect beauty."
 
-A deconstructionist fashion website inspired by Maison Margiela and Sacai's design philosophy. Built with Next.js 15 and Framer Motion.
+Experimental fashion portfolio by Taehyun Lee. Built with Next.js 15 and Framer Motion.
 
-## 🧪 Philosophy
+## Philosophy
 
-**CINCH LAB** exists in the liminal space between destruction and creation. We document process, not product. We celebrate failure as data. This is not commerce—this is philosophy rendered in code.
+**THE YON** (더 연) = "저 너머" — Beyond reach, beyond time, beyond space.
+Fashion that transcends the tangible, pursuing an ideal beauty that remains forever elusive.
 
-## ✨ Features
+Core aesthetic: **"Twisted yet harmonious"** — Every element is slightly off-center, yet the whole achieves perfect balance.
+
+## Features
 
 ### Design System
-- **Deconstructionist Interface** - Exposed seams, raw edges, visible construction
-- **Hybrid Layering** - Sacai-inspired dual elements and spliced patterns
-- **Laboratory Aesthetic** - Technical, experimental, process-focused
-- **Anti-Commercial** - No sales, no products, pure experimentation
+- **Asymmetric Typography** — Never centered, always intentional
+- **Faerie-style Layouts** — Scattered, organic image placement
+- **Monochrome Palette** — Black (#0A0A0A) to white (#FAFAFA) with warm taupe accent
+- **Experimental Motion** — Parallax scroll, subtle rotations
 
 ### Technical Excellence
 - Server-side rendering with Next.js 15
-- Advanced animations with Framer Motion
-- Responsive design for all devices
-- Optimized performance (< 150KB First Load JS)
+- Advanced animations with Framer Motion & GSAP
+- Smooth scrolling with Lenis
+- Optimized performance
 - TypeScript for type safety
 
-## 🎨 Pages
+## Pages
 
-- **Home** (`/`) - Real-time experiment tracking and laboratory monitoring
-- **Lab** (`/lab`) - Technical showcase with experiment documentation
-- **Collections** (`/collections`) - Runway, editorial, and grid views
-- **Archive** (`/archive`) - Failed experiments and learning documentation
-- **About** (`/about`) - Philosophy manifesto and inspirations
-- **Contact** (`/contact`) - Non-commercial inquiries only
-- **Analysis** (`/analysis`) - Fashion critique and brand analysis
+- **Home** (`/`) — Faerie-style scattered images with parallax
+- **Collections** (`/collections`) — Asymmetric gallery with rotated cards
+- **Archive** (`/archive`) — Research documentation and process timeline
+- **About** (`/about`) — Designer philosophy and approach
+- **Contact** (`/contact`) — Minimal inquiry form
 
-## 🚀 Tech Stack
+## Tech Stack
 
-- **Framework:** Next.js 15.5.3
-- **Animation:** Framer Motion 11
-- **Styling:** Tailwind CSS 3.4
-- **Language:** TypeScript 5
+- **Framework:** Next.js 15
+- **Animation:** Framer Motion, GSAP, Lenis
+- **Styling:** Tailwind CSS
+- **Language:** TypeScript
+- **CMS:** Sanity (optional)
 - **Deployment:** Vercel
-- **Region:** Seoul (icn1)
 
-## 📦 Installation
-
-### Prerequisites
-- Node.js 20+
-- npm or yarn
-- Git
-
-### Setup
+## Installation
 
 ```bash
 # Clone repository
@@ -59,99 +53,69 @@ cd cinch-lab
 # Install dependencies
 npm install
 
-# Create environment variables
-cp .env.example .env.local
-
 # Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000](http://localhost:3000) to view.
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
 ├── app/                    # Next.js app directory
-│   ├── page.tsx           # Homepage
-│   ├── lab/               # Laboratory page
-│   ├── collections/       # Collections showcase
+│   ├── page.tsx           # Homepage (Faerie layout)
+│   ├── collections/       # Collections gallery
 │   ├── archive/           # Archive timeline
-│   ├── about/             # Philosophy page
-│   ├── contact/           # Contact form
-│   └── analysis/          # Brand critique
-├── components/
-│   └── InteractiveElements.tsx  # Reusable components
-├── styles/
-│   ├── globals.css        # Global styles
-│   └── cinch-laboratory.css  # Design system
-└── types/                 # TypeScript definitions
+│   ├── about/             # Designer philosophy
+│   └── contact/           # Contact form
+├── components/            # Reusable components
+│   ├── YonNav.tsx        # Navigation
+│   ├── Footer.tsx        # Footer
+│   └── ...
+└── styles/
+    └── globals.css        # Global styles & design system
 ```
 
-## 🎯 Design Principles
+## Design Principles
 
-### Margiela-Inspired Elements
-- Exposed construction details
-- Raw edges and unfinished elements
-- White as infinite possibility
-- Process over product
+### Typography
+- **Cormorant Garamond** — Elegant serif for titles
+- **Inter** — Clean sans-serif for body
+- **Space Mono** — Technical mono for details
 
-### Sacai-Inspired Elements
-- Hybrid constructions
-- Dual identities
-- Layered interfaces
-- Unexpected combinations
-
-## 📊 Performance Metrics
-
-- **First Load JS:** ~150KB
-- **Build Time:** < 20s
-- **Lighthouse Score:** 95+
-- **FPS:** 60fps animations
-
-## 🌐 Deployment
-
-### Vercel (Recommended)
-
-1. Push to GitHub
-2. Import project on Vercel
-3. Deploy with default settings
-4. Set environment variables in Vercel dashboard
-
-### Manual Deployment
-
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm run start
+### Color Palette
+```css
+--yon-black: #0A0A0A
+--yon-charcoal: #1A1A1A
+--yon-graphite: #2A2A2A
+--yon-grey: #6B6B6B
+--yon-silver: #A3A3A3
+--yon-platinum: #D4D4D4
+--yon-ivory: #F0F0F0
+--yon-white: #FAFAFA
+--yon-accent: #8B7355
 ```
 
-## 🔐 Environment Variables
+### Motion
+- Transform & opacity only
+- ease-out-expo timing
+- 60fps target
 
-```env
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
-NEXT_PUBLIC_GA_ID=your-ga-id
-NEXT_PUBLIC_ENVIRONMENT=production
-```
+## Portfolio Purpose
 
-## 🤝 Contributing
+This website serves as a portfolio for graduate school applications to:
+- Central Saint Martins (CSM)
+- Parsons School of Design
+- Royal Academy of Fine Arts Antwerp
 
-This is an experimental laboratory. We welcome philosophical contributions, not commercial ones.
+## License
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/ExperimentalFeature`)
-3. Commit your changes (`git commit -m 'Add experimental feature'`)
-4. Push to the branch (`git push origin feature/ExperimentalFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-© 2024 CINCH LAB. All rights reserved.
+© 2025 THE YON. All rights reserved.
 
 ---
 
-**"Fashion is not art, but it can be."**
+**Designer:** Taehyun Lee
+**School:** SASADA Fashion School
 
-Built with dedication to Maison Margiela and Sacai's vision.
+*"Beyond fashion, beyond reach, beyond time."*
