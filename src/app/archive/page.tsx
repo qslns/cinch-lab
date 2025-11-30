@@ -1,9 +1,12 @@
 'use client'
 
 import { useState, useMemo, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+
+// Custom easing for smooth animations
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Archive items - research and process documentation
 const archiveItems = [
@@ -467,94 +470,190 @@ export default function ArchivePage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
-      {/* Hero Header */}
-      <section className="relative pt-6 md:pt-8 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
-        {/* Background decoration */}
+      {/* Hero Header - Extreme Typography */}
+      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-end pt-32 md:pt-40 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
+        {/* Giant Background Letter */}
         <motion.span
-          className="absolute top-[-5%] right-[-10%] font-mono text-[40vw] md:text-[30vw] text-yon-platinum/10 leading-none select-none pointer-events-none"
+          className="absolute top-[5%] right-[-15%] font-serif text-[70vw] md:text-[50vw] text-yon-platinum/[0.04] leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: yonEase }}
         >
           A
         </motion.span>
 
-        <div className="max-w-6xl mx-auto relative">
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12">
-            {/* Title section */}
+        {/* Secondary decorative element */}
+        <motion.div
+          className="absolute top-[20%] left-[5%] w-px h-[30vh] bg-gradient-to-b from-transparent via-yon-grey/20 to-transparent"
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
+        />
+
+        {/* Scattered number tags */}
+        <motion.span
+          className="absolute top-[15%] right-[20%] font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] rotate-90"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          04.ARCHIVE
+        </motion.span>
+
+        <div className="w-full max-w-7xl mx-auto relative">
+          <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-end">
+            {/* Title section - Extreme Scale */}
             <motion.div
-              className="md:col-span-7"
-              initial={{ opacity: 0, y: 30 }}
+              className="md:col-span-8"
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, ease: yonEase }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-8 h-px bg-yon-grey" />
-                <span className="font-mono text-[10px] text-yon-grey tracking-[0.2em] uppercase">
+              {/* Prefix tag */}
+              <motion.div
+                className="flex items-center gap-4 mb-6"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2, ease: yonEase }}
+              >
+                <span className="w-12 h-px bg-yon-accent" />
+                <span className="font-mono text-[10px] text-yon-accent tracking-[0.3em] uppercase">
                   Process & Research
                 </span>
-              </div>
+              </motion.div>
 
-              <h1 className="font-serif text-[16vw] md:text-[10vw] lg:text-[8vw] text-yon-black leading-[0.85]">
+              {/* Main Title - Extreme Typography */}
+              <h1 className="relative">
                 <motion.span
-                  className="block"
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.8] tracking-[-0.03em]"
+                  initial={{ opacity: 0, y: 80, rotate: 2 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{ duration: 1, delay: 0.1, ease: yonEase }}
                 >
                   Arch
                 </motion.span>
                 <motion.span
-                  className="block ml-[15%]"
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.8] tracking-[-0.03em] ml-[20%] md:ml-[25%]"
+                  initial={{ opacity: 0, y: 80, rotate: -2 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{ duration: 1, delay: 0.2, ease: yonEase }}
                 >
                   ive
                 </motion.span>
+
+                {/* Italic overlay on hover effect */}
+                <motion.span
+                  className="absolute top-0 left-0 font-serif italic text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-accent/10 leading-[0.8] tracking-[-0.03em] pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.15 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  Arch
+                </motion.span>
               </h1>
 
+              {/* Subtitle */}
               <motion.p
-                className="mt-8 text-lg md:text-xl text-yon-steel leading-relaxed max-w-md"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                className="mt-8 md:mt-12 text-lg md:text-xl lg:text-2xl text-yon-steel leading-relaxed max-w-lg"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5, ease: yonEase }}
               >
                 Fragments of creation. Experiments preserved.
-                The journey matters as much as the destination.
+                <span className="block mt-2 text-yon-grey">
+                  The journey matters as much as the destination.
+                </span>
               </motion.p>
             </motion.div>
 
-            {/* Stats & Info */}
+            {/* Stats & Info - Asymmetric Position */}
             <motion.div
-              className="md:col-span-4 md:col-start-9 md:pt-20"
-              initial={{ opacity: 0, y: 20 }}
+              className="md:col-span-3 md:col-start-10"
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: yonEase }}
             >
-              <div className="space-y-6">
-                <div>
-                  <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase block mb-2">
+              <div className="space-y-8 md:space-y-10">
+                {/* Total Entries */}
+                <div className="relative">
+                  <motion.span
+                    className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
                     Total Entries
-                  </span>
-                  <span className="font-serif text-4xl md:text-5xl text-yon-black">
+                  </motion.span>
+                  <motion.span
+                    className="font-serif text-5xl md:text-6xl lg:text-7xl text-yon-black leading-none"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.7, ease: yonEase }}
+                  >
                     {archiveItems.length}
-                  </span>
+                  </motion.span>
+                  <motion.span
+                    className="absolute -right-2 top-0 font-mono text-[8px] text-yon-grey/30"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    [01]
+                  </motion.span>
                 </div>
-                <div>
-                  <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase block mb-2">
+
+                {/* Active Research */}
+                <div className="relative ml-4">
+                  <motion.span
+                    className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                  >
                     Active Research
-                  </span>
-                  <span className="font-serif text-4xl md:text-5xl text-yon-accent">
+                  </motion.span>
+                  <motion.span
+                    className="font-serif text-5xl md:text-6xl lg:text-7xl text-yon-accent leading-none"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.8, ease: yonEase }}
+                  >
                     {archiveItems.filter(i => i.status === 'current').length}
-                  </span>
+                  </motion.span>
+                  <motion.span
+                    className="absolute -right-2 top-0 font-mono text-[8px] text-yon-grey/30"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                  >
+                    [02]
+                  </motion.span>
                 </div>
-                <div className="pt-4">
+
+                {/* Timeline indicator */}
+                <motion.div
+                  className="pt-4 flex items-center gap-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  <span className="w-6 h-px bg-yon-grey/30" />
                   <span className="font-mono text-[10px] text-yon-grey/40 tracking-wider">
                     SS24 — AW25
                   </span>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
+
+          {/* Decorative line at bottom */}
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-yon-grey/20 via-yon-accent/30 to-transparent"
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.5, delay: 0.6, ease: yonEase }}
+          />
         </div>
       </section>
 

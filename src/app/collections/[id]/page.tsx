@@ -1,10 +1,13 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Footer from '@/components/Footer'
+
+// Custom easing for smooth animations
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Collection data with enhanced image layouts
 const collectionsData: Record<string, {
@@ -168,68 +171,158 @@ export default function CollectionDetailPage() {
   return (
     <div className="min-h-screen bg-yon-white">
       {/* ============================================
-          HERO SECTION - Fullscreen with Parallax
+          HERO SECTION - Fullscreen with Extreme Typography
           ============================================ */}
-      <section ref={heroRef} className="relative h-screen overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen overflow-hidden">
         {/* Background image placeholder */}
         <motion.div
           className="absolute inset-0 bg-yon-charcoal"
           style={{ scale: heroScale }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-mono text-sm text-yon-grey tracking-widest">HERO IMAGE</span>
+            <span className="font-mono text-sm text-yon-grey/30 tracking-widest">HERO IMAGE</span>
           </div>
         </motion.div>
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-yon-black/60 via-transparent to-transparent" />
+        {/* Gradient overlays - enhanced */}
+        <div className="absolute inset-0 bg-gradient-to-t from-yon-black/70 via-yon-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-yon-black/30 to-transparent" />
 
-        {/* Hero content */}
+        {/* Giant background letter */}
+        <motion.span
+          className="absolute top-[10%] right-[-15%] font-serif text-[70vw] md:text-[50vw] text-yon-white/[0.02] leading-none select-none pointer-events-none"
+          style={{ y: titleY }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: yonEase }}
+        >
+          {collection.title.charAt(0)}
+        </motion.span>
+
+        {/* Decorative vertical line */}
         <motion.div
-          className="absolute bottom-0 left-0 right-0 p-8 md:p-16"
+          className="absolute top-[15%] left-[8%] w-px h-[30vh] bg-gradient-to-b from-transparent via-yon-accent/40 to-transparent"
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: yonEase }}
+        />
+
+        {/* Collection index tag */}
+        <motion.span
+          className="absolute top-[25%] left-[4%] font-mono text-[10px] text-yon-silver/40 tracking-[0.3em] -rotate-90 origin-left"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+        >
+          COLLECTION.{collection.year}
+        </motion.span>
+
+        {/* Hero content - Extreme Typography */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 p-8 md:p-12 lg:p-20"
           style={{ y: titleY, opacity: heroOpacity }}
         >
           <div className="max-w-7xl mx-auto">
-            <motion.span
-              className="font-mono text-xs text-yon-silver tracking-[0.3em] uppercase"
+            {/* Season tag with accent */}
+            <motion.div
+              className="flex items-center gap-4 mb-6"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: yonEase }}
+            >
+              <span className="w-10 h-px bg-yon-accent" />
+              <span className="font-mono text-[11px] text-yon-accent tracking-[0.3em] uppercase">
+                {collection.season} {collection.year}
+              </span>
+            </motion.div>
+
+            {/* Main Title - EXTREME Scale */}
+            <motion.h1
+              className="relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.span
+                className="block font-serif text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-white leading-[0.75] tracking-[-0.03em]"
+                initial={{ opacity: 0, y: 100, rotate: 3 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                transition={{ duration: 1.2, delay: 0.5, ease: yonEase }}
+              >
+                {collection.title.split(' ')[0] || collection.title}
+              </motion.span>
+              {collection.title.split(' ')[1] && (
+                <motion.span
+                  className="block font-serif text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-white leading-[0.75] tracking-[-0.03em] ml-[10%] md:ml-[15%]"
+                  initial={{ opacity: 0, y: 100, rotate: -3 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{ duration: 1.2, delay: 0.6, ease: yonEase }}
+                >
+                  {collection.title.split(' ').slice(1).join(' ')}
+                </motion.span>
+              )}
+
+              {/* Italic ghost overlay */}
+              <motion.span
+                className="absolute top-0 left-0 font-serif italic text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-accent/[0.08] leading-[0.75] tracking-[-0.03em] pointer-events-none"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.9, ease: yonEase }}
+              >
+                {collection.title.split(' ')[0] || collection.title}
+              </motion.span>
+            </motion.h1>
+
+            {/* Description teaser */}
+            <motion.p
+              className="mt-8 md:mt-12 max-w-lg text-base md:text-lg text-yon-silver/80 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              transition={{ duration: 0.8, delay: 0.8, ease: yonEase }}
             >
-              {collection.season} {collection.year}
-            </motion.span>
-            <motion.h1
-              className="mt-4 font-serif text-[15vw] md:text-[10vw] lg:text-[8vw] text-yon-white leading-[0.9]"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="block transform rotate-[-0.5deg]">{collection.title.split(' ')[0] || collection.title}</span>
-              {collection.title.split(' ')[1] && (
-                <span className="block transform rotate-[0.3deg] ml-[5%]">{collection.title.split(' ').slice(1).join(' ')}</span>
-              )}
-            </motion.h1>
+              {collection.description.split('.')[0]}.
+            </motion.p>
+
+            {/* Decorative line */}
+            <motion.div
+              className="mt-10 w-[50%] md:w-[30%] h-px bg-gradient-to-r from-yon-silver/30 via-yon-accent/40 to-transparent"
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.2, delay: 1, ease: yonEase }}
+            />
           </div>
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator - offset position */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-8 left-[10%]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
           style={{ opacity: heroOpacity }}
         >
           <div className="flex flex-col items-center gap-3">
-            <span className="font-mono text-[10px] text-yon-silver/70 tracking-widest uppercase">
-              Scroll
+            <span className="font-mono text-[9px] text-yon-silver/50 tracking-[0.25em] uppercase">
+              Scroll to explore
             </span>
             <motion.div
-              className="w-px h-12 bg-yon-silver/50 origin-top"
+              className="w-px h-16 bg-gradient-to-b from-yon-silver/40 to-transparent origin-top"
               animate={{ scaleY: [1, 0.4, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             />
           </div>
+        </motion.div>
+
+        {/* Image count indicator */}
+        <motion.div
+          className="absolute bottom-8 right-8 md:right-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+        >
+          <span className="font-mono text-[10px] text-yon-silver/50 tracking-wider">
+            {collection.images.length} IMAGES
+          </span>
         </motion.div>
       </section>
 

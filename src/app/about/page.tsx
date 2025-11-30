@@ -5,6 +5,9 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 
+// Custom easing for smooth animations
+const yonEase = [0.22, 1, 0.36, 1] as const
+
 // Skills/expertise data
 const expertise = [
   {
@@ -315,10 +318,39 @@ export default function AboutPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
-      {/* Hero Section */}
-      <section className="relative min-h-[120vh] md:min-h-[140vh] overflow-hidden">
+      {/* Hero Section - Extreme Typography */}
+      <section className="relative min-h-[100vh] md:min-h-[120vh] overflow-hidden">
         {/* Grain texture */}
         <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
+
+        {/* Giant Background Letters */}
+        <motion.span
+          className="absolute top-[10%] left-[-10%] font-serif text-[80vw] md:text-[55vw] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
+          style={{ y: parallaxY }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: yonEase }}
+        >
+          Y
+        </motion.span>
+
+        {/* Vertical decorative line */}
+        <motion.div
+          className="absolute top-[15%] right-[12%] w-px h-[40vh] bg-gradient-to-b from-transparent via-yon-accent/30 to-transparent"
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: yonEase }}
+        />
+
+        {/* Number tag */}
+        <motion.span
+          className="absolute top-[25%] right-[8%] font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] -rotate-90 origin-right"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+        >
+          05.ABOUT
+        </motion.span>
 
         {/* Scattered background images */}
         {scatteredImages.map(img => (
@@ -327,84 +359,107 @@ export default function AboutPage() {
 
         {/* Main content */}
         <motion.div
-          className="relative z-20 pt-24 md:pt-32 lg:pt-40 px-6 md:px-12 lg:px-16"
+          className="relative z-20 pt-32 md:pt-40 lg:pt-48 px-6 md:px-12 lg:px-16"
           style={{ opacity: heroOpacity, scale: heroScale }}
         >
           <div className="max-w-7xl mx-auto">
             <motion.div className="relative">
-              {/* Background letter */}
-              <motion.span
-                className="absolute -top-12 -left-4 md:-left-12 font-mono text-[120px] md:text-[200px] text-yon-platinum/15 leading-none select-none pointer-events-none"
-                style={{ y: parallaxY }}
-              >
-                A
-              </motion.span>
-
-              {/* Label */}
+              {/* Prefix tag with accent */}
               <motion.div
-                className="flex items-center gap-3 mb-6"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                className="flex items-center gap-4 mb-8"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: yonEase }}
               >
-                <span className="w-8 h-px bg-yon-grey" />
-                <span className="font-mono text-[10px] text-yon-grey tracking-[0.25em] uppercase">
+                <span className="w-12 h-px bg-yon-accent" />
+                <span className="font-mono text-[10px] text-yon-accent tracking-[0.3em] uppercase">
                   Beyond the horizon
                 </span>
               </motion.div>
 
-              {/* Title */}
-              <h1 className="relative font-serif text-[20vw] md:text-[16vw] lg:text-[13vw] text-yon-black leading-[0.8]">
+              {/* Title - EXTREME Scale */}
+              <h1 className="relative">
+                {/* Main title */}
                 <motion.span
-                  className="block"
-                  initial={{ opacity: 0, y: 80 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="block font-serif text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-black leading-[0.75] tracking-[-0.04em]"
+                  initial={{ opacity: 0, y: 100, rotate: 3 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
                 >
                   THE
                 </motion.span>
                 <motion.span
-                  className="block ml-[8%]"
-                  initial={{ opacity: 0, y: 80 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className="block font-serif text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-black leading-[0.75] tracking-[-0.04em] ml-[12%] md:ml-[18%]"
+                  initial={{ opacity: 0, y: 100, rotate: -3 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{ duration: 1.2, delay: 0.45, ease: yonEase }}
                 >
                   YON
                 </motion.span>
+
+                {/* Italic ghost overlay */}
+                <motion.span
+                  className="absolute top-0 left-0 font-serif italic text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-accent/[0.08] leading-[0.75] tracking-[-0.04em] pointer-events-none"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1, delay: 0.8, ease: yonEase }}
+                >
+                  THE
+                </motion.span>
               </h1>
 
-              {/* Tagline */}
+              {/* Korean subtitle - asymmetric placement */}
               <motion.div
-                className="mt-12 md:mt-20 ml-[2%] md:ml-[12%] max-w-lg"
-                initial={{ opacity: 0, y: 40 }}
+                className="mt-8 md:mt-12 ml-[5%] md:ml-[45%] lg:ml-[50%]"
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.8, delay: 0.6, ease: yonEase }}
               >
-                <p className="text-xl md:text-2xl text-yon-steel leading-relaxed">
+                <span className="font-mono text-[11px] md:text-xs text-yon-grey/50 tracking-[0.2em]">
+                  저 너머 — Beyond
+                </span>
+              </motion.div>
+
+              {/* Tagline - dramatically positioned */}
+              <motion.div
+                className="mt-16 md:mt-24 max-w-xl md:max-w-2xl"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.7, ease: yonEase }}
+              >
+                <p className="text-xl md:text-2xl lg:text-3xl text-yon-steel leading-[1.4]">
                   "저 너머"를 향한 끊임없는 탐구.
                 </p>
-                <p className="mt-4 text-base md:text-lg text-yon-grey leading-relaxed">
+                <p className="mt-6 text-base md:text-lg text-yon-grey leading-relaxed max-w-md">
                   시간과 공간을 초월한 패션을 추구합니다.
-                  뒤틀렸지만 조화로운, 해체되었지만 완벽한.
+                  <span className="block mt-2">뒤틀렸지만 조화로운, 해체되었지만 완벽한.</span>
                 </p>
               </motion.div>
 
-              {/* Scroll indicator */}
+              {/* Scroll indicator - offset */}
               <motion.div
-                className="absolute bottom-[-40vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+                className="absolute bottom-[-50vh] left-[10%] flex flex-col items-center gap-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
               >
-                <span className="font-mono text-[9px] text-yon-grey/60 tracking-[0.2em] uppercase">
-                  Scroll
+                <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.25em] uppercase">
+                  Scroll to explore
                 </span>
                 <motion.div
-                  className="w-px h-12 bg-yon-grey/30"
-                  animate={{ scaleY: [1, 0.5, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-px h-16 bg-gradient-to-b from-yon-grey/40 to-transparent"
+                  animate={{ scaleY: [1, 0.4, 1] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
               </motion.div>
+
+              {/* Decorative bottom line */}
+              <motion.div
+                className="absolute bottom-[-30vh] left-0 right-[40%] h-px bg-gradient-to-r from-yon-accent/40 via-yon-grey/20 to-transparent"
+                initial={{ scaleX: 0, originX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1.5, delay: 0.8, ease: yonEase }}
+              />
             </motion.div>
           </div>
         </motion.div>

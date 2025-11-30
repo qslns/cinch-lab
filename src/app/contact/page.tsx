@@ -1,8 +1,11 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Footer from '@/components/Footer'
+
+// Custom easing for smooth animations
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Contact form field type
 type FormField = 'name' | 'email' | 'type' | 'message'
@@ -460,7 +463,36 @@ export default function ContactPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white relative overflow-hidden">
-      {/* Decorative elements */}
+      {/* Giant Background Letter */}
+      <motion.span
+        className="absolute top-[5%] right-[-20%] font-serif text-[80vw] md:text-[60vw] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
+        style={{ y: parallax2 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: yonEase }}
+      >
+        C
+      </motion.span>
+
+      {/* Vertical decorative line */}
+      <motion.div
+        className="absolute top-[20%] left-[8%] w-px h-[35vh] bg-gradient-to-b from-transparent via-yon-accent/30 to-transparent"
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
+      />
+
+      {/* Number tag */}
+      <motion.span
+        className="absolute top-[30%] left-[4%] font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] -rotate-90 origin-left"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        06.CONTACT
+      </motion.span>
+
+      {/* Decorative elements - repositioned */}
       {decorativeElements.map((el, index) => (
         <motion.div
           key={index}
@@ -471,11 +503,11 @@ export default function ContactPage() {
             zIndex: 1,
           }}
           initial={{ opacity: 0, scale: 0.8, rotate: el.rotation - 10 }}
-          animate={{ opacity: 0.5, scale: 1, rotate: el.rotation }}
+          animate={{ opacity: 0.4, scale: 1, rotate: el.rotation }}
           transition={{
             duration: 1.2,
             delay: 0.5 + index * 0.2,
-            ease: [0.16, 1, 0.3, 1],
+            ease: yonEase,
           }}
         >
           <div
@@ -485,58 +517,91 @@ export default function ContactPage() {
         </motion.div>
       ))}
 
-      {/* Background letter */}
-      <motion.span
-        className="absolute top-16 right-[-8%] font-mono text-[200px] md:text-[400px] text-yon-platinum/15 leading-none select-none pointer-events-none"
-        style={{ y: parallax2 }}
-      >
-        C
-      </motion.span>
-
       {/* Main content */}
-      <div className="relative z-10 min-h-screen px-6 md:px-12 py-24 md:py-32">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
+      <div className="relative z-10 min-h-screen px-6 md:px-12 lg:px-16 py-32 md:py-40">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Header - Extreme Typography */}
           <motion.div
-            className="mb-16 md:mb-24"
-            initial={{ opacity: 0, y: 40 }}
+            className="mb-20 md:mb-32"
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: yonEase }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-8 h-px bg-yon-grey" />
-              <span className="font-mono text-[10px] text-yon-grey tracking-[0.25em] uppercase">
+            {/* Prefix tag with accent */}
+            <motion.div
+              className="flex items-center gap-4 mb-8"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: yonEase }}
+            >
+              <span className="w-12 h-px bg-yon-accent" />
+              <span className="font-mono text-[10px] text-yon-accent tracking-[0.3em] uppercase">
                 Get in touch
               </span>
-            </div>
+            </motion.div>
 
-            <h1 className="font-serif text-[14vw] md:text-[9vw] lg:text-[7vw] text-yon-black leading-[0.85]">
+            {/* Main Title - EXTREME Scale */}
+            <h1 className="relative">
               <motion.span
-                className="block"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.75] tracking-[-0.03em]"
+                initial={{ opacity: 0, y: 100, rotate: 2 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                transition={{ duration: 1.2, delay: 0.1, ease: yonEase }}
               >
                 Con
               </motion.span>
               <motion.span
-                className="block ml-[12%]"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.75] tracking-[-0.03em] ml-[15%] md:ml-[20%]"
+                initial={{ opacity: 0, y: 100, rotate: -2 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                transition={{ duration: 1.2, delay: 0.2, ease: yonEase }}
               >
                 tact
               </motion.span>
+
+              {/* Italic ghost overlay */}
+              <motion.span
+                className="absolute top-0 left-0 font-serif italic text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-accent/[0.06] leading-[0.75] tracking-[-0.03em] pointer-events-none"
+                initial={{ opacity: 0, x: 15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.6, ease: yonEase }}
+              >
+                Con
+              </motion.span>
             </h1>
 
+            {/* Korean subtitle - asymmetric placement */}
+            <motion.div
+              className="mt-6 md:mt-10 ml-[5%] md:ml-[40%]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5, ease: yonEase }}
+            >
+              <span className="font-mono text-[11px] text-yon-grey/50 tracking-[0.2em]">
+                연락 — Let's connect
+              </span>
+            </motion.div>
+
+            {/* Subtitle */}
             <motion.p
-              className="mt-8 text-lg md:text-xl text-yon-steel leading-relaxed max-w-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-10 md:mt-14 text-lg md:text-xl lg:text-2xl text-yon-steel leading-relaxed max-w-lg"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: yonEase }}
             >
               For collaborations, exhibitions, press inquiries, or just to say hello.
+              <span className="block mt-3 text-base text-yon-grey">
+                협업, 전시, 언론 문의 또는 간단한 인사를 위해.
+              </span>
             </motion.p>
+
+            {/* Decorative line */}
+            <motion.div
+              className="mt-12 w-[60%] md:w-[40%] h-px bg-gradient-to-r from-yon-grey/20 via-yon-accent/30 to-transparent"
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.2, delay: 0.7, ease: yonEase }}
+            />
           </motion.div>
 
           {/* Two column layout */}
