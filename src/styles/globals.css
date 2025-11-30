@@ -921,3 +921,377 @@
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ============================================
+   Advanced Hover Interactions
+   THE YON - Enhanced UX
+   ============================================ */
+
+/* Text Reveal on Hover */
+.hover-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-reveal::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  background: var(--yon-black);
+  color: var(--yon-white);
+  transform: translateY(100%);
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.hover-reveal:hover::before {
+  transform: translateY(0);
+}
+
+/* Underline Slide Effect - Left to Right */
+.underline-slide {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-slide::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--yon-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.underline-slide:hover::after,
+.underline-slide:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Underline Slide - Center Out */
+.underline-center {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-center::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.underline-center:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Background Fill - Bottom to Top */
+.bg-fill-up {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bg-fill-up::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--yon-black);
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.bg-fill-up:hover::before {
+  transform: scaleY(1);
+}
+
+.bg-fill-up:hover {
+  color: var(--yon-white);
+}
+
+/* Background Fill - Left to Right */
+.bg-fill-right {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bg-fill-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--yon-black);
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.bg-fill-right:hover::before {
+  transform: scaleX(1);
+}
+
+.bg-fill-right:hover {
+  color: var(--yon-white);
+}
+
+/* Glow Effect on Hover */
+.hover-glow {
+  transition: box-shadow var(--duration-normal) ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(139, 115, 85, 0.3);
+}
+
+/* Scale & Lift Effect */
+.hover-lift {
+  transition:
+    transform var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Rotate on Hover */
+.hover-rotate {
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.hover-rotate:hover {
+  transform: rotate(-2deg);
+}
+
+/* Image Zoom with Overlay */
+.image-zoom-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-zoom-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(10, 10, 10, 0.4) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) ease;
+}
+
+.image-zoom-overlay:hover::after {
+  opacity: 1;
+}
+
+.image-zoom-overlay img {
+  transition: transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.image-zoom-overlay:hover img {
+  transform: scale(1.08);
+}
+
+/* Text Color Shift */
+.text-shift {
+  transition: color var(--duration-normal) ease;
+}
+
+.text-shift:hover {
+  color: var(--yon-accent);
+}
+
+/* Border Reveal Animation */
+.border-reveal {
+  position: relative;
+}
+
+.border-reveal::before,
+.border-reveal::after {
+  content: '';
+  position: absolute;
+  background: var(--yon-black);
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Top & Bottom borders */
+.border-reveal::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.border-reveal::after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.border-reveal:hover::before,
+.border-reveal:hover::after {
+  transform: scaleX(1);
+}
+
+/* Italic Shift on Hover */
+.hover-italic {
+  transition: font-style 0.1s ease;
+}
+
+.hover-italic:hover {
+  font-style: italic;
+}
+
+/* Letter Spacing Expand */
+.hover-tracking {
+  transition: letter-spacing var(--duration-normal) var(--ease-out-expo);
+}
+
+.hover-tracking:hover {
+  letter-spacing: 0.3em;
+}
+
+/* Arrow Slide */
+.arrow-slide {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arrow-slide .arrow {
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.arrow-slide:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* Plus to X Transform */
+.plus-to-x {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.plus-to-x::before,
+.plus-to-x::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.plus-to-x::before {
+  width: 100%;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.plus-to-x::after {
+  width: 2px;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+.plus-to-x:hover::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.plus-to-x:hover::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Shimmer Effect */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left var(--duration-slower) var(--ease-out-expo);
+}
+
+.shimmer:hover::after {
+  left: 100%;
+}
+
+/* Clip Path Reveal */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--duration-normal) var(--ease-out-expo);
+}
+
+.clip-reveal:hover,
+.clip-reveal.revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Scale Down on Click */
+.click-scale {
+  transition: transform 0.1s ease;
+}
+
+.click-scale:active {
+  transform: scale(0.97);
+}
+
+/* Pulse on Hover */
+.hover-pulse:hover {
+  animation: hover-pulse 0.5s ease-in-out;
+}
+
+@keyframes hover-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Gradient Background Shift */
+.gradient-shift {
+  background-size: 200% 100%;
+  background-image: linear-gradient(
+    90deg,
+    var(--yon-black) 0%,
+    var(--yon-charcoal) 50%,
+    var(--yon-black) 100%
+  );
+  transition: background-position var(--duration-normal) ease;
+}
+
+.gradient-shift:hover {
+  background-position: -100% 0;
+}

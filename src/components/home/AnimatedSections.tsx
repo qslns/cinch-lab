@@ -69,23 +69,40 @@ function CollectionCard({ collection, index }: { collection: Collection; index: 
   const isInView = useInView(ref, { once: true, margin: '-80px' })
   const [isHovered, setIsHovered] = useState(false)
 
-  // Different layouts for each card
+  // Parallax scroll effect
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [60, -60])
+  const scaleProgress = useTransform(scrollYProgress, [0, 0.5], [0.92, 1])
+  const rotateProgress = useTransform(scrollYProgress, [0, 0.5, 1], [2, 0, -1])
+
+  // Different layouts for each card - more varied sizes
   const layouts = [
-    { imageCol: 'lg:col-span-7', infoCol: 'lg:col-span-4 lg:col-start-9', imageRotation: -1.5, infoOffset: 'lg:mt-20' },
-    { imageCol: 'lg:col-span-6 lg:col-start-6', infoCol: 'lg:col-span-4 lg:col-start-1', imageRotation: 1.2, infoOffset: 'lg:mt-32' },
-    { imageCol: 'lg:col-span-8 lg:col-start-3', infoCol: 'lg:col-span-5 lg:col-start-8', imageRotation: -0.8, infoOffset: 'lg:-mt-16' },
+    { imageCol: 'lg:col-span-7', infoCol: 'lg:col-span-4 lg:col-start-9', imageRotation: -2.2, infoOffset: 'lg:mt-24', size: 'large' },
+    { imageCol: 'lg:col-span-5 lg:col-start-7', infoCol: 'lg:col-span-5 lg:col-start-1', imageRotation: 1.8, infoOffset: 'lg:mt-36', size: 'medium' },
+    { imageCol: 'lg:col-span-9 lg:col-start-2', infoCol: 'lg:col-span-4 lg:col-start-9', imageRotation: -1.2, infoOffset: 'lg:-mt-20', size: 'xlarge' },
   ]
 
   const layout = layouts[index % 3]
   const isReversed = index % 2 === 1
 
+  // Aspect ratio based on size
+  const aspectRatios = {
+    medium: 'aspect-[3/4]',
+    large: 'aspect-[4/5]',
+    xlarge: 'aspect-[16/10]',
+  }
+
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 1.2, delay: 0.1, ease: yonEase }}
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 1.4, delay: 0.1, ease: yonEase }}
       className="relative"
+      style={{ y: parallaxY }}
     >
       <Link
         href={`/collections/${collection.slug}`}
@@ -98,13 +115,14 @@ function CollectionCard({ collection, index }: { collection: Collection; index: 
           {/* Image - Asymmetric size and position */}
           <div className={`${layout.imageCol} ${isReversed ? 'lg:order-2' : ''}`}>
             <motion.div
-              className="relative aspect-[4/5] bg-yon-charcoal overflow-hidden"
-              style={{ rotate: `${layout.imageRotation}deg` }}
+              className={`relative ${aspectRatios[layout.size as keyof typeof aspectRatios] || 'aspect-[4/5]'} bg-yon-charcoal overflow-hidden`}
+              style={{ rotate: rotateProgress, scale: scaleProgress }}
               animate={{
-                scale: isHovered ? 1.02 : 1,
+                scale: isHovered ? 1.03 : 1,
                 rotate: isHovered ? 0 : layout.imageRotation,
+                boxShadow: isHovered ? '0 40px 80px rgba(0,0,0,0.3)' : '0 20px 40px rgba(0,0,0,0.1)',
               }}
-              transition={{ duration: 0.6, ease: yonEase }}
+              transition={{ duration: 0.7, ease: yonEase }}
             >
               {/* Placeholder content */}
               <div className="absolute inset-0 flex items-center justify-center">

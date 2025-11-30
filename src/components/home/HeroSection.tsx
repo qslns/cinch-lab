@@ -232,39 +232,76 @@ export default function HeroSection() {
                 </span>
               </motion.div>
 
-              {/* Main Title - Asymmetric stacking */}
+              {/* Main Title - Extreme asymmetric stacking */}
               <div className="relative">
-                <h1 className="font-serif text-[20vw] md:text-[16vw] lg:text-[12vw] leading-[0.8] tracking-[-0.03em] text-yon-black">
+                {/* Giant background letter for visual depth */}
+                <motion.span
+                  className="absolute -left-[10%] top-1/2 -translate-y-1/2 font-serif text-[50vw] md:text-[40vw] lg:text-[35vw] text-yon-grey/[0.03] leading-none pointer-events-none select-none"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1.5, delay: 0.1, ease: yonEase }}
+                >
+                  Y
+                </motion.span>
+
+                <h1 className="font-serif text-[28vw] md:text-[22vw] lg:text-[16vw] leading-[0.75] tracking-[-0.04em] text-yon-black relative">
                   <motion.span
-                    className="block"
-                    initial={{ opacity: 0, x: -100, rotate: -2 }}
-                    animate={{ opacity: 1, x: 0, rotate: 0 }}
-                    transition={{ duration: 1, delay: 0.3, ease: yonEase }}
+                    className="block relative"
+                    initial={{ opacity: 0, x: -150, rotate: -3, y: 50 }}
+                    animate={{ opacity: 1, x: 0, rotate: -0.8, y: 0 }}
+                    transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
                   >
                     THE
+                    {/* Decorative line */}
+                    <motion.span
+                      className="absolute -right-4 top-1/2 w-24 h-px bg-yon-accent origin-left hidden lg:block"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 0.9, ease: yonEase }}
+                    />
                   </motion.span>
                   <motion.span
-                    className="block ml-[8%] lg:ml-[12%]"
-                    initial={{ opacity: 0, x: 100, rotate: 2 }}
-                    animate={{ opacity: 1, x: 0, rotate: 0 }}
-                    transition={{ duration: 1, delay: 0.5, ease: yonEase }}
-                    style={{ transform: 'rotate(0.5deg)' }}
+                    className="block ml-[10%] lg:ml-[18%] relative"
+                    initial={{ opacity: 0, x: 150, rotate: 3, y: -30 }}
+                    animate={{ opacity: 1, x: 0, rotate: 0.5, y: 0 }}
+                    transition={{ duration: 1.2, delay: 0.5, ease: yonEase }}
                   >
                     YON
+                    {/* Italic variant overlay for depth */}
+                    <motion.span
+                      className="absolute inset-0 font-serif italic text-transparent [-webkit-text-stroke:1px_rgba(139,115,85,0.15)] pointer-events-none select-none"
+                      style={{ transform: 'translate(3px, 3px)' }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.2 }}
+                    >
+                      YON
+                    </motion.span>
                   </motion.span>
                 </h1>
 
-                {/* Subtitle overlay - positioned asymmetrically */}
+                {/* Subtitle overlay - positioned asymmetrically with line */}
                 <motion.div
-                  className="absolute -bottom-4 left-[15%] lg:left-[20%]"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.9, ease: yonEase }}
+                  className="absolute -bottom-6 md:-bottom-8 left-[12%] lg:left-[18%] flex items-center gap-4"
+                  initial={{ opacity: 0, y: 30, x: -20 }}
+                  animate={{ opacity: 1, y: 0, x: 0 }}
+                  transition={{ duration: 0.8, delay: 1.0, ease: yonEase }}
                 >
-                  <p className="font-mono text-xs md:text-sm text-yon-accent tracking-[0.2em] uppercase">
+                  <span className="w-8 md:w-12 h-px bg-yon-accent" />
+                  <p className="font-mono text-xs md:text-sm text-yon-accent tracking-[0.25em] uppercase">
                     저 너머 — Beyond
                   </p>
                 </motion.div>
+
+                {/* Small decorative number */}
+                <motion.span
+                  className="absolute top-0 -right-4 lg:right-8 font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] rotate-90 origin-left"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.4 }}
+                >
+                  001/2025
+                </motion.span>
               </div>
 
               {/* Location & Season info - rotated */}

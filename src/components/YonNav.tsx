@@ -3,6 +3,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+// Dynamic import for FullscreenMenu (client-only)
+const FullscreenMenu = dynamic(() => import('./FullscreenMenu'), { ssr: false })
 
 // Navigation structure with sub-items and IDs for accessibility
 const navItems = [
@@ -34,6 +38,7 @@ const navItems = [
 
 export default function YonNav() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isFullscreenMenuOpen, setIsFullscreenMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isMounted, setIsMounted] = useState(false)
@@ -55,6 +60,7 @@ export default function YonNav() {
 
   useEffect(() => {
     setIsOpen(false)
+    setIsFullscreenMenuOpen(false)
     setActiveDropdown(null)
   }, [pathname])
 
@@ -225,6 +231,45 @@ export default function YonNav() {
             className="desktop-nav"
             aria-label="Main navigation"
           >
+            {/* Fullscreen Menu Button */}
+            <button
+              onClick={() => setIsFullscreenMenuOpen(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: 'Consolas, monospace',
+                fontSize: '11px',
+                fontWeight: 400,
+                color: '#4A4A4A',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                padding: '8px 0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#0A0A0A'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#4A4A4A'
+              }}
+              aria-label="Open fullscreen menu"
+            >
+              <span style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                width: '16px',
+              }}>
+                <span style={{ width: '16px', height: '1.5px', backgroundColor: 'currentColor' }} />
+                <span style={{ width: '12px', height: '1.5px', backgroundColor: 'currentColor' }} />
+              </span>
+              <span>Menu</span>
+            </button>
             {navItems.map((item) => {
               const isActive = pathname === item.href ||
                 (item.href !== '/' && pathname.startsWith(item.href))
@@ -535,6 +580,12 @@ export default function YonNav() {
           }
         }
       `}</style>
+
+      {/* Fullscreen Menu */}
+      <FullscreenMenu
+        isOpen={isFullscreenMenuOpen}
+        onClose={() => setIsFullscreenMenuOpen(false)}
+      />
     </>
   )
 }
