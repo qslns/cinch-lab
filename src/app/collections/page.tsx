@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client } from '../../../sanity/lib/client'
@@ -9,6 +9,9 @@ import { urlFor } from '../../../sanity/lib/image'
 import { collectionsQuery } from '@/lib/sanity/queries'
 import type { Collection } from '@/types/sanity'
 import Footer from '@/components/Footer'
+
+// THE YON custom easing
+const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Fallback data for THE YON
 const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
@@ -78,7 +81,7 @@ const seasonOptions = [
   { id: 'ss24', label: 'SS24' },
 ]
 
-// Collection card component
+// Collection card component with enhanced animations
 function CollectionCard({
   collection,
   index
@@ -90,6 +93,30 @@ function CollectionCard({
   const isInView = useInView(ref, { once: true, margin: '-80px' })
   const [isHovered, setIsHovered] = useState(false)
   const isReversed = index % 2 === 1
+
+  // Parallax scroll effect
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [80, -80])
+  const scaleProgress = useTransform(scrollYProgress, [0, 0.5], [0.9, 1])
+  const rotateProgress = useTransform(scrollYProgress, [0, 0.5, 1], [3, 0, -2])
+
+  // Different layouts for each card
+  const layouts = [
+    { imageCol: 'lg:col-span-8', infoCol: 'lg:col-span-4', rotation: -2.5, size: 'xlarge' },
+    { imageCol: 'lg:col-span-6 lg:col-start-6', infoCol: 'lg:col-span-5 lg:col-start-1', rotation: 2, size: 'large' },
+    { imageCol: 'lg:col-span-7 lg:col-start-3', infoCol: 'lg:col-span-4 lg:col-start-9', rotation: -1.5, size: 'large' },
+    { imageCol: 'lg:col-span-9', infoCol: 'lg:col-span-3', rotation: 1.8, size: 'xlarge' },
+  ]
+  const layout = layouts[index % 4]
+
+  // Aspect ratios based on size
+  const aspectRatios = {
+    large: 'aspect-[4/5]',
+    xlarge: 'aspect-[16/10]',
+  }
 
   const statusColors = {
     in_progress: 'bg-yon-accent text-white',
@@ -106,23 +133,41 @@ function CollectionCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 1.2, delay: index * 0.08, ease: yonEase }}
+      style={{ y: parallaxY }}
+      className="relative"
     >
+      {/* Decorative large number */}
+      <motion.span
+        className="absolute -left-8 lg:-left-20 top-0 font-serif text-[120px] lg:text-[200px] text-yon-grey/[0.04] leading-none pointer-events-none select-none hidden lg:block"
+        initial={{ opacity: 0, x: -50 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
+      >
+        {String(index + 1).padStart(2, '0')}
+      </motion.span>
+
       <Link
         href={`/collections/${collection.slug}`}
         className="group block"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        data-cursor="link"
       >
-        <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-start">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Image */}
-          <div className={`md:col-span-7 ${isReversed ? 'md:col-start-6 md:order-2' : ''}`}>
+          <div className={`${layout.imageCol} ${isReversed ? 'lg:order-2' : ''}`}>
             <motion.div
-              className="relative aspect-[4/5] bg-yon-charcoal overflow-hidden"
-              animate={{ scale: isHovered ? 1.02 : 1 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className={`relative ${aspectRatios[layout.size as keyof typeof aspectRatios] || 'aspect-[4/5]'} bg-yon-charcoal overflow-hidden`}
+              style={{ rotate: rotateProgress, scale: scaleProgress }}
+              animate={{
+                scale: isHovered ? 1.03 : 1,
+                rotate: isHovered ? 0 : layout.rotation,
+                boxShadow: isHovered ? '0 50px 100px rgba(0,0,0,0.25)' : '0 20px 40px rgba(0,0,0,0.1)',
+              }}
+              transition={{ duration: 0.7, ease: yonEase }}
             >
               {collection.mainImage ? (
                 <Image
@@ -351,41 +396,88 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-yon-white">
-      {/* Header */}
-      <section className="pt-6 md:pt-8 pb-8 md:pb-12 px-6 md:px-8 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-12 gap-6 md:gap-8">
-            {/* Title */}
+      {/* Hero Header - Extreme typography */}
+      <section className="relative pt-8 md:pt-12 pb-16 md:pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
+        {/* Background decoration */}
+        <motion.span
+          className="absolute -right-[10%] top-1/2 -translate-y-1/2 font-serif text-[40vw] text-yon-grey/[0.02] leading-none pointer-events-none select-none"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: yonEase }}
+        >
+          C
+        </motion.span>
+
+        <div className="max-w-[1600px] mx-auto relative">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Title - Large asymmetric */}
             <motion.div
-              className="md:col-span-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              className="lg:col-span-8"
+              initial={{ opacity: 0, x: -100, rotate: -2 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+              transition={{ duration: 1.2, ease: yonEase }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-6 h-px bg-yon-grey" />
-                <span className="font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
+              <div className="flex items-center gap-4 mb-6" style={{ transform: 'rotate(-0.5deg)' }}>
+                <span className="w-12 h-px bg-yon-accent" />
+                <span className="font-mono text-[10px] text-yon-accent tracking-[0.25em] uppercase">
                   Portfolio
                 </span>
+                <span className="font-mono text-[10px] text-yon-grey/40 tracking-wider">
+                  002
+                </span>
               </div>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-[1.1]">
-                Collections
+
+              <h1 className="font-serif text-[18vw] md:text-[14vw] lg:text-[10vw] leading-[0.85] tracking-[-0.03em] text-yon-black">
+                <motion.span
+                  className="block"
+                  initial={{ opacity: 0, y: 80 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.2, ease: yonEase }}
+                  style={{ transform: 'rotate(-0.5deg)' }}
+                >
+                  Collec
+                </motion.span>
+                <motion.span
+                  className="block ml-[8%] lg:ml-[15%]"
+                  initial={{ opacity: 0, y: 80 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.4, ease: yonEase }}
+                  style={{ transform: 'rotate(0.5deg)' }}
+                >
+                  tions
+                </motion.span>
               </h1>
+
+              {/* Decorative line */}
+              <motion.div
+                className="mt-8 flex items-center gap-4"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <span className="w-24 h-px bg-yon-grey/30" />
+                <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em]">
+                  {filteredCollections.length} PROJECTS
+                </span>
+              </motion.div>
             </motion.div>
 
-            {/* Description */}
+            {/* Description - Offset */}
             <motion.div
-              className="md:col-span-5 md:col-start-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              className="lg:col-span-4 lg:pt-32"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.5, ease: yonEase }}
             >
-              <p className="text-base md:text-lg text-yon-steel leading-[1.7]">
-                Each collection is an experiment — a question posed to fabric, form, and tradition.
-              </p>
-              <p className="mt-3 text-sm text-yon-grey leading-[1.7]">
-                실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
-              </p>
+              <div style={{ transform: 'rotate(0.5deg)' }}>
+                <p className="text-lg md:text-xl text-yon-black leading-[1.6] font-light">
+                  Each collection is an experiment — a question posed to fabric, form, and tradition.
+                </p>
+                <p className="mt-5 text-sm text-yon-grey leading-[1.8]">
+                  실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
+                  뒤틀렸지만 조화로운 — 모든 요소가 약간씩 어긋나 있지만 전체적으로 아름다운 구성.
+                </p>
+              </div>
             </motion.div>
           </div>
         </div>

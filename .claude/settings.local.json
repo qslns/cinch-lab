@@ -19,7 +19,10 @@
       "Bash(awk:*)",
       "Bash(curl:*)",
       "Bash(dir:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(del \"c:\\Users\\t9140\\OneDrive\\바탕 화면\\cinch-lab\\src\\app\\robots.txt\")",
+      "Bash(npx lighthouse:*)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []
