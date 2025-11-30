@@ -22,7 +22,9 @@
       "Bash(npm uninstall:*)",
       "Bash(del \"c:\\Users\\t9140\\OneDrive\\바탕 화면\\cinch-lab\\src\\app\\robots.txt\")",
       "Bash(npx lighthouse:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(findstr:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": [],
     "ask": []
