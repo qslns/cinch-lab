@@ -32,10 +32,14 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'THE YON — Beyond Fashion',
+  metadataBase: new URL('https://theyon.vercel.app'),
+  title: {
+    default: 'THE YON | Beyond Fashion',
+    template: '%s | THE YON',
+  },
   description: 'Twisted yet harmonious. Experimental fashion portfolio by Taehyun Lee. Every element is slightly askew, yet together they form perfect beauty.',
-  keywords: 'THE YON, experimental fashion, avant-garde, fashion portfolio, Taehyun Lee, CSM, Parsons, Antwerp, deconstructed fashion, pattern magic',
-  authors: [{ name: 'THE YON' }],
+  keywords: ['THE YON', 'experimental fashion', 'avant-garde', 'fashion portfolio', 'Taehyun Lee', 'CSM', 'Parsons', 'Antwerp', 'deconstructed fashion', 'pattern magic', '이태현', '패션 포트폴리오'],
+  authors: [{ name: 'Taehyun Lee', url: 'https://theyon.vercel.app' }],
   creator: 'Taehyun Lee',
   publisher: 'THE YON',
   formatDetection: {
@@ -43,28 +47,19 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://theyon.vercel.app'),
   openGraph: {
-    title: 'THE YON — Beyond Fashion',
-    description: 'Twisted yet harmonious. Experimental fashion that transcends time and space.',
+    type: 'website',
+    locale: 'ko_KR',
+    alternateLocale: 'en_US',
     url: 'https://theyon.vercel.app',
     siteName: 'THE YON',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'THE YON - Beyond Fashion',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
+    title: 'THE YON | Beyond Fashion',
+    description: 'Twisted yet harmonious. Experimental fashion that transcends time and space.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'THE YON — Beyond Fashion',
+    title: 'THE YON | Beyond Fashion',
     description: 'Twisted yet harmonious. Fashion beyond the horizon.',
-    images: ['/og-image.png'],
     creator: '@theyon_studio',
   },
   robots: {
@@ -78,11 +73,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-icon.png',
+  verification: {
+    google: 'verification-token',
   },
+  category: 'fashion',
 }
 
 export const viewport = {
@@ -100,13 +94,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="THE YON" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0A0A0A" />
-        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
       <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black`}>
         <LenisProvider>
