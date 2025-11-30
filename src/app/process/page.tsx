@@ -5,6 +5,9 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 
+// Custom easing for smooth animations
+const yonEase = [0.22, 1, 0.36, 1] as const
+
 // Process stages data - CSM/Parsons/Antwerp 포트폴리오 핵심 요소
 const processStages = [
   {
@@ -370,107 +373,167 @@ export default function ProcessPage() {
         style={{ width: progressWidth }}
       />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center px-6 md:px-12 lg:px-16 overflow-hidden">
+      {/* Hero Section - Extreme Typography */}
+      <section className="relative min-h-screen flex flex-col justify-end pb-16 md:pb-24 px-6 md:px-12 lg:px-16 overflow-hidden">
         {/* Grain texture */}
         <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
 
-        {/* Background letter */}
+        {/* Giant Background Letter */}
         <motion.span
-          className="absolute top-[10%] right-[-10%] font-mono text-[50vw] md:text-[40vw] text-yon-platinum/10 leading-none select-none pointer-events-none"
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute top-[5%] right-[-15%] font-serif text-[80vw] md:text-[60vw] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: yonEase }}
         >
           P
         </motion.span>
 
-        <div className="max-w-7xl mx-auto relative">
-          {/* Label */}
+        {/* Vertical decorative line */}
+        <motion.div
+          className="absolute top-[15%] left-[8%] w-px h-[35vh] bg-gradient-to-b from-transparent via-yon-accent/30 to-transparent"
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
+        />
+
+        {/* Number tag */}
+        <motion.span
+          className="absolute top-[25%] left-[4%] font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] -rotate-90 origin-left"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          03.PROCESS
+        </motion.span>
+
+        <div className="max-w-7xl mx-auto relative w-full">
+          {/* Prefix tag with accent */}
           <motion.div
-            className="flex items-center gap-3 mb-8"
+            className="flex items-center gap-4 mb-8"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: yonEase }}
           >
-            <span className="w-12 h-px bg-yon-grey" />
-            <span className="font-mono text-[10px] text-yon-grey tracking-[0.25em] uppercase">
+            <span className="w-12 h-px bg-yon-accent" />
+            <span className="font-mono text-[10px] text-yon-accent tracking-[0.3em] uppercase">
               The Making
             </span>
           </motion.div>
 
-          {/* Title */}
-          <h1 className="font-serif text-[18vw] md:text-[14vw] lg:text-[12vw] text-yon-black leading-[0.85]">
+          {/* Main Title - EXTREME Scale */}
+          <h1 className="relative">
             <motion.span
-              className="block"
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="block font-serif text-[24vw] md:text-[18vw] lg:text-[16vw] text-yon-black leading-[0.75] tracking-[-0.04em]"
+              initial={{ opacity: 0, y: 100, rotate: 3 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
             >
               Pro
             </motion.span>
             <motion.span
-              className="block ml-[10%]"
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="block font-serif text-[24vw] md:text-[18vw] lg:text-[16vw] text-yon-black leading-[0.75] tracking-[-0.04em] ml-[15%] md:ml-[20%]"
+              initial={{ opacity: 0, y: 100, rotate: -3 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.45, ease: yonEase }}
             >
               cess
             </motion.span>
+
+            {/* Italic ghost overlay */}
+            <motion.span
+              className="absolute top-0 left-0 font-serif italic text-[24vw] md:text-[18vw] lg:text-[16vw] text-yon-accent/[0.06] leading-[0.75] tracking-[-0.04em] pointer-events-none"
+              initial={{ opacity: 0, x: 15 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.7, ease: yonEase }}
+            >
+              Pro
+            </motion.span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Korean subtitle - asymmetric placement */}
           <motion.div
-            className="mt-12 md:mt-16 ml-[5%] md:ml-[15%] max-w-lg"
-            initial={{ opacity: 0, y: 40 }}
+            className="mt-6 md:mt-10 ml-[5%] md:ml-[45%]"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: yonEase }}
           >
-            <p className="text-xl md:text-2xl text-yon-steel leading-relaxed">
-              The journey from idea to garment.
-              Every step documented, every failure celebrated.
-            </p>
-            <p className="mt-4 text-base text-yon-grey leading-relaxed">
-              아이디어에서 의복까지의 여정.
-              모든 단계가 기록되고, 모든 실패가 축하받습니다.
-            </p>
+            <span className="font-mono text-[11px] text-yon-grey/50 tracking-[0.2em]">
+              과정 — The Journey
+            </span>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            className="mt-16 md:mt-24 grid grid-cols-3 gap-8 max-w-xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            {[
-              { value: '8', label: 'Stages' },
-              { value: '14+', label: 'Weeks' },
-              { value: '∞', label: 'Iterations' },
-            ].map((stat, i) => (
-              <div key={i}>
-                <span className="font-serif text-4xl md:text-5xl text-yon-black">{stat.value}</span>
-                <span className="block mt-2 font-mono text-[9px] text-yon-grey tracking-[0.15em] uppercase">
-                  {stat.label}
+          {/* Two column layout */}
+          <div className="mt-12 md:mt-20 grid md:grid-cols-12 gap-8 md:gap-12">
+            {/* Subtitle */}
+            <motion.div
+              className="md:col-span-6"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7, ease: yonEase }}
+            >
+              <p className="text-xl md:text-2xl lg:text-3xl text-yon-steel leading-[1.4]">
+                The journey from idea to garment.
+                <span className="block mt-3 text-base md:text-lg text-yon-grey">
+                  아이디어에서 의복까지의 여정. 모든 실패가 축하받습니다.
                 </span>
-              </div>
-            ))}
-          </motion.div>
+              </p>
+            </motion.div>
 
-          {/* Scroll indicator */}
+            {/* Stats - asymmetric */}
+            <motion.div
+              className="md:col-span-4 md:col-start-9"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8, ease: yonEase }}
+            >
+              <div className="space-y-6">
+                {[
+                  { value: '8', label: 'Stages', tag: '[01]' },
+                  { value: '14+', label: 'Weeks', tag: '[02]' },
+                  { value: '∞', label: 'Iterations', tag: '[03]' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex items-end justify-between border-b border-yon-platinum/50 pb-3"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.9 + i * 0.1, ease: yonEase }}
+                  >
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-serif text-4xl md:text-5xl text-yon-black leading-none">{stat.value}</span>
+                      <span className="font-mono text-[9px] text-yon-grey tracking-[0.15em] uppercase">
+                        {stat.label}
+                      </span>
+                    </div>
+                    <span className="font-mono text-[8px] text-yon-grey/30">{stat.tag}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Decorative line */}
           <motion.div
-            className="absolute bottom-[-20vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+            className="mt-12 w-[50%] md:w-[35%] h-px bg-gradient-to-r from-yon-grey/20 via-yon-accent/30 to-transparent"
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 1, ease: yonEase }}
+          />
+
+          {/* Scroll indicator - offset */}
+          <motion.div
+            className="absolute bottom-[-8vh] left-[10%] flex flex-col items-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.2 }}
           >
-            <span className="font-mono text-[8px] text-yon-grey/50 tracking-[0.2em] uppercase">
+            <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.25em] uppercase">
               Scroll to explore
             </span>
             <motion.div
               className="w-px h-16 bg-gradient-to-b from-yon-grey/40 to-transparent"
-              animate={{ scaleY: [1, 0.5, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ scaleY: [1, 0.4, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
         </div>
