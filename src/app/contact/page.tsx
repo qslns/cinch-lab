@@ -169,23 +169,33 @@ function TypeSelector({
   onChange: (type: string) => void
   error?: string
 }) {
+  const errorId = 'inquiry-type-error'
+
   return (
     <motion.div
       className="space-y-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
+      role="radiogroup"
+      aria-labelledby="inquiry-type-label"
+      aria-required="true"
+      aria-invalid={!!error}
+      aria-describedby={error ? errorId : undefined}
     >
-      <label className="block font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
-        Inquiry Type <span className="text-yon-accent">*</span>
+      <span id="inquiry-type-label" className="block font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
+        Inquiry Type <span className="text-yon-accent" aria-hidden="true">*</span>
+        <span className="sr-only">(required)</span>
         <span className="hidden md:inline text-yon-grey/50 ml-2">문의 유형</span>
-      </label>
+      </span>
 
       <div className="flex flex-wrap gap-3">
         {inquiryTypes.map((type) => (
           <motion.button
             key={type.id}
             type="button"
+            role="radio"
+            aria-checked={value === type.id}
             onClick={() => onChange(type.id)}
             className={`group relative px-4 py-2.5 font-mono text-[11px] tracking-wider border transition-all duration-300 ${
               value === type.id
@@ -196,7 +206,7 @@ function TypeSelector({
             whileTap={{ scale: 0.98 }}
           >
             <span className="uppercase">{type.label}</span>
-            <span className={`block text-[9px] mt-0.5 ${value === type.id ? 'text-yon-silver' : 'text-yon-grey/50'}`}>
+            <span className={`block text-[9px] mt-0.5 ${value === type.id ? 'text-yon-silver' : 'text-yon-grey/50'}`} aria-hidden="true">
               {type.labelKo}
             </span>
           </motion.button>
@@ -206,6 +216,8 @@ function TypeSelector({
       <AnimatePresence>
         {error && (
           <motion.span
+            id={errorId}
+            role="alert"
             className="block text-[10px] text-red-500 font-mono"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -227,10 +239,14 @@ function SubmitButton({
   isSubmitting: boolean
   isSuccess: boolean
 }) {
+  const buttonText = isSubmitting ? 'Sending message...' : isSuccess ? 'Message sent successfully' : 'Send Message'
+
   return (
     <motion.button
       type="submit"
       disabled={isSubmitting || isSuccess}
+      aria-busy={isSubmitting}
+      aria-label={buttonText}
       className={`group relative w-full md:w-auto px-10 py-4 font-mono text-xs tracking-[0.2em] uppercase transition-all duration-500 ${
         isSuccess
           ? 'bg-green-600 text-white'
@@ -252,6 +268,7 @@ function SubmitButton({
               className="w-4 h-4 border-2 border-yon-white/30 border-t-yon-white rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              aria-hidden="true"
             />
             Sending...
           </motion.span>
@@ -262,7 +279,7 @@ function SubmitButton({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             Sent Successfully
@@ -280,6 +297,7 @@ function SubmitButton({
               className="inline-block"
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
+              aria-hidden="true"
             >
               →
             </motion.span>

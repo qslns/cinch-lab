@@ -127,9 +127,11 @@ function CollectionCard({
               {collection.mainImage ? (
                 <Image
                   src={urlFor(collection.mainImage).width(1000).height(1250).url()}
-                  alt={collection.title || ''}
+                  alt={`${collection.title} - ${collection.season?.toUpperCase() || ''} collection by THE YON`}
                   fill
                   className="object-cover transition-transform duration-700"
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 100vw, 58vw"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
