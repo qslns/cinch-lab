@@ -114,7 +114,7 @@ export default function RootLayout({
           <SkipToMain />
           <KeyboardNavigationIndicator />
           <YonNav />
-          <main id="main-content" className="pt-20">
+          <main id="main-content">
             {children}
           </main>
           <BackToTop />

@@ -45,7 +45,7 @@ export default function HomePage() {
       {/* ============================================
           HERO SECTION - Clean, readable layout
           ============================================ */}
-      <section className="relative min-h-screen flex flex-col justify-center pt-20 md:pt-24 pb-16 md:pb-20 overflow-hidden">
+      <section className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-center pb-16 md:pb-20 overflow-hidden">
         {/* Subtle grain texture */}
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
 
