@@ -1,41 +1,355 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Footer from '@/components/Footer'
 
-// Scattered decorative elements
+// Contact form field type
+type FormField = 'name' | 'email' | 'type' | 'message'
+type FormData = Record<FormField, string>
+type FormErrors = Partial<Record<FormField, string>>
+
+// Inquiry types
+const inquiryTypes = [
+  { id: 'collaboration', label: 'Collaboration', labelKo: '협업 문의' },
+  { id: 'exhibition', label: 'Exhibition', labelKo: '전시 문의' },
+  { id: 'press', label: 'Press / Media', labelKo: '언론 / 미디어' },
+  { id: 'other', label: 'Other', labelKo: '기타' },
+]
+
+// Social links
+const socialLinks = [
+  {
+    id: 'email',
+    label: 'Email',
+    value: 'hello@theyon.com',
+    href: 'mailto:hello@theyon.com',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+      </svg>
+    ),
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    value: '@theyon_studio',
+    href: 'https://instagram.com/theyon_studio',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+        <path d="M17.5 6.5h.01" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+]
+
+// Decorative elements
 const decorativeElements = [
-  {
-    id: 1,
-    type: 'shape',
-    position: { top: '10%', left: '5%' },
-    size: 'w-[20vw] md:w-[12vw]',
-    rotation: -8,
-    variant: 'light' as const,
-  },
-  {
-    id: 2,
-    type: 'shape',
-    position: { top: '25%', right: '8%' },
-    size: 'w-[15vw] md:w-[10vw]',
-    rotation: 12,
-    variant: 'medium' as const,
-  },
-  {
-    id: 3,
-    type: 'shape',
-    position: { bottom: '20%', left: '10%' },
-    size: 'w-[18vw] md:w-[8vw]',
-    rotation: -3,
-    variant: 'dark' as const,
-  },
+  { position: { top: '8%', left: '3%' }, size: 'w-[18vw] md:w-[10vw]', rotation: -6, variant: 'light' as const },
+  { position: { top: '20%', right: '5%' }, size: 'w-[14vw] md:w-[8vw]', rotation: 8, variant: 'medium' as const },
+  { position: { bottom: '30%', left: '8%' }, size: 'w-[16vw] md:w-[7vw]', rotation: -3, variant: 'dark' as const },
 ]
 
 const variantStyles = {
   light: 'bg-yon-platinum',
   medium: 'bg-yon-silver',
   dark: 'bg-yon-charcoal',
+}
+
+// Form input component
+function FormInput({
+  label,
+  labelKo,
+  name,
+  type = 'text',
+  value,
+  onChange,
+  error,
+  placeholder,
+  required = false,
+  isTextarea = false,
+}: {
+  label: string
+  labelKo: string
+  name: FormField
+  type?: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  error?: string
+  placeholder?: string
+  required?: boolean
+  isTextarea?: boolean
+}) {
+  const [isFocused, setIsFocused] = useState(false)
+  const hasValue = value.length > 0
+
+  const inputClasses = `
+    w-full bg-transparent border-b px-0 py-3 text-base text-yon-black
+    placeholder:text-yon-grey/40 outline-none transition-colors duration-300
+    ${error ? 'border-red-500' : isFocused ? 'border-yon-black' : 'border-yon-platinum'}
+  `
+
+  return (
+    <motion.div
+      className="relative"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Label */}
+      <motion.label
+        className={`absolute left-0 transition-all duration-300 pointer-events-none ${
+          isFocused || hasValue
+            ? '-top-5 text-[10px] tracking-[0.15em] uppercase'
+            : 'top-3 text-sm'
+        } ${error ? 'text-red-500' : isFocused ? 'text-yon-black' : 'text-yon-grey'}`}
+        htmlFor={name}
+      >
+        <span className="font-mono">{label}</span>
+        {required && <span className="text-yon-accent ml-1">*</span>}
+        <span className="hidden md:inline text-yon-grey/50 ml-2 font-mono">
+          {labelKo}
+        </span>
+      </motion.label>
+
+      {/* Input */}
+      {isTextarea ? (
+        <textarea
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder={isFocused ? placeholder : ''}
+          className={`${inputClasses} resize-none min-h-[120px]`}
+          required={required}
+        />
+      ) : (
+        <input
+          id={name}
+          name={name}
+          type={type}
+          value={value}
+          onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder={isFocused ? placeholder : ''}
+          className={inputClasses}
+          required={required}
+        />
+      )}
+
+      {/* Error message */}
+      <AnimatePresence>
+        {error && (
+          <motion.span
+            className="absolute -bottom-5 left-0 text-[10px] text-red-500 font-mono"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+          >
+            {error}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+// Type selector component
+function TypeSelector({
+  value,
+  onChange,
+  error,
+}: {
+  value: string
+  onChange: (type: string) => void
+  error?: string
+}) {
+  return (
+    <motion.div
+      className="space-y-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+    >
+      <label className="block font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
+        Inquiry Type <span className="text-yon-accent">*</span>
+        <span className="hidden md:inline text-yon-grey/50 ml-2">문의 유형</span>
+      </label>
+
+      <div className="flex flex-wrap gap-3">
+        {inquiryTypes.map((type) => (
+          <motion.button
+            key={type.id}
+            type="button"
+            onClick={() => onChange(type.id)}
+            className={`group relative px-4 py-2.5 font-mono text-[11px] tracking-wider border transition-all duration-300 ${
+              value === type.id
+                ? 'border-yon-black bg-yon-black text-yon-white'
+                : 'border-yon-platinum text-yon-grey hover:border-yon-grey'
+            }`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="uppercase">{type.label}</span>
+            <span className={`block text-[9px] mt-0.5 ${value === type.id ? 'text-yon-silver' : 'text-yon-grey/50'}`}>
+              {type.labelKo}
+            </span>
+          </motion.button>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {error && (
+          <motion.span
+            className="block text-[10px] text-red-500 font-mono"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+          >
+            {error}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+// Submit button component
+function SubmitButton({
+  isSubmitting,
+  isSuccess,
+}: {
+  isSubmitting: boolean
+  isSuccess: boolean
+}) {
+  return (
+    <motion.button
+      type="submit"
+      disabled={isSubmitting || isSuccess}
+      className={`group relative w-full md:w-auto px-10 py-4 font-mono text-xs tracking-[0.2em] uppercase transition-all duration-500 ${
+        isSuccess
+          ? 'bg-green-600 text-white'
+          : 'bg-yon-black text-yon-white hover:bg-yon-charcoal'
+      }`}
+      whileHover={{ scale: isSubmitting || isSuccess ? 1 : 1.02 }}
+      whileTap={{ scale: isSubmitting || isSuccess ? 1 : 0.98 }}
+    >
+      <AnimatePresence mode="wait">
+        {isSubmitting ? (
+          <motion.span
+            key="loading"
+            className="flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.span
+              className="w-4 h-4 border-2 border-yon-white/30 border-t-yon-white rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            />
+            Sending...
+          </motion.span>
+        ) : isSuccess ? (
+          <motion.span
+            key="success"
+            className="flex items-center justify-center gap-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Sent Successfully
+          </motion.span>
+        ) : (
+          <motion.span
+            key="default"
+            className="flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            Send Message
+            <motion.span
+              className="inline-block"
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  )
+}
+
+// Contact link component
+function ContactLink({
+  link,
+  index,
+}: {
+  link: typeof socialLinks[0]
+  index: number
+}) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  return (
+    <motion.a
+      href={link.href}
+      target={link.id === 'instagram' ? '_blank' : undefined}
+      rel={link.id === 'instagram' ? 'noopener noreferrer' : undefined}
+      className="group block py-6 border-b border-yon-platinum last:border-b-0"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <motion.div
+            className="text-yon-grey group-hover:text-yon-accent transition-colors duration-300"
+            animate={{ rotate: isHovered ? 15 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {link.icon}
+          </motion.div>
+          <div>
+            <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase block mb-1">
+              {link.label}
+            </span>
+            <motion.span
+              className="font-serif text-xl md:text-2xl text-yon-black group-hover:text-yon-accent transition-colors duration-300"
+              animate={{ x: isHovered ? 8 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {link.value}
+            </motion.span>
+          </div>
+        </div>
+        <motion.span
+          className="text-yon-grey group-hover:text-yon-accent"
+          animate={{ x: isHovered ? 8 : 0, opacity: isHovered ? 1 : 0.5 }}
+          transition={{ duration: 0.3 }}
+        >
+          {link.id === 'instagram' ? (
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          ) : (
+            '→'
+          )}
+        </motion.span>
+      </div>
+    </motion.a>
+  )
 }
 
 export default function ContactPage() {
@@ -45,15 +359,93 @@ export default function ContactPage() {
     offset: ['start start', 'end end'],
   })
 
-  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, -40])
-  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, -80])
+  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, -100])
+
+  // Form state
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    type: '',
+    message: '',
+  })
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  // Validate form
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {}
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email'
+    }
+
+    if (!formData.type) {
+      newErrors.type = 'Please select an inquiry type'
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required'
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    // Clear error on change
+    if (errors[name as FormField]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }))
+    }
+  }
+
+  // Handle type change
+  const handleTypeChange = (type: string) => {
+    setFormData((prev) => ({ ...prev, type }))
+    if (errors.type) {
+      setErrors((prev) => ({ ...prev, type: undefined }))
+    }
+  }
+
+  // Handle submit
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    setIsSubmitting(true)
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    setIsSubmitting(false)
+    setIsSuccess(true)
+
+    // Reset form after success
+    setTimeout(() => {
+      setFormData({ name: '', email: '', type: '', message: '' })
+      setIsSuccess(false)
+    }, 3000)
+  }
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white relative overflow-hidden">
-      {/* Scattered decorative shapes */}
+      {/* Decorative elements */}
       {decorativeElements.map((el, index) => (
         <motion.div
-          key={el.id}
+          key={index}
           className={`absolute ${el.size} pointer-events-none`}
           style={{
             ...el.position,
@@ -61,7 +453,7 @@ export default function ContactPage() {
             zIndex: 1,
           }}
           initial={{ opacity: 0, scale: 0.8, rotate: el.rotation - 10 }}
-          animate={{ opacity: 0.6, scale: 1, rotate: el.rotation }}
+          animate={{ opacity: 0.5, scale: 1, rotate: el.rotation }}
           transition={{
             duration: 1.2,
             delay: 0.5 + index * 0.2,
@@ -75,150 +467,211 @@ export default function ContactPage() {
         </motion.div>
       ))}
 
-      {/* Decorative large letter */}
-      <span className="absolute top-20 right-[-5%] font-mono text-[200px] md:text-[400px] text-yon-platinum/20 leading-none select-none pointer-events-none">
+      {/* Background letter */}
+      <motion.span
+        className="absolute top-16 right-[-8%] font-mono text-[200px] md:text-[400px] text-yon-platinum/15 leading-none select-none pointer-events-none"
+        style={{ y: parallax2 }}
+      >
         C
-      </span>
+      </motion.span>
 
       {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-center px-6 md:px-12 py-32">
-        <div className="max-w-5xl mx-auto w-full">
-          <div className="grid md:grid-cols-12 gap-12 md:gap-16">
-            {/* Left column - Title */}
-            <motion.div
-              className="md:col-span-5"
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
+      <div className="relative z-10 min-h-screen px-6 md:px-12 py-24 md:py-32">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <motion.div
+            className="mb-16 md:mb-24"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-8 h-px bg-yon-grey" />
+              <span className="font-mono text-[10px] text-yon-grey tracking-[0.25em] uppercase">
                 Get in touch
               </span>
-              <h1 className="mt-4 font-serif text-[12vw] md:text-[6vw] text-yon-black leading-[0.9]">
-                <span className="block transform rotate-[-1deg]">Con</span>
-                <span className="block transform rotate-[0.5deg] ml-[10%]">tact</span>
-              </h1>
+            </div>
 
-              <motion.p
-                className="mt-8 text-lg text-yon-steel leading-relaxed max-w-sm"
-                initial={{ opacity: 0, y: 20 }}
+            <h1 className="font-serif text-[14vw] md:text-[9vw] lg:text-[7vw] text-yon-black leading-[0.85]">
+              <motion.span
+                className="block"
+                initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
-                For collaborations, exhibitions, press inquiries, or just to say hello.
+                Con
+              </motion.span>
+              <motion.span
+                className="block ml-[12%]"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              >
+                tact
+              </motion.span>
+            </h1>
+
+            <motion.p
+              className="mt-8 text-lg md:text-xl text-yon-steel leading-relaxed max-w-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              For collaborations, exhibitions, press inquiries, or just to say hello.
+            </motion.p>
+          </motion.div>
+
+          {/* Two column layout */}
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+            {/* Left - Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <form onSubmit={handleSubmit} className="space-y-10">
+                <FormInput
+                  label="Name"
+                  labelKo="이름"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  error={errors.name}
+                  placeholder="Your name"
+                  required
+                />
+
+                <FormInput
+                  label="Email"
+                  labelKo="이메일"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={errors.email}
+                  placeholder="your@email.com"
+                  required
+                />
+
+                <TypeSelector
+                  value={formData.type}
+                  onChange={handleTypeChange}
+                  error={errors.type}
+                />
+
+                <FormInput
+                  label="Message"
+                  labelKo="메시지"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  error={errors.message}
+                  placeholder="Tell us about your project or inquiry..."
+                  required
+                  isTextarea
+                />
+
+                <div className="pt-4">
+                  <SubmitButton isSubmitting={isSubmitting} isSuccess={isSuccess} />
+                </div>
+              </form>
+
+              {/* Note */}
+              <motion.p
+                className="mt-8 text-sm text-yon-grey leading-relaxed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                THE YON is not a commercial brand. We focus on experimental fashion research
+                and creative collaborations.
               </motion.p>
             </motion.div>
 
-            {/* Right column - Contact info */}
+            {/* Right - Direct contacts */}
             <motion.div
-              className="md:col-span-6 md:col-start-7 md:mt-16"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:pt-8"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* Contact items */}
-              <div className="space-y-12">
-                {/* Email */}
-                <motion.div
-                  className="group"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase block mb-3">
-                    01 — Email
-                  </span>
-                  <a
-                    href="mailto:hello@theyon.com"
-                    className="group/link font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 inline-flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
-                  >
-                    <span>hello@theyon.com</span>
-                    <span className="opacity-0 group-hover/link:opacity-100 transform -translate-x-2 group-hover/link:translate-x-0 transition-all duration-300">→</span>
-                  </a>
-                </motion.div>
-
-                {/* Instagram */}
-                <motion.div
-                  className="group"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase block mb-3">
-                    02 — Instagram
-                  </span>
-                  <a
-                    href="https://instagram.com/theyon_studio"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group/link font-serif text-2xl md:text-3xl text-yon-black hover:text-yon-accent focus-visible:text-yon-accent transition-colors duration-300 inline-flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-yon-black focus-visible:ring-offset-4"
-                  >
-                    <span>@theyon_studio</span>
-                    <svg className="w-4 h-4 opacity-50 group-hover/link:opacity-100 transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </motion.div>
-
-                {/* Location */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase block mb-3">
-                    03 — Based in
-                  </span>
-                  <p className="font-serif text-2xl md:text-3xl text-yon-black">
-                    <span className="block">Seoul &</span>
-                    <span className="block ml-[5%]">Tokyo</span>
-                  </p>
-                </motion.div>
+              <div className="flex items-center gap-3 mb-8">
+                <span className="w-8 h-px bg-yon-grey" />
+                <span className="font-mono text-[10px] text-yon-grey tracking-[0.15em] uppercase">
+                  Direct Contact
+                </span>
               </div>
+
+              <div className="mb-12">
+                {socialLinks.map((link, index) => (
+                  <ContactLink key={link.id} link={link} index={index} />
+                ))}
+              </div>
+
+              {/* Location */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase block mb-4">
+                  Based in
+                </span>
+                <p className="font-serif text-3xl md:text-4xl text-yon-black leading-tight">
+                  <span className="block">Seoul</span>
+                  <span className="block ml-[5%] text-yon-grey">&</span>
+                  <span className="block">Tokyo</span>
+                </p>
+              </motion.div>
+
+              {/* Response time */}
+              <motion.div
+                className="mt-12 p-6 bg-yon-ivory"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase block mb-2">
+                  Response Time
+                </span>
+                <p className="text-base text-yon-steel">
+                  We typically respond within 2-3 business days.
+                  For urgent inquiries, please use email directly.
+                </p>
+              </motion.div>
             </motion.div>
           </div>
-
-          {/* Bottom note - rotated */}
-          <motion.div
-            className="mt-24 md:mt-32 relative"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Decorative line */}
-            <div className="w-16 h-px bg-yon-silver mb-8" />
-
-            <p className="text-sm text-yon-grey max-w-md leading-relaxed">
-              THE YON is not a commercial brand. We focus on experimental fashion research
-              and creative collaborations. For exhibition or partnership inquiries, please
-              reach out via email.
-            </p>
-          </motion.div>
         </div>
       </div>
 
-      {/* Bottom decorative section */}
-      <section className="relative py-24 md:py-32 bg-yon-charcoal overflow-hidden">
-        {/* Scattered numbers */}
-        <span className="absolute top-8 left-8 font-mono text-[100px] md:text-[180px] text-yon-graphite/20 leading-none select-none pointer-events-none transform rotate-[-5deg]">
+      {/* Bottom quote section */}
+      <section className="relative py-24 md:py-32 px-6 md:px-12 bg-yon-charcoal overflow-hidden">
+        {/* Decorative */}
+        <span className="absolute top-6 left-6 md:left-12 font-mono text-[80px] md:text-[140px] text-yon-graphite/15 leading-none select-none pointer-events-none transform rotate-[-5deg]">
           04
         </span>
-        <span className="absolute bottom-8 right-8 font-mono text-[80px] md:text-[140px] text-yon-graphite/15 leading-none select-none pointer-events-none transform rotate-[8deg]">
+        <span className="absolute bottom-6 right-6 md:right-12 font-mono text-[60px] md:text-[100px] text-yon-graphite/10 leading-none select-none pointer-events-none transform rotate-[8deg]">
           ∞
         </span>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-white leading-[1.3]">
+            <p className="font-serif text-2xl md:text-4xl lg:text-5xl text-yon-white leading-[1.3]">
               <span className="block">Every conversation</span>
               <span className="block">is a new possibility</span>
             </p>
-            <p className="mt-8 font-mono text-xs text-yon-silver tracking-[0.2em] uppercase">
+
+            <p className="mt-6 text-base text-yon-silver/80 leading-relaxed max-w-md mx-auto">
+              모든 대화는 새로운 가능성입니다.
+              함께 무언가를 만들어 보시겠습니까?
+            </p>
+
+            <p className="mt-10 font-mono text-[10px] text-yon-grey/50 tracking-[0.25em] uppercase">
               THE YON — Beyond Fashion
             </p>
           </motion.div>
