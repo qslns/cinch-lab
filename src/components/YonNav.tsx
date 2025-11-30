@@ -17,6 +17,7 @@ const navItems = [
       { href: '/collections/origin', label: 'Origin', season: 'SS24' },
     ],
   },
+  { id: 'nav-process', href: '/process', label: 'Process' },
   {
     id: 'nav-archive',
     href: '/archive',
