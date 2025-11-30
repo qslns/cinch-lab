@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Cormorant_Garamond, Space_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import YonNav from '@/components/YonNav'
-import BackToTop from '@/components/BackToTop'
-import ScrollProgress from '@/components/ScrollProgress'
-import LenisProvider from '@/hooks/useLenis'
+import ClientProviders from '@/components/ClientProviders'
 import '@/styles/globals.css'
 
 // Typography System - THE YON
@@ -85,6 +83,34 @@ export const viewport = {
   themeColor: '#000000',
 }
 
+// JSON-LD structured data for SEO
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Taehyun Lee',
+    alternateName: '이태현',
+    description: 'Experimental fashion designer exploring the philosophy of "twisted yet harmonious"',
+    jobTitle: 'Fashion Designer',
+    url: 'https://theyon.vercel.app',
+    sameAs: [
+      'https://instagram.com/theyon_studio',
+    ],
+    worksFor: {
+      '@type': 'Organization',
+      name: 'THE YON',
+      url: 'https://theyon.vercel.app',
+    },
+    alumniOf: {
+      '@type': 'EducationalOrganization',
+      name: 'SASADA Fashion School',
+    },
+  },
+  dateCreated: '2024-01-01',
+  dateModified: new Date().toISOString().split('T')[0],
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -99,18 +125,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="THE YON" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0A0A0A" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black`}>
-        <LenisProvider>
-          <ScrollProgress />
+        <ClientProviders>
           <SkipToMain />
           <KeyboardNavigationIndicator />
           <YonNav />
           <main id="main-content">
             {children}
           </main>
-          <BackToTop />
-        </LenisProvider>
+        </ClientProviders>
       </body>
     </html>
   )
