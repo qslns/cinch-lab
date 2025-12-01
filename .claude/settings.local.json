@@ -28,7 +28,8 @@
       "Bash(find:*)",
       "Bash(xargs:*)",
       "Bash(npx next lint)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(ANALYZE=true npm run build:*)"
     ],
     "deny": [],
     "ask": []

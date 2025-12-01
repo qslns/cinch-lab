@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
 import { client } from '../../../sanity/lib/client'
 import { urlFor } from '../../../sanity/lib/image'
 import { collectionsQuery } from '@/lib/sanity/queries'
