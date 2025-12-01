@@ -18,9 +18,9 @@ interface Collection {
   season: string
   year: string
   slug: string
-  description: string
-  techniques: string[]
-  status: string
+  description?: string
+  techniques?: string[]
+  status?: string
 }
 
 interface ArchiveItem {

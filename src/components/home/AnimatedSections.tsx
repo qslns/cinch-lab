@@ -12,9 +12,9 @@ interface Collection {
   season: string
   year: string
   slug: string
-  description: string
-  techniques: string[]
-  status: string
+  description?: string
+  techniques?: string[]
+  status?: string
 }
 
 interface ArchiveItem {
@@ -157,21 +157,23 @@ function CollectionCard({ collection, index }: { collection: Collection; index: 
                 </motion.span>
               </div>
 
-              <motion.div
-                className="absolute bottom-6 right-6"
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : 10 }}
-              >
-                <span className={`inline-block font-mono text-[8px] tracking-[0.15em] uppercase px-3 py-1.5 ${
-                  collection.status === 'In Progress'
-                    ? 'bg-yon-accent text-white'
-                    : collection.status === 'Testing'
-                    ? 'bg-yon-steel text-white'
-                    : 'bg-yon-silver text-yon-charcoal'
-                }`}>
-                  {collection.status}
-                </span>
-              </motion.div>
+              {collection.status && (
+                <motion.div
+                  className="absolute bottom-6 right-6"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : 10 }}
+                >
+                  <span className={`inline-block font-mono text-[8px] tracking-[0.15em] uppercase px-3 py-1.5 ${
+                    collection.status === 'In Progress'
+                      ? 'bg-yon-accent text-white'
+                      : collection.status === 'Testing'
+                      ? 'bg-yon-steel text-white'
+                      : 'bg-yon-silver text-yon-charcoal'
+                  }`}>
+                    {collection.status}
+                  </span>
+                </motion.div>
+              )}
 
               {/* View prompt */}
               <motion.div
@@ -224,27 +226,31 @@ function CollectionCard({ collection, index }: { collection: Collection; index: 
               </motion.h3>
 
               {/* Description */}
-              <p className="mt-5 text-sm text-yon-steel leading-[1.8] max-w-sm">
-                {collection.description}
-              </p>
+              {collection.description && (
+                <p className="mt-5 text-sm text-yon-steel leading-[1.8] max-w-sm">
+                  {collection.description}
+                </p>
+              )}
 
               {/* Techniques */}
-              <div className="mt-8 pt-6 border-t border-yon-platinum/60">
-                <span className="font-mono text-[8px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3">
-                  Techniques
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {collection.techniques.map((tech, i) => (
-                    <motion.span
-                      key={i}
-                      className="font-mono text-[10px] text-yon-steel px-3 py-1.5 bg-yon-platinum/40 hover:bg-yon-platinum/60 transition-colors"
-                      whileHover={{ y: -2 }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
+              {collection.techniques && collection.techniques.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-yon-platinum/60">
+                  <span className="font-mono text-[8px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3">
+                    Techniques
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {collection.techniques.map((tech, i) => (
+                      <motion.span
+                        key={i}
+                        className="font-mono text-[10px] text-yon-steel px-3 py-1.5 bg-yon-platinum/40 hover:bg-yon-platinum/60 transition-colors"
+                        whileHover={{ y: -2 }}
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* CTA */}
               <motion.div
