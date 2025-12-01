@@ -37,6 +37,7 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [images, setImages] = useState<LightboxImage[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
 
   const openLightbox = useCallback((imgs: LightboxImage[], startIndex = 0) => {
     setImages(imgs)
@@ -57,6 +58,24 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
   const goPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
   }, [images.length])
+
+  // Touch gesture handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX)
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStart === null) return
+
+    const touchEnd = e.changedTouches[0].clientX
+    const diff = touchStart - touchEnd
+
+    // Swipe threshold: 50px
+    if (diff > 50) goNext()
+    if (diff < -50) goPrev()
+
+    setTouchStart(null)
+  }, [touchStart, goNext, goPrev])
 
   // Keyboard navigation
   useEffect(() => {
@@ -193,6 +212,8 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
               className="relative max-w-[90vw] max-h-[85vh] flex flex-col items-center"
               onClick={(e) => e.stopPropagation()}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
               <div className="relative w-full h-full flex items-center justify-center">
                 <Image
