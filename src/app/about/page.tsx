@@ -323,9 +323,9 @@ export default function AboutPage() {
         {/* Grain texture */}
         <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
 
-        {/* Giant Background Letters */}
+        {/* Subtle Background Letter */}
         <motion.span
-          className="absolute top-[10%] left-[-10%] font-serif text-[80vw] md:text-[55vw] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
+          className="absolute top-[10%] left-[-5%] font-serif text-[18rem] md:text-[24rem] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -377,34 +377,15 @@ export default function AboutPage() {
                 </span>
               </motion.div>
 
-              {/* Title - EXTREME Scale */}
+              {/* Title - Restrained, elegant */}
               <h1 className="relative">
-                {/* Main title */}
                 <motion.span
-                  className="block font-serif text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-black leading-[0.75] tracking-[-0.04em]"
-                  initial={{ opacity: 0, y: 100, rotate: 3 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  className="block font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-tight tracking-[-0.02em]"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
                 >
-                  THE
-                </motion.span>
-                <motion.span
-                  className="block font-serif text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-black leading-[0.75] tracking-[-0.04em] ml-[12%] md:ml-[18%]"
-                  initial={{ opacity: 0, y: 100, rotate: -3 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{ duration: 1.2, delay: 0.45, ease: yonEase }}
-                >
-                  YON
-                </motion.span>
-
-                {/* Italic ghost overlay */}
-                <motion.span
-                  className="absolute top-0 left-0 font-serif italic text-[28vw] md:text-[20vw] lg:text-[18vw] text-yon-accent/[0.08] leading-[0.75] tracking-[-0.04em] pointer-events-none"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1, delay: 0.8, ease: yonEase }}
-                >
-                  THE
+                  THE YON
                 </motion.span>
               </h1>
 
@@ -469,7 +450,7 @@ export default function AboutPage() {
       <section className="relative py-32 md:py-48 px-6 md:px-12 lg:px-16 bg-yon-ivory overflow-hidden">
         {/* Background number */}
         <motion.span
-          className="absolute top-1/2 -translate-y-1/2 -right-[15%] font-mono text-[40vw] md:text-[30vw] text-yon-platinum/10 leading-none select-none pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 -right-[5%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/10 leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
         >
           01
@@ -492,7 +473,7 @@ export default function AboutPage() {
                 </span>
               </div>
 
-              <h2 className="font-serif text-[10vw] md:text-[5vw] lg:text-[4vw] text-yon-black leading-[1]">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-tight">
                 <span className="block">Twisted</span>
                 <span className="block ml-[6%]">yet</span>
                 <span className="block">harmonious</span>
@@ -549,7 +530,7 @@ export default function AboutPage() {
       <section className="relative py-32 md:py-48 px-6 md:px-12 lg:px-16 overflow-hidden">
         {/* Background number */}
         <motion.span
-          className="absolute top-16 -left-[10%] font-mono text-[35vw] md:text-[25vw] text-yon-platinum/8 leading-none select-none pointer-events-none"
+          className="absolute top-16 -left-[3%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/[0.08] leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
         >
           02
@@ -615,7 +596,7 @@ export default function AboutPage() {
                 </span>
               </div>
 
-              <h2 className="font-serif text-[9vw] md:text-[4.5vw] lg:text-[3.5vw] text-yon-black leading-[1.05]">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-tight">
                 <span className="block">Taehyun</span>
                 <span className="block ml-[4%]">Lee</span>
               </h2>
@@ -653,7 +634,7 @@ export default function AboutPage() {
       {/* Skills Section */}
       <section className="py-32 md:py-48 px-6 md:px-12 lg:px-16 bg-yon-ivory relative overflow-hidden">
         <motion.span
-          className="absolute bottom-[-10%] right-[-10%] font-mono text-[40vw] md:text-[30vw] text-yon-platinum/10 leading-none select-none pointer-events-none"
+          className="absolute bottom-[-5%] right-[-3%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/10 leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
         >
           03
@@ -673,7 +654,7 @@ export default function AboutPage() {
               </span>
             </div>
 
-            <h2 className="font-serif text-[8vw] md:text-[4vw] lg:text-[3vw] text-yon-black leading-[1.1] mb-12">
+            <h2 className="font-serif text-2xl md:text-3xl text-yon-black leading-tight mb-12">
               Core Skills
             </h2>
           </motion.div>
@@ -712,7 +693,7 @@ export default function AboutPage() {
                 </span>
               </div>
 
-              <h2 className="font-serif text-[10vw] md:text-[5vw] lg:text-[4vw] leading-[1]">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl leading-tight">
                 <span className="block">How</span>
                 <span className="block ml-[6%]">we work</span>
               </h2>
@@ -768,7 +749,7 @@ export default function AboutPage() {
       {/* Timeline Section */}
       <section className="py-32 md:py-48 px-6 md:px-12 lg:px-16 relative overflow-hidden">
         <motion.span
-          className="absolute top-1/2 -translate-y-1/2 -left-[15%] font-mono text-[40vw] md:text-[28vw] text-yon-platinum/8 leading-none select-none pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 -left-[5%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/[0.08] leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
         >
           05
@@ -788,7 +769,7 @@ export default function AboutPage() {
               </span>
             </div>
 
-            <h2 className="font-serif text-[8vw] md:text-[4vw] lg:text-[3vw] text-yon-black leading-[1.1] mb-16">
+            <h2 className="font-serif text-2xl md:text-3xl text-yon-black leading-tight mb-16">
               Timeline
             </h2>
           </motion.div>
@@ -820,7 +801,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            <p className="font-serif text-[7vw] md:text-[4vw] lg:text-[3.2vw] text-yon-black leading-[1.2]">
+            <p className="font-serif text-xl md:text-2xl lg:text-3xl text-yon-black leading-relaxed">
               <span className="block">The journey matters</span>
               <span className="block ml-[4%]">as much as</span>
               <span className="block">the destination</span>

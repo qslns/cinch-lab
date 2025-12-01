@@ -472,9 +472,9 @@ export default function ArchivePage() {
     <div ref={containerRef} className="min-h-screen bg-yon-white">
       {/* Hero Header - Extreme Typography */}
       <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-end pt-32 md:pt-40 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
-        {/* Giant Background Letter */}
+        {/* Subtle Background Letter */}
         <motion.span
-          className="absolute top-[5%] right-[-15%] font-serif text-[70vw] md:text-[50vw] text-yon-platinum/[0.04] leading-none select-none pointer-events-none"
+          className="absolute top-[5%] right-[-5%] font-serif text-[18rem] md:text-[24rem] text-yon-platinum/[0.04] leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -523,33 +523,15 @@ export default function ArchivePage() {
                 </span>
               </motion.div>
 
-              {/* Main Title - Extreme Typography */}
+              {/* Main Title - Restrained, elegant */}
               <h1 className="relative">
                 <motion.span
-                  className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.8] tracking-[-0.03em]"
-                  initial={{ opacity: 0, y: 80, rotate: 2 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  className="block font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-tight tracking-[-0.02em]"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.1, ease: yonEase }}
                 >
-                  Arch
-                </motion.span>
-                <motion.span
-                  className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.8] tracking-[-0.03em] ml-[20%] md:ml-[25%]"
-                  initial={{ opacity: 0, y: 80, rotate: -2 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{ duration: 1, delay: 0.2, ease: yonEase }}
-                >
-                  ive
-                </motion.span>
-
-                {/* Italic overlay on hover effect */}
-                <motion.span
-                  className="absolute top-0 left-0 font-serif italic text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-accent/10 leading-[0.8] tracking-[-0.03em] pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.15 }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                >
-                  Arch
+                  Archive
                 </motion.span>
               </h1>
 
@@ -829,7 +811,7 @@ export default function ArchivePage() {
       {/* Philosophy Section */}
       <section className="py-24 md:py-32 px-6 md:px-8 lg:px-12 bg-yon-ivory relative overflow-hidden">
         <motion.span
-          className="absolute bottom-[-10%] left-[-5%] font-mono text-[50vw] md:text-[35vw] text-yon-platinum/15 leading-none select-none pointer-events-none"
+          className="absolute bottom-[-5%] left-[-3%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/15 leading-none select-none pointer-events-none"
           style={{ y: parallaxY }}
         >
           M
@@ -849,7 +831,7 @@ export default function ArchivePage() {
               </span>
             </div>
 
-            <h2 className="font-serif text-[8vw] md:text-[5vw] lg:text-[4vw] text-yon-black leading-[1.1]">
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-tight">
               <span className="block">The making</span>
               <span className="block ml-[10%]">is the meaning</span>
             </h2>

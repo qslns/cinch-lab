@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-yon-white flex items-center justify-center relative overflow-hidden px-6">
       {/* Decorative background element */}
       <span
-        className="absolute top-[-10%] right-[-5%] font-serif text-[40vw] text-yon-platinum/20 leading-none select-none pointer-events-none"
+        className="absolute top-[-5%] right-[-3%] font-serif text-[12rem] md:text-[16rem] text-yon-platinum/20 leading-none select-none pointer-events-none"
         aria-hidden="true"
       >
         4

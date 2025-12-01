@@ -463,9 +463,9 @@ export default function ContactPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white relative overflow-hidden">
-      {/* Giant Background Letter */}
+      {/* Subtle Background Letter */}
       <motion.span
-        className="absolute top-[5%] right-[-20%] font-serif text-[80vw] md:text-[60vw] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
+        className="absolute top-[5%] right-[-5%] font-serif text-[18rem] md:text-[24rem] text-yon-platinum/[0.03] leading-none select-none pointer-events-none"
         style={{ y: parallax2 }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -540,33 +540,15 @@ export default function ContactPage() {
               </span>
             </motion.div>
 
-            {/* Main Title - EXTREME Scale */}
+            {/* Main Title - Restrained, elegant */}
             <h1 className="relative">
               <motion.span
-                className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.75] tracking-[-0.03em]"
-                initial={{ opacity: 0, y: 100, rotate: 2 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                className="block font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-tight tracking-[-0.02em]"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.1, ease: yonEase }}
               >
-                Con
-              </motion.span>
-              <motion.span
-                className="block font-serif text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-black leading-[0.75] tracking-[-0.03em] ml-[15%] md:ml-[20%]"
-                initial={{ opacity: 0, y: 100, rotate: -2 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ duration: 1.2, delay: 0.2, ease: yonEase }}
-              >
-                tact
-              </motion.span>
-
-              {/* Italic ghost overlay */}
-              <motion.span
-                className="absolute top-0 left-0 font-serif italic text-[22vw] md:text-[16vw] lg:text-[14vw] text-yon-accent/[0.06] leading-[0.75] tracking-[-0.03em] pointer-events-none"
-                initial={{ opacity: 0, x: 15 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.6, ease: yonEase }}
-              >
-                Con
+                Contact
               </motion.span>
             </h1>
 

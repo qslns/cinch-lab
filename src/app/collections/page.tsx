@@ -270,7 +270,7 @@ function CollectionCard({
             </div>
 
             <motion.h2
-              className="font-serif text-2xl md:text-3xl text-yon-black leading-tight"
+              className="font-serif text-lg md:text-xl text-yon-black leading-tight"
               animate={{ color: isHovered ? 'var(--yon-accent)' : 'var(--yon-black)' }}
               transition={{ duration: 0.3 }}
             >
@@ -396,90 +396,36 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-yon-white">
-      {/* Hero Header - Extreme typography */}
-      <section className="relative pt-8 md:pt-12 pb-16 md:pb-24 px-6 md:px-8 lg:px-16 overflow-hidden">
-        {/* Background decoration */}
-        <motion.span
-          className="absolute -right-[10%] top-1/2 -translate-y-1/2 font-serif text-[40vw] text-yon-grey/[0.02] leading-none pointer-events-none select-none"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: yonEase }}
-        >
-          C
-        </motion.span>
+      {/* Hero Header - Restrained, elegant */}
+      <section className="relative pt-32 md:pt-48 pb-16 md:pb-24 px-6 md:px-10 lg:px-16">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Minimal header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: yonEase }}
+          >
+            {/* Label */}
+            <div className="flex items-center gap-4 mb-12">
+              <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase">
+                Collections
+              </span>
+              <span className="w-8 h-px bg-yon-grey/20" />
+              <span className="font-mono text-[8px] text-yon-grey/30 tracking-wider">
+                {filteredCollections.length} Projects
+              </span>
+            </div>
 
-        <div className="max-w-[1600px] mx-auto relative">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
-            {/* Title - Large asymmetric */}
-            <motion.div
-              className="lg:col-span-8"
-              initial={{ opacity: 0, x: -100, rotate: -2 }}
-              animate={{ opacity: 1, x: 0, rotate: 0 }}
-              transition={{ duration: 1.2, ease: yonEase }}
-            >
-              <div className="flex items-center gap-4 mb-6" style={{ transform: 'rotate(-0.5deg)' }}>
-                <span className="w-12 h-px bg-yon-accent" />
-                <span className="font-mono text-[10px] text-yon-accent tracking-[0.25em] uppercase">
-                  Portfolio
-                </span>
-                <span className="font-mono text-[10px] text-yon-grey/40 tracking-wider">
-                  002
-                </span>
-              </div>
+            {/* Title - restrained size */}
+            <h1 className="font-serif text-2xl md:text-3xl text-yon-black leading-relaxed max-w-2xl">
+              Each collection is an experiment — a question posed to fabric, form, and tradition.
+            </h1>
 
-              <h1 className="font-serif text-[18vw] md:text-[14vw] lg:text-[10vw] leading-[0.85] tracking-[-0.03em] text-yon-black">
-                <motion.span
-                  className="block"
-                  initial={{ opacity: 0, y: 80 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.2, ease: yonEase }}
-                  style={{ transform: 'rotate(-0.5deg)' }}
-                >
-                  Collec
-                </motion.span>
-                <motion.span
-                  className="block ml-[8%] lg:ml-[15%]"
-                  initial={{ opacity: 0, y: 80 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.4, ease: yonEase }}
-                  style={{ transform: 'rotate(0.5deg)' }}
-                >
-                  tions
-                </motion.span>
-              </h1>
-
-              {/* Decorative line */}
-              <motion.div
-                className="mt-8 flex items-center gap-4"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                <span className="w-24 h-px bg-yon-grey/30" />
-                <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em]">
-                  {filteredCollections.length} PROJECTS
-                </span>
-              </motion.div>
-            </motion.div>
-
-            {/* Description - Offset */}
-            <motion.div
-              className="lg:col-span-4 lg:pt-32"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.5, ease: yonEase }}
-            >
-              <div style={{ transform: 'rotate(0.5deg)' }}>
-                <p className="text-lg md:text-xl text-yon-black leading-[1.6] font-light">
-                  Each collection is an experiment — a question posed to fabric, form, and tradition.
-                </p>
-                <p className="mt-5 text-sm text-yon-grey leading-[1.8]">
-                  실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
-                  뒤틀렸지만 조화로운 — 모든 요소가 약간씩 어긋나 있지만 전체적으로 아름다운 구성.
-                </p>
-              </div>
-            </motion.div>
-          </div>
+            {/* Subtitle */}
+            <p className="mt-6 text-sm text-yon-grey/70 leading-relaxed max-w-lg">
+              실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
+            </p>
+          </motion.div>
         </div>
       </section>
 

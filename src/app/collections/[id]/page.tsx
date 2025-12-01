@@ -155,7 +155,7 @@ export default function CollectionDetailPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-serif text-[20vw] md:text-[15vw] text-yon-platinum leading-none">404</h1>
+          <h1 className="font-serif text-6xl md:text-7xl text-yon-platinum leading-none">404</h1>
           <p className="mt-4 text-lg text-yon-grey">Collection not found</p>
           <Link
             href="/collections"
@@ -188,9 +188,9 @@ export default function CollectionDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-yon-black/70 via-yon-black/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-yon-black/30 to-transparent" />
 
-        {/* Giant background letter */}
+        {/* Subtle background letter */}
         <motion.span
-          className="absolute top-[10%] right-[-15%] font-serif text-[70vw] md:text-[50vw] text-yon-white/[0.02] leading-none select-none pointer-events-none"
+          className="absolute top-[10%] right-[-5%] font-serif text-[20rem] md:text-[28rem] text-yon-white/[0.02] leading-none select-none pointer-events-none"
           style={{ y: titleY }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -236,7 +236,7 @@ export default function CollectionDetailPage() {
               </span>
             </motion.div>
 
-            {/* Main Title - EXTREME Scale */}
+            {/* Main Title - Restrained, elegant */}
             <motion.h1
               className="relative"
               initial={{ opacity: 0 }}
@@ -244,32 +244,12 @@ export default function CollectionDetailPage() {
               transition={{ duration: 0.5 }}
             >
               <motion.span
-                className="block font-serif text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-white leading-[0.75] tracking-[-0.03em]"
-                initial={{ opacity: 0, y: 100, rotate: 3 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                className="block font-serif text-3xl md:text-4xl lg:text-5xl text-yon-white leading-tight tracking-[-0.02em]"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.5, ease: yonEase }}
               >
-                {collection.title.split(' ')[0] || collection.title}
-              </motion.span>
-              {collection.title.split(' ')[1] && (
-                <motion.span
-                  className="block font-serif text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-white leading-[0.75] tracking-[-0.03em] ml-[10%] md:ml-[15%]"
-                  initial={{ opacity: 0, y: 100, rotate: -3 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: yonEase }}
-                >
-                  {collection.title.split(' ').slice(1).join(' ')}
-                </motion.span>
-              )}
-
-              {/* Italic ghost overlay */}
-              <motion.span
-                className="absolute top-0 left-0 font-serif italic text-[20vw] md:text-[14vw] lg:text-[12vw] text-yon-accent/[0.08] leading-[0.75] tracking-[-0.03em] pointer-events-none"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.9, ease: yonEase }}
-              >
-                {collection.title.split(' ')[0] || collection.title}
+                {collection.title}
               </motion.span>
             </motion.h1>
 

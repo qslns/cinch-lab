@@ -8,7 +8,7 @@ import { ImagePlaceholder } from './ImagePlaceholder'
 // THE YON custom easing
 const yonEase = [0.22, 1, 0.36, 1] as const
 
-// Scattered floating images component - Enhanced for Faerie-style
+// Floating image component - Image-dominant approach
 function FloatingImage({
   left,
   top,
@@ -28,38 +28,37 @@ function FloatingImage({
   label: string
   variant?: 'dark' | 'medium' | 'light'
   aspectRatio?: string
-  size?: 'small' | 'medium' | 'large' | 'xlarge'
+  size?: 'small' | 'medium' | 'large' | 'xlarge' | 'hero'
   parallaxSpeed?: number
   zIndex?: number
 }) {
-  const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], [0, parallaxSpeed * 300])
 
   const sizeClasses = {
-    small: 'w-24 md:w-32 lg:w-40',
-    medium: 'w-32 md:w-48 lg:w-64',
-    large: 'w-48 md:w-64 lg:w-80',
-    xlarge: 'w-56 md:w-72 lg:w-96',
+    small: 'w-28 md:w-36 lg:w-44',
+    medium: 'w-40 md:w-56 lg:w-72',
+    large: 'w-56 md:w-72 lg:w-96',
+    xlarge: 'w-72 md:w-96 lg:w-[28rem]',
+    hero: 'w-80 md:w-[28rem] lg:w-[36rem]',
   }
 
   return (
     <motion.div
-      ref={ref}
       className={`absolute ${sizeClasses[size]} pointer-events-auto`}
       style={{ left, top, zIndex, y }}
-      initial={{ opacity: 0, y: 80, rotate: rotation * 2, scale: 0.85 }}
+      initial={{ opacity: 0, y: 100, rotate: rotation * 2, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, rotate: rotation, scale: 1 }}
       transition={{
-        duration: 1.4,
+        duration: 1.6,
         delay,
         ease: yonEase,
       }}
       whileHover={{
-        scale: 1.05,
-        rotate: 0,
+        scale: 1.02,
+        rotate: rotation * 0.5,
         zIndex: 50,
-        transition: { duration: 0.5, ease: yonEase },
+        transition: { duration: 0.6, ease: yonEase },
       }}
       data-cursor="image"
     >
@@ -68,14 +67,14 @@ function FloatingImage({
         variant={variant}
         aspectRatio={aspectRatio}
       />
-      {/* Margiela-style number tag */}
+      {/* Minimal label */}
       <motion.span
-        className="absolute -bottom-6 left-0 font-mono text-[8px] text-yon-grey/40 tracking-[0.3em]"
+        className="absolute -bottom-5 left-0 font-mono text-[8px] text-yon-grey/30 tracking-[0.2em]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: delay + 0.5 }}
+        transition={{ delay: delay + 0.6 }}
       >
-        {label.includes('/') ? label.split('/')[1]?.trim() : label}
+        {label.split('/')[1]?.trim() || label}
       </motion.span>
     </motion.div>
   )
@@ -87,20 +86,16 @@ export default function HeroSection() {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Smooth scroll parallax
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   })
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -150])
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9])
-  const titleY = useTransform(scrollYProgress, [0, 0.3], [0, -80])
-  const subtitleY = useTransform(scrollYProgress, [0, 0.3], [0, -40])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
+  const heroY = useTransform(scrollYProgress, [0, 0.6], [0, -100])
 
-  // Mouse parallax with stronger effect
-  const springConfig = { stiffness: 100, damping: 25 }
+  // Mouse parallax
+  const springConfig = { stiffness: 80, damping: 30 }
   const parallaxX = useSpring(mouseX, springConfig)
   const parallaxY = useSpring(mouseY, springConfig)
 
@@ -110,10 +105,8 @@ export default function HeroSection() {
     const handleMouseMove = (e: MouseEvent) => {
       const centerX = window.innerWidth / 2
       const centerY = window.innerHeight / 2
-      const moveX = (e.clientX - centerX) / 30
-      const moveY = (e.clientY - centerY) / 30
-      mouseX.set(moveX)
-      mouseY.set(moveY)
+      mouseX.set((e.clientX - centerX) / 40)
+      mouseY.set((e.clientY - centerY) / 40)
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -123,9 +116,7 @@ export default function HeroSection() {
   if (!isMounted) {
     return (
       <section className="relative min-h-[100vh] flex items-center justify-center bg-yon-white">
-        <div className="text-center">
-          <span className="font-serif text-[15vw] text-yon-black leading-none">THE YON</span>
-        </div>
+        <span className="font-mono text-[10px] tracking-[0.4em] text-yon-grey/40 uppercase">THE YON</span>
       </section>
     )
   }
@@ -133,351 +124,212 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[120vh] overflow-hidden bg-yon-white"
+      className="relative min-h-[130vh] overflow-hidden bg-yon-white"
     >
-      {/* Subtle grain texture overlay */}
-      <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
+      {/* Subtle grain texture */}
+      <div className="absolute inset-0 opacity-[0.012] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
 
-      {/* GIANT Background Typography - Extreme scale */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-        style={{ opacity: heroOpacity }}
-      >
-        <motion.span
-          className="font-serif text-[70vw] md:text-[55vw] lg:text-[45vw] text-yon-grey/[0.025] leading-none select-none whitespace-nowrap"
-          initial={{ opacity: 0, scale: 0.9, x: 100 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 2, ease: yonEase }}
-          style={{ y: titleY }}
-        >
-          YON
-        </motion.span>
-      </motion.div>
-
-      {/* Asymmetric scattered images - Faerie style with depth layers */}
+      {/* IMAGE-DOMINANT LAYOUT - Images are the hero */}
       <motion.div
         className="absolute inset-0"
-        style={{ x: parallaxX, y: parallaxY }}
+        style={{ x: parallaxX, y: parallaxY, opacity: heroOpacity }}
       >
-        {/* Layer 1 - Background images (slower parallax) */}
+        {/* Primary hero image - largest, commands attention */}
         <FloatingImage
-          left="3%"
-          top="12%"
-          rotation={-3}
-          delay={0.6}
+          left="8%"
+          top="15%"
+          rotation={-1.5}
+          delay={0.4}
           label="AW25 / 001"
           variant="dark"
           aspectRatio="3/4"
-          size="large"
-          parallaxSpeed={-0.15}
-          zIndex={5}
-        />
-        <FloatingImage
-          left="72%"
-          top="5%"
-          rotation={2}
-          delay={0.8}
-          label="FRAGMENT / 002"
-          variant="light"
-          aspectRatio="4/5"
-          size="medium"
-          parallaxSpeed={-0.1}
-          zIndex={5}
+          size="hero"
+          parallaxSpeed={-0.08}
+          zIndex={20}
         />
 
-        {/* Layer 2 - Mid-ground images */}
+        {/* Secondary images - supporting roles */}
         <FloatingImage
-          left="78%"
-          top="50%"
+          left="58%"
+          top="8%"
+          rotation={2}
+          delay={0.7}
+          label="SS25 / 002"
+          variant="light"
+          aspectRatio="4/5"
+          size="large"
+          parallaxSpeed={0.05}
+          zIndex={15}
+        />
+
+        <FloatingImage
+          left="70%"
+          top="55%"
           rotation={-2}
           delay={1.0}
           label="DETAIL / 003"
           variant="medium"
           aspectRatio="1/1"
-          size="large"
-          parallaxSpeed={0.05}
-          zIndex={15}
+          size="medium"
+          parallaxSpeed={0.12}
+          zIndex={25}
         />
+
         <FloatingImage
-          left="-2%"
-          top="58%"
-          rotation={2.5}
+          left="2%"
+          top="70%"
+          rotation={1.5}
           delay={1.2}
           label="PROCESS / 004"
           variant="light"
           aspectRatio="16/10"
           size="medium"
           parallaxSpeed={0.08}
-          zIndex={15}
+          zIndex={10}
         />
 
-        {/* Layer 3 - Foreground images (faster parallax) */}
+        {/* Small accent image */}
         <FloatingImage
-          left="42%"
-          top="68%"
-          rotation={-1.5}
+          left="45%"
+          top="75%"
+          rotation={-1}
           delay={1.4}
-          label="SS25 / 005"
+          label="TOILE / 005"
           variant="dark"
-          aspectRatio="4/5"
-          size="xlarge"
-          parallaxSpeed={0.15}
-          zIndex={25}
-        />
-
-        {/* Additional scattered element */}
-        <FloatingImage
-          left="55%"
-          top="15%"
-          rotation={1}
-          delay={1.6}
-          label="TOILE / 006"
-          variant="medium"
           aspectRatio="3/4"
           size="small"
-          parallaxSpeed={0.12}
-          zIndex={20}
+          parallaxSpeed={0.15}
+          zIndex={30}
         />
       </motion.div>
 
-      {/* Main Content - EXTREME Asymmetric layout */}
+      {/* RESTRAINED TYPOGRAPHY - Small but present */}
       <motion.div
-        className="relative z-30 min-h-[100vh] flex flex-col justify-center px-4 md:px-8 lg:px-12"
-        style={{ opacity: heroOpacity, y: heroY, scale: heroScale }}
+        className="relative z-40 min-h-[100vh] flex flex-col justify-between py-8 md:py-12 px-6 md:px-10 lg:px-16"
+        style={{ opacity: heroOpacity, y: heroY }}
       >
-        <div className="max-w-[1800px] mx-auto w-full">
-          {/* Asymmetric Grid - More extreme split */}
-          <div className="grid lg:grid-cols-12 gap-4 lg:gap-0">
-            {/* Left side - Main Title - DOMINANT */}
-            <div className="lg:col-span-9 lg:col-start-1">
-              {/* Tagline with micro typography */}
-              <motion.div
-                className="flex items-center gap-3 mb-6 lg:mb-10"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.2, ease: yonEase }}
-              >
-                <motion.span
-                  className="w-16 md:w-24 h-px bg-yon-accent"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4, ease: yonEase }}
-                  style={{ originX: 0 }}
-                />
-                <span className="font-mono text-[8px] md:text-[9px] text-yon-accent tracking-[0.35em] uppercase">
-                  Experimental Fashion
-                </span>
-                <span className="hidden md:inline font-mono text-[8px] text-yon-grey/30 tracking-[0.2em]">
-                  Portfolio 2024—25
-                </span>
-              </motion.div>
-
-              {/* MAIN TITLE - EXTREME SCALE */}
-              <div className="relative">
-                <h1 className="relative">
-                  {/* THE - First line */}
-                  <motion.span
-                    className="block font-serif leading-[0.75] tracking-[-0.05em] text-yon-black"
-                    style={{
-                      fontSize: 'clamp(5rem, 25vw, 18rem)',
-                      transform: 'rotate(-1deg)',
-                    }}
-                    initial={{ opacity: 0, x: -200, rotate: -5 }}
-                    animate={{ opacity: 1, x: 0, rotate: -1 }}
-                    transition={{ duration: 1.4, delay: 0.3, ease: yonEase }}
-                  >
-                    THE
-                    {/* Decorative accent line */}
-                    <motion.span
-                      className="absolute -right-8 md:-right-16 top-1/2 w-16 md:w-32 h-[2px] bg-yon-accent origin-left hidden lg:block"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: 1, delay: 1.2, ease: yonEase }}
-                    />
-                  </motion.span>
-
-                  {/* YON - Second line with offset */}
-                  <motion.span
-                    className="block font-serif leading-[0.75] tracking-[-0.05em] text-yon-black ml-[8%] md:ml-[12%] lg:ml-[18%]"
-                    style={{
-                      fontSize: 'clamp(5rem, 25vw, 18rem)',
-                      transform: 'rotate(0.5deg)',
-                    }}
-                    initial={{ opacity: 0, x: 200, rotate: 5 }}
-                    animate={{ opacity: 1, x: 0, rotate: 0.5 }}
-                    transition={{ duration: 1.4, delay: 0.5, ease: yonEase }}
-                  >
-                    YON
-                    {/* Ghost outline effect */}
-                    <motion.span
-                      className="absolute inset-0 font-serif italic text-transparent pointer-events-none select-none"
-                      style={{
-                        WebkitTextStroke: '1px rgba(139, 115, 85, 0.12)',
-                        transform: 'translate(4px, 4px)',
-                      }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.5, duration: 0.8 }}
-                    >
-                      YON
-                    </motion.span>
-                  </motion.span>
-                </h1>
-
-                {/* Subtitle - Positioned asymmetrically */}
-                <motion.div
-                  className="absolute -bottom-4 md:-bottom-8 left-[15%] md:left-[20%] flex items-center gap-3 md:gap-4"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1.1, ease: yonEase }}
-                  style={{ y: subtitleY }}
-                >
-                  <span className="w-6 md:w-10 h-px bg-yon-grey/40" />
-                  <p className="font-mono text-[10px] md:text-xs text-yon-steel tracking-[0.3em] uppercase">
-                    저 너머 — Beyond Fashion
-                  </p>
-                </motion.div>
-
-                {/* Margiela-style number tag */}
-                <motion.span
-                  className="absolute -top-4 md:-top-8 right-0 lg:right-[10%] font-mono text-[9px] text-yon-grey/25 tracking-[0.4em] rotate-90 origin-bottom-right"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.6 }}
-                >
-                  001 / 2025
-                </motion.span>
-              </div>
-
-              {/* Location markers - Micro typography, rotated */}
-              <motion.div
-                className="mt-20 md:mt-28 lg:mt-36 flex items-center gap-4 md:gap-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.3 }}
-                style={{ transform: 'rotate(-0.5deg)' }}
-              >
-                <span className="font-mono text-[9px] text-yon-grey/60 tracking-[0.2em]">SEOUL</span>
-                <span className="w-12 md:w-20 h-px bg-yon-platinum" />
-                <span className="font-mono text-[9px] text-yon-grey/60 tracking-[0.2em]">TOKYO</span>
-                <span className="w-12 md:w-20 h-px bg-yon-platinum hidden md:block" />
-                <span className="font-mono text-[9px] text-yon-grey/30 tracking-[0.15em] hidden md:block">
-                  AW25 — SS25
-                </span>
-              </motion.div>
-            </div>
-
-            {/* Right side - Description - MINIMAL, offset position */}
-            <motion.div
-              className="lg:col-span-3 lg:col-start-10 lg:pt-48 mt-16 lg:mt-0"
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, delay: 0.9, ease: yonEase }}
-            >
-              <div className="lg:transform lg:rotate-[1deg] max-w-xs lg:max-w-none">
-                <p className="text-base md:text-lg text-yon-black leading-[1.7] font-light">
-                  Fashion that transcends time and space.
-                </p>
-                <p className="mt-3 text-sm text-yon-grey leading-[1.8]">
-                  뒤틀렸지만 조화로운 — 모든 요소가 약간씩 어긋나 있지만,
-                  전체적으로 하나의 아름다운 구성을 이룹니다.
-                </p>
-
-                {/* CTA - Minimal, elegant */}
-                <motion.div
-                  className="mt-10 md:mt-14 flex flex-col gap-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.4 }}
-                >
-                  <Link
-                    href="/collections"
-                    className="group inline-flex items-center gap-3 w-fit"
-                    data-cursor="link"
-                  >
-                    <span className="px-6 py-3 bg-yon-black text-yon-white font-mono text-[9px] tracking-[0.2em] uppercase group-hover:bg-yon-charcoal transition-colors duration-300">
-                      Explore Collections
-                    </span>
-                    <motion.span
-                      className="text-yon-black text-sm"
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                    >
-                      →
-                    </motion.span>
-                  </Link>
-
-                  <Link
-                    href="/process"
-                    className="group inline-flex items-center gap-2 w-fit font-mono text-[9px] tracking-[0.15em] uppercase text-yon-grey hover:text-yon-black transition-colors"
-                    data-cursor="link"
-                  >
-                    <motion.span
-                      className="w-4 h-px bg-yon-grey group-hover:w-8 group-hover:bg-yon-black transition-all duration-300"
-                    />
-                    <span>View Process</span>
-                  </Link>
-                </motion.div>
-
-                {/* Designer credit - Micro */}
-                <motion.div
-                  className="mt-14 pt-6 border-t border-yon-platinum/40"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.6 }}
-                >
-                  <span className="font-mono text-[8px] text-yon-grey/40 tracking-[0.25em] uppercase block">
-                    By Taehyun Lee
-                  </span>
-                  <span className="font-mono text-[8px] text-yon-grey/25 tracking-[0.15em] block mt-1">
-                    SASADA Fashion Academy
-                  </span>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Scroll Indicator - Minimal, asymmetric */}
-      <motion.div
-        className="absolute bottom-8 md:bottom-12 left-8 md:left-16 z-30"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        <div className="flex flex-col items-start gap-3">
+        {/* Top: Brand mark - minimal, corner placement */}
+        <div className="flex justify-between items-start">
           <motion.div
-            className="w-px h-12 md:h-16 bg-gradient-to-b from-yon-grey/50 to-transparent origin-top"
-            animate={{ scaleY: [1, 0.5, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <span className="font-mono text-[7px] text-yon-grey/40 tracking-[0.3em] uppercase -rotate-90 origin-top-left translate-y-4">
-            Scroll
-          </span>
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: yonEase }}
+          >
+            <span className="font-mono text-[10px] tracking-[0.4em] text-yon-grey/60 uppercase">
+              THE YON
+            </span>
+            <span className="block font-mono text-[8px] tracking-[0.2em] text-yon-grey/30 mt-1">
+              저 너머
+            </span>
+          </motion.div>
+
+          <motion.div
+            className="text-right"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <span className="font-mono text-[8px] tracking-[0.25em] text-yon-grey/30 uppercase">
+              Portfolio
+            </span>
+            <span className="block font-mono text-[8px] tracking-[0.15em] text-yon-grey/20 mt-0.5">
+              2024—25
+            </span>
+          </motion.div>
+        </div>
+
+        {/* Center: Philosophy statement - quiet but present */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center max-w-md px-6 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.8, duration: 1.2 }}
+        >
+          <p className="font-serif text-lg md:text-xl text-yon-black/80 leading-relaxed italic">
+            Twisted yet harmonious
+          </p>
+          <p className="font-mono text-[9px] tracking-[0.3em] text-yon-grey/40 mt-4 uppercase">
+            뒤틀렸지만 조화로운
+          </p>
+        </motion.div>
+
+        {/* Bottom: Navigation hints and info */}
+        <div className="flex justify-between items-end">
+          {/* Left: Scroll indicator */}
+          <motion.div
+            className="flex flex-col items-start gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
+          >
+            <motion.div
+              className="w-px h-12 bg-gradient-to-b from-yon-grey/40 to-transparent origin-top"
+              animate={{ scaleY: [1, 0.4, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <span className="font-mono text-[7px] tracking-[0.3em] text-yon-grey/30 uppercase">
+              Scroll
+            </span>
+          </motion.div>
+
+          {/* Center: CTA - understated */}
+          <motion.div
+            className="flex flex-col items-center gap-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.6 }}
+          >
+            <Link
+              href="/collections"
+              className="group flex items-center gap-3"
+              data-cursor="link"
+            >
+              <span className="font-mono text-[9px] tracking-[0.2em] text-yon-grey/60 uppercase group-hover:text-yon-black transition-colors duration-300">
+                View Collections
+              </span>
+              <motion.span
+                className="text-yon-grey/40 text-xs group-hover:text-yon-black transition-colors"
+                animate={{ x: [0, 3, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                →
+              </motion.span>
+            </Link>
+
+            <Link
+              href="/process"
+              className="font-mono text-[8px] tracking-[0.15em] text-yon-grey/30 uppercase hover:text-yon-grey/60 transition-colors"
+              data-cursor="link"
+            >
+              Process
+            </Link>
+          </motion.div>
+
+          {/* Right: Designer credit */}
+          <motion.div
+            className="text-right"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.2 }}
+          >
+            <span className="font-mono text-[8px] tracking-[0.2em] text-yon-grey/25 uppercase block">
+              Taehyun Lee
+            </span>
+            <span className="font-mono text-[7px] tracking-[0.15em] text-yon-grey/15 block mt-0.5">
+              SASADA
+            </span>
+          </motion.div>
         </div>
       </motion.div>
 
-      {/* Decorative geometric element */}
+      {/* Decorative: Subtle geometric */}
       <motion.div
-        className="absolute top-[20%] right-[5%] z-10 hidden lg:block"
-        initial={{ opacity: 0, scale: 0, rotate: 0 }}
-        animate={{ opacity: 0.08, scale: 1, rotate: 45 }}
-        transition={{ delay: 2, duration: 1.5, ease: yonEase }}
+        className="absolute top-[25%] right-[12%] z-5 hidden lg:block pointer-events-none"
+        initial={{ opacity: 0, rotate: 0 }}
+        animate={{ opacity: 0.04, rotate: 45 }}
+        transition={{ delay: 2.5, duration: 1.5 }}
       >
-        <div className="w-24 h-24 border border-yon-grey/40" />
-      </motion.div>
-
-      {/* Large decorative letter - Bottom right */}
-      <motion.div
-        className="absolute bottom-[15%] right-[8%] z-5 hidden lg:block pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.03 }}
-        transition={{ delay: 2.2, duration: 1 }}
-      >
-        <span className="font-serif text-[25vw] text-yon-grey leading-none">
-          ¶
-        </span>
+        <div className="w-16 h-16 border border-yon-grey/30" />
       </motion.div>
     </section>
   )
