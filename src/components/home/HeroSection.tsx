@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion'
 import { ImagePlaceholder } from './ImagePlaceholder'
+import { useLightbox } from '@/components/ImageLightbox'
 
 // THE YON custom easing
 const yonEase = [0.22, 1, 0.36, 1] as const
@@ -20,6 +21,7 @@ function FloatingImage({
   size = 'medium',
   parallaxSpeed = 0.1,
   zIndex = 10,
+  onImageClick,
 }: {
   left: string
   top: string
@@ -31,6 +33,7 @@ function FloatingImage({
   size?: 'small' | 'medium' | 'large' | 'xlarge' | 'hero'
   parallaxSpeed?: number
   zIndex?: number
+  onImageClick: () => void
 }) {
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], [0, parallaxSpeed * 300])
@@ -44,8 +47,8 @@ function FloatingImage({
   }
 
   return (
-    <motion.div
-      className={`absolute ${sizeClasses[size]} pointer-events-auto`}
+    <motion.button
+      className={`absolute ${sizeClasses[size]} pointer-events-auto cursor-zoom-in group`}
       style={{ left, top, zIndex, y }}
       initial={{ opacity: 0, y: 100, rotate: rotation * 2, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, rotate: rotation, scale: 1 }}
@@ -60,13 +63,36 @@ function FloatingImage({
         zIndex: 50,
         transition: { duration: 0.6, ease: yonEase },
       }}
+      onClick={onImageClick}
       data-cursor="image"
+      aria-label={`View ${label}`}
     >
-      <ImagePlaceholder
-        label={label}
-        variant={variant}
-        aspectRatio={aspectRatio}
-      />
+      <div className="relative">
+        <ImagePlaceholder
+          label={label}
+          variant={variant}
+          aspectRatio={aspectRatio}
+        />
+        {/* Hover overlay with zoom icon */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
+        >
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke={variant === 'light' ? '#0A0A0A' : '#FAFAFA'}
+            strokeWidth="1.5"
+          >
+            <circle cx="14" cy="14" r="8" />
+            <line x1="20" y1="20" x2="26" y2="26" />
+            <line x1="14" y1="11" x2="14" y2="17" />
+            <line x1="11" y1="14" x2="17" y2="14" />
+          </svg>
+        </div>
+      </div>
       {/* Minimal label */}
       <motion.span
         className="absolute -bottom-5 left-0 font-mono text-[8px] text-yon-grey/30 tracking-[0.2em]"
@@ -76,15 +102,25 @@ function FloatingImage({
       >
         {label.split('/')[1]?.trim() || label}
       </motion.span>
-    </motion.div>
+    </motion.button>
   )
 }
+
+// Hero images data for lightbox
+const heroImages = [
+  { label: 'AW25 / 001', src: '/images/hero/aw25-001.jpg', aspectRatio: '3/4' },
+  { label: 'SS25 / 002', src: '/images/hero/ss25-002.jpg', aspectRatio: '4/5' },
+  { label: 'DETAIL / 003', src: '/images/hero/detail-003.jpg', aspectRatio: '1/1' },
+  { label: 'PROCESS / 004', src: '/images/hero/process-004.jpg', aspectRatio: '16/10' },
+  { label: 'TOILE / 005', src: '/images/hero/toile-005.jpg', aspectRatio: '3/4' },
+]
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isMounted, setIsMounted] = useState(false)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
+  const { openLightbox } = useLightbox()
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -98,6 +134,20 @@ export default function HeroSection() {
   const springConfig = { stiffness: 80, damping: 30 }
   const parallaxX = useSpring(mouseX, springConfig)
   const parallaxY = useSpring(mouseY, springConfig)
+
+  // Prepare lightbox images
+  const lightboxImages = heroImages.map(img => ({
+    src: img.src,
+    alt: img.label,
+    caption: img.label,
+    captionKo: 'THE YON 2024-25',
+    width: 1200,
+    height: img.aspectRatio === '1/1' ? 1200 : img.aspectRatio === '16/10' ? 750 : 1600,
+  }))
+
+  const handleImageClick = (index: number) => {
+    openLightbox(lightboxImages, index)
+  }
 
   useEffect(() => {
     setIsMounted(true)
@@ -146,6 +196,7 @@ export default function HeroSection() {
           size="hero"
           parallaxSpeed={-0.08}
           zIndex={20}
+          onImageClick={() => handleImageClick(0)}
         />
 
         {/* Secondary images - supporting roles */}
@@ -160,6 +211,7 @@ export default function HeroSection() {
           size="large"
           parallaxSpeed={0.05}
           zIndex={15}
+          onImageClick={() => handleImageClick(1)}
         />
 
         <FloatingImage
@@ -173,6 +225,7 @@ export default function HeroSection() {
           size="medium"
           parallaxSpeed={0.12}
           zIndex={25}
+          onImageClick={() => handleImageClick(2)}
         />
 
         <FloatingImage
@@ -186,6 +239,7 @@ export default function HeroSection() {
           size="medium"
           parallaxSpeed={0.08}
           zIndex={10}
+          onImageClick={() => handleImageClick(3)}
         />
 
         {/* Small accent image */}
@@ -200,6 +254,7 @@ export default function HeroSection() {
           size="small"
           parallaxSpeed={0.15}
           zIndex={30}
+          onImageClick={() => handleImageClick(4)}
         />
       </motion.div>
 

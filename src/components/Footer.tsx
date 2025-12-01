@@ -6,6 +6,7 @@ import BackToTop from './BackToTop'
 
 const navItems = [
   { href: '/collections', label: 'Collections' },
+  { href: '/process', label: 'Process' },
   { href: '/archive', label: 'Archive' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },

@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Footer from '@/components/Footer'
+import { useLightbox } from '@/components/ImageLightbox'
 
 // Custom easing
 const yonEase = [0.22, 1, 0.36, 1] as const
@@ -57,15 +58,17 @@ const variantStyles = {
 function FloatingImage({
   img,
   scrollYProgress,
+  onImageClick,
 }: {
   img: typeof scatteredImages[0]
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
+  onImageClick: () => void
 }) {
   const y = useTransform(scrollYProgress, [0, 1], [0, -100 * img.parallaxSpeed])
 
   return (
-    <motion.div
-      className={`absolute ${img.size} pointer-events-none`}
+    <motion.button
+      className={`absolute ${img.size} cursor-zoom-in group`}
       style={{
         ...img.position,
         y,
@@ -78,14 +81,36 @@ function FloatingImage({
         delay: 0.3 + img.id * 0.15,
         ease: yonEase,
       }}
+      onClick={onImageClick}
+      data-cursor="image"
+      aria-label={`View image ${img.id}`}
     >
       <div
         className={`relative ${variantStyles[img.variant]} overflow-hidden`}
         style={{ aspectRatio: img.aspectRatio }}
       >
         <div className="absolute inset-0 border border-current opacity-5" />
+        {/* Hover overlay with zoom icon */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke={img.variant === 'dark' ? '#FAFAFA' : '#0A0A0A'}
+            strokeWidth="1.5"
+          >
+            <circle cx="14" cy="14" r="8" />
+            <line x1="20" y1="20" x2="26" y2="26" />
+            <line x1="14" y1="11" x2="14" y2="17" />
+            <line x1="11" y1="14" x2="17" y2="14" />
+          </svg>
+        </div>
       </div>
-    </motion.div>
+    </motion.button>
   )
 }
 
@@ -95,14 +120,29 @@ export default function AboutPage() {
     target: containerRef,
     offset: ['start start', 'end end'],
   })
+  const { openLightbox } = useLightbox()
+
+  // Prepare images for lightbox
+  const lightboxImages = scatteredImages.map(img => ({
+    src: `/images/about/${img.id}.jpg`,
+    alt: `About image ${img.id}`,
+    caption: `Taehyun Lee - Image ${img.id}`,
+    captionKo: 'THE YON Studio',
+    width: 1200,
+    height: img.aspectRatio === '1/1' ? 1200 : img.aspectRatio === '3/4' ? 1600 : 1500,
+  }))
+
+  const handleImageClick = (index: number) => {
+    openLightbox(lightboxImages, index)
+  }
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
       {/* Hero - Images dominant, minimal text */}
       <section className="relative min-h-[100vh] overflow-hidden">
         {/* Scattered images */}
-        {scatteredImages.map(img => (
-          <FloatingImage key={img.id} img={img} scrollYProgress={scrollYProgress} />
+        {scatteredImages.map((img, index) => (
+          <FloatingImage key={img.id} img={img} scrollYProgress={scrollYProgress} onImageClick={() => handleImageClick(index)} />
         ))}
 
         {/* Minimal text - center */}

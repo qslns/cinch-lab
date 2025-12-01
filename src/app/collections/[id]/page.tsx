@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Footer from '@/components/Footer'
+import { useLightbox } from '@/components/ImageLightbox'
 
 // Custom easing for smooth animations
 const yonEase = [0.22, 1, 0.36, 1] as const
@@ -136,6 +137,7 @@ export default function CollectionDetailPage() {
   const params = useParams()
   const slug = params.id as string
   const collection = collectionsData[slug]
+  const { openLightbox } = useLightbox()
 
   const heroRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
@@ -146,6 +148,20 @@ export default function CollectionDetailPage() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const titleY = useTransform(scrollYProgress, [0, 1], [0, 100])
+
+  // Prepare images for lightbox
+  const lightboxImages = collection?.images.map((image, index) => ({
+    src: `/images/collections/${slug}/${String(image.id).padStart(2, '0')}.jpg`,
+    alt: `${collection.title} - ${image.caption || `Image ${image.id}`}`,
+    caption: image.caption,
+    captionKo: `${collection.title} ${collection.season} ${collection.year}`,
+    width: 1200,
+    height: image.size === 'large' ? 1600 : image.size === 'medium' ? 1500 : 1200,
+  })) || []
+
+  const handleImageClick = (index: number) => {
+    openLightbox(lightboxImages, index)
+  }
 
   if (!collection) {
     return (
@@ -278,9 +294,12 @@ export default function CollectionDetailPage() {
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
               >
-                <div
-                  className={`relative ${sizeStyles[image.size]} ${variantStyles[image.variant]} overflow-hidden transition-shadow duration-500 hover:shadow-2xl`}
+                <button
+                  onClick={() => handleImageClick(index)}
+                  className={`relative ${sizeStyles[image.size]} ${variantStyles[image.variant]} overflow-hidden transition-shadow duration-500 hover:shadow-2xl cursor-zoom-in group w-full`}
                   style={{ transform: `rotate(${rotation}deg)` }}
+                  data-cursor="image"
+                  aria-label={`View ${image.caption || `Image ${image.id}`}`}
                 >
                   {/* Placeholder content */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -295,7 +314,27 @@ export default function CollectionDetailPage() {
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
-                </div>
+
+                  {/* Hover overlay with zoom icon */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                    style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
+                  >
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      stroke="#FAFAFA"
+                      strokeWidth="1.5"
+                    >
+                      <circle cx="14" cy="14" r="8" />
+                      <line x1="20" y1="20" x2="26" y2="26" />
+                      <line x1="14" y1="11" x2="14" y2="17" />
+                      <line x1="11" y1="14" x2="17" y2="14" />
+                    </svg>
+                  </div>
+                </button>
 
                 {/* Caption */}
                 {image.caption && (

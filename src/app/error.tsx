@@ -52,13 +52,13 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={reset}
-            className="px-8 py-4 bg-yon-black text-yon-white font-mono text-sm tracking-wider uppercase hover:bg-yon-charcoal transition-colors duration-300"
+            className="px-8 py-4 bg-yon-black text-yon-white font-mono text-sm tracking-wider uppercase hover:bg-yon-charcoal transition-colors duration-300 focus-ring"
           >
             Try again
           </button>
           <Link
             href="/"
-            className="px-8 py-4 border border-yon-black text-yon-black font-mono text-sm tracking-wider uppercase hover:bg-yon-black hover:text-yon-white transition-colors duration-300"
+            className="px-8 py-4 border border-yon-black text-yon-black font-mono text-sm tracking-wider uppercase hover:bg-yon-black hover:text-yon-white transition-colors duration-300 focus-ring"
           >
             Go home
           </Link>

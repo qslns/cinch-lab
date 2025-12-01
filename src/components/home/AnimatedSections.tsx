@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { useLightbox } from '@/components/ImageLightbox'
 
 const yonEase = [0.22, 1, 0.36, 1] as const
 
@@ -283,6 +284,14 @@ function CollectionCard({ collection, index }: { collection: Collection; index: 
   )
 }
 
+// Archive preview images for lightbox
+const archivePreviewImages = [
+  { src: '/images/archive/aw25-001.jpg', alt: 'AW25-001', label: 'AW25-001' },
+  { src: '/images/archive/ss25.jpg', alt: 'SS25', label: 'SS25' },
+  { src: '/images/archive/ss25-002.jpg', alt: 'SS25-002', label: 'SS25-002' },
+  { src: '/images/archive/aw24.jpg', alt: 'AW24', label: 'AW24' },
+]
+
 export default function AnimatedSections({
   collections,
   archivePreview,
@@ -295,8 +304,23 @@ export default function AnimatedSections({
     target: archiveRef,
     offset: ['start end', 'end start'],
   })
+  const { openLightbox } = useLightbox()
 
   const archiveY = useTransform(scrollYProgress, [0, 1], [50, -50])
+
+  // Prepare lightbox images
+  const lightboxImages = archivePreviewImages.map(img => ({
+    src: img.src,
+    alt: img.alt,
+    caption: img.label,
+    captionKo: 'THE YON Archive',
+    width: 1200,
+    height: 1600,
+  }))
+
+  const handleArchiveImageClick = (index: number) => {
+    openLightbox(lightboxImages, index)
+  }
 
   return (
     <>
@@ -477,51 +501,80 @@ export default function AnimatedSections({
             >
               <div className="grid grid-cols-12 gap-4">
                 {/* Large image */}
-                <motion.div
-                  className="col-span-8 aspect-[4/5] bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-pointer"
+                <motion.button
+                  className="col-span-8 aspect-[4/5] bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-zoom-in relative"
                   style={{ rotate: '-1.5deg' }}
                   whileHover={{ scale: 1.02, rotate: 0 }}
+                  onClick={() => handleArchiveImageClick(0)}
                   data-cursor="image"
+                  aria-label="View AW25-001"
                 >
                   <span className="font-mono text-[10px] text-yon-silver/30 tracking-[0.2em] group-hover:text-yon-silver/50 transition-colors">
                     AW25-001
                   </span>
-                </motion.div>
+                  {/* Hover zoom icon */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center bg-yon-black/20">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="#FAFAFA" strokeWidth="1.5">
+                      <circle cx="14" cy="14" r="8" /><line x1="20" y1="20" x2="26" y2="26" /><line x1="14" y1="11" x2="14" y2="17" /><line x1="11" y1="14" x2="17" y2="14" />
+                    </svg>
+                  </div>
+                </motion.button>
 
                 {/* Small square */}
-                <motion.div
-                  className="col-span-4 col-start-9 row-start-1 aspect-square bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-pointer mt-12"
+                <motion.button
+                  className="col-span-4 col-start-9 row-start-1 aspect-square bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-zoom-in mt-12 relative"
                   style={{ rotate: '2deg' }}
                   whileHover={{ scale: 1.05, rotate: 0 }}
+                  onClick={() => handleArchiveImageClick(1)}
                   data-cursor="image"
+                  aria-label="View SS25"
                 >
                   <span className="font-mono text-[9px] text-yon-silver/30 tracking-wider group-hover:text-yon-silver/50 transition-colors">
                     SS25
                   </span>
-                </motion.div>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center bg-yon-black/20">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke="#FAFAFA" strokeWidth="1.5">
+                      <circle cx="14" cy="14" r="8" /><line x1="20" y1="20" x2="26" y2="26" /><line x1="14" y1="11" x2="14" y2="17" /><line x1="11" y1="14" x2="17" y2="14" />
+                    </svg>
+                  </div>
+                </motion.button>
 
                 {/* Bottom row */}
-                <motion.div
-                  className="col-span-5 col-start-2 aspect-[3/4] bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-pointer -mt-8"
+                <motion.button
+                  className="col-span-5 col-start-2 aspect-[3/4] bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-zoom-in -mt-8 relative"
                   style={{ rotate: '1deg' }}
                   whileHover={{ scale: 1.02, rotate: 0 }}
+                  onClick={() => handleArchiveImageClick(2)}
                   data-cursor="image"
+                  aria-label="View SS25-002"
                 >
                   <span className="font-mono text-[9px] text-yon-silver/30 tracking-wider group-hover:text-yon-silver/50 transition-colors">
                     SS25-002
                   </span>
-                </motion.div>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center bg-yon-black/20">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke="#FAFAFA" strokeWidth="1.5">
+                      <circle cx="14" cy="14" r="8" /><line x1="20" y1="20" x2="26" y2="26" /><line x1="14" y1="11" x2="14" y2="17" /><line x1="11" y1="14" x2="17" y2="14" />
+                    </svg>
+                  </div>
+                </motion.button>
 
-                <motion.div
-                  className="col-span-5 col-start-8 aspect-square bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-pointer"
+                <motion.button
+                  className="col-span-5 col-start-8 aspect-square bg-yon-graphite flex items-center justify-center group hover:bg-yon-steel/20 transition-colors cursor-zoom-in relative"
                   style={{ rotate: '-1deg' }}
                   whileHover={{ scale: 1.05, rotate: 0 }}
+                  onClick={() => handleArchiveImageClick(3)}
                   data-cursor="image"
+                  aria-label="View AW24"
                 >
                   <span className="font-mono text-[9px] text-yon-silver/30 tracking-wider group-hover:text-yon-silver/50 transition-colors">
                     AW24
                   </span>
-                </motion.div>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center bg-yon-black/20">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke="#FAFAFA" strokeWidth="1.5">
+                      <circle cx="14" cy="14" r="8" /><line x1="20" y1="20" x2="26" y2="26" /><line x1="14" y1="11" x2="14" y2="17" /><line x1="11" y1="14" x2="17" y2="14" />
+                    </svg>
+                  </div>
+                </motion.button>
               </div>
             </motion.div>
           </div>

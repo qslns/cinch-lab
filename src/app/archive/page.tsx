@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import { useLightbox } from '@/components/ImageLightbox'
 
 // Custom easing for smooth animations
 const yonEase = [0.22, 1, 0.36, 1] as const
@@ -139,7 +140,7 @@ function ListIcon({ active }: { active: boolean }) {
 }
 
 // Grid View Item
-function GridItem({ item, index }: { item: typeof archiveItems[0]; index: number }) {
+function GridItem({ item, index, onImageClick }: { item: typeof archiveItems[0]; index: number; onImageClick: () => void }) {
   const [isHovered, setIsHovered] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -152,13 +153,18 @@ function GridItem({ item, index }: { item: typeof archiveItems[0]; index: number
       transition={{ duration: 0.5, delay: index * 0.05 }}
       layout
     >
-      <motion.div
-        className="relative cursor-pointer"
+      <motion.button
+        className="relative cursor-zoom-in w-full text-left"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => {
+          onImageClick()
+          setIsExpanded(!isExpanded)
+        }}
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
+        data-cursor="image"
+        aria-label={`View ${item.title}`}
       >
         {/* Image placeholder with aspect ratio */}
         <div
@@ -207,6 +213,28 @@ function GridItem({ item, index }: { item: typeof archiveItems[0]; index: number
             </h3>
           </motion.div>
 
+          {/* Zoom icon on hover */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 32 32"
+              fill="none"
+              stroke="#FAFAFA"
+              strokeWidth="1.5"
+            >
+              <circle cx="14" cy="14" r="8" />
+              <line x1="20" y1="20" x2="26" y2="26" />
+              <line x1="14" y1="11" x2="14" y2="17" />
+              <line x1="11" y1="14" x2="17" y2="14" />
+            </svg>
+          </motion.div>
+
           {/* Border */}
           <div className="absolute inset-0 border border-yon-silver/10" />
         </div>
@@ -220,7 +248,7 @@ function GridItem({ item, index }: { item: typeof archiveItems[0]; index: number
             {item.date}
           </span>
         </div>
-      </motion.div>
+      </motion.button>
 
       {/* Expanded details */}
       <AnimatePresence>
@@ -434,6 +462,21 @@ export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedSeason, setSelectedSeason] = useState('All')
+  const { openLightbox } = useLightbox()
+
+  // Prepare lightbox images from archive items
+  const getLightboxImages = (items: typeof archiveItems) => items.map(item => ({
+    src: `/images/archive/${item.id.toLowerCase()}.jpg`,
+    alt: item.title,
+    caption: item.title,
+    captionKo: item.description,
+    width: 1200,
+    height: 1600,
+  }))
+
+  const handleImageClick = (items: typeof archiveItems, index: number) => {
+    openLightbox(getLightboxImages(items), index)
+  }
 
   // Filter items
   const filteredItems = useMemo(() => {
@@ -577,7 +620,7 @@ export default function ArchivePage() {
                 transition={{ duration: 0.3 }}
               >
                 {filteredItems.map((item, index) => (
-                  <GridItem key={item.id} item={item} index={index} />
+                  <GridItem key={item.id} item={item} index={index} onImageClick={() => handleImageClick(filteredItems, index)} />
                 ))}
               </motion.div>
             )}

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import { useLightbox } from '@/components/ImageLightbox'
 
 // Custom easing for smooth animations
 const yonEase = [0.22, 1, 0.36, 1] as const
@@ -99,10 +100,12 @@ function ProcessItem({
   item,
   index,
   stageColor,
+  onImageClick,
 }: {
   item: { type: string; label: string; id: string }
   index: number
   stageColor: string
+  onImageClick: () => void
 }) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -124,16 +127,17 @@ function ProcessItem({
   }
 
   return (
-    <motion.div
-      className="group relative cursor-pointer"
+    <motion.button
+      className="group relative cursor-zoom-in w-full text-left"
       initial={{ opacity: 0, y: 40, rotate: -2 }}
       whileInView={{ opacity: 1, y: 0, rotate: index % 2 === 0 ? 1 : -1 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] as const }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onImageClick}
       data-cursor="image"
-      data-cursor-text="View"
+      aria-label={`View ${item.label}`}
     >
       <motion.div
         className={`relative bg-${stageColor} overflow-hidden`}
@@ -156,13 +160,27 @@ function ProcessItem({
           </motion.span>
         </div>
 
-        {/* Hover overlay */}
+        {/* Hover overlay with zoom icon */}
         <motion.div
-          className="absolute inset-0 bg-yon-accent/20"
+          className="absolute inset-0 bg-yon-accent/20 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0 }}
           transition={{ duration: 0.3 }}
-        />
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke={stageColor === 'yon-charcoal' || stageColor === 'yon-black' || stageColor === 'yon-graphite' ? '#FAFAFA' : '#0A0A0A'}
+            strokeWidth="1.5"
+          >
+            <circle cx="14" cy="14" r="8" />
+            <line x1="20" y1="20" x2="26" y2="26" />
+            <line x1="14" y1="11" x2="14" y2="17" />
+            <line x1="11" y1="14" x2="17" y2="14" />
+          </svg>
+        </motion.div>
 
         {/* Border */}
         <div className="absolute inset-0 border border-current opacity-10" />
@@ -181,12 +199,12 @@ function ProcessItem({
           {item.type}
         </span>
       </motion.div>
-    </motion.div>
+    </motion.button>
   )
 }
 
 // Process stage section - minimal
-function ProcessStage({ stage, index }: { stage: typeof processStages[0]; index: number }) {
+function ProcessStage({ stage, index, onImageClick }: { stage: typeof processStages[0]; index: number; onImageClick: (stageIndex: number, itemIndex: number) => void }) {
   return (
     <section
       className={`relative py-16 md:py-24 px-6 md:px-12 lg:px-16 ${
@@ -220,7 +238,7 @@ function ProcessStage({ stage, index }: { stage: typeof processStages[0]; index:
               key={item.id}
               className={i === 0 ? 'md:col-span-2 md:row-span-2' : ''}
             >
-              <ProcessItem item={item} index={i} stageColor={stage.color} />
+              <ProcessItem item={item} index={i} stageColor={stage.color} onImageClick={() => onImageClick(index, i)} />
             </div>
           ))}
         </div>
@@ -235,8 +253,33 @@ export default function ProcessPage() {
     target: containerRef,
     offset: ['start start', 'end end'],
   })
+  const { openLightbox } = useLightbox()
 
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
+  // Prepare all images for lightbox
+  const allProcessImages = processStages.flatMap((stage, stageIndex) =>
+    stage.items.map((item, itemIndex) => ({
+      src: `/images/process/${stage.id}/${item.id.toLowerCase()}.jpg`,
+      alt: `${stage.title} - ${item.label}`,
+      caption: `${stage.title}: ${item.label}`,
+      captionKo: item.id,
+      width: 1200,
+      height: item.type === 'swatch' ? 1200 : item.type === 'detail' ? 900 : 1600,
+      stageIndex,
+      itemIndex,
+    }))
+  )
+
+  const handleImageClick = (stageIndex: number, itemIndex: number) => {
+    // Calculate flat index from stage and item indices
+    let flatIndex = 0
+    for (let i = 0; i < stageIndex; i++) {
+      flatIndex += processStages[i].items.length
+    }
+    flatIndex += itemIndex
+    openLightbox(allProcessImages, flatIndex)
+  }
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
@@ -291,7 +334,7 @@ export default function ProcessPage() {
       {/* Process Stages */}
       {processStages.map((stage, index) => (
         <div key={stage.id} id={`stage-${stage.id}`}>
-          <ProcessStage stage={stage} index={index} />
+          <ProcessStage stage={stage} index={index} onImageClick={handleImageClick} />
         </div>
       ))}
 

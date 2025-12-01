@@ -44,13 +44,13 @@ export default function NotFound() {
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-4 bg-yon-black text-yon-white font-mono text-xs tracking-[0.15em] uppercase hover:bg-yon-charcoal transition-colors duration-300"
+            className="inline-flex items-center justify-center px-8 py-4 bg-yon-black text-yon-white font-mono text-xs tracking-[0.15em] uppercase hover:bg-yon-charcoal transition-colors duration-300 focus-ring"
           >
             Go Home
           </Link>
           <Link
             href="/collections"
-            className="inline-flex items-center justify-center px-8 py-4 border border-yon-black text-yon-black font-mono text-xs tracking-[0.15em] uppercase hover:bg-yon-black hover:text-yon-white transition-colors duration-300"
+            className="inline-flex items-center justify-center px-8 py-4 border border-yon-black text-yon-black font-mono text-xs tracking-[0.15em] uppercase hover:bg-yon-black hover:text-yon-white transition-colors duration-300 focus-ring"
           >
             View Collections
           </Link>
@@ -70,7 +70,7 @@ export default function NotFound() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-mono text-sm text-yon-steel hover:text-yon-black transition-colors duration-300"
+                className="font-mono text-sm text-yon-steel hover:text-yon-black transition-colors duration-300 focus-ring"
               >
                 {link.label}
               </Link>

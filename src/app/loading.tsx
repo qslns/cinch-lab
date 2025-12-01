@@ -4,7 +4,12 @@ import { motion } from 'framer-motion'
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 bg-yon-white z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 bg-yon-white z-50 flex items-center justify-center"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading content"
+    >
       <div className="text-center">
         {/* Logo */}
         <motion.h1

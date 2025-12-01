@@ -7,6 +7,11 @@ export const metadata: Metadata = {
     title: 'Archive | THE YON',
     description: 'Research documentation and design process archive. Explore the experiments, iterations, and creative journey behind THE YON collections.',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Archive | THE YON',
+    description: 'Research and process documentation archive.',
+  },
 }
 
 export default function ArchiveLayout({
