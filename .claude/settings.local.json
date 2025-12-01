@@ -26,7 +26,8 @@
       "Bash(findstr:*)",
       "Bash(npm audit:*)",
       "Bash(find:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(npx next lint)"
     ],
     "deny": [],
     "ask": []

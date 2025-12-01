@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, RefObject, ElementType } from 'react'
+import React, { useEffect, useRef, RefObject, ElementType, useMemo } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -58,7 +58,18 @@ export function useScrollReveal<T extends HTMLElement>(
   options: ScrollAnimationOptions
 ): RefObject<T> {
   const ref = useRef<T>(null)
-  const opts = { ...defaultOptions, ...options }
+  const opts = useMemo(() => ({ ...defaultOptions, ...options }), [
+    options.animation,
+    options.duration,
+    options.delay,
+    options.ease,
+    options.stagger,
+    options.scrub,
+    options.start,
+    options.end,
+    options.markers,
+    options.once,
+  ])
 
   useEffect(() => {
     const element = ref.current

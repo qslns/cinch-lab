@@ -134,9 +134,11 @@ interface ScatteredGridProps {
 }
 
 export function ScatteredGrid({ children, className = '' }: ScatteredGridProps) {
+  const childrenLength = children.length
+
   // Generate pseudo-random but consistent positions
   const positions = useMemo(() => {
-    return children.map((_, index) => {
+    return Array.from({ length: childrenLength }).map((_, index) => {
       const seed = index * 17 + 7
       const row = Math.floor(index / 3)
       const col = index % 3
@@ -149,7 +151,7 @@ export function ScatteredGrid({ children, className = '' }: ScatteredGridProps) 
         zIndex: seed % 5,
       }
     })
-  }, [children.length])
+  }, [childrenLength])
 
   return (
     <div className={`relative w-full min-h-[200vh] ${className}`}>

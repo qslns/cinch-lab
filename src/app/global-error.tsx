@@ -101,14 +101,14 @@ export default function GlobalError({
               >
                 Try Again
               </button>
-              <a
-                href="/"
+              <button
+                onClick={() => window.location.href = '/'}
                 style={{
                   padding: '16px 32px',
                   backgroundColor: 'transparent',
                   color: '#0A0A0A',
                   border: '1px solid #0A0A0A',
-                  textDecoration: 'none',
+                  cursor: 'pointer',
                   fontFamily: 'Consolas, monospace',
                   fontSize: '11px',
                   letterSpacing: '0.15em',
@@ -116,7 +116,7 @@ export default function GlobalError({
                 }}
               >
                 Go Home
-              </a>
+              </button>
             </div>
 
             {/* Footer */}
