@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
@@ -430,8 +430,6 @@ function ListItem({ item, index }: { item: typeof archiveItems[0]; index: number
 }
 
 export default function ArchivePage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -463,7 +461,7 @@ export default function ArchivePage() {
   }, [filteredItems])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-yon-white">
+    <div className="min-h-screen bg-yon-white">
       {/* Hero Header - Minimal */}
       <section className="relative pt-32 md:pt-48 pb-16 md:pb-24 px-6 md:px-8 lg:px-12">
         <div className="max-w-7xl mx-auto">

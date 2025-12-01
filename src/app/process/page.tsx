@@ -187,8 +187,6 @@ function ProcessItem({
 
 // Process stage section - minimal
 function ProcessStage({ stage, index }: { stage: typeof processStages[0]; index: number }) {
-  const isEven = index % 2 === 0
-
   return (
     <section
       className={`relative py-16 md:py-24 px-6 md:px-12 lg:px-16 ${
