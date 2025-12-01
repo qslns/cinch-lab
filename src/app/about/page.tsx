@@ -124,27 +124,29 @@ export default function AboutPage() {
       </section>
 
       {/* Contact - Just the essentials */}
-      <section className="py-32 md:py-48 px-6 text-center">
+      <section className="py-40 md:py-56 px-6 text-center">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1 }}
         >
           <a
             href="mailto:hello@theyon.com"
-            className="font-mono text-sm text-yon-grey hover:text-yon-black transition-colors tracking-wider"
+            className="group relative inline-block font-mono text-xs text-yon-grey hover:text-yon-black transition-colors duration-500 tracking-wider"
           >
-            hello@theyon.com
+            <span>hello@theyon.com</span>
+            <span className="absolute bottom-0 left-0 w-0 h-px bg-current group-hover:w-full transition-all duration-300" />
           </a>
-          <span className="block mt-4">
+          <span className="block mt-6">
             <a
               href="https://instagram.com/theyon_studio"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-sm text-yon-grey/60 hover:text-yon-black transition-colors tracking-wider"
+              className="group relative inline-block font-mono text-xs text-yon-grey/50 hover:text-yon-black transition-colors duration-500 tracking-wider"
             >
-              @theyon_studio
+              <span>@theyon_studio</span>
+              <span className="absolute bottom-0 left-0 w-0 h-px bg-current group-hover:w-full transition-all duration-300" />
             </a>
           </span>
         </motion.div>

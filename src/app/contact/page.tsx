@@ -13,15 +13,16 @@ export default function ContactPage() {
       <section className="min-h-[80vh] flex items-center justify-center px-6">
         <motion.div
           className="text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: yonEase }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, ease: yonEase }}
         >
           <a
             href="mailto:hello@theyon.com"
-            className="font-mono text-base md:text-lg text-yon-black hover:text-yon-grey transition-colors tracking-wider"
+            className="group relative inline-block font-mono text-sm md:text-base text-yon-black hover:text-yon-grey transition-colors duration-500 tracking-wider"
           >
-            hello@theyon.com
+            <span>hello@theyon.com</span>
+            <span className="absolute bottom-0 left-0 w-0 h-px bg-current group-hover:w-full transition-all duration-300" />
           </a>
         </motion.div>
       </section>

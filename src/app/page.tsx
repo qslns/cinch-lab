@@ -1,6 +1,7 @@
-import Link from 'next/link'
 import Footer from '@/components/Footer'
 import HomeClient from '@/components/home/HomeClient'
+import PhilosophySection from '@/components/home/PhilosophySection'
+import ContactCTASection from '@/components/home/ContactCTASection'
 
 // Static data
 const collections = [
@@ -32,36 +33,6 @@ const archivePreview = [
   { id: 'SS25-002', title: 'Raw Edge Studies', category: 'Material' },
   { id: 'AW24-003', title: 'Volume Architecture', category: 'Form' },
 ]
-
-
-// Minimal Philosophy Section - Just the essence
-function PhilosophySection() {
-  return (
-    <section className="relative py-32 md:py-48 lg:py-56 px-6 md:px-8 lg:px-12 bg-yon-ivory overflow-hidden">
-      <div className="max-w-4xl mx-auto text-center">
-        <p className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-relaxed italic">
-          Twisted yet harmonious
-        </p>
-      </div>
-    </section>
-  )
-}
-
-// Minimal Contact - Just the email
-function ContactCTASection() {
-  return (
-    <section className="relative py-24 md:py-32 px-6 md:px-8 lg:px-12">
-      <div className="max-w-4xl mx-auto text-center">
-        <a
-          href="mailto:hello@theyon.com"
-          className="font-mono text-sm text-yon-grey hover:text-yon-black transition-colors tracking-wider"
-        >
-          hello@theyon.com
-        </a>
-      </div>
-    </section>
-  )
-}
 
 export default function HomePage() {
   return (

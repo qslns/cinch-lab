@@ -1,18 +1,11 @@
-import type { Metadata } from 'next'
+import { Metadata } from 'next'
+import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Meet Taehyun Lee, the designer behind THE YON. Exploring the philosophy of "twisted yet harmonious" through experimental fashion design.',
-  openGraph: {
-    title: 'About | THE YON',
-    description: 'Meet Taehyun Lee, the designer behind THE YON. Exploring the philosophy of "twisted yet harmonious" through experimental fashion design.',
-  },
+  description: 'Taehyun Lee. Tokyo.',
 }
 
-export default function AboutLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AboutLayout({ children }: { children: ReactNode }) {
   return children
 }

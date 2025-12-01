@@ -97,3 +97,59 @@ export function ScaleUp(props: Omit<ScrollRevealProps, 'variant'>) {
 export function RotateIn(props: Omit<ScrollRevealProps, 'variant'>) {
   return <ScrollReveal {...props} variant="rotateIn" />
 }
+
+// Stagger container for lists/grids
+interface StaggerContainerProps {
+  children: ReactNode
+  className?: string
+  staggerDelay?: number
+}
+
+export function StaggerContainer({
+  children,
+  className,
+  staggerDelay = 0.1
+}: StaggerContainerProps) {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={{
+        visible: {
+          transition: { staggerChildren: staggerDelay }
+        }
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// Stagger item for use inside StaggerContainer
+interface StaggerItemProps {
+  children: ReactNode
+  className?: string
+}
+
+export function StaggerItem({ children, className }: StaggerItemProps) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.6,
+            ease: yonEase
+          }
+        }
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
