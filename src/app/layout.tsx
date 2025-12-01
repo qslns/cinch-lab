@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Inter, Cormorant_Garamond, Space_Mono } from 'next/font/google'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
+import { GoogleAnalytics } from '@/components/Analytics'
 import YonNav from '@/components/YonNav'
 import ClientProviders from '@/components/ClientProviders'
 import '@/styles/globals.css'
@@ -130,7 +132,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black`}>
+      <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black safe-area-top safe-area-bottom`}>
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
         <ClientProviders>
           <SkipToMain />
           <KeyboardNavigationIndicator />

@@ -1459,3 +1459,91 @@ html {
     padding-inline: 4rem;
   }
 }
+
+/* ============================================
+   Mobile UX Enhancements
+   THE YON - Touch-First Design
+   ============================================ */
+
+/* Safe area for notched devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile-optimized touch targets */
+@media (max-width: 768px) {
+  button,
+  a,
+  [role="button"],
+  .tap-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Mobile-optimized spacing */
+  .mobile-px {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  /* Disable hover effects on touch devices */
+  @media (hover: none) {
+    .hover-lift:hover,
+    .card-pro:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+/* Mobile gallery with snap scrolling */
+.mobile-gallery {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.mobile-gallery::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-gallery-item {
+  flex: 0 0 85%;
+  scroll-snap-align: center;
+  padding: 0 0.5rem;
+}
+
+/* Floating action button */
+.mobile-fab {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0));
+  right: 1.5rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--yon-black);
+  color: var(--yon-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: var(--z-above);
+}
+
+/* Haptic feedback simulation */
+.haptic-feedback:active {
+  transform: scale(0.97);
+}
+
+/* Mobile form optimization */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
