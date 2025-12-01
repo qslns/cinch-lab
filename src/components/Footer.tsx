@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import BackToTop from './BackToTop'
 
 const navItems = [
   { href: '/collections', label: 'Collections' },
@@ -17,6 +18,8 @@ const socialItems = [
 
 export default function Footer() {
   return (
+    <>
+    <BackToTop />
     <footer className="py-20 md:py-28 px-6 md:px-12 bg-yon-charcoal text-yon-white">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
@@ -120,5 +123,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   )
 }
