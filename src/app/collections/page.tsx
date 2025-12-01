@@ -257,18 +257,8 @@ function CollectionCard({
             </motion.div>
           </div>
 
-          {/* Info */}
+          {/* Info - Minimal: just title and season */}
           <div className={`md:col-span-4 ${isReversed ? 'md:col-start-1 md:order-1' : ''} md:py-8`}>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="font-mono text-[10px] text-yon-grey tracking-[0.12em] uppercase">
-                {collection.season?.toUpperCase()}
-              </span>
-              <span className="w-3 h-px bg-yon-grey/30" />
-              <span className="font-mono text-[10px] text-yon-grey/60 tracking-wider">
-                {collection.year}
-              </span>
-            </div>
-
             <motion.h2
               className="font-serif text-lg md:text-xl text-yon-black leading-tight"
               animate={{ color: isHovered ? 'var(--yon-accent)' : 'var(--yon-black)' }}
@@ -277,69 +267,9 @@ function CollectionCard({
               {collection.title}
             </motion.h2>
 
-            {collection.description && (
-              <p className="mt-4 text-sm text-yon-steel leading-[1.7]">
-                {collection.description}
-              </p>
-            )}
-
-            {/* Status badge - visible on mobile/non-hover */}
-            {collection.status && (
-              <div className="mt-6 md:hidden">
-                <span className={`inline-block font-mono text-[9px] tracking-[0.1em] uppercase px-2 py-1 ${
-                  collection.status === 'in_progress'
-                    ? 'bg-yon-accent/10 text-yon-accent'
-                    : collection.status === 'testing'
-                    ? 'bg-yon-steel/10 text-yon-steel'
-                    : 'bg-yon-platinum text-yon-grey'
-                }`}>
-                  {statusLabels[collection.status as keyof typeof statusLabels] || 'Complete'}
-                </span>
-              </div>
-            )}
-
-            {/* Techniques */}
-            {collection.techniques && collection.techniques.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-yon-platinum">
-                <span className="font-mono text-[9px] text-yon-grey/60 tracking-[0.1em] uppercase block mb-3">
-                  Techniques
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {collection.techniques.slice(0, 3).map((tech, i) => (
-                    <span
-                      key={i}
-                      className="font-mono text-[10px] text-yon-steel px-2 py-1 bg-yon-platinum/50"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Materials */}
-            {collection.materials && collection.materials.length > 0 && (
-              <div className="mt-4">
-                <span className="font-mono text-[9px] text-yon-grey/60 tracking-[0.1em] uppercase block mb-2">
-                  Materials
-                </span>
-                <p className="font-mono text-[10px] text-yon-grey">
-                  {collection.materials.slice(0, 3).join(' · ')}
-                </p>
-              </div>
-            )}
-
-            {/* View more */}
-            <motion.div
-              className="mt-6 flex items-center gap-2"
-              animate={{ x: isHovered ? 4 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <span className="font-mono text-[10px] text-yon-grey tracking-[0.1em] uppercase">
-                Explore
-              </span>
-              <span className="text-yon-grey">→</span>
-            </motion.div>
+            <span className="block mt-3 font-mono text-[10px] text-yon-grey/60 tracking-[0.15em] uppercase">
+              {collection.season?.toUpperCase()}
+            </span>
           </div>
         </div>
       </Link>
@@ -416,15 +346,10 @@ export default function CollectionsPage() {
               </span>
             </div>
 
-            {/* Title - restrained size */}
-            <h1 className="font-serif text-2xl md:text-3xl text-yon-black leading-relaxed max-w-2xl">
-              Each collection is an experiment — a question posed to fabric, form, and tradition.
+            {/* Title - minimal */}
+            <h1 className="font-serif text-2xl md:text-3xl text-yon-black">
+              Collections
             </h1>
-
-            {/* Subtitle */}
-            <p className="mt-6 text-sm text-yon-grey/70 leading-relaxed max-w-lg">
-              실험적인 패턴 메이킹과 소재 연구를 통해 패션의 경계를 탐구합니다.
-            </p>
           </motion.div>
         </div>
       </section>
@@ -548,24 +473,15 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      {/* Archive CTA */}
-      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12 bg-yon-ivory">
+      {/* Archive link - minimal */}
+      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="font-mono text-[10px] text-yon-grey tracking-[0.2em] uppercase">
-              Explore More
-            </span>
-            <h2 className="mt-4 font-serif text-2xl md:text-3xl text-yon-black">
-              Discover the process behind each collection
-            </h2>
-            <p className="mt-4 text-sm text-yon-steel max-w-md mx-auto">
-              Visit the archive to explore research, experiments, and documentation.
-            </p>
             <Link
               href="/archive"
               className="group inline-flex items-center gap-3 mt-8 px-6 py-3 border border-yon-black font-mono text-[10px] tracking-[0.12em] uppercase text-yon-black hover:bg-yon-black hover:text-yon-white transition-all duration-300"

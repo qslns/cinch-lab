@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 
@@ -431,12 +431,6 @@ function ListItem({ item, index }: { item: typeof archiveItems[0]; index: number
 
 export default function ArchivePage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
-
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, -100])
 
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [searchQuery, setSearchQuery] = useState('')
@@ -470,172 +464,27 @@ export default function ArchivePage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
-      {/* Hero Header - Extreme Typography */}
-      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-end pt-32 md:pt-40 pb-16 md:pb-24 px-6 md:px-8 lg:px-12 overflow-hidden">
-        {/* Subtle Background Letter */}
-        <motion.span
-          className="absolute top-[5%] right-[-5%] font-serif text-[18rem] md:text-[24rem] text-yon-platinum/[0.04] leading-none select-none pointer-events-none"
-          style={{ y: parallaxY }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: yonEase }}
-        >
-          A
-        </motion.span>
-
-        {/* Secondary decorative element */}
-        <motion.div
-          className="absolute top-[20%] left-[5%] w-px h-[30vh] bg-gradient-to-b from-transparent via-yon-grey/20 to-transparent"
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: yonEase }}
-        />
-
-        {/* Scattered number tags */}
-        <motion.span
-          className="absolute top-[15%] right-[20%] font-mono text-[10px] text-yon-grey/30 tracking-[0.3em] rotate-90"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          04.ARCHIVE
-        </motion.span>
-
-        <div className="w-full max-w-7xl mx-auto relative">
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-end">
-            {/* Title section - Extreme Scale */}
-            <motion.div
-              className="md:col-span-8"
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: yonEase }}
-            >
-              {/* Prefix tag */}
-              <motion.div
-                className="flex items-center gap-4 mb-6"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: yonEase }}
-              >
-                <span className="w-12 h-px bg-yon-accent" />
-                <span className="font-mono text-[10px] text-yon-accent tracking-[0.3em] uppercase">
-                  Process & Research
-                </span>
-              </motion.div>
-
-              {/* Main Title - Restrained, elegant */}
-              <h1 className="relative">
-                <motion.span
-                  className="block font-serif text-4xl md:text-5xl lg:text-6xl text-yon-black leading-tight tracking-[-0.02em]"
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.1, ease: yonEase }}
-                >
-                  Archive
-                </motion.span>
-              </h1>
-
-              {/* Subtitle */}
-              <motion.p
-                className="mt-8 md:mt-12 text-lg md:text-xl lg:text-2xl text-yon-steel leading-relaxed max-w-lg"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5, ease: yonEase }}
-              >
-                Fragments of creation. Experiments preserved.
-                <span className="block mt-2 text-yon-grey">
-                  The journey matters as much as the destination.
-                </span>
-              </motion.p>
-            </motion.div>
-
-            {/* Stats & Info - Asymmetric Position */}
-            <motion.div
-              className="md:col-span-3 md:col-start-10"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: yonEase }}
-            >
-              <div className="space-y-8 md:space-y-10">
-                {/* Total Entries */}
-                <div className="relative">
-                  <motion.span
-                    className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    Total Entries
-                  </motion.span>
-                  <motion.span
-                    className="font-serif text-5xl md:text-6xl lg:text-7xl text-yon-black leading-none"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.7, ease: yonEase }}
-                  >
-                    {archiveItems.length}
-                  </motion.span>
-                  <motion.span
-                    className="absolute -right-2 top-0 font-mono text-[8px] text-yon-grey/30"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                  >
-                    [01]
-                  </motion.span>
-                </div>
-
-                {/* Active Research */}
-                <div className="relative ml-4">
-                  <motion.span
-                    className="font-mono text-[9px] text-yon-grey/50 tracking-[0.2em] uppercase block mb-3"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    Active Research
-                  </motion.span>
-                  <motion.span
-                    className="font-serif text-5xl md:text-6xl lg:text-7xl text-yon-accent leading-none"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8, ease: yonEase }}
-                  >
-                    {archiveItems.filter(i => i.status === 'current').length}
-                  </motion.span>
-                  <motion.span
-                    className="absolute -right-2 top-0 font-mono text-[8px] text-yon-grey/30"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                  >
-                    [02]
-                  </motion.span>
-                </div>
-
-                {/* Timeline indicator */}
-                <motion.div
-                  className="pt-4 flex items-center gap-3"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9 }}
-                >
-                  <span className="w-6 h-px bg-yon-grey/30" />
-                  <span className="font-mono text-[10px] text-yon-grey/40 tracking-wider">
-                    SS24 — AW25
-                  </span>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Decorative line at bottom */}
+      {/* Hero Header - Minimal */}
+      <section className="relative pt-32 md:pt-48 pb-16 md:pb-24 px-6 md:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto">
           <motion.div
-            className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-yon-grey/20 via-yon-accent/30 to-transparent"
-            initial={{ scaleX: 0, originX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.5, delay: 0.6, ease: yonEase }}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: yonEase }}
+          >
+            {/* Label */}
+            <div className="flex items-center gap-4 mb-12">
+              <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase">
+                Archive
+              </span>
+              <span className="w-8 h-px bg-yon-grey/20" />
+            </div>
+
+            {/* Title */}
+            <h1 className="font-serif text-2xl md:text-3xl text-yon-black">
+              Archive
+            </h1>
+          </motion.div>
         </div>
       </section>
 
@@ -808,87 +657,22 @@ export default function ArchivePage() {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="py-24 md:py-32 px-6 md:px-8 lg:px-12 bg-yon-ivory relative overflow-hidden">
-        <motion.span
-          className="absolute bottom-[-5%] left-[-3%] font-mono text-[10rem] md:text-[14rem] text-yon-platinum/15 leading-none select-none pointer-events-none"
-          style={{ y: parallaxY }}
-        >
-          M
-        </motion.span>
-
-        <div className="max-w-4xl mx-auto relative">
+      {/* Collections link - minimal */}
+      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+            transition={{ duration: 0.8 }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-8 h-px bg-yon-grey" />
-              <span className="font-mono text-[10px] text-yon-grey tracking-[0.2em] uppercase">
-                Philosophy
-              </span>
-            </div>
-
-            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-tight">
-              <span className="block">The making</span>
-              <span className="block ml-[10%]">is the meaning</span>
-            </h2>
-
-            <p className="mt-10 text-lg md:text-xl text-yon-steel leading-relaxed max-w-2xl">
-              In a world of instant everything, THE YON chooses to slow down.
-              Every stitch deliberate, every choice intentional.
-              The process itself becomes the art.
-            </p>
-
-            <p className="mt-6 text-base text-yon-grey leading-relaxed max-w-xl">
-              모든 것이 즉각적인 세상에서, 우리는 천천히 가기로 했습니다.
-              과정 자체가 예술이 됩니다.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 md:py-28 px-6 md:px-8 lg:px-12 bg-yon-charcoal relative overflow-hidden">
-        <span className="absolute top-8 right-8 font-mono text-[100px] md:text-[160px] text-yon-graphite/20 leading-none select-none pointer-events-none">
-          →
-        </span>
-
-        <div className="max-w-4xl mx-auto text-center relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
-          >
-            <span className="font-mono text-[10px] text-yon-silver/60 tracking-[0.2em] uppercase">
-              Continue exploring
-            </span>
-
-            <div className="mt-8">
-              <Link
-                href="/collections"
-                className="group inline-flex items-center gap-4"
-              >
-                <span className="font-serif text-3xl md:text-4xl lg:text-5xl text-yon-white group-hover:text-yon-platinum transition-colors duration-300">
-                  View Collections
-                </span>
-                <motion.span
-                  className="text-2xl text-yon-white"
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  →
-                </motion.span>
-              </Link>
-            </div>
-
-            <p className="mt-8 font-mono text-[10px] text-yon-grey/50 tracking-wider">
-              THE YON — Beyond Fashion
-            </p>
+            <Link
+              href="/collections"
+              className="group inline-flex items-center gap-3 px-6 py-3 border border-yon-black font-mono text-[10px] tracking-[0.12em] uppercase text-yon-black hover:bg-yon-black hover:text-yon-white transition-all duration-300"
+            >
+              <span>Collections</span>
+              <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
           </motion.div>
         </div>
       </section>

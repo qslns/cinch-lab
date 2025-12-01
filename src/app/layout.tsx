@@ -34,12 +34,12 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://theyon.vercel.app'),
   title: {
-    default: 'THE YON | Beyond Fashion',
+    default: 'THE YON',
     template: '%s | THE YON',
   },
-  description: 'Twisted yet harmonious. Experimental fashion portfolio by Taehyun Lee. Every element is slightly askew, yet together they form perfect beauty.',
-  keywords: ['THE YON', 'experimental fashion', 'avant-garde', 'fashion portfolio', 'Taehyun Lee', 'CSM', 'Parsons', 'Antwerp', 'deconstructed fashion', 'pattern magic', '이태현', '패션 포트폴리오'],
-  authors: [{ name: 'Taehyun Lee', url: 'https://theyon.vercel.app' }],
+  description: 'Twisted yet harmonious.',
+  keywords: ['THE YON', 'Taehyun Lee', 'fashion'],
+  authors: [{ name: 'Taehyun Lee' }],
   creator: 'Taehyun Lee',
   publisher: 'THE YON',
   formatDetection: {
@@ -53,13 +53,13 @@ export const metadata: Metadata = {
     alternateLocale: 'en_US',
     url: 'https://theyon.vercel.app',
     siteName: 'THE YON',
-    title: 'THE YON | Beyond Fashion',
-    description: 'Twisted yet harmonious. Experimental fashion that transcends time and space.',
+    title: 'THE YON',
+    description: 'Twisted yet harmonious.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'THE YON | Beyond Fashion',
-    description: 'Twisted yet harmonious. Fashion beyond the horizon.',
+    title: 'THE YON',
+    description: 'Twisted yet harmonious.',
     creator: '@theyon_studio',
   },
   robots: {
@@ -73,9 +73,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'verification-token',
-  },
   category: 'fashion',
 }
 
@@ -85,29 +82,17 @@ export const viewport = {
   themeColor: '#000000',
 }
 
-// JSON-LD structured data for SEO
+// JSON-LD structured data
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   mainEntity: {
     '@type': 'Person',
     name: 'Taehyun Lee',
-    alternateName: '이태현',
-    description: 'Experimental fashion designer exploring the philosophy of "twisted yet harmonious"',
-    jobTitle: 'Fashion Designer',
     url: 'https://theyon.vercel.app',
     sameAs: [
       'https://instagram.com/theyon_studio',
     ],
-    worksFor: {
-      '@type': 'Organization',
-      name: 'THE YON',
-      url: 'https://theyon.vercel.app',
-    },
-    alumniOf: {
-      '@type': 'EducationalOrganization',
-      name: 'SASADA Fashion School',
-    },
   },
   dateCreated: '2024-01-01',
   dateModified: new Date().toISOString().split('T')[0],
