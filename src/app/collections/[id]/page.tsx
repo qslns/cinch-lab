@@ -253,77 +253,11 @@ export default function CollectionDetailPage() {
               </motion.span>
             </motion.h1>
 
-            {/* Description teaser */}
-            <motion.p
-              className="mt-8 md:mt-12 max-w-lg text-base md:text-lg text-yon-silver/80 leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8, ease: yonEase }}
-            >
-              {collection.description.split('.')[0]}.
-            </motion.p>
-
-            {/* Decorative line */}
-            <motion.div
-              className="mt-10 w-[50%] md:w-[30%] h-px bg-gradient-to-r from-yon-silver/30 via-yon-accent/40 to-transparent"
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, delay: 1, ease: yonEase }}
-            />
           </div>
         </motion.div>
 
-        {/* Scroll indicator - offset position */}
-        <motion.div
-          className="absolute bottom-8 left-[10%]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          style={{ opacity: heroOpacity }}
-        >
-          <div className="flex flex-col items-center gap-3">
-            <span className="font-mono text-[9px] text-yon-silver/50 tracking-[0.25em] uppercase">
-              Scroll to explore
-            </span>
-            <motion.div
-              className="w-px h-16 bg-gradient-to-b from-yon-silver/40 to-transparent origin-top"
-              animate={{ scaleY: [1, 0.4, 1] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </div>
-        </motion.div>
-
-        {/* Image count indicator */}
-        <motion.div
-          className="absolute bottom-8 right-8 md:right-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-        >
-          <span className="font-mono text-[10px] text-yon-silver/50 tracking-wider">
-            {collection.images.length} IMAGES
-          </span>
-        </motion.div>
       </section>
 
-      {/* ============================================
-          INTRO TEXT
-          ============================================ */}
-      <section className="py-32 md:py-48 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
-          <motion.p
-            className="font-serif text-2xl md:text-3xl lg:text-4xl text-yon-black leading-relaxed"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
-          >
-            <span className="transform inline-block rotate-[-0.3deg]">
-              {collection.description}
-            </span>
-          </motion.p>
-        </div>
-      </section>
 
       {/* ============================================
           IMAGE GALLERY - Varied Layouts
@@ -375,106 +309,6 @@ export default function CollectionDetailPage() {
         </div>
       </section>
 
-      {/* ============================================
-          CONCEPT SECTION
-          ============================================ */}
-      <section className="py-32 md:py-48 px-6 md:px-12 bg-yon-ivory">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 1 }}
-          >
-            {/* Decorative element */}
-            <span className="absolute -top-12 -left-4 md:-left-12 font-mono text-[100px] md:text-[160px] text-yon-platinum/30 leading-none select-none pointer-events-none">
-              &ldquo;
-            </span>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
-                Concept
-              </span>
-              <p className="mt-8 text-lg md:text-xl text-yon-steel leading-relaxed">
-                {collection.concept}
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ============================================
-          DETAILS SECTION
-          ============================================ */}
-      <section className="py-32 md:py-48 px-6 md:px-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 md:gap-24">
-            {/* Techniques */}
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
-            >
-              <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
-                Techniques
-              </span>
-              <ul className="mt-8 space-y-4">
-                {collection.techniques.map((technique, index) => (
-                  <motion.li
-                    key={index}
-                    className="flex items-start gap-4"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <span className="font-mono text-xs text-yon-grey mt-1">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-base text-yon-black">{technique}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Materials */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
-            >
-              <span className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase">
-                Materials
-              </span>
-              <ul className="mt-8 space-y-4">
-                {collection.materials.map((material, index) => (
-                  <motion.li
-                    key={index}
-                    className="flex items-start gap-4"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <span className="font-mono text-xs text-yon-grey mt-1">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-base text-yon-black">{material}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* ============================================
           NAVIGATION
