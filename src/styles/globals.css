@@ -1903,3 +1903,702 @@ html {
     transition: none;
   }
 }
+
+/* ============================================
+   THE YON - AVANT-GARDE FASHION SYSTEM
+   "Twisted yet harmonious"
+   ============================================ */
+
+/* ============================================
+   PART 2: Asymmetric Grid System
+   Breaking the perfect grid intentionally
+   ============================================ */
+
+/* Asymmetric 12-column grid variants */
+.grid-asymmetric {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+/* Asymmetric layouts - element breaking grid */
+.col-offset-left {
+  margin-left: -5%;
+}
+
+.col-offset-right {
+  margin-right: -5%;
+}
+
+.col-break-left {
+  margin-left: -10%;
+  width: 110%;
+}
+
+.col-break-right {
+  margin-right: -10%;
+  width: 110%;
+}
+
+/* Strategic whitespace - Section spacing */
+.section-breathe {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+}
+
+@media (min-width: 768px) {
+  .section-breathe {
+    padding-top: 12rem;
+    padding-bottom: 12rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-breathe {
+    padding-top: 16rem;
+    padding-bottom: 16rem;
+  }
+}
+
+/* Extreme spacing for hero sections */
+.section-hero-breathe {
+  padding-top: 6rem;
+  padding-bottom: 10rem;
+}
+
+@media (min-width: 768px) {
+  .section-hero-breathe {
+    padding-top: 8rem;
+    padding-bottom: 14rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-hero-breathe {
+    padding-top: 10rem;
+    padding-bottom: 20rem;
+  }
+}
+
+/* ============================================
+   PART 2: Extreme Typography System
+   Fashion editorial style
+   ============================================ */
+
+/* Hero title - Screen dominating */
+.text-hero-extreme {
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 20vw, 16rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-weight: 300;
+}
+
+/* Section title - Large but controlled */
+.text-section-extreme {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 12vw, 8rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+}
+
+/* Editorial quote style */
+.text-editorial {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Micro label - Almost invisible */
+.text-whisper {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--yon-grey);
+  opacity: 0.5;
+}
+
+/* Number tag - Margiela style */
+.text-number-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.4em;
+  color: var(--yon-grey);
+  opacity: 0.3;
+}
+
+/* Stat number - Emphasized */
+.text-stat-extreme {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-weight: 300;
+}
+
+/* ============================================
+   PART 2: Element Rotation & Tilt
+   "Twisted" visual language
+   ============================================ */
+
+/* Subtle rotations */
+.rotate-subtle-ccw { transform: rotate(-0.5deg); }
+.rotate-subtle-cw { transform: rotate(0.5deg); }
+.rotate-mild-ccw { transform: rotate(-1.5deg); }
+.rotate-mild-cw { transform: rotate(1.5deg); }
+.rotate-medium-ccw { transform: rotate(-2.5deg); }
+.rotate-medium-cw { transform: rotate(2.5deg); }
+
+/* Hover straighten effect */
+.rotate-hover-straighten {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rotate-hover-straighten:hover {
+  transform: rotate(0deg) !important;
+}
+
+/* ============================================
+   PART 2: Overlap & Layering System
+   Elements invading each other's space
+   ============================================ */
+
+/* Negative margins for overlap */
+.overlap-up-sm { margin-top: -2rem; }
+.overlap-up-md { margin-top: -4rem; }
+.overlap-up-lg { margin-top: -8rem; }
+.overlap-up-xl { margin-top: -12rem; }
+
+.overlap-left-sm { margin-left: -2rem; }
+.overlap-left-md { margin-left: -4rem; }
+.overlap-left-lg { margin-left: -8rem; }
+
+.overlap-right-sm { margin-right: -2rem; }
+.overlap-right-md { margin-right: -4rem; }
+.overlap-right-lg { margin-right: -8rem; }
+
+/* Z-index layers */
+.layer-back { z-index: 0; }
+.layer-base { z-index: 10; }
+.layer-content { z-index: 20; }
+.layer-emphasis { z-index: 30; }
+.layer-front { z-index: 40; }
+.layer-overlay { z-index: 100; }
+
+/* ============================================
+   PART 3: Advanced Image Treatments
+   Fashion photography presentation
+   ============================================ */
+
+/* Image with pull-out effect */
+.image-pull-left {
+  width: calc(100% + 4rem);
+  margin-left: -2rem;
+}
+
+.image-pull-right {
+  width: calc(100% + 4rem);
+  margin-right: -2rem;
+}
+
+@media (min-width: 1024px) {
+  .image-pull-left {
+    width: calc(100% + 8rem);
+    margin-left: -4rem;
+  }
+  .image-pull-right {
+    width: calc(100% + 8rem);
+    margin-right: -4rem;
+  }
+}
+
+/* Full bleed image */
+.image-full-bleed {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+/* Image with tilt and shadow */
+.image-editorial {
+  transform: rotate(-1deg);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-editorial:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.18);
+}
+
+/* Image mask reveal animation */
+.image-mask-reveal {
+  clip-path: inset(100% 0 0 0);
+  animation: maskReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes maskReveal {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ============================================
+   PART 3: Text Treatments
+   Editorial typography effects
+   ============================================ */
+
+/* Text with outline only */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--yon-black);
+}
+
+.text-outline-thin {
+  color: transparent;
+  -webkit-text-stroke: 0.5px var(--yon-grey);
+}
+
+/* Text gradient fade */
+.text-fade-right {
+  background: linear-gradient(to right, var(--yon-black), transparent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Split text hover effect container */
+.text-split-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-split-hover::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  overflow: hidden;
+  color: var(--yon-accent);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.text-split-hover:hover::before {
+  width: 100%;
+}
+
+/* ============================================
+   PART 3: Decorative Elements
+   Visual accents & details
+   ============================================ */
+
+/* Accent line - Horizontal */
+.accent-line-h {
+  width: 60px;
+  height: 1px;
+  background: var(--yon-accent);
+}
+
+.accent-line-h-long {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, var(--yon-accent), transparent);
+}
+
+/* Accent line - Vertical */
+.accent-line-v {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--yon-accent), transparent);
+}
+
+/* Decorative bracket */
+.deco-bracket::before,
+.deco-bracket::after {
+  font-family: var(--font-serif);
+  font-size: 1.5em;
+  color: var(--yon-grey);
+  opacity: 0.3;
+}
+
+.deco-bracket::before {
+  content: '[';
+  margin-right: 0.5em;
+}
+
+.deco-bracket::after {
+  content: ']';
+  margin-left: 0.5em;
+}
+
+/* Giant background number */
+.deco-giant-number {
+  font-family: var(--font-serif);
+  font-size: clamp(10rem, 30vw, 25rem);
+  line-height: 0.8;
+  color: var(--yon-grey);
+  opacity: 0.025;
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+}
+
+/* ============================================
+   PART 4: Card Variants
+   Collection & project cards
+   ============================================ */
+
+/* Editorial card - Asymmetric hover */
+.card-editorial {
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-editorial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.card-editorial:hover {
+  transform: translateY(-8px) rotate(0.5deg);
+}
+
+.card-editorial:hover::before {
+  border-color: var(--yon-accent);
+}
+
+/* Minimal card with number */
+.card-numbered {
+  position: relative;
+  padding-left: 3rem;
+}
+
+.card-numbered::before {
+  content: attr(data-number);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--yon-grey);
+  opacity: 0.4;
+}
+
+/* ============================================
+   PART 4: Button Variants
+   Sophisticated interactions
+   ============================================ */
+
+/* Minimal button with line */
+.btn-minimal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--yon-grey);
+  transition: color 0.3s ease;
+}
+
+.btn-minimal::before {
+  content: '';
+  width: 1rem;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-minimal:hover {
+  color: var(--yon-black);
+}
+
+.btn-minimal:hover::before {
+  width: 2rem;
+}
+
+/* Solid button with slide effect */
+.btn-solid {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yon-white);
+  background: var(--yon-black);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.btn-solid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--yon-accent);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+
+.btn-solid span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-solid:hover::before {
+  transform: translateX(0);
+}
+
+.btn-solid:hover {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   PART 5: Section Dividers
+   Visual rhythm breaks
+   ============================================ */
+
+/* Minimal divider */
+.divider-minimal {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    var(--yon-platinum) 20%,
+    var(--yon-platinum) 80%,
+    transparent
+  );
+}
+
+/* Asymmetric divider */
+.divider-asymmetric {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right,
+    var(--yon-accent),
+    var(--yon-platinum) 30%,
+    transparent
+  );
+}
+
+/* Numbered divider */
+.divider-numbered {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.divider-numbered::before {
+  content: attr(data-section);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--yon-grey);
+  opacity: 0.4;
+}
+
+.divider-numbered::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--yon-platinum), transparent);
+}
+
+/* ============================================
+   PART 5: Scroll Progress & Indicators
+   Navigation aids
+   ============================================ */
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--yon-accent);
+  transform-origin: left;
+  z-index: 9999;
+}
+
+/* Section indicator dots */
+.section-indicators {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.section-indicator {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--yon-grey);
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.section-indicator.active {
+  background: var(--yon-black);
+  border-color: var(--yon-black);
+}
+
+.section-indicator:hover {
+  border-color: var(--yon-accent);
+}
+
+/* ============================================
+   PART 6: Animation Utilities
+   Motion design system
+   ============================================ */
+
+/* Fade variants */
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-left {
+  animation: fadeLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale reveal */
+.animate-scale-reveal {
+  animation: scaleReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes scaleReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Rotation reveal */
+.animate-rotate-reveal {
+  animation: rotateReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes rotateReveal {
+  from {
+    opacity: 0;
+    transform: rotate(-5deg) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) translateY(0);
+  }
+}
+
+/* Stagger delay utilities */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
+.stagger-8 { animation-delay: 0.8s; }
+
+/* Line draw animation */
+.animate-line-draw {
+  animation: lineDraw 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes lineDraw {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ============================================
+   PART 6: Cursor Interaction Hints
+   Data attributes for custom cursor
+   ============================================ */
+
+[data-cursor="link"] {
+  cursor: pointer;
+}
+
+[data-cursor="image"] {
+  cursor: pointer;
+}
+
+[data-cursor="drag"] {
+  cursor: grab;
+}
+
+[data-cursor="drag"]:active {
+  cursor: grabbing;
+}
+
+/* ============================================
+   Print Styles
+   Portfolio-ready output
+   ============================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .text-hero-extreme,
+  .text-section-extreme {
+    font-size: 2rem !important;
+  }
+}
