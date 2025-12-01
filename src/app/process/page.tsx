@@ -274,7 +274,7 @@ export default function ProcessPage() {
       <section className="sticky top-16 md:top-20 z-40 bg-yon-white/95 backdrop-blur-sm border-y border-yon-platinum py-4 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-            {processStages.map((stage, i) => (
+            {processStages.map((stage) => (
               <a
                 key={stage.id}
                 href={`#stage-${stage.id}`}

@@ -3,9 +3,6 @@
 import { motion } from 'framer-motion'
 import { ReactNode, useEffect, useState } from 'react'
 
-// THE YON custom easing - smoother, more luxurious feel
-const yonEase = [0.22, 1, 0.36, 1] as const
-
 interface TemplateProps {
   children: ReactNode
 }
