@@ -36,9 +36,9 @@ THE YON (더 연) = "저 너머"
 - 카테고리: Construction, Material, Form, Process
 
 ### ABOUT (/about)
-- 디자이너 소개
-- 철학: "뒤틀렸지만 조화로운"
-- 스킬 시각화
+- 디자이너 소개 (미니멀)
+- 이름 + 도시 + 연락처만
+- 이미지가 말하게 한다
 
 ### CONTACT (/contact)
 - 미니멀 디자인
