@@ -21,7 +21,7 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['framer-motion', 'gsap', 'lenis', 'lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+    optimizePackageImports: ['framer-motion', 'gsap', 'lenis'],
   },
 
   // Performance optimizations
