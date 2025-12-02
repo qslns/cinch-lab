@@ -113,6 +113,9 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
             className="fixed inset-0 z-[99999] flex items-center justify-center"
             style={{ backgroundColor: 'rgba(10, 10, 10, 0.95)' }}
             onClick={closeLightbox}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Image gallery, showing image ${currentIndex + 1} of ${images.length}`}
           >
             {/* Close button */}
             <motion.button
@@ -275,7 +278,10 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
                     color: 'rgba(250, 250, 250, 0.5)',
                     letterSpacing: '0.15em',
                   }}
+                  aria-live="polite"
+                  aria-atomic="true"
                 >
+                  <span className="sr-only">Image </span>
                   {String(currentIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
                 </motion.div>
               )}

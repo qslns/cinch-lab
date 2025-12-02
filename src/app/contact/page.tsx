@@ -193,25 +193,29 @@ export default function ContactPage() {
               </motion.button>
             </div>
 
-            {/* Status Messages */}
-            {submitStatus === 'success' && (
-              <motion.p
-                className="font-mono text-xs text-yon-accent"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                Thank you for your message. We'll be in touch soon.
-              </motion.p>
-            )}
-            {submitStatus === 'error' && (
-              <motion.p
-                className="font-mono text-xs text-red-600"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                Something went wrong. Please try again.
-              </motion.p>
-            )}
+            {/* Status Messages - aria-live for screen reader announcements */}
+            <div aria-live="polite" aria-atomic="true">
+              {submitStatus === 'success' && (
+                <motion.p
+                  className="font-mono text-xs text-yon-accent"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  role="status"
+                >
+                  Thank you for your message. We'll be in touch soon.
+                </motion.p>
+              )}
+              {submitStatus === 'error' && (
+                <motion.p
+                  className="font-mono text-xs text-red-600"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  role="alert"
+                >
+                  Something went wrong. Please try again.
+                </motion.p>
+              )}
+            </div>
           </motion.form>
         </div>
       </section>
