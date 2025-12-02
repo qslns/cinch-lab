@@ -93,9 +93,11 @@ export default function CustomCursor() {
     // Initial setup
     setupInteractiveElements()
 
-    // Use MutationObserver to detect new elements
+    // Use MutationObserver to detect new elements (with debounce)
+    let debounceTimer: NodeJS.Timeout
     const observer = new MutationObserver(() => {
-      setupInteractiveElements()
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(setupInteractiveElements, 100)
     })
 
     observer.observe(document.body, {
@@ -108,6 +110,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
       observer.disconnect()
+      clearTimeout(debounceTimer)
     }
   }, [isMobile, isVisible, cursorX, cursorY])
 
@@ -217,11 +220,18 @@ export default function CustomCursor() {
         transition={{ duration: 0.15 }}
       />
 
-      {/* Hide default cursor globally */}
+      {/* Hide default cursor globally - only on pointer devices without reduced motion preference */}
       <style jsx global>{`
-        @media (pointer: fine) {
+        @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
           * {
             cursor: none !important;
+          }
+          /* Restore cursor for form elements for accessibility */
+          input, textarea, select, [contenteditable] {
+            cursor: text !important;
+          }
+          button, a, [role="button"] {
+            cursor: pointer !important;
           }
         }
       `}</style>

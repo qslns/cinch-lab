@@ -42,12 +42,12 @@ export default function Footer() {
             <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
               Navigate
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3 md:space-y-3">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group inline-flex items-center gap-2 text-base text-yon-silver hover:text-yon-white focus-visible:text-yon-white transition-colors duration-300 focus-ring"
+                    className="group inline-flex items-center gap-2 text-base text-yon-silver hover:text-yon-white focus-visible:text-yon-white transition-colors duration-300 focus-ring py-1"
                   >
                     <span>{item.label}</span>
                     <motion.span
@@ -68,7 +68,7 @@ export default function Footer() {
             <h4 className="font-mono text-xs text-yon-grey tracking-[0.2em] uppercase mb-6">
               Connect
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3 md:space-y-3">
               {socialItems.map((item) => (
                 <li key={item.href}>
                   <a
@@ -76,7 +76,7 @@ export default function Footer() {
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     aria-label={item.external ? `${item.label} (opens in new tab)` : item.label}
-                    className="group inline-flex items-center gap-2 text-base text-yon-silver hover:text-yon-white focus-visible:text-yon-white transition-colors duration-300 focus-ring"
+                    className="group inline-flex items-center gap-2 text-base text-yon-silver hover:text-yon-white focus-visible:text-yon-white transition-colors duration-300 focus-ring py-1"
                   >
                     <span>{item.label}</span>
                     {item.external && (

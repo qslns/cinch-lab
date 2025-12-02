@@ -1548,6 +1548,25 @@ html {
   }
 }
 
+/* Mobile font size optimization - ensure readability */
+@media (max-width: 640px) {
+  /* Ensure minimum readable font size for decorative text */
+  .font-mono {
+    font-size: max(0.625rem, 10px); /* At least 10px */
+  }
+
+  /* Improve contrast for low-opacity text on mobile */
+  .text-yon-grey\/20 {
+    --tw-text-opacity: 0.35;
+  }
+  .text-yon-grey\/30 {
+    --tw-text-opacity: 0.45;
+  }
+  .text-yon-grey\/40 {
+    --tw-text-opacity: 0.55;
+  }
+}
+
 /* ============================================
    Link Underline Hover Effects
    THE YON - Elegant Animation System
