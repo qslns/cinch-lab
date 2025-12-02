@@ -35,3 +35,10 @@ next-env.d.ts
 # images folder (too large for git)
 /웹 꾸미기 사진
 /public/웹 꾸미기 사진
+
+# lighthouse reports
+lighthouse*.json
+
+# Windows system files
+nul
+Thumbs.db
