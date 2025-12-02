@@ -10,8 +10,11 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+  // Error is already logged by Next.js error boundary
+  // Keep error in dependency for potential future error tracking service
   useEffect(() => {
-    console.error('Application error:', error)
+    // Optional: Send to error tracking service (Sentry, etc.)
+    // errorTrackingService.captureException(error)
   }, [error])
 
   return (
