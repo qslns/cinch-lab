@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Inter, Cormorant_Garamond, Space_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { SkipToMain, KeyboardNavigationIndicator } from '@/components/Accessibility'
 import { GoogleAnalytics } from '@/components/Analytics'
 import YonNav from '@/components/YonNav'
@@ -82,20 +84,45 @@ export const viewport = {
   themeColor: '#000000',
 }
 
-// JSON-LD structured data
+// JSON-LD structured data - Enhanced for SEO
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'ProfilePage',
-  mainEntity: {
-    '@type': 'Person',
-    name: 'Taehyun Lee',
-    url: 'https://theyon.vercel.app',
-    sameAs: [
-      'https://instagram.com/theyon_studio',
-    ],
-  },
-  dateCreated: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://theyon.vercel.app/#website',
+      url: 'https://theyon.vercel.app',
+      name: 'THE YON',
+      description: 'Experimental fashion portfolio by Taehyun Lee',
+      publisher: { '@id': 'https://theyon.vercel.app/#person' },
+      inLanguage: ['en', 'ko'],
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://theyon.vercel.app/#person',
+      name: 'Taehyun Lee',
+      alternateName: '이태현',
+      url: 'https://theyon.vercel.app',
+      image: 'https://theyon.vercel.app/images/profile.jpg',
+      jobTitle: 'Fashion Designer',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'THE YON',
+      },
+      sameAs: [
+        'https://instagram.com/theyon_studio',
+      ],
+      knowsAbout: ['Fashion Design', 'Pattern Making', 'Experimental Fashion'],
+    },
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://theyon.vercel.app/#collections',
+      url: 'https://theyon.vercel.app/collections',
+      name: 'Collections',
+      description: 'Experimental fashion collections by THE YON',
+      isPartOf: { '@id': 'https://theyon.vercel.app/#website' },
+    },
+  ],
 }
 
 export default function RootLayout({
@@ -129,6 +156,8 @@ export default function RootLayout({
             {children}
           </main>
         </ClientProviders>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
