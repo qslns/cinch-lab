@@ -21,6 +21,7 @@ export default function ContactPage() {
     email: '',
     type: '',
     message: '',
+    website: '', // Honeypot field for bot protection
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -51,7 +52,7 @@ export default function ContactPage() {
       }
 
       setSubmitStatus('success')
-      setFormData({ name: '', email: '', type: '', message: '' })
+      setFormData({ name: '', email: '', type: '', message: '', website: '' })
     } catch {
       setSubmitStatus('error')
     } finally {
@@ -176,6 +177,20 @@ export default function ContactPage() {
                 rows={5}
                 className="w-full px-0 py-3 font-mono text-sm text-yon-black bg-transparent border-b border-yon-platinum focus:border-yon-black focus:outline-none transition-colors resize-none placeholder:text-yon-grey/40"
                 placeholder="Your message..."
+              />
+            </div>
+
+            {/* Honeypot field - hidden from real users, bots will fill it */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
               />
             </div>
 

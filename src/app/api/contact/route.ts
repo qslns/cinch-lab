@@ -5,11 +5,20 @@ const submissions = new Map<string, number[]>()
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_SUBMISSIONS = 3 // Max 3 submissions per minute
 
+// Allowed origins for CSRF protection
+const ALLOWED_ORIGINS = [
+  'https://theyon.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:3001',
+]
+
 interface ContactFormData {
   name: string
   email: string
   type: string
   message: string
+  // Honeypot field (should be empty)
+  website?: string
 }
 
 function validateEmail(email: string): boolean {
@@ -49,6 +58,15 @@ function recordSubmission(ip: string): void {
 
 export async function POST(request: NextRequest) {
   try {
+    // CSRF Protection: Verify Origin header
+    const origin = request.headers.get('origin')
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+      return NextResponse.json(
+        { error: 'Invalid request origin.' },
+        { status: 403 }
+      )
+    }
+
     // Get client IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
                request.headers.get('x-real-ip') ||
@@ -64,6 +82,15 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body: ContactFormData = await request.json()
+
+    // Honeypot check: if website field is filled, it's likely a bot
+    if (body.website) {
+      // Silently reject but return success to confuse bots
+      return NextResponse.json(
+        { success: true, message: 'Message sent successfully.' },
+        { status: 200 }
+      )
+    }
 
     // Validate required fields
     if (!body.name || !body.email || !body.type || !body.message) {
