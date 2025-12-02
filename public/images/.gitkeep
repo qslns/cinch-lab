@@ -1,0 +1,32 @@
+# THE YON - Image Structure
+
+Place your images in the following folders:
+
+## /hero/
+- aw25-001.jpg (3:4 ratio)
+- ss25-002.jpg (4:5 ratio)
+- detail-003.jpg (1:1 ratio)
+- process-004.jpg (16:10 ratio)
+- toile-005.jpg (3:4 ratio)
+
+## /collections/
+- deconstruction/
+  - hero.jpg (16:9 ratio, main image)
+  - 01.jpg, 02.jpg, 03.jpg...
+- fragments/
+- void/
+
+## /archive/
+- research/
+- material/
+- form/
+- process/
+
+## /process/
+- sketches/
+- toile/
+- development/
+
+---
+Recommended: WebP format, max 1920px width
+LCP images should be optimized for fast loading
