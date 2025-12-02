@@ -8,50 +8,40 @@ import { useLightbox } from '@/components/ImageLightbox'
 // Custom easing
 const yonEase = [0.22, 1, 0.36, 1] as const
 
-// Skills data
-const skills = [
-  { name: 'Pattern Making', level: 95 },
-  { name: 'Draping', level: 90 },
-  { name: 'Tailoring', level: 88 },
-  { name: 'Fabric Manipulation', level: 85 },
-  { name: 'Concept Development', level: 92 },
-  { name: 'Technical Drawing', level: 80 },
-]
-
 // Scattered image placeholders - Images speak
 const scatteredImages = [
   {
     id: 1,
-    position: { top: '8%', left: '5%' },
-    size: 'w-[26vw] md:w-[18vw]',
-    rotation: -4,
+    position: { top: '12%', left: '8%' },
+    size: 'w-[28vw] md:w-[20vw]',
+    rotation: -3,
     variant: 'dark' as const,
     aspectRatio: '4/5',
     parallaxSpeed: 0.3,
   },
   {
     id: 2,
-    position: { top: '15%', right: '8%' },
-    size: 'w-[30vw] md:w-[22vw]',
-    rotation: 3,
+    position: { top: '18%', right: '10%' },
+    size: 'w-[32vw] md:w-[24vw]',
+    rotation: 2,
     variant: 'medium' as const,
     aspectRatio: '3/4',
     parallaxSpeed: 0.5,
   },
   {
     id: 3,
-    position: { top: '55%', left: '10%' },
-    size: 'w-[22vw] md:w-[14vw]',
-    rotation: -2,
+    position: { top: '58%', left: '15%' },
+    size: 'w-[24vw] md:w-[16vw]',
+    rotation: -1.5,
     variant: 'light' as const,
     aspectRatio: '1/1',
     parallaxSpeed: 0.4,
   },
   {
     id: 4,
-    position: { top: '60%', right: '15%' },
-    size: 'w-[28vw] md:w-[16vw]',
-    rotation: 5,
+    position: { top: '55%', right: '12%' },
+    size: 'w-[26vw] md:w-[18vw]',
+    rotation: 4,
     variant: 'dark' as const,
     aspectRatio: '4/5',
     parallaxSpeed: 0.6,
@@ -70,7 +60,7 @@ function FloatingImage({
   scrollYProgress,
   onImageClick,
 }: {
-  img: typeof scatteredImages[0]
+  img: (typeof scatteredImages)[0]
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
   onImageClick: () => void
 }) {
@@ -100,7 +90,7 @@ function FloatingImage({
         style={{ aspectRatio: img.aspectRatio }}
       >
         <div className="absolute inset-0 border border-current opacity-5" />
-        {/* Hover overlay with zoom icon */}
+        {/* Hover overlay */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
           style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
@@ -133,11 +123,11 @@ export default function AboutPage() {
   const { openLightbox } = useLightbox()
 
   // Prepare images for lightbox
-  const lightboxImages = scatteredImages.map(img => ({
+  const lightboxImages = scatteredImages.map((img) => ({
     src: `/images/about/${img.id}.jpg`,
     alt: `About image ${img.id}`,
-    caption: `Taehyun Lee - Image ${img.id}`,
-    captionKo: 'THE YON Studio',
+    caption: `Taehyun Lee`,
+    captionKo: 'THE YON',
     width: 1200,
     height: img.aspectRatio === '1/1' ? 1200 : img.aspectRatio === '3/4' ? 1600 : 1500,
   }))
@@ -148,186 +138,52 @@ export default function AboutPage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-yon-white">
-      {/* Hero - Images dominant, minimal text */}
+      {/* Full viewport - Images dominant */}
       <section className="relative min-h-[100vh] overflow-hidden">
         {/* Scattered images */}
         {scatteredImages.map((img, index) => (
-          <FloatingImage key={img.id} img={img} scrollYProgress={scrollYProgress} onImageClick={() => handleImageClick(index)} />
+          <FloatingImage
+            key={img.id}
+            img={img}
+            scrollYProgress={scrollYProgress}
+            onImageClick={() => handleImageClick(index)}
+          />
         ))}
 
-        {/* Minimal text - center */}
-        <div className="relative z-20 min-h-[100vh] flex items-center justify-center px-6">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5, ease: yonEase }}
-          >
-            <h1 className="font-serif text-3xl md:text-4xl text-yon-black">
-              Taehyun Lee
-            </h1>
-            <p className="mt-4 font-mono text-[10px] text-yon-grey/60 tracking-[0.3em] uppercase">
-              Tokyo
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Philosophy Section */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-yon-ivory">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: yonEase }}
-          >
-            <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase">
-              Philosophy
-            </span>
-            <h2 className="mt-6 font-serif text-2xl md:text-3xl text-yon-black leading-relaxed">
-              "Twisted yet harmonious"
-            </h2>
-            <p className="mt-6 font-serif text-lg md:text-xl text-yon-steel leading-relaxed italic">
-              뒤틀렸지만 조화로운
-            </p>
-            <p className="mt-8 text-yon-steel leading-relaxed max-w-2xl">
-              Every element slightly askew, yet the whole composition remains beautiful.
-              This is the essence of THE YON—finding harmony within deliberate imperfection,
-              creating garments that transcend conventional boundaries while maintaining an
-              inherent balance that speaks to the soul.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: yonEase }}
-          >
-            <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase">
-              Expertise
-            </span>
-            <h2 className="mt-6 font-serif text-2xl md:text-3xl text-yon-black">
-              Skills
-            </h2>
-          </motion.div>
-
-          <div className="mt-12 space-y-6">
-            {skills.map((skill, index) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: yonEase }}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-xs text-yon-black tracking-wider">
-                    {skill.name}
-                  </span>
-                  <span className="font-mono text-[10px] text-yon-grey/60">
-                    {skill.level}%
-                  </span>
-                </div>
-                <div className="h-[2px] bg-yon-platinum overflow-hidden">
-                  <motion.div
-                    className="h-full bg-yon-black"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: index * 0.1 + 0.3, ease: yonEase }}
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Education & Experience */}
-      <section className="py-24 md:py-32 px-6 md:px-10 lg:px-16 bg-yon-charcoal text-yon-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: yonEase }}
-            className="grid md:grid-cols-2 gap-12 md:gap-16"
-          >
-            {/* Education */}
-            <div>
-              <span className="font-mono text-[9px] text-yon-grey tracking-[0.3em] uppercase">
-                Education
-              </span>
-              <div className="mt-6 space-y-6">
-                <div>
-                  <h3 className="font-serif text-lg text-yon-white">Sasada Mode Seminar</h3>
-                  <p className="mt-1 font-mono text-xs text-yon-silver tracking-wider">
-                    Fashion Design · Tokyo
-                  </p>
-                  <p className="mt-1 font-mono text-[10px] text-yon-grey">
-                    2023 — Present
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Goals */}
-            <div>
-              <span className="font-mono text-[9px] text-yon-grey tracking-[0.3em] uppercase">
-                Aspirations
-              </span>
-              <div className="mt-6 space-y-4">
-                <p className="font-mono text-xs text-yon-silver tracking-wider">
-                  Central Saint Martins · MA Fashion
-                </p>
-                <p className="font-mono text-xs text-yon-silver tracking-wider">
-                  Parsons School of Design · MFA
-                </p>
-                <p className="font-mono text-xs text-yon-silver tracking-wider">
-                  Royal Academy of Fine Arts Antwerp
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact - Just the essentials */}
-      <section className="py-24 md:py-32 px-6 text-center">
+        {/* Name - top left */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
+          className="absolute top-24 left-6 md:left-10 lg:left-16 z-30"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: yonEase }}
         >
-          <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase block mb-8">
-            Get in Touch
-          </span>
+          <h1 className="font-serif text-2xl md:text-3xl text-yon-black">Taehyun Lee</h1>
+          <p className="mt-2 font-mono text-[10px] text-yon-grey/50 tracking-[0.3em] uppercase">
+            Tokyo
+          </p>
+        </motion.div>
+
+        {/* Contact - bottom right */}
+        <motion.div
+          className="absolute bottom-24 right-6 md:right-10 lg:right-16 z-30 text-right"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8, ease: yonEase }}
+        >
           <a
             href="mailto:hello@theyon.com"
-            className="group relative inline-block font-mono text-sm text-yon-black hover:text-yon-grey transition-colors duration-500 tracking-wider focus-ring"
+            className="block font-mono text-xs text-yon-grey/60 hover:text-yon-black transition-colors duration-300 tracking-wider focus-ring"
           >
-            <span>hello@theyon.com</span>
-            <span className="absolute bottom-0 left-0 w-0 h-px bg-current group-hover:w-full transition-all duration-300" />
+            hello@theyon.com
           </a>
-          <span className="block mt-6">
-            <a
-              href="https://instagram.com/theyon_studio"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative inline-block font-mono text-xs text-yon-grey/50 hover:text-yon-black transition-colors duration-500 tracking-wider focus-ring"
-            >
-              <span>@theyon_studio</span>
-              <span className="absolute bottom-0 left-0 w-0 h-px bg-current group-hover:w-full transition-all duration-300" />
-            </a>
-          </span>
+          <a
+            href="https://instagram.com/theyon_studio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mt-1 font-mono text-xs text-yon-grey/40 hover:text-yon-black transition-colors duration-300 tracking-wider focus-ring"
+          >
+            @theyon_studio
+          </a>
         </motion.div>
       </section>
 
