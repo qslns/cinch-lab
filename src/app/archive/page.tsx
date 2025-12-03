@@ -4,10 +4,8 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import { useLightbox } from '@/components/ImageLightbox'
-
-// Custom easing for smooth animations
-const yonEase = [0.22, 1, 0.36, 1] as const
 
 // Archive items - research and process documentation
 const archiveItems = [
@@ -104,379 +102,125 @@ const archiveItems = [
 const categories = ['All', 'Construction', 'Material', 'Form', 'Process', 'Experiment', 'Detail', 'Origin', 'Surface']
 const seasons = ['All', 'AW25', 'SS25', 'AW24', 'SS24']
 
-// View mode types
-type ViewMode = 'grid' | 'timeline' | 'list'
-
-function SearchIcon() {
-  return (
-    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-    </svg>
-  )
-}
-
-function GridIcon({ active }: { active: boolean }) {
-  return (
-    <svg className={`w-4 h-4 transition-colors ${active ? 'text-yon-black' : 'text-yon-grey'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-    </svg>
-  )
-}
-
-function TimelineIcon({ active }: { active: boolean }) {
-  return (
-    <svg className={`w-4 h-4 transition-colors ${active ? 'text-yon-black' : 'text-yon-grey'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
-    </svg>
-  )
-}
-
-function ListIcon({ active }: { active: boolean }) {
-  return (
-    <svg className={`w-4 h-4 transition-colors ${active ? 'text-yon-black' : 'text-yon-grey'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-    </svg>
-  )
-}
-
-// Grid View Item
-function GridItem({ item, index, onImageClick }: { item: typeof archiveItems[0]; index: number; onImageClick: () => void }) {
+// Dense archive card with scattered slots
+function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const rotations = [-3, 2, -2, 3, -1.5, 2.5, -2.5, 1.5]
+  const clips = ['irregular-1', 'torn-1', 'organic-1', 'torn-2', 'irregular-3', 'wave-1', 'corner-cut', 'notch-1'] as const
+  const decorations = ['tape-corner', 'pin', 'staple', 'corner-fold', 'tape-top', 'clip', 'pin-red', 'mark-x'] as const
 
   return (
     <motion.div
-      className="group relative"
+      className="relative"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
-      layout
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ transform: `rotate(${rotations[index % rotations.length] * 0.3}deg)` }}
     >
-      <motion.button
-        className="relative cursor-zoom-in w-full text-left"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={() => {
-          onImageClick()
-          setIsExpanded(!isExpanded)
-        }}
-        whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
-        data-cursor="image"
-        aria-label={`View ${item.title}`}
-      >
-        {/* Image placeholder with aspect ratio */}
-        <div
-          className="relative bg-yon-charcoal overflow-hidden"
-          style={{ aspectRatio: index % 3 === 0 ? '3/4' : index % 3 === 1 ? '4/5' : '1/1' }}
-        >
-          {/* Gradient overlay on hover */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-yon-black/80 via-yon-black/20 to-transparent"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-          />
+      {/* Main slot - clickable */}
+      <div className="relative cursor-pointer" style={{ minHeight: '280px' }}>
+        <Slot
+          label={item.title}
+          size={index % 3 === 0 ? 'medium' : index % 3 === 1 ? 'small' : 'medium-wide'}
+          rotation={rotations[index % rotations.length]}
+          clip={clips[index % clips.length]}
+          shadow={isHovered ? 'dramatic' : 'offset'}
+          zIndex={10}
+          grayscale={item.status === 'archived'}
+          sepia={item.status === 'archived' && index % 2 === 0}
+          decoration={decorations[index % decorations.length]}
+          annotationNumber={item.id}
+          texture={index % 4 === 0 ? 'grain' : undefined}
+        />
 
-          {/* ID in center */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <motion.span
-              className="font-mono text-[10px] text-yon-silver/40 tracking-[0.2em]"
-              animate={{ opacity: isHovered ? 0.2 : 0.4 }}
-            >
-              {item.id}
-            </motion.span>
-          </div>
+        {/* Secondary accent slot */}
+        <Slot
+          label={item.category}
+          size="tiny"
+          position="absolute"
+          top="65%"
+          right="-8%"
+          rotation={-rotations[index % rotations.length] * 2}
+          border="thin"
+          zIndex={15}
+          decoration={index % 2 === 0 ? 'pin' : 'clip'}
+        />
 
-          {/* Status indicator */}
-          <div className="absolute top-3 right-3">
-            <motion.div
-              className={`w-2 h-2 rounded-full ${item.status === 'current' ? 'bg-yon-accent' : 'bg-yon-silver/40'}`}
-              animate={{ scale: isHovered && item.status === 'current' ? [1, 1.3, 1] : 1 }}
-              transition={{ duration: 0.6, repeat: isHovered && item.status === 'current' ? Infinity : 0 }}
-            />
-          </div>
+        {/* Swatch */}
+        <Slot
+          label={item.season}
+          size="swatch"
+          position="absolute"
+          bottom="-5%"
+          left="10%"
+          rotation={rotations[(index + 3) % rotations.length]}
+          border={index % 2 === 0 ? 'rough' : 'accent'}
+          zIndex={12}
+        />
+      </div>
 
-          {/* Hover content */}
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 p-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-            transition={{ duration: 0.3 }}
+      {/* Info below */}
+      <div className="mt-4 px-2">
+        <div className="flex items-center gap-3">
+          <span
+            className={`font-mono uppercase tracking-[0.15em] ${
+              item.status === 'current' ? 'text-yon-accent' : 'text-yon-grey/40'
+            }`}
+            style={{ fontSize: '0.5rem' }}
           >
-            <span className="font-mono text-[9px] text-yon-accent tracking-[0.15em] uppercase">
-              {item.category}
-            </span>
-            <h3 className="mt-1 font-serif text-lg text-yon-white leading-tight">
-              {item.title}
-            </h3>
-          </motion.div>
-
-          {/* Zoom icon on hover */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="#FAFAFA"
-              strokeWidth="1.5"
-            >
-              <circle cx="14" cy="14" r="8" />
-              <line x1="20" y1="20" x2="26" y2="26" />
-              <line x1="14" y1="11" x2="14" y2="17" />
-              <line x1="11" y1="14" x2="17" y2="14" />
-            </svg>
-          </motion.div>
-
-          {/* Border */}
-          <div className="absolute inset-0 border border-yon-silver/10" />
-        </div>
-
-        {/* Below card info */}
-        <div className="mt-3 flex items-center justify-between">
-          <span className="font-mono text-[9px] text-yon-grey tracking-[0.1em]">
-            {item.season}
+            {item.status === 'current' ? '● Current' : '○ Archived'}
           </span>
-          <span className="font-mono text-[9px] text-yon-grey/60 tracking-wider">
+          <span className="font-mono text-yon-grey/30" style={{ fontSize: '0.5rem' }}>
             {item.date}
           </span>
         </div>
-      </motion.button>
 
-      {/* Expanded details */}
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            className="mt-4 p-4 bg-yon-ivory border border-yon-platinum"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <p className="text-sm text-yon-steel leading-relaxed">
-              {item.longDescription}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {item.tags.map(tag => (
-                <span
-                  key={tag}
-                  className="px-2 py-1 font-mono text-[8px] text-yon-grey tracking-wider bg-yon-white border border-yon-platinum"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
-}
-
-// Timeline View Item
-function TimelineItem({ item, index, isLast }: { item: typeof archiveItems[0]; index: number; isLast: boolean }) {
-  const [isHovered, setIsHovered] = useState(false)
-
-  return (
-    <motion.div
-      className="relative pl-8 md:pl-12"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-    >
-      {/* Timeline line */}
-      {!isLast && (
-        <div className="absolute left-[7px] md:left-[11px] top-6 bottom-0 w-px bg-yon-platinum" />
-      )}
-
-      {/* Timeline dot */}
-      <motion.div
-        className={`absolute left-0 md:left-1 top-1.5 w-[14px] h-[14px] rounded-full border-2 ${
-          item.status === 'current'
-            ? 'border-yon-accent bg-yon-accent'
-            : 'border-yon-silver bg-yon-white'
-        }`}
-        animate={{ scale: isHovered ? 1.3 : 1 }}
-        transition={{ duration: 0.2 }}
-      />
-
-      {/* Content */}
-      <div
-        className="pb-10 md:pb-14 cursor-pointer"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <span className="font-mono text-[10px] text-yon-grey tracking-wider">
-            {item.date}
-          </span>
-          <span className="w-3 h-px bg-yon-silver" />
-          <span className="font-mono text-[10px] text-yon-grey/60 tracking-[0.1em] uppercase">
-            {item.category}
-          </span>
-        </div>
-
-        <motion.h3
-          className="font-serif text-xl md:text-2xl text-yon-black leading-tight"
-          animate={{ x: isHovered ? 8 : 0, color: isHovered ? '#8B7355' : '#0A0A0A' }}
-          transition={{ duration: 0.3 }}
+        <h3
+          className="font-serif text-yon-black mt-2"
+          style={{
+            fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+            transform: `rotate(${rotations[index % rotations.length] * 0.2}deg)`
+          }}
         >
           {item.title}
-        </motion.h3>
+        </h3>
 
-        <motion.p
-          className="mt-2 text-sm text-yon-steel leading-relaxed max-w-lg"
-          initial={{ opacity: 0.7 }}
-          animate={{ opacity: isHovered ? 1 : 0.7 }}
+        <p
+          className="font-sans text-yon-grey/60 mt-2"
+          style={{ fontSize: '0.75rem', lineHeight: 1.6 }}
         >
           {item.description}
-        </motion.p>
+        </p>
 
         {/* Tags */}
         <motion.div
           className="mt-3 flex flex-wrap gap-2"
           initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
+          animate={{ opacity: isHovered ? 1 : 0.5 }}
         >
           {item.tags.map(tag => (
             <span
               key={tag}
-              className="px-2 py-0.5 font-mono text-[8px] text-yon-grey tracking-wider bg-yon-ivory"
+              className="font-mono text-yon-grey/50 uppercase tracking-wider"
+              style={{ fontSize: '0.45rem' }}
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </motion.div>
-
-        {/* Season badge */}
-        <div className="absolute right-0 top-0">
-          <span className={`font-mono text-[10px] tracking-wider ${
-            item.status === 'current' ? 'text-yon-accent' : 'text-yon-grey/40'
-          }`}>
-            {item.season}
-          </span>
-        </div>
       </div>
-    </motion.div>
-  )
-}
-
-// List View Item
-function ListItem({ item, index }: { item: typeof archiveItems[0]; index: number }) {
-  const [isHovered, setIsHovered] = useState(false)
-
-  return (
-    <motion.div
-      className="group border-b border-yon-platinum last:border-b-0"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.03 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="py-5 md:py-6 grid md:grid-cols-12 gap-4 items-center cursor-pointer">
-        {/* ID & Status */}
-        <div className="md:col-span-2 flex items-center gap-3">
-          <motion.div
-            className={`w-1.5 h-1.5 rounded-full ${item.status === 'current' ? 'bg-yon-accent' : 'bg-yon-silver/40'}`}
-            animate={{ scale: isHovered && item.status === 'current' ? [1, 1.5, 1] : 1 }}
-            transition={{ duration: 0.4 }}
-          />
-          <span className="font-mono text-[10px] text-yon-grey tracking-wider">
-            {item.id}
-          </span>
-        </div>
-
-        {/* Title */}
-        <motion.div
-          className="md:col-span-4"
-          animate={{ x: isHovered ? 4 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <h3 className="font-serif text-lg text-yon-black group-hover:text-yon-accent transition-colors duration-300">
-            {item.title}
-          </h3>
-        </motion.div>
-
-        {/* Category */}
-        <div className="md:col-span-2 hidden md:block">
-          <span className="font-mono text-[10px] text-yon-grey tracking-[0.1em] uppercase">
-            {item.category}
-          </span>
-        </div>
-
-        {/* Season */}
-        <div className="md:col-span-2 hidden md:block">
-          <span className="font-mono text-[10px] text-yon-grey tracking-wider">
-            {item.season}
-          </span>
-        </div>
-
-        {/* Date & Arrow */}
-        <div className="md:col-span-2 flex items-center justify-between">
-          <span className="font-mono text-[10px] text-yon-grey/60 tracking-wider">
-            {item.date}
-          </span>
-          <motion.span
-            className="text-yon-grey"
-            animate={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0.3 }}
-            transition={{ duration: 0.2 }}
-          >
-            →
-          </motion.span>
-        </div>
-      </div>
-
-      {/* Expanded preview on hover */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            className="pb-4 md:pl-[16.67%]"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <p className="text-sm text-yon-steel leading-relaxed max-w-xl">
-              {item.description}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }
 
 export default function ArchivePage() {
-  const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedSeason, setSelectedSeason] = useState('All')
   const { openLightbox } = useLightbox()
-
-  // Prepare lightbox images from archive items
-  const getLightboxImages = (items: typeof archiveItems) => items.map(item => ({
-    src: `/images/archive/${item.id.toLowerCase()}.jpg`,
-    alt: item.title,
-    caption: item.title,
-    captionKo: item.description,
-    width: 1200,
-    height: 1600,
-  }))
-
-  const handleImageClick = (items: typeof archiveItems, index: number) => {
-    openLightbox(getLightboxImages(items), index)
-  }
 
   // Filter items
   const filteredItems = useMemo(() => {
@@ -493,229 +237,765 @@ export default function ArchivePage() {
     })
   }, [searchQuery, selectedCategory, selectedSeason])
 
-  // Group by season for timeline view
-  const groupedBySeason = useMemo(() => {
-    const grouped: Record<string, typeof archiveItems> = {}
-    filteredItems.forEach(item => {
-      if (!grouped[item.season]) grouped[item.season] = []
-      grouped[item.season].push(item)
-    })
-    return grouped
-  }, [filteredItems])
-
   return (
-    <div className="min-h-screen bg-yon-white">
-      {/* Hero Header - Minimal */}
-      <section className="relative pt-32 md:pt-48 pb-16 md:pb-24 px-6 md:px-8 lg:px-12">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: yonEase }}
-          >
-            {/* Label */}
-            <div className="flex items-center gap-4 mb-12">
-              <span className="font-mono text-[9px] text-yon-grey/50 tracking-[0.3em] uppercase">
-                Archive
-              </span>
-              <span className="w-8 h-px bg-yon-grey/20" />
-            </div>
+    <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
+      {/* ============================================
+          HERO - Dense Deconstructivist Header
+          ============================================ */}
+      <section className="relative min-h-[85vh] w-full overflow-hidden texture-grain">
+        {/* Background typography - ARCHIVE */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '10%',
+            left: '-12%',
+            fontSize: 'clamp(14rem, 35vw, 55rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.025,
+            lineHeight: 0.8,
+            letterSpacing: '-0.05em',
+            color: '#0A0A0A',
+            transform: 'rotate(-4deg)',
+          }}
+          aria-hidden="true"
+        >
+          ARCHIVE
+        </span>
 
-            {/* Title */}
-            <h1 className="font-serif text-2xl md:text-3xl text-yon-black">
+        {/* Secondary background - DOC */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: '8%',
+            right: '-8%',
+            fontSize: 'clamp(10rem, 25vw, 40rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.02,
+            color: '#8B7355',
+            transform: 'rotate(6deg)',
+          }}
+          aria-hidden="true"
+        >
+          DOC
+        </span>
+
+        {/* Third layer - vertical */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '25%',
+            right: '5%',
+            fontSize: 'clamp(4rem, 10vw, 12rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.015,
+            letterSpacing: '0.3em',
+            color: '#0A0A0A',
+            writingMode: 'vertical-rl',
+          }}
+          aria-hidden="true"
+        >
+          RESEARCH
+        </span>
+
+        {/* ===== HERO SLOTS - 12 scattered ===== */}
+
+        {/* Slot 1: Hero left bleeding */}
+        <Slot
+          label="ARCHIVE / MAIN"
+          size="hero"
+          position="absolute"
+          top="5%"
+          left="-5%"
+          rotation={-3}
+          clip="irregular-1"
+          shadow="offset-xl"
+          zIndex={18}
+          bleed="left"
+          bleedAmount="lg"
+          grayscale
+          annotationNumber="A-001"
+          texture="grain"
+        />
+
+        {/* Slot 2: Large right */}
+        <Slot
+          label="PROCESS"
+          size="large"
+          position="absolute"
+          top="8%"
+          right="5%"
+          rotation={4}
+          clip="torn-1"
+          shadow="float"
+          zIndex={16}
+          decoration="tape-corner"
+          bleed="right"
+          bleedAmount="md"
+          sepia
+        />
+
+        {/* Slot 3: Medium overlapping */}
+        <Slot
+          label="RESEARCH"
+          size="medium"
+          position="absolute"
+          top="40%"
+          left="35%"
+          rotation={-5}
+          clip="organic-1"
+          shadow="dramatic"
+          zIndex={22}
+          overlapX={80}
+          decoration="staple"
+        />
+
+        {/* Slot 4: Small */}
+        <Slot
+          label="STUDY"
+          size="small"
+          position="absolute"
+          top="55%"
+          right="20%"
+          rotation={6}
+          clip="torn-2"
+          zIndex={20}
+          grayscale
+          decoration="pin"
+        />
+
+        {/* Slot 5: Medium-wide */}
+        <Slot
+          label="DOCUMENT"
+          size="medium-wide"
+          position="absolute"
+          bottom="20%"
+          left="5%"
+          rotation={2}
+          clip="wave-1"
+          shadow="soft"
+          zIndex={14}
+          decoration="corner-fold"
+        />
+
+        {/* Slot 6-8: Swatch cluster */}
+        <Slot
+          label="A"
+          size="swatch"
+          position="absolute"
+          top="28%"
+          left="55%"
+          rotation={12}
+          border="rough"
+          zIndex={24}
+          decoration="tape-top"
+        />
+
+        <Slot
+          label="B"
+          size="swatch"
+          position="absolute"
+          top="32%"
+          left="62%"
+          rotation={-8}
+          border="accent"
+          zIndex={26}
+          overlapX={20}
+        />
+
+        <Slot
+          label="C"
+          size="swatch"
+          position="absolute"
+          top="36%"
+          left="68%"
+          rotation={5}
+          border="thin"
+          zIndex={25}
+          overlapX={25}
+        />
+
+        {/* Slot 9: Tiny */}
+        <Slot
+          label="REF"
+          size="tiny"
+          position="absolute"
+          bottom="35%"
+          right="35%"
+          rotation={-10}
+          clip="notch-1"
+          zIndex={28}
+          decoration="clip"
+        />
+
+        {/* Slot 10: Small bottom right bleeding */}
+        <Slot
+          label="NOTES"
+          size="small"
+          position="absolute"
+          bottom="15%"
+          right="-2%"
+          rotation={-4}
+          clip="irregular-4"
+          zIndex={15}
+          bleed="right"
+          bleedAmount="md"
+          grayscale
+        />
+
+        {/* Slot 11: Micro accents */}
+        <Slot
+          label="01"
+          size="micro"
+          position="absolute"
+          top="48%"
+          left="72%"
+          rotation={15}
+          border="thin"
+          zIndex={30}
+          decoration="pin-red"
+        />
+
+        {/* Slot 12: Medium-tall */}
+        <Slot
+          label="HISTORY"
+          size="medium-tall"
+          position="absolute"
+          bottom="5%"
+          left="45%"
+          rotation={-1.5}
+          clip="corner-cut"
+          shadow="deep"
+          zIndex={12}
+          sepia
+        />
+
+        {/* Scattered Annotations */}
+        <AnnotationLabel
+          text="archive"
+          position={{ top: '12%', left: '28%' }}
+          rotation={-3}
+          variant="tag"
+        />
+        <AnnotationLabel
+          text="research notes"
+          position={{ top: '38%', right: '8%' }}
+          rotation={5}
+          variant="handwritten"
+        />
+        <AnnotationLabel
+          text="DOC"
+          position={{ bottom: '28%', left: '25%' }}
+          rotation={-2}
+          variant="stamp"
+        />
+        <AnnotationLabel
+          text="reference"
+          position={{ top: '65%', left: '58%' }}
+          rotation={8}
+          variant="default"
+        />
+
+        {/* Main title */}
+        <div className="relative z-35 pt-44 pb-16 px-8 md:px-16 lg:px-24">
+          <div className="max-w-5xl">
+            <span
+              className="block font-mono uppercase tracking-[0.4em] text-yon-grey/40"
+              style={{ fontSize: '0.55rem' }}
+            >
+              THE YON — Archive
+            </span>
+
+            <h1
+              className="font-serif text-yon-black mt-6"
+              style={{
+                fontSize: 'clamp(3rem, 7vw, 6rem)',
+                letterSpacing: '-0.03em',
+                transform: 'rotate(-1.5deg)',
+                lineHeight: 0.95,
+              }}
+            >
               Archive
             </h1>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Controls Section */}
-      <section className="sticky top-16 md:top-20 z-40 bg-yon-white/95 backdrop-blur-sm border-y border-yon-platinum py-4 px-6 md:px-8 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+            <p
+              className="font-sans text-yon-grey/60 mt-10 max-w-lg"
+              style={{
+                fontSize: '0.9rem',
+                lineHeight: 1.8,
+                marginLeft: '3rem',
+                transform: 'rotate(0.5deg)',
+              }}
+            >
+              Research, process documentation, and experiments.
+              Every failure is a step toward discovery. Nothing is wasted.
+            </p>
+
+            <span
+              className="block font-mono text-yon-grey/30 mt-4"
+              style={{
+                fontSize: '0.55rem',
+                letterSpacing: '0.2em',
+                marginLeft: '3rem',
+              }}
+            >
+              아카이브 — 리서치 & 프로세스
+            </span>
+          </div>
+        </div>
+
+        {/* Filter controls */}
+        <div className="relative z-35 px-8 md:px-16 lg:px-24 pb-12">
+          <div className="flex flex-wrap items-center gap-6">
             {/* Search */}
             <div className="relative flex-1 max-w-xs">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-yon-grey">
-                <SearchIcon />
-              </div>
               <input
                 type="text"
-                placeholder="Search archive..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 font-mono text-xs text-yon-black bg-transparent border border-yon-platinum focus:border-yon-grey focus:outline-none transition-colors placeholder:text-yon-grey/50"
+                className="w-full px-4 py-2.5 font-mono text-yon-black bg-transparent border-b border-yon-grey/20 focus:border-yon-black focus:outline-none transition-colors placeholder:text-yon-grey/40"
+                style={{ fontSize: '0.75rem' }}
               />
             </div>
 
-            {/* Filters */}
-            <div className="flex items-center gap-4 overflow-x-auto pb-1 md:pb-0">
-              {/* Category filter */}
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="font-mono text-[10px] text-yon-grey tracking-wider bg-transparent border border-yon-platinum px-3 py-2 focus:border-yon-grey focus:outline-none cursor-pointer"
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+            <span className="text-yon-grey/20">|</span>
 
-              {/* Season filter */}
-              <select
-                value={selectedSeason}
-                onChange={(e) => setSelectedSeason(e.target.value)}
-                className="font-mono text-[10px] text-yon-grey tracking-wider bg-transparent border border-yon-platinum px-3 py-2 focus:border-yon-grey focus:outline-none cursor-pointer"
-              >
-                {seasons.map(season => (
-                  <option key={season} value={season}>{season}</option>
-                ))}
-              </select>
+            {/* Category filter */}
+            <div className="flex items-center gap-2 overflow-x-auto">
+              {categories.slice(0, 5).map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`font-mono uppercase tracking-[0.15em] transition-all whitespace-nowrap ${
+                    selectedCategory === cat
+                      ? 'text-yon-black border-b border-yon-black'
+                      : 'text-yon-grey/40 hover:text-yon-grey/70'
+                  }`}
+                  style={{ fontSize: '0.55rem', paddingBottom: '2px' }}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
 
-            {/* View mode toggle */}
-            <div className="flex items-center gap-1 border border-yon-platinum p-1">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 transition-colors ${viewMode === 'grid' ? 'bg-yon-ivory' : 'hover:bg-yon-ivory/50'}`}
-                aria-label="Grid view"
-              >
-                <GridIcon active={viewMode === 'grid'} />
-              </button>
-              <button
-                onClick={() => setViewMode('timeline')}
-                className={`p-2 transition-colors ${viewMode === 'timeline' ? 'bg-yon-ivory' : 'hover:bg-yon-ivory/50'}`}
-                aria-label="Timeline view"
-              >
-                <TimelineIcon active={viewMode === 'timeline'} />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 transition-colors ${viewMode === 'list' ? 'bg-yon-ivory' : 'hover:bg-yon-ivory/50'}`}
-                aria-label="List view"
-              >
-                <ListIcon active={viewMode === 'list'} />
-              </button>
+            <span className="text-yon-grey/20">|</span>
+
+            {/* Season filter */}
+            <div className="flex items-center gap-2">
+              {seasons.map(season => (
+                <button
+                  key={season}
+                  onClick={() => setSelectedSeason(season)}
+                  className={`font-mono uppercase tracking-[0.15em] transition-all ${
+                    selectedSeason === season
+                      ? 'text-yon-black border-b border-yon-black'
+                      : 'text-yon-grey/40 hover:text-yon-grey/70'
+                  }`}
+                  style={{ fontSize: '0.55rem', paddingBottom: '2px' }}
+                >
+                  {season}
+                </button>
+              ))}
             </div>
 
             {/* Results count */}
-            <span className="font-mono text-[10px] text-yon-grey/60 tracking-wider whitespace-nowrap">
-              {filteredItems.length} results
+            <span
+              className="ml-auto font-mono text-yon-grey/30"
+              style={{ fontSize: '0.55rem', letterSpacing: '0.1em' }}
+            >
+              {filteredItems.length} Items
             </span>
           </div>
         </div>
       </section>
 
-      {/* Archive Content */}
-      <section className="py-12 md:py-16 px-6 md:px-8 lg:px-12">
-        <div className="max-w-6xl mx-auto">
-          <AnimatePresence mode="wait">
-            {/* Grid View */}
-            {viewMode === 'grid' && (
-              <motion.div
-                key="grid"
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {filteredItems.map((item, index) => (
-                  <GridItem key={item.id} item={item} index={index} onImageClick={() => handleImageClick(filteredItems, index)} />
-                ))}
-              </motion.div>
-            )}
+      {/* ============================================
+          ARCHIVE GRID - Dense Scattered Layout
+          ============================================ */}
+      <section className="relative py-20 px-8 md:px-16 lg:px-24 texture-paper">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '5%',
+            right: '-10%',
+            fontSize: 'clamp(10rem, 25vw, 38rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.015,
+            color: '#0A0A0A',
+            transform: 'rotate(5deg)',
+          }}
+          aria-hidden="true"
+        >
+          01—08
+        </span>
 
-            {/* Timeline View */}
-            {viewMode === 'timeline' && (
-              <motion.div
-                key="timeline"
-                className="max-w-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {Object.entries(groupedBySeason).map(([season, items]) => (
-                  <div key={season} className="mb-12">
-                    <div className="flex items-center gap-4 mb-8">
-                      <span className="font-mono text-sm text-yon-black tracking-wider">
-                        {season}
-                      </span>
-                      <span className="flex-1 h-px bg-yon-platinum" />
-                    </div>
-                    {items.map((item, index) => (
-                      <TimelineItem
-                        key={item.id}
-                        item={item}
-                        index={index}
-                        isLast={index === items.length - 1}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </motion.div>
-            )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${selectedCategory}-${selectedSeason}-${searchQuery}`}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {filteredItems.map((item, index) => (
+              <ArchiveCard key={item.id} item={item} index={index} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
-            {/* List View */}
-            {viewMode === 'list' && (
-              <motion.div
-                key="list"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* List header */}
-                <div className="hidden md:grid md:grid-cols-12 gap-4 pb-3 border-b border-yon-charcoal mb-2">
-                  <span className="md:col-span-2 font-mono text-[9px] text-yon-grey tracking-[0.1em] uppercase">ID</span>
-                  <span className="md:col-span-4 font-mono text-[9px] text-yon-grey tracking-[0.1em] uppercase">Title</span>
-                  <span className="md:col-span-2 font-mono text-[9px] text-yon-grey tracking-[0.1em] uppercase">Category</span>
-                  <span className="md:col-span-2 font-mono text-[9px] text-yon-grey tracking-[0.1em] uppercase">Season</span>
-                  <span className="md:col-span-2 font-mono text-[9px] text-yon-grey tracking-[0.1em] uppercase">Date</span>
-                </div>
-                {filteredItems.map((item, index) => (
-                  <ListItem key={item.id} item={item} index={index} />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Empty state */}
-          {filteredItems.length === 0 && (
-            <motion.div
-              className="py-20 text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+        {/* Empty state */}
+        {filteredItems.length === 0 && (
+          <motion.div
+            className="py-24 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <span className="font-mono text-yon-grey/50" style={{ fontSize: '0.75rem' }}>
+              No results found
+            </span>
+            <button
+              onClick={() => {
+                setSelectedCategory('All')
+                setSelectedSeason('All')
+                setSearchQuery('')
+              }}
+              className="block mx-auto mt-6 font-mono uppercase tracking-[0.15em] text-yon-black hover:text-yon-accent transition-colors border-b border-yon-grey/20 hover:border-yon-black pb-1"
+              style={{ fontSize: '0.6rem' }}
             >
-              <span className="font-mono text-[10px] text-yon-grey tracking-wider">
-                No results found
-              </span>
-              <p className="mt-2 text-yon-steel">
-                Try adjusting your search or filters
-              </p>
-            </motion.div>
-          )}
+              Reset Filters →
+            </button>
+          </motion.div>
+        )}
+      </section>
+
+      {/* ============================================
+          FAILURES SECTION - Important Documentation
+          ============================================ */}
+      <section className="relative min-h-[80vh] w-full py-24 overflow-hidden bg-yon-ivory/30 texture-grain">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '5%',
+            right: '-10%',
+            fontSize: 'clamp(12rem, 30vw, 45rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.025,
+            lineHeight: 0.8,
+            color: '#8B7355',
+            transform: 'rotate(5deg)',
+          }}
+          aria-hidden="true"
+        >
+          FAIL
+        </span>
+
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: '10%',
+            left: '-5%',
+            fontSize: 'clamp(5rem, 12vw, 18rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.02,
+            color: '#0A0A0A',
+            transform: 'rotate(-90deg)',
+            transformOrigin: 'left bottom',
+          }}
+          aria-hidden="true"
+        >
+          ESSENTIAL
+        </span>
+
+        <div className="relative z-10 px-8 md:px-16 lg:px-24">
+          <div className="max-w-4xl">
+            <span
+              className="block font-mono uppercase tracking-[0.3em] text-yon-accent/60"
+              style={{ fontSize: '0.55rem' }}
+            >
+              Essential Documentation
+            </span>
+
+            <h2
+              className="font-serif text-yon-accent mt-6"
+              style={{
+                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+                letterSpacing: '-0.02em',
+                transform: 'rotate(-1deg)',
+              }}
+            >
+              Failures
+            </h2>
+
+            <p
+              className="font-sans text-yon-grey/60 mt-8 max-w-lg"
+              style={{
+                fontSize: '0.9rem',
+                lineHeight: 1.8,
+                marginLeft: '2rem',
+                transform: 'rotate(0.5deg)',
+              }}
+            >
+              Every failed experiment teaches something. Rejected ideas, broken toiles, wrong paths —
+              all documented as essential steps toward discovery.
+            </p>
+          </div>
+
+          {/* Failure slots - 10 scattered grayscale */}
+          <div className="relative mt-20" style={{ minHeight: '50vh' }}>
+            <Slot
+              label="REJECTED / 01"
+              size="large"
+              position="absolute"
+              top="0%"
+              left="0%"
+              rotation={-3}
+              clip="torn-2"
+              shadow="offset"
+              grayscale
+              zIndex={10}
+              annotationNumber="F-001"
+              decoration="mark-x"
+            />
+
+            <Slot
+              label="FAILED TOILE"
+              size="medium"
+              position="absolute"
+              top="10%"
+              right="10%"
+              rotation={5}
+              clip="irregular-5"
+              grayscale
+              zIndex={15}
+              decoration="tape-corner"
+            />
+
+            <Slot
+              label="WRONG PATH"
+              size="small"
+              position="absolute"
+              top="30%"
+              left="35%"
+              rotation={-8}
+              clip="organic-2"
+              grayscale
+              zIndex={18}
+              overlapX={60}
+              decoration="staple"
+            />
+
+            <Slot
+              label="ITERATION 03"
+              size="medium-wide"
+              position="absolute"
+              top="45%"
+              left="5%"
+              rotation={2}
+              clip="wave-2"
+              grayscale
+              sepia
+              zIndex={12}
+              decoration="pin"
+            />
+
+            <Slot
+              label="DISCARDED"
+              size="small-square"
+              position="absolute"
+              top="50%"
+              right="20%"
+              rotation={-6}
+              border="rough"
+              grayscale
+              zIndex={16}
+              decoration="mark-x"
+            />
+
+            <Slot
+              label="X"
+              size="swatch"
+              position="absolute"
+              top="70%"
+              left="65%"
+              rotation={-10}
+              border="rough"
+              grayscale
+              zIndex={22}
+              decoration="mark-x"
+            />
+
+            <Slot
+              label="X"
+              size="swatch"
+              position="absolute"
+              top="75%"
+              left="72%"
+              rotation={8}
+              border="thin"
+              grayscale
+              zIndex={23}
+              overlapX={20}
+            />
+
+            <Slot
+              label="NO"
+              size="micro"
+              position="absolute"
+              top="38%"
+              right="40%"
+              rotation={15}
+              border="accent"
+              grayscale
+              zIndex={25}
+            />
+
+            <Slot
+              label="?"
+              size="micro"
+              position="absolute"
+              bottom="20%"
+              left="25%"
+              rotation={-12}
+              border="dashed"
+              grayscale
+              zIndex={24}
+            />
+
+            <Slot
+              label="LESSON"
+              size="tiny"
+              position="absolute"
+              bottom="15%"
+              right="35%"
+              rotation={10}
+              clip="notch-2"
+              grayscale
+              zIndex={20}
+              decoration="corner-fold"
+            />
+
+            {/* Annotations */}
+            <AnnotationLabel
+              text="learn from this"
+              position={{ top: '25%', left: '55%' }}
+              rotation={4}
+              variant="handwritten"
+            />
+            <AnnotationLabel
+              text="REJECTED"
+              position={{ top: '60%', right: '25%' }}
+              rotation={-3}
+              variant="stamp"
+            />
+            <AnnotationLabel
+              text="try again"
+              position={{ bottom: '25%', left: '48%' }}
+              rotation={6}
+              variant="default"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Collections link - minimal */}
-      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+      {/* ============================================
+          CTA - Collections Link
+          ============================================ */}
+      <section className="relative min-h-[50vh] w-full flex items-center justify-center overflow-hidden texture-grain">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '25%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: 'clamp(12rem, 30vw, 45rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.015,
+            color: '#0A0A0A',
+          }}
+          aria-hidden="true"
+        >
+          →
+        </span>
+
+        <div className="text-center px-8 z-10">
+          <span
+            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
+            style={{ fontSize: '0.55rem' }}
           >
-            <Link
-              href="/collections"
-              className="group inline-flex items-center gap-3 px-6 py-3 border border-yon-black font-mono text-[10px] tracking-[0.12em] uppercase text-yon-black hover:bg-yon-black hover:text-yon-white transition-all duration-300"
-            >
-              <span>Collections</span>
-              <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-            </Link>
-          </motion.div>
+            See the results
+          </span>
+
+          <h2
+            className="font-serif text-yon-black mt-6"
+            style={{
+              fontSize: 'clamp(1.8rem, 4.5vw, 3rem)',
+              transform: 'rotate(-1deg)',
+            }}
+          >
+            Collections
+          </h2>
+
+          <Link
+            href="/collections"
+            className="inline-block mt-10 font-mono uppercase tracking-[0.2em] text-yon-grey/50 hover:text-yon-black transition-colors border-b border-yon-grey/20 hover:border-yon-black pb-1"
+            style={{ fontSize: '0.6rem' }}
+          >
+            View Collections →
+          </Link>
         </div>
+
+        {/* Accent slots */}
+        <Slot
+          label="RESULT"
+          size="small"
+          position="absolute"
+          bottom="15%"
+          right="10%"
+          rotation={-5}
+          clip="irregular-3"
+          zIndex={5}
+          decoration="tape-corner"
+        />
+
+        <Slot
+          label="FINAL"
+          size="tiny"
+          position="absolute"
+          top="20%"
+          left="15%"
+          rotation={8}
+          border="accent"
+          zIndex={6}
+        />
+
+        <Slot
+          label="→"
+          size="micro"
+          position="absolute"
+          bottom="30%"
+          left="25%"
+          rotation={-3}
+          border="thin"
+          zIndex={7}
+        />
+
+        <AnnotationLabel
+          text="explore"
+          position={{ top: '35%', right: '20%' }}
+          rotation={4}
+          variant="handwritten"
+        />
       </section>
 
       <Footer />

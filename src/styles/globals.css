@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Deconstructivist Design System */
+@import './deconstructivist.css';
+
 /* ============================================
    THE YON Design System
    "Twisted yet harmonious"

@@ -1,178 +1,379 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import Link from 'next/link'
 import Footer from '@/components/Footer'
-import { useLightbox } from '@/components/ImageLightbox'
-
-// Custom easing
-const yonEase = [0.22, 1, 0.36, 1] as const
-
-// Scattered image placeholders - Images speak
-const scatteredImages = [
-  {
-    id: 1,
-    position: { top: '12%', left: '8%' },
-    size: 'w-[28vw] md:w-[20vw]',
-    rotation: -3,
-    variant: 'dark' as const,
-    aspectRatio: '4/5',
-    parallaxSpeed: 0.3,
-  },
-  {
-    id: 2,
-    position: { top: '18%', right: '10%' },
-    size: 'w-[32vw] md:w-[24vw]',
-    rotation: 2,
-    variant: 'medium' as const,
-    aspectRatio: '3/4',
-    parallaxSpeed: 0.5,
-  },
-  {
-    id: 3,
-    position: { top: '58%', left: '15%' },
-    size: 'w-[24vw] md:w-[16vw]',
-    rotation: -1.5,
-    variant: 'light' as const,
-    aspectRatio: '1/1',
-    parallaxSpeed: 0.4,
-  },
-  {
-    id: 4,
-    position: { top: '55%', right: '12%' },
-    size: 'w-[26vw] md:w-[18vw]',
-    rotation: 4,
-    variant: 'dark' as const,
-    aspectRatio: '4/5',
-    parallaxSpeed: 0.6,
-  },
-]
-
-const variantStyles = {
-  light: 'bg-yon-platinum',
-  medium: 'bg-yon-silver',
-  dark: 'bg-yon-charcoal',
-}
-
-// Floating image component
-function FloatingImage({
-  img,
-  scrollYProgress,
-  onImageClick,
-}: {
-  img: (typeof scatteredImages)[0]
-  scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress']
-  onImageClick: () => void
-}) {
-  const y = useTransform(scrollYProgress, [0, 1], [0, -100 * img.parallaxSpeed])
-
-  return (
-    <motion.button
-      className={`absolute ${img.size} cursor-zoom-in group`}
-      style={{
-        ...img.position,
-        y,
-        zIndex: img.id,
-      }}
-      initial={{ opacity: 0, scale: 0.9, rotate: img.rotation - 5 }}
-      animate={{ opacity: 1, scale: 1, rotate: img.rotation }}
-      transition={{
-        duration: 1.2,
-        delay: 0.3 + img.id * 0.15,
-        ease: yonEase,
-      }}
-      onClick={onImageClick}
-      data-cursor="image"
-      aria-label={`View image ${img.id}`}
-    >
-      <div
-        className={`relative ${variantStyles[img.variant]} overflow-hidden`}
-        style={{ aspectRatio: img.aspectRatio }}
-      >
-        <div className="absolute inset-0 border border-current opacity-5" />
-        {/* Hover overlay */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-          style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
-        >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 32 32"
-            fill="none"
-            stroke={img.variant === 'dark' ? '#FAFAFA' : '#0A0A0A'}
-            strokeWidth="1.5"
-          >
-            <circle cx="14" cy="14" r="8" />
-            <line x1="20" y1="20" x2="26" y2="26" />
-            <line x1="14" y1="11" x2="14" y2="17" />
-            <line x1="11" y1="14" x2="17" y2="14" />
-          </svg>
-        </div>
-      </div>
-    </motion.button>
-  )
-}
+import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 
 export default function AboutPage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
-  const { openLightbox } = useLightbox()
-
-  // Prepare images for lightbox
-  const lightboxImages = scatteredImages.map((img) => ({
-    src: `/images/about/${img.id}.jpg`,
-    alt: `About image ${img.id}`,
-    caption: `Taehyun Lee`,
-    captionKo: 'THE YON',
-    width: 1200,
-    height: img.aspectRatio === '1/1' ? 1200 : img.aspectRatio === '3/4' ? 1600 : 1500,
-  }))
-
-  const handleImageClick = (index: number) => {
-    openLightbox(lightboxImages, index)
-  }
-
   return (
-    <div ref={containerRef} className="min-h-screen bg-yon-white">
-      {/* Full viewport - Images dominant */}
-      <section className="relative min-h-[100vh] overflow-hidden">
-        {/* Scattered images */}
-        {scatteredImages.map((img, index) => (
-          <FloatingImage
-            key={img.id}
-            img={img}
-            scrollYProgress={scrollYProgress}
-            onImageClick={() => handleImageClick(index)}
-          />
-        ))}
-
-        {/* Name - top left */}
-        <motion.div
-          className="absolute top-24 left-6 md:left-10 lg:left-16 z-30"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5, ease: yonEase }}
+    <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
+      {/* ============================================
+          SECTION 1: Portrait Collage Hero
+          Dense deconstructivist layout - 15+ slots
+          ============================================ */}
+      <section className="relative min-h-screen w-full overflow-hidden texture-grain">
+        {/* Background typography - Name */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '15%',
+            left: '-15%',
+            fontSize: 'clamp(14rem, 35vw, 55rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.025,
+            lineHeight: 0.8,
+            letterSpacing: '-0.05em',
+            color: '#0A0A0A',
+            transform: 'rotate(-5deg)',
+          }}
+          aria-hidden="true"
         >
-          <h1 className="font-serif text-2xl md:text-3xl text-yon-black">Taehyun Lee</h1>
-          <p className="mt-2 font-mono text-[10px] text-yon-grey/50 tracking-[0.3em] uppercase">
-            Tokyo
-          </p>
-        </motion.div>
+          TAEHYUN
+        </span>
+
+        {/* Secondary background - LEE */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: '10%',
+            right: '-10%',
+            fontSize: 'clamp(10rem, 25vw, 40rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.02,
+            letterSpacing: '0.1em',
+            color: '#8B7355',
+            transform: 'rotate(8deg)',
+          }}
+          aria-hidden="true"
+        >
+          LEE
+        </span>
+
+        {/* Third layer - vertical */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '25%',
+            right: '5%',
+            fontSize: 'clamp(4rem, 10vw, 12rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.015,
+            letterSpacing: '0.3em',
+            color: '#0A0A0A',
+            writingMode: 'vertical-rl',
+          }}
+          aria-hidden="true"
+        >
+          DESIGNER
+        </span>
+
+        {/* ===== HERO SLOTS - 15 scattered portrait collage ===== */}
+
+        {/* Slot 1: Main portrait - large, left bleeding */}
+        <Slot
+          label="PORTRAIT"
+          size="hero"
+          position="absolute"
+          top="5%"
+          left="-5%"
+          rotation={-2.5}
+          clip="irregular-1"
+          shadow="offset-xl"
+          zIndex={20}
+          bleed="left"
+          bleedAmount="lg"
+          annotationNumber="001"
+          texture="grain"
+        />
+
+        {/* Slot 2: Studio shot - right top */}
+        <Slot
+          label="STUDIO"
+          size="large"
+          position="absolute"
+          top="3%"
+          right="5%"
+          rotation={3}
+          clip="torn-1"
+          shadow="float"
+          zIndex={18}
+          decoration="tape-corner"
+          bleed="right"
+          bleedAmount="md"
+        />
+
+        {/* Slot 3: Medium - hands at work */}
+        <Slot
+          label="HANDS"
+          size="medium"
+          position="absolute"
+          top="40%"
+          right="15%"
+          rotation={-4}
+          clip="organic-1"
+          shadow="dramatic"
+          zIndex={25}
+          overlapX={80}
+          decoration="staple"
+        />
+
+        {/* Slot 4: Process shot */}
+        <Slot
+          label="PROCESS"
+          size="small"
+          position="absolute"
+          bottom="25%"
+          left="5%"
+          rotation={6}
+          clip="torn-2"
+          shadow="offset"
+          zIndex={22}
+          grayscale
+          decoration="pin"
+        />
+
+        {/* Slot 5: Tokyo reference */}
+        <Slot
+          label="TOKYO"
+          size="tiny"
+          position="absolute"
+          top="55%"
+          left="35%"
+          rotation={-10}
+          clip="notch-1"
+          zIndex={28}
+          decoration="clip"
+        />
+
+        {/* Slot 6: Sasada badge */}
+        <Slot
+          label="SASADA"
+          size="swatch"
+          position="absolute"
+          top="22%"
+          right="35%"
+          rotation={15}
+          border="accent"
+          zIndex={24}
+          decoration="tape-top"
+        />
+
+        {/* Slot 7: Small square - materials */}
+        <Slot
+          label="MATERIAL"
+          size="small-square"
+          position="absolute"
+          bottom="15%"
+          right="8%"
+          rotation={-3}
+          clip="diagonal-1"
+          shadow="soft"
+          zIndex={19}
+          decoration="corner-fold"
+        />
+
+        {/* Slot 8: Detail - right bleeding */}
+        <Slot
+          label="DETAIL"
+          size="small"
+          position="absolute"
+          top="65%"
+          right="-3%"
+          rotation={-8}
+          clip="irregular-4"
+          zIndex={15}
+          bleed="right"
+          bleedAmount="md"
+          sepia
+        />
+
+        {/* Slot 9: Micro accent */}
+        <Slot
+          label="01"
+          size="micro"
+          position="absolute"
+          top="35%"
+          left="50%"
+          rotation={12}
+          border="thin"
+          zIndex={30}
+          decoration="pin-red"
+        />
+
+        {/* Slot 10: Medium-wide - sketchbook */}
+        <Slot
+          label="SKETCHBOOK"
+          size="medium-wide"
+          position="absolute"
+          top="70%"
+          left="20%"
+          rotation={2}
+          clip="wave-1"
+          shadow="float"
+          zIndex={16}
+          overlapY={60}
+        />
+
+        {/* Slot 11: Swatch cluster 1 */}
+        <Slot
+          label="WOOL"
+          size="swatch"
+          position="absolute"
+          top="78%"
+          left="55%"
+          rotation={-5}
+          border="rough"
+          zIndex={26}
+        />
+
+        {/* Slot 12: Swatch cluster 2 */}
+        <Slot
+          label="SILK"
+          size="swatch"
+          position="absolute"
+          top="82%"
+          left="62%"
+          rotation={8}
+          border="accent"
+          zIndex={27}
+          overlapX={25}
+        />
+
+        {/* Slot 13: Tiny-wide reference */}
+        <Slot
+          label="REF"
+          size="tiny-wide"
+          position="absolute"
+          top="12%"
+          left="45%"
+          rotation={-6}
+          clip="irregular-5"
+          zIndex={21}
+          grayscale
+        />
+
+        {/* Slot 14: Top bleeding */}
+        <Slot
+          label="MOOD"
+          size="small"
+          position="absolute"
+          top="-2%"
+          left="60%"
+          rotation={4}
+          clip="trapezoid"
+          shadow="offset"
+          zIndex={14}
+          bleed="top"
+          bleedAmount="md"
+        />
+
+        {/* Slot 15: Medium-tall */}
+        <Slot
+          label="FORM"
+          size="medium-tall"
+          position="absolute"
+          bottom="10%"
+          left="42%"
+          rotation={-1.5}
+          clip="corner-cut"
+          shadow="deep"
+          zIndex={17}
+          contrast
+        />
+
+        {/* Scattered Annotations */}
+        <AnnotationLabel
+          text="designer"
+          position={{ top: '8%', left: '30%' }}
+          rotation={-3}
+          variant="tag"
+        />
+        <AnnotationLabel
+          text="self portrait"
+          position={{ top: '48%', left: '8%' }}
+          rotation={5}
+          variant="handwritten"
+        />
+        <AnnotationLabel
+          text="2024"
+          position={{ bottom: '35%', right: '30%' }}
+          rotation={-2}
+          variant="stamp"
+        />
+        <AnnotationLabel
+          text="tokyo"
+          position={{ top: '60%', right: '5%' }}
+          rotation={8}
+          variant="default"
+        />
+
+        {/* Name and info - positioned asymmetrically */}
+        <div
+          className="absolute z-40"
+          style={{
+            bottom: '8%',
+            left: '6%',
+            transform: 'rotate(-1deg)',
+          }}
+        >
+          <span
+            className="block font-mono uppercase tracking-[0.4em] text-yon-grey/40"
+            style={{ fontSize: '0.55rem' }}
+          >
+            Designer
+          </span>
+
+          <h1
+            className="font-serif text-yon-black mt-4"
+            style={{
+              fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Taehyun Lee
+          </h1>
+
+          <span
+            className="block font-mono text-yon-grey/30 mt-2"
+            style={{ fontSize: '0.65rem', letterSpacing: '0.15em' }}
+          >
+            이태현
+          </span>
+
+          <div className="mt-6 flex items-center gap-4">
+            <span
+              className="font-mono uppercase tracking-[0.2em] text-yon-grey/40"
+              style={{ fontSize: '0.55rem' }}
+            >
+              Seoul / Tokyo
+            </span>
+            <span className="w-6 h-px bg-yon-grey/20" />
+            <span
+              className="font-mono uppercase tracking-[0.2em] text-yon-grey/40"
+              style={{ fontSize: '0.55rem' }}
+            >
+              SASADA
+            </span>
+          </div>
+        </div>
 
         {/* Contact - bottom right */}
-        <motion.div
-          className="absolute bottom-24 right-6 md:right-10 lg:right-16 z-30 text-right"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8, ease: yonEase }}
+        <div
+          className="absolute z-40"
+          style={{
+            bottom: '8%',
+            right: '6%',
+            textAlign: 'right',
+            transform: 'rotate(0.5deg)',
+          }}
         >
           <a
             href="mailto:hello@theyon.com"
-            className="block font-mono text-xs text-yon-grey/60 hover:text-yon-black transition-colors duration-300 tracking-wider focus-ring"
+            className="block font-mono text-yon-grey/50 hover:text-yon-black transition-colors"
+            style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}
           >
             hello@theyon.com
           </a>
@@ -180,11 +381,692 @@ export default function AboutPage() {
             href="https://instagram.com/theyon_studio"
             target="_blank"
             rel="noopener noreferrer"
-            className="block mt-1 font-mono text-xs text-yon-grey/40 hover:text-yon-black transition-colors duration-300 tracking-wider focus-ring"
+            className="block font-mono text-yon-grey/30 hover:text-yon-black transition-colors mt-2"
+            style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
           >
             @theyon_studio
           </a>
-        </motion.div>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-40">
+          <span
+            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/30"
+            style={{ fontSize: '0.5rem' }}
+          >
+            Scroll
+          </span>
+          <span className="block text-yon-grey/20 mt-2 text-center">↓</span>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION 2: Philosophy / Statement
+          Dense moodboard style with 8 slots
+          ============================================ */}
+      <section className="relative min-h-[90vh] w-full flex items-center overflow-hidden texture-paper">
+        {/* Background letter */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '5%',
+            right: '-20%',
+            fontSize: 'clamp(25rem, 60vw, 85rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.02,
+            lineHeight: 0.8,
+            color: '#0A0A0A',
+          }}
+          aria-hidden="true"
+        >
+          Y
+        </span>
+
+        {/* Secondary background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: '8%',
+            left: '-5%',
+            fontSize: 'clamp(5rem, 12vw, 18rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.02,
+            letterSpacing: '0.2em',
+            color: '#0A0A0A',
+            transform: 'rotate(-90deg)',
+            transformOrigin: 'left bottom',
+          }}
+          aria-hidden="true"
+        >
+          PHILOSOPHY
+        </span>
+
+        <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-5xl">
+          <p
+            className="font-serif italic text-yon-black/90 leading-relaxed"
+            style={{
+              fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+              transform: 'rotate(-1.5deg)',
+              maxWidth: '42ch',
+            }}
+          >
+            &ldquo;Twisted yet harmonious&rdquo;
+          </p>
+
+          <p
+            className="font-mono uppercase tracking-[0.25em] text-yon-grey/50 mt-10"
+            style={{
+              fontSize: '0.65rem',
+              marginLeft: '3rem',
+              transform: 'rotate(0.5deg)',
+            }}
+          >
+            뒤틀렸지만 조화로운
+          </p>
+
+          <p
+            className="font-sans text-yon-grey/70 mt-14 max-w-lg leading-relaxed"
+            style={{
+              fontSize: '0.9rem',
+              marginLeft: '5rem',
+              transform: 'rotate(0.8deg)',
+            }}
+          >
+            Every element slightly askew, yet together they form perfect beauty.
+            Fashion that exists beyond time and space—unreachable, ideal.
+            The pursuit of something just beyond reach.
+          </p>
+        </div>
+
+        {/* Floating slots - 8 slots */}
+        <Slot
+          label="MOOD"
+          size="medium"
+          position="absolute"
+          top="8%"
+          right="8%"
+          rotation={6}
+          clip="irregular-6"
+          shadow="float"
+          zIndex={8}
+          grayscale
+          decoration="tape-top"
+        />
+
+        <Slot
+          label="VISION"
+          size="small"
+          position="absolute"
+          top="30%"
+          right="20%"
+          rotation={-4}
+          clip="torn-3"
+          zIndex={10}
+          decoration="pin"
+          overlapY={40}
+        />
+
+        <Slot
+          label="REF"
+          size="tiny"
+          position="absolute"
+          bottom="25%"
+          right="25%"
+          rotation={-10}
+          border="thin"
+          zIndex={12}
+        />
+
+        <Slot
+          label="TEXTURE"
+          size="swatch"
+          position="absolute"
+          top="55%"
+          right="40%"
+          rotation={12}
+          border="rough"
+          zIndex={9}
+          decoration="staple"
+        />
+
+        <Slot
+          label="SKETCH"
+          size="small"
+          position="absolute"
+          bottom="12%"
+          right="5%"
+          rotation={-5}
+          clip="organic-2"
+          zIndex={7}
+          bleed="right"
+          bleedAmount="sm"
+          sepia
+        />
+
+        <Slot
+          label="IDEA"
+          size="tiny-wide"
+          position="absolute"
+          top="40%"
+          right="32%"
+          rotation={-8}
+          clip="notch-2"
+          zIndex={11}
+        />
+
+        <Slot
+          label="02"
+          size="micro"
+          position="absolute"
+          top="50%"
+          right="48%"
+          rotation={15}
+          border="accent"
+          zIndex={14}
+        />
+
+        <Slot
+          label="FORM"
+          size="small-square"
+          position="absolute"
+          bottom="30%"
+          right="12%"
+          rotation={3}
+          clip="diagonal-2"
+          zIndex={6}
+          decoration="corner-fold"
+        />
+
+        <AnnotationLabel
+          text="essential"
+          position={{ bottom: '45%', left: '58%' }}
+          rotation={3}
+          variant="handwritten"
+        />
+        <AnnotationLabel
+          text="beyond"
+          position={{ top: '20%', right: '40%' }}
+          rotation={-4}
+          variant="tag"
+        />
+      </section>
+
+      {/* ============================================
+          SECTION 3: Education / Background
+          Dense documentation style with 6 slots
+          ============================================ */}
+      <section className="relative min-h-[80vh] py-24 px-8 md:px-16 lg:px-24 overflow-hidden texture-grain">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: '5%',
+            left: '-10%',
+            fontSize: 'clamp(10rem, 22vw, 35rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.02,
+            lineHeight: 0.8,
+            color: '#0A0A0A',
+            transform: 'rotate(-3deg)',
+          }}
+          aria-hidden="true"
+        >
+          2024
+        </span>
+
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '10%',
+            right: '-8%',
+            fontSize: 'clamp(8rem, 18vw, 28rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.015,
+            color: '#8B7355',
+            transform: 'rotate(5deg)',
+          }}
+          aria-hidden="true"
+        >
+          SASADA
+        </span>
+
+        <div className="relative z-10 max-w-4xl">
+          <span
+            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
+            style={{ fontSize: '0.55rem' }}
+          >
+            Background
+          </span>
+
+          <div className="mt-14 space-y-12">
+            {/* Education */}
+            <div style={{ transform: 'rotate(-0.5deg)' }}>
+              <span
+                className="font-mono text-yon-accent/60"
+                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
+              >
+                EDUCATION
+              </span>
+              <h3
+                className="font-serif text-yon-black mt-3"
+                style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)' }}
+              >
+                SASADA Fashion School
+              </h3>
+              <span
+                className="block font-mono text-yon-grey/40 mt-2"
+                style={{ fontSize: '0.65rem', letterSpacing: '0.15em' }}
+              >
+                Tokyo — 2023–Present
+              </span>
+            </div>
+
+            {/* Target */}
+            <div style={{ marginLeft: '4rem', transform: 'rotate(0.3deg)' }}>
+              <span
+                className="font-mono text-yon-accent/60"
+                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
+              >
+                PORTFOLIO TARGET
+              </span>
+              <p
+                className="font-sans text-yon-grey/60 mt-3"
+                style={{ fontSize: '0.85rem', lineHeight: 1.7 }}
+              >
+                CSM, Parsons, Royal Academy of Antwerp
+              </p>
+              <span
+                className="block font-mono text-yon-grey/30 mt-2"
+                style={{ fontSize: '0.5rem', letterSpacing: '0.15em' }}
+              >
+                대학원 포트폴리오
+              </span>
+            </div>
+
+            {/* Focus */}
+            <div style={{ transform: 'rotate(-0.3deg)' }}>
+              <span
+                className="font-mono text-yon-accent/60"
+                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
+              >
+                FOCUS
+              </span>
+              <p
+                className="font-sans text-yon-grey/60 mt-3"
+                style={{ fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '40ch' }}
+              >
+                Experimental tailoring, pattern deconstruction, material exploration, conceptual
+                fashion design
+              </p>
+            </div>
+
+            {/* Values */}
+            <div style={{ marginLeft: '2rem', transform: 'rotate(0.5deg)' }}>
+              <span
+                className="font-mono text-yon-accent/60"
+                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
+              >
+                VALUES
+              </span>
+              <p
+                className="font-sans text-yon-grey/60 mt-3"
+                style={{ fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '35ch' }}
+              >
+                Imperfection as aesthetic. Process over product. Research-driven creativity.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Side slots - 6 scattered */}
+        <Slot
+          label="SKETCH"
+          size="large"
+          position="absolute"
+          top="5%"
+          right="5%"
+          rotation={-3}
+          clip="torn-1"
+          shadow="offset"
+          zIndex={10}
+          annotationNumber="S-001"
+          decoration="tape-corner"
+        />
+
+        <Slot
+          label="TOILE"
+          size="medium"
+          position="absolute"
+          top="40%"
+          right="10%"
+          rotation={5}
+          clip="irregular-2"
+          shadow="float"
+          zIndex={12}
+          sepia
+        />
+
+        <Slot
+          label="PATTERN"
+          size="small"
+          position="absolute"
+          bottom="20%"
+          right="25%"
+          rotation={-6}
+          clip="organic-1"
+          zIndex={14}
+          grayscale
+          decoration="pin"
+        />
+
+        <Slot
+          label="NOTE"
+          size="tiny"
+          position="absolute"
+          top="65%"
+          right="40%"
+          rotation={10}
+          border="thin"
+          zIndex={16}
+          decoration="clip"
+        />
+
+        <Slot
+          label="SAMPLE"
+          size="swatch"
+          position="absolute"
+          bottom="30%"
+          right="8%"
+          rotation={-8}
+          border="rough"
+          zIndex={11}
+          decoration="tape-top"
+        />
+
+        <Slot
+          label="03"
+          size="micro"
+          position="absolute"
+          top="30%"
+          right="35%"
+          rotation={12}
+          border="accent"
+          zIndex={18}
+        />
+
+        <AnnotationLabel
+          text="research"
+          position={{ top: '15%', right: '30%' }}
+          rotation={-3}
+          variant="handwritten"
+        />
+        <AnnotationLabel
+          text="WIP"
+          position={{ bottom: '40%', right: '15%' }}
+          rotation={5}
+          variant="stamp"
+        />
+      </section>
+
+      {/* ============================================
+          SECTION 4: Work Process Section
+          New dense moodboard
+          ============================================ */}
+      <section className="relative min-h-[70vh] w-full py-24 overflow-hidden bg-yon-ivory/30 texture-paper">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '10%',
+            left: '-8%',
+            fontSize: 'clamp(8rem, 18vw, 28rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.02,
+            color: '#0A0A0A',
+            transform: 'rotate(-5deg)',
+          }}
+          aria-hidden="true"
+        >
+          WORK
+        </span>
+
+        <div className="relative z-10 px-8 md:px-16 lg:px-24">
+          <div className="max-w-4xl">
+            <span
+              className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
+              style={{ fontSize: '0.55rem' }}
+            >
+              Process
+            </span>
+
+            <h2
+              className="font-serif text-yon-black mt-6"
+              style={{
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                letterSpacing: '-0.02em',
+                transform: 'rotate(-0.5deg)',
+              }}
+            >
+              How I Work
+            </h2>
+
+            <p
+              className="font-sans text-yon-grey/60 mt-8 max-w-md"
+              style={{
+                fontSize: '0.9rem',
+                lineHeight: 1.8,
+                marginLeft: '2rem',
+                transform: 'rotate(0.3deg)',
+              }}
+            >
+              Research-driven design process. From concept to toile to final piece.
+              Embracing mistakes as creative opportunities.
+            </p>
+          </div>
+
+          {/* Process slots grid */}
+          <div className="relative mt-16" style={{ minHeight: '40vh' }}>
+            <Slot
+              label="RESEARCH"
+              size="medium"
+              position="absolute"
+              top="0"
+              left="0"
+              rotation={-2}
+              clip="irregular-1"
+              shadow="offset"
+              zIndex={15}
+              annotationNumber="01"
+              decoration="pin"
+            />
+
+            <Slot
+              label="SKETCH"
+              size="small"
+              position="absolute"
+              top="10%"
+              left="30%"
+              rotation={4}
+              clip="torn-2"
+              zIndex={18}
+              decoration="tape-top"
+            />
+
+            <Slot
+              label="PROTOTYPE"
+              size="medium"
+              position="absolute"
+              top="5%"
+              right="15%"
+              rotation={-3}
+              clip="organic-2"
+              shadow="float"
+              zIndex={16}
+              annotationNumber="02"
+            />
+
+            <Slot
+              label="ITERATE"
+              size="small-square"
+              position="absolute"
+              bottom="20%"
+              left="20%"
+              rotation={6}
+              clip="diagonal-1"
+              zIndex={20}
+              decoration="staple"
+            />
+
+            <Slot
+              label="FINAL"
+              size="small"
+              position="absolute"
+              bottom="10%"
+              right="25%"
+              rotation={-5}
+              clip="irregular-3"
+              shadow="dramatic"
+              zIndex={17}
+              annotationNumber="03"
+              decoration="corner-fold"
+            />
+
+            <Slot
+              label="A"
+              size="swatch"
+              position="absolute"
+              top="50%"
+              left="45%"
+              rotation={10}
+              border="rough"
+              zIndex={22}
+            />
+
+            <Slot
+              label="B"
+              size="swatch"
+              position="absolute"
+              top="55%"
+              left="52%"
+              rotation={-8}
+              border="accent"
+              zIndex={23}
+              overlapX={20}
+            />
+
+            <AnnotationLabel
+              text="iterate"
+              position={{ top: '35%', left: '35%' }}
+              rotation={-3}
+              variant="handwritten"
+            />
+            <AnnotationLabel
+              text="APPROVED"
+              position={{ bottom: '25%', right: '10%' }}
+              rotation={5}
+              variant="stamp"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION 5: CTA - Contact
+          ============================================ */}
+      <section className="relative min-h-[50vh] w-full flex items-center justify-center overflow-hidden texture-grain">
+        {/* Background */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '25%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: 'clamp(12rem, 30vw, 45rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.015,
+            color: '#0A0A0A',
+          }}
+          aria-hidden="true"
+        >
+          →
+        </span>
+
+        <div className="text-center px-8 z-10">
+          <span
+            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
+            style={{ fontSize: '0.55rem' }}
+          >
+            Get in touch
+          </span>
+
+          <h2
+            className="font-serif text-yon-black mt-6"
+            style={{
+              fontSize: 'clamp(1.8rem, 4.5vw, 3rem)',
+              transform: 'rotate(-1deg)',
+            }}
+          >
+            Contact
+          </h2>
+
+          <Link
+            href="/contact"
+            className="inline-block mt-10 font-mono uppercase tracking-[0.2em] text-yon-grey/50 hover:text-yon-black transition-colors border-b border-yon-grey/20 hover:border-yon-black pb-1"
+            style={{ fontSize: '0.6rem' }}
+          >
+            Send Message →
+          </Link>
+        </div>
+
+        {/* Accent slots */}
+        <Slot
+          label="STUDIO"
+          size="small"
+          position="absolute"
+          bottom="15%"
+          right="10%"
+          rotation={-8}
+          clip="irregular-4"
+          zIndex={5}
+          grayscale
+          decoration="tape-corner"
+        />
+
+        <Slot
+          label="MAIL"
+          size="tiny"
+          position="absolute"
+          top="20%"
+          left="12%"
+          rotation={10}
+          border="thin"
+          zIndex={6}
+          decoration="pin"
+        />
+
+        <Slot
+          label="@"
+          size="micro"
+          position="absolute"
+          bottom="30%"
+          left="25%"
+          rotation={-5}
+          border="accent"
+          zIndex={7}
+        />
+
+        <AnnotationLabel
+          text="say hello"
+          position={{ top: '35%', right: '20%' }}
+          rotation={4}
+          variant="handwritten"
+        />
       </section>
 
       <Footer />
