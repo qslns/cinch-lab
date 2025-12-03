@@ -323,7 +323,7 @@ export default function YonNav() {
                     />
                   </Link>
 
-                  {/* Dropdown Menu */}
+                  {/* Dropdown Menu - Minimal */}
                   {hasSubItems && activeDropdown === item.href && (
                     <div
                       id={dropdownId}
@@ -335,11 +335,10 @@ export default function YonNav() {
                         top: '100%',
                         left: 0,
                         marginTop: '8px',
-                        padding: '12px 0',
+                        padding: '8px 0',
                         backgroundColor: '#FAFAFA',
-                        border: '1px solid #D4D4D4',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                        minWidth: '220px',
+                        borderTop: '1px solid #E8E8E8',
+                        minWidth: '180px',
                         zIndex: 10001,
                       }}
                       onMouseEnter={() => handleMouseEnter(item.href)}
@@ -355,34 +354,31 @@ export default function YonNav() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            padding: '10px 16px',
+                            padding: '8px 12px',
                             fontFamily: 'Consolas, monospace',
                             fontSize: '10px',
-                            color: '#4A4A4A',
+                            color: '#7A7A7A',
                             textDecoration: 'none',
                             textTransform: 'uppercase',
                             letterSpacing: '0.08em',
+                            transition: 'color 0.2s ease',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#F0F0F0'
                             e.currentTarget.style.color = '#0A0A0A'
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent'
-                            e.currentTarget.style.color = '#4A4A4A'
+                            e.currentTarget.style.color = '#7A7A7A'
                           }}
                           onFocus={(e) => {
-                            e.currentTarget.style.backgroundColor = '#F0F0F0'
                             e.currentTarget.style.color = '#0A0A0A'
                           }}
                           onBlur={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent'
-                            e.currentTarget.style.color = '#4A4A4A'
+                            e.currentTarget.style.color = '#7A7A7A'
                           }}
                         >
                           <span>{subItem.label}</span>
                           {'season' in subItem && (
-                            <span style={{ color: '#7A7A7A', fontSize: '9px' }}>
+                            <span style={{ color: '#B0B0B0', fontSize: '9px' }}>
                               {subItem.season}
                             </span>
                           )}

@@ -2,14 +2,14 @@
 
 import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ImagePlaceholder } from './ImagePlaceholder'
 import { useLightbox } from '@/components/ImageLightbox'
 
 // THE YON custom easing
 const yonEase = [0.22, 1, 0.36, 1] as const
 
-// Floating image component - Image-dominant approach
+// Simplified floating image - no excessive hover effects
 function FloatingImage({
   left,
   top,
@@ -19,7 +19,6 @@ function FloatingImage({
   variant = 'dark',
   aspectRatio = '3/4',
   size = 'medium',
-  parallaxSpeed = 0.1,
   zIndex = 10,
   onImageClick,
 }: {
@@ -31,13 +30,9 @@ function FloatingImage({
   variant?: 'dark' | 'medium' | 'light'
   aspectRatio?: string
   size?: 'small' | 'medium' | 'large' | 'xlarge' | 'hero'
-  parallaxSpeed?: number
   zIndex?: number
   onImageClick: () => void
 }) {
-  const { scrollYProgress } = useScroll()
-  const y = useTransform(scrollYProgress, [0, 1], [0, parallaxSpeed * 300])
-
   const sizeClasses = {
     small: 'w-28 md:w-36 lg:w-44',
     medium: 'w-40 md:w-56 lg:w-72',
@@ -48,60 +43,27 @@ function FloatingImage({
 
   return (
     <motion.button
-      className={`absolute ${sizeClasses[size]} pointer-events-auto cursor-zoom-in group`}
-      style={{ left, top, zIndex, y }}
-      initial={{ opacity: 0, y: 100, rotate: rotation * 2, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, rotate: rotation, scale: 1 }}
+      className={`absolute ${sizeClasses[size]} pointer-events-auto cursor-pointer`}
+      style={{ left, top, zIndex, rotate: rotation }}
+      initial={{ opacity: 0, y: 60 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 1.6,
+        duration: 1.2,
         delay,
         ease: yonEase,
       }}
-      whileHover={{
-        scale: 1.02,
-        rotate: rotation * 0.5,
-        zIndex: 50,
-        transition: { duration: 0.6, ease: yonEase },
-      }}
       onClick={onImageClick}
-      data-cursor="image"
       aria-label={`View ${label}`}
     >
-      <div className="relative">
-        <ImagePlaceholder
-          label={label}
-          variant={variant}
-          aspectRatio={aspectRatio}
-        />
-        {/* Hover overlay with zoom icon */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-          style={{ backgroundColor: 'rgba(10, 10, 10, 0.3)' }}
-        >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-            stroke={variant === 'light' ? '#0A0A0A' : '#FAFAFA'}
-            strokeWidth="1.5"
-          >
-            <circle cx="14" cy="14" r="8" />
-            <line x1="20" y1="20" x2="26" y2="26" />
-            <line x1="14" y1="11" x2="14" y2="17" />
-            <line x1="11" y1="14" x2="17" y2="14" />
-          </svg>
-        </div>
-      </div>
+      <ImagePlaceholder
+        label={label}
+        variant={variant}
+        aspectRatio={aspectRatio}
+      />
       {/* Minimal label */}
-      <motion.span
-        className="absolute -bottom-5 left-0 font-mono text-[8px] text-yon-grey/30 tracking-[0.2em]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: delay + 0.6 }}
-      >
+      <span className="absolute -bottom-5 left-0 font-mono text-[8px] text-yon-grey/30 tracking-[0.2em]">
         {label.split('/')[1]?.trim() || label}
-      </motion.span>
+      </span>
     </motion.button>
   )
 }
@@ -111,15 +73,11 @@ const heroImages = [
   { label: 'AW25 / 001', src: '/images/hero/aw25-001.jpg', aspectRatio: '3/4' },
   { label: 'SS25 / 002', src: '/images/hero/ss25-002.jpg', aspectRatio: '4/5' },
   { label: 'DETAIL / 003', src: '/images/hero/detail-003.jpg', aspectRatio: '1/1' },
-  { label: 'PROCESS / 004', src: '/images/hero/process-004.jpg', aspectRatio: '16/10' },
-  { label: 'TOILE / 005', src: '/images/hero/toile-005.jpg', aspectRatio: '3/4' },
 ]
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isMounted, setIsMounted] = useState(false)
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
   const { openLightbox } = useLightbox()
 
   const { scrollYProgress } = useScroll({
@@ -128,12 +86,6 @@ export default function HeroSection() {
   })
 
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const heroY = useTransform(scrollYProgress, [0, 0.6], [0, -100])
-
-  // Mouse parallax
-  const springConfig = { stiffness: 80, damping: 30 }
-  const parallaxX = useSpring(mouseX, springConfig)
-  const parallaxY = useSpring(mouseY, springConfig)
 
   // Prepare lightbox images
   const lightboxImages = heroImages.map(img => ({
@@ -142,7 +94,7 @@ export default function HeroSection() {
     caption: img.label,
     captionKo: 'THE YON 2024-25',
     width: 1200,
-    height: img.aspectRatio === '1/1' ? 1200 : img.aspectRatio === '16/10' ? 750 : 1600,
+    height: img.aspectRatio === '1/1' ? 1200 : 1600,
   }))
 
   const handleImageClick = (index: number) => {
@@ -151,17 +103,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     setIsMounted(true)
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const centerX = window.innerWidth / 2
-      const centerY = window.innerHeight / 2
-      mouseX.set((e.clientX - centerX) / 40)
-      mouseY.set((e.clientY - centerY) / 40)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
+  }, [])
 
   if (!isMounted) {
     return (
@@ -176,99 +118,65 @@ export default function HeroSection() {
       ref={containerRef}
       className="relative min-h-[130vh] overflow-hidden bg-yon-white"
     >
-      {/* Subtle grain texture */}
-      <div className="absolute inset-0 opacity-[0.012] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
-
-      {/* IMAGE-DOMINANT LAYOUT - Images are the hero */}
+      {/* IMAGE LAYOUT - Reduced to 3 images, no parallax */}
       <motion.div
         className="absolute inset-0"
-        style={{ x: parallaxX, y: parallaxY, opacity: heroOpacity }}
+        style={{ opacity: heroOpacity }}
       >
-        {/* Primary hero image - largest, commands attention */}
+        {/* Primary hero image */}
         <FloatingImage
           left="8%"
           top="15%"
           rotation={-1.5}
-          delay={0.4}
+          delay={0.3}
           label="AW25 / 001"
           variant="dark"
           aspectRatio="3/4"
           size="hero"
-          parallaxSpeed={-0.08}
           zIndex={20}
           onImageClick={() => handleImageClick(0)}
         />
 
-        {/* Secondary images - supporting roles */}
+        {/* Secondary image */}
         <FloatingImage
           left="58%"
-          top="8%"
-          rotation={2}
-          delay={0.7}
+          top="10%"
+          rotation={1.5}
+          delay={0.5}
           label="SS25 / 002"
           variant="light"
           aspectRatio="4/5"
           size="large"
-          parallaxSpeed={0.05}
           zIndex={15}
           onImageClick={() => handleImageClick(1)}
         />
 
+        {/* Accent image */}
         <FloatingImage
-          left="70%"
-          top="55%"
-          rotation={-2}
-          delay={1.0}
+          left="65%"
+          top="58%"
+          rotation={-1}
+          delay={0.7}
           label="DETAIL / 003"
           variant="medium"
           aspectRatio="1/1"
           size="medium"
-          parallaxSpeed={0.12}
           zIndex={25}
           onImageClick={() => handleImageClick(2)}
         />
-
-        <FloatingImage
-          left="2%"
-          top="70%"
-          rotation={1.5}
-          delay={1.2}
-          label="PROCESS / 004"
-          variant="light"
-          aspectRatio="16/10"
-          size="medium"
-          parallaxSpeed={0.08}
-          zIndex={10}
-          onImageClick={() => handleImageClick(3)}
-        />
-
-        {/* Small accent image */}
-        <FloatingImage
-          left="45%"
-          top="75%"
-          rotation={-1}
-          delay={1.4}
-          label="TOILE / 005"
-          variant="dark"
-          aspectRatio="3/4"
-          size="small"
-          parallaxSpeed={0.15}
-          zIndex={30}
-          onImageClick={() => handleImageClick(4)}
-        />
       </motion.div>
 
-      {/* RESTRAINED TYPOGRAPHY - Small but present */}
+      {/* TYPOGRAPHY - Simplified */}
       <motion.div
         className="relative z-40 min-h-[100vh] flex flex-col justify-between py-8 md:py-12 px-6 md:px-10 lg:px-16"
-        style={{ opacity: heroOpacity, y: heroY }}
+        style={{ opacity: heroOpacity }}
       >
-        {/* Top: Brand mark - minimal, corner placement */}
+        {/* Top: Brand mark */}
         <div className="flex justify-between items-start">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: yonEase }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: yonEase }}
           >
             <span className="font-mono text-[10px] tracking-[0.4em] text-yon-grey/60 uppercase">
               THE YON
@@ -282,7 +190,7 @@ export default function HeroSection() {
             className="text-right"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
             <span className="font-mono text-[8px] tracking-[0.25em] text-yon-grey/30 uppercase">
               Portfolio
@@ -293,12 +201,12 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Center: Philosophy statement - quiet but present */}
+        {/* Center: Philosophy statement */}
         <motion.div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center max-w-md px-6 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 1.2 }}
+          transition={{ delay: 1, duration: 0.8 }}
         >
           <p className="font-serif text-lg md:text-xl text-yon-black/80 leading-relaxed italic">
             Twisted yet harmonious
@@ -308,53 +216,43 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        {/* Bottom: Navigation hints and info */}
+        {/* Bottom: Navigation */}
         <div className="flex justify-between items-end">
-          {/* Left: Scroll indicator */}
+          {/* Left: Scroll indicator - static, no animation */}
           <motion.div
             className="flex flex-col items-start gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2 }}
+            transition={{ delay: 1.2 }}
           >
-            <motion.div
-              className="w-px h-12 bg-gradient-to-b from-yon-grey/40 to-transparent origin-top"
-              animate={{ scaleY: [1, 0.4, 1] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            />
+            <div className="w-px h-12 bg-gradient-to-b from-yon-grey/40 to-transparent" />
             <span className="font-mono text-[7px] tracking-[0.3em] text-yon-grey/30 uppercase">
               Scroll
             </span>
           </motion.div>
 
-          {/* Center: CTA - understated */}
+          {/* Center: CTA */}
           <motion.div
             className="flex flex-col items-center gap-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.6 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
           >
             <Link
               href="/collections"
               className="group flex items-center gap-3"
-              data-cursor="link"
             >
               <span className="font-mono text-[9px] tracking-[0.2em] text-yon-grey/60 uppercase group-hover:text-yon-black transition-colors duration-300">
                 View Collections
               </span>
-              <motion.span
-                className="text-yon-grey/40 text-xs group-hover:text-yon-black transition-colors"
-                animate={{ x: [0, 3, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              >
+              <span className="text-yon-grey/40 text-xs group-hover:text-yon-black transition-colors duration-300">
                 →
-              </motion.span>
+              </span>
             </Link>
 
             <Link
               href="/process"
-              className="font-mono text-[8px] tracking-[0.15em] text-yon-grey/30 uppercase hover:text-yon-grey/60 transition-colors"
-              data-cursor="link"
+              className="font-mono text-[8px] tracking-[0.15em] text-yon-grey/30 uppercase hover:text-yon-grey/60 transition-colors duration-300"
             >
               Process
             </Link>
@@ -365,7 +263,7 @@ export default function HeroSection() {
             className="text-right"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.2 }}
+            transition={{ delay: 1.4 }}
           >
             <span className="font-mono text-[8px] tracking-[0.2em] text-yon-grey/25 uppercase block">
               Taehyun Lee
@@ -375,16 +273,6 @@ export default function HeroSection() {
             </span>
           </motion.div>
         </div>
-      </motion.div>
-
-      {/* Decorative: Subtle geometric */}
-      <motion.div
-        className="absolute top-[25%] right-[12%] z-5 hidden lg:block pointer-events-none"
-        initial={{ opacity: 0, rotate: 0 }}
-        animate={{ opacity: 0.04, rotate: 45 }}
-        transition={{ delay: 2.5, duration: 1.5 }}
-      >
-        <div className="w-16 h-16 border border-yon-grey/30" />
       </motion.div>
     </section>
   )
