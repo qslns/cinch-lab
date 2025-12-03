@@ -93,6 +93,8 @@ export default function CustomCursor() {
           y,
           translateX: '-50%',
           translateY: '-50%',
+          borderStyle: 'solid',
+          backgroundColor: 'transparent',
         }}
         animate={{
           width: variant === 'hidden' ? 0 : 10,
@@ -109,14 +111,6 @@ export default function CustomCursor() {
           opacity: { duration: 0.15 },
           borderWidth: { duration: 0.15 },
           borderColor: { duration: 0.2 },
-        }}
-        style={{
-          x,
-          y,
-          translateX: '-50%',
-          translateY: '-50%',
-          borderStyle: 'solid',
-          backgroundColor: 'transparent',
         }}
       />
 

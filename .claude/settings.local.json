@@ -29,7 +29,8 @@
       "Bash(xargs:*)",
       "Bash(npx next lint)",
       "Bash(npx tsc:*)",
-      "Bash(ANALYZE=true npm run build:*)"
+      "Bash(ANALYZE=true npm run build:*)",
+      "Bash(timeout 15 npm run dev:*)"
     ],
     "deny": [],
     "ask": []
