@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react'
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
@@ -225,7 +225,9 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
                   width={images[currentIndex].width || 1200}
                   height={images[currentIndex].height || 800}
                   className="max-w-full max-h-[75vh] w-auto h-auto object-contain"
-                  priority
+                  priority={currentIndex === 0}
+                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
+                  quality={85}
                 />
               </div>
 
@@ -318,6 +320,8 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
                       fill
                       className="object-cover"
                       sizes="64px"
+                      quality={60}
+                      loading="lazy"
                     />
                   </button>
                 ))}
@@ -340,7 +344,7 @@ interface LightboxImageProps {
   fill?: boolean
 }
 
-export function LightboxImage({
+export const LightboxImage = memo(function LightboxImage({
   image,
   images,
   index = 0,
@@ -350,11 +354,11 @@ export function LightboxImage({
 }: LightboxImageProps) {
   const { openLightbox } = useLightbox()
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const imagesToShow = images || [image]
     const startIndex = images ? index : 0
     openLightbox(imagesToShow, startIndex)
-  }
+  }, [images, image, index, openLightbox])
 
   return (
     <button
@@ -369,7 +373,9 @@ export function LightboxImage({
           alt={image.alt}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={80}
+          loading="lazy"
         />
       ) : (
         <Image
@@ -378,6 +384,8 @@ export function LightboxImage({
           width={image.width || 800}
           height={image.height || 1000}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          quality={80}
+          loading="lazy"
         />
       )}
 
@@ -402,7 +410,7 @@ export function LightboxImage({
       </div>
     </button>
   )
-}
+})
 
 // Gallery component - renders multiple images with lightbox support
 interface ImageGalleryProps {

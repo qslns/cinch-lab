@@ -9,26 +9,26 @@ import YonNav from '@/components/YonNav'
 import ClientProviders from '@/components/ClientProviders'
 import '@/styles/globals.css'
 
-// Typography System - THE YON
-// Cormorant Garamond: Elegant serif for titles
-// Inter: Clean sans-serif for body
-// Space Mono: Monospace for technical details
+// Typography System - THE YON (Optimized)
+// Only load weights actually used in the design
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
+  preload: true,
 })
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '600'],
+  weight: ['300', '400'], // Removed 600 - not used
   variable: '--font-serif',
   display: 'swap',
+  preload: true,
 })
 
 const spaceMono = Space_Mono({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['400'], // Removed 700 - rarely used
   variable: '--font-mono',
   display: 'swap',
 })
@@ -148,7 +148,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0A0A0A" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd, null, 0) }}
         />
       </head>
       <body className={`${inter.variable} ${cormorant.variable} ${spaceMono.variable} font-sans antialiased bg-yon-white text-yon-black safe-area-top safe-area-bottom`}>
