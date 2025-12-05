@@ -191,9 +191,9 @@ export default function LabPage() {
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
       {/* ============================================
-          HERO - Lab Introduction (Dense Collage)
+          HERO - Lab Introduction - fits single screen
           ============================================ */}
-      <section className="relative min-h-screen w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography - LAB */}
         <span
           className="absolute pointer-events-none select-none"

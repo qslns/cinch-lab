@@ -62,10 +62,10 @@ export default function ContactPage() {
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
       {/* ============================================
-          CONTACT - Dense Deconstructivist Collage
+          CONTACT - Dense Deconstructivist Collage - fits single screen
           15+ scattered slots around minimal form
           ============================================ */}
-      <section className="relative min-h-screen w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography - @ symbol massive */}
         <span
           className="absolute pointer-events-none select-none"
@@ -367,7 +367,7 @@ export default function ContactPage() {
         />
 
         {/* Main content - Form */}
-        <div className="relative z-30 min-h-screen flex items-center px-8 md:px-16 lg:px-24 py-32">
+        <div className="relative z-30 h-full flex items-center px-8 md:px-16 lg:px-24 py-16">
           <div className="w-full max-w-xl">
             {/* Header */}
             <div style={{ transform: 'rotate(-1deg)' }}>

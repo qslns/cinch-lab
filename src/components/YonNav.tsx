@@ -171,7 +171,7 @@ export default function YonNav() {
             zIndex: 9999,
             backgroundColor: '#FAFAFA',
             borderBottom: '1px solid rgba(0,0,0,0.06)',
-            height: '72px',
+            height: '42px',
           }}
         >
           <div style={{
@@ -180,8 +180,8 @@ export default function YonNav() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 32px',
-            height: '72px',
+            padding: '0 24px',
+            height: '42px',
           }}>
             <span style={{
               fontFamily: 'Georgia, serif',
@@ -193,14 +193,14 @@ export default function YonNav() {
             </span>
           </div>
         </header>
-        <div style={{ height: '72px' }} />
+        <div style={{ height: '42px' }} />
       </>
     )
   }
 
   return (
     <>
-      {/* DECONSTRUCTIVIST NAVIGATION BAR */}
+      {/* COMPACT DECONSTRUCTIVIST NAVIGATION BAR */}
       <header
         style={{
           position: 'fixed',
@@ -221,44 +221,11 @@ export default function YonNav() {
             top: 0,
             left: '15%',
             width: scrolled ? '35%' : '0%',
-            height: '2px',
+            height: '1px',
             backgroundColor: '#8B7355',
             transition: 'width 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         />
-
-        {/* Scattered decorative elements */}
-        <span
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '8px',
-            transform: 'translateY(-50%) rotate(-90deg)',
-            fontFamily: 'Consolas, monospace',
-            fontSize: '8px',
-            color: 'rgba(138, 115, 85, 0.3)',
-            letterSpacing: '0.15em',
-            pointerEvents: 'none',
-          }}
-        >
-          NAV
-        </span>
-
-        <span
-          style={{
-            position: 'absolute',
-            top: '12px',
-            right: '120px',
-            fontFamily: 'Consolas, monospace',
-            fontSize: '7px',
-            color: 'rgba(74, 74, 74, 0.2)',
-            letterSpacing: '0.2em',
-            transform: 'rotate(2deg)',
-            pointerEvents: 'none',
-          }}
-        >
-          2024
-        </span>
 
         <div
           style={{
@@ -267,31 +234,31 @@ export default function YonNav() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 32px',
-            height: '72px',
+            padding: '0 24px',
+            height: '42px',
             position: 'relative',
           }}
         >
-          {/* Logo - deconstructed style */}
+          {/* Logo - compact deconstructed style */}
           <Link
             href="/"
             onClick={() => setIsOpen(false)}
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
+              alignItems: 'center',
+              gap: '8px',
               textDecoration: 'none',
               zIndex: 10000,
-              transform: 'rotate(-0.5deg)',
+              transform: 'rotate(-0.3deg)',
             }}
           >
             <span
               style={{
                 fontFamily: 'Georgia, serif',
-                fontSize: '28px',
+                fontSize: '18px',
                 fontWeight: 400,
                 color: '#0A0A0A',
-                letterSpacing: '-0.03em',
+                letterSpacing: '-0.02em',
                 lineHeight: 1,
               }}
             >
@@ -300,14 +267,13 @@ export default function YonNav() {
             <span
               style={{
                 fontFamily: 'Consolas, monospace',
-                fontSize: '7px',
+                fontSize: '6px',
                 color: '#8B7355',
-                letterSpacing: '0.3em',
-                marginTop: '2px',
-                marginLeft: '2px',
+                letterSpacing: '0.2em',
+                opacity: 0.7,
               }}
             >
-              BEYOND FASHION
+              저 너머
             </span>
           </Link>
 
@@ -346,35 +312,17 @@ export default function YonNav() {
                     handleMouseLeave()
                   }}
                 >
-                  {/* Number tag - exposed structure */}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '-8px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      fontFamily: 'Consolas, monospace',
-                      fontSize: '7px',
-                      color: isHovered ? '#8B7355' : 'rgba(74, 74, 74, 0.3)',
-                      letterSpacing: '0.1em',
-                      transition: 'color 0.3s ease',
-                      pointerEvents: 'none',
-                    }}
-                  >
-                    {item.num}
-                  </span>
-
                   <Link
                     href={item.href}
                     style={{
                       fontFamily: 'Consolas, monospace',
-                      fontSize: '10px',
+                      fontSize: '9px',
                       fontWeight: isActive ? 600 : 400,
                       color: isActive ? '#0A0A0A' : isHovered ? '#0A0A0A' : '#4A4A4A',
                       textDecoration: 'none',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.15em',
-                      padding: '16px 16px',
+                      letterSpacing: '0.12em',
+                      padding: '10px 12px',
                       display: 'block',
                       position: 'relative',
                       transition: 'color 0.3s ease',
@@ -392,31 +340,16 @@ export default function YonNav() {
                       </span>
                     )}
 
-                    {/* Active/Hover indicator - asymmetric underline */}
-                    <span
-                      style={{
-                        position: 'absolute',
-                        bottom: '10px',
-                        left: '16px',
-                        right: isHovered || isActive ? '16px' : '100%',
-                        height: '1px',
-                        backgroundColor: isActive ? '#8B7355' : '#0A0A0A',
-                        transform: `rotate(${rotation * -1}deg)`,
-                        transition: 'right 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-                      }}
-                    />
-
-                    {/* Active dot */}
+                    {/* Active indicator - simple underline */}
                     {isActive && (
                       <span
                         style={{
                           position: 'absolute',
-                          bottom: '8px',
+                          bottom: '6px',
+                          left: '12px',
                           right: '12px',
-                          width: '3px',
-                          height: '3px',
+                          height: '1px',
                           backgroundColor: '#8B7355',
-                          borderRadius: '50%',
                         }}
                       />
                     )}
@@ -523,89 +456,62 @@ export default function YonNav() {
               )
             })}
 
-            {/* Divider - deconstructed */}
+            {/* Divider - compact */}
             <span
               style={{
                 width: '1px',
-                height: '24px',
-                backgroundColor: 'rgba(0,0,0,0.1)',
-                margin: '0 12px',
-                transform: 'rotate(10deg)',
+                height: '16px',
+                backgroundColor: 'rgba(0,0,0,0.08)',
+                margin: '0 8px',
               }}
             />
 
-            {/* Fullscreen Menu Button - deconstructed */}
+            {/* Fullscreen Menu Button - compact */}
             <button
               onClick={() => setIsFullscreenMenuOpen(true)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
+                gap: '6px',
                 fontFamily: 'Consolas, monospace',
-                fontSize: '10px',
+                fontSize: '8px',
                 fontWeight: 400,
                 color: '#4A4A4A',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
-                letterSpacing: '0.15em',
-                padding: '12px 16px',
+                letterSpacing: '0.1em',
+                padding: '8px 10px',
                 background: 'none',
-                border: '1px solid transparent',
+                border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                transform: 'rotate(0.5deg)',
-                position: 'relative',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = '#0A0A0A'
-                e.currentTarget.style.borderColor = 'rgba(139, 115, 85, 0.3)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = '#4A4A4A'
-                e.currentTarget.style.borderColor = 'transparent'
               }}
               aria-label="Open fullscreen menu"
             >
               <span style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '3px',
-                width: '14px',
+                gap: '2px',
+                width: '12px',
               }}>
                 <span style={{
-                  width: '14px',
-                  height: '1.5px',
-                  backgroundColor: 'currentColor',
-                  transform: 'rotate(-2deg)',
-                }} />
-                <span style={{
-                  width: '10px',
-                  height: '1.5px',
-                  backgroundColor: 'currentColor',
-                  transform: 'rotate(1deg)',
-                }} />
-                <span style={{
                   width: '12px',
-                  height: '1.5px',
+                  height: '1px',
                   backgroundColor: 'currentColor',
-                  transform: 'rotate(-1deg)',
+                }} />
+                <span style={{
+                  width: '8px',
+                  height: '1px',
+                  backgroundColor: 'currentColor',
                 }} />
               </span>
               <span>Menu</span>
-
-              {/* Corner accent */}
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '4px',
-                  right: '4px',
-                  width: '4px',
-                  height: '4px',
-                  borderTop: '1px solid #8B7355',
-                  borderRight: '1px solid #8B7355',
-                  opacity: 0.5,
-                }}
-              />
             </button>
           </nav>
 
@@ -656,7 +562,7 @@ export default function YonNav() {
       </header>
 
       {/* Spacer to prevent content overlap */}
-      <div style={{ height: '72px' }} aria-hidden="true" />
+      <div style={{ height: '42px' }} aria-hidden="true" />
 
       {/* Mobile Menu Overlay - deconstructed */}
       {isOpen && (

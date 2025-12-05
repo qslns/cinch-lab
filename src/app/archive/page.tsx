@@ -253,9 +253,9 @@ export default function ArchivePage() {
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
       {/* ============================================
-          HERO - Dense Deconstructivist Header
+          HERO - Dense Deconstructivist Header - fits single screen
           ============================================ */}
-      <section className="relative min-h-[85vh] w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography - ARCHIVE */}
         <span
           className="absolute pointer-events-none select-none"

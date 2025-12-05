@@ -20,9 +20,9 @@ export default function HomePage() {
       {/* ============================================
           SECTION 1: HERO - Dense Deconstructivist Collage
           Target: 15+ slots with overlapping, bleeding, varied sizes
-          1920x1080 viewport optimized
+          1920x1080 viewport optimized - fits in single screen capture
           ============================================ */}
-      <section className="relative min-h-screen w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography - THE YON massive with layer effect */}
         <span
           className="absolute pointer-events-none select-none"

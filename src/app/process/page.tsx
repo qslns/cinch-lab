@@ -311,9 +311,9 @@ export default function ProcessPage() {
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
       {/* ============================================
-          HERO - Sketchbook Cover
+          HERO - Sketchbook Cover - fits single screen
           ============================================ */}
-      <section className="relative min-h-[70vh] w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography */}
         <span
           className="absolute pointer-events-none select-none"

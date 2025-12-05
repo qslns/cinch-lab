@@ -21,9 +21,9 @@ export default function AboutPage() {
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
       {/* ============================================
           SECTION 1: Portrait Collage Hero
-          Dense deconstructivist layout - 15+ slots
+          Dense deconstructivist layout - fits single screen capture
           ============================================ */}
-      <section className="relative min-h-screen w-full overflow-hidden texture-grain">
+      <section className="relative w-full overflow-hidden texture-grain" style={{ height: 'calc(100vh - 42px)' }}>
         {/* Background typography - Name */}
         <span
           className="absolute pointer-events-none select-none"
