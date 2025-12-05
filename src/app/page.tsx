@@ -107,7 +107,7 @@ export default function HomePage() {
 
         {/* Slot 1: Hero - Primary large image (left, bleeding) */}
         <Slot
-          label="AW25 / LOOK 01"
+          label="LOOK 01"
           size="hero"
           position="absolute"
           top="5%"
@@ -124,7 +124,7 @@ export default function HomePage() {
 
         {/* Slot 2: Large - Secondary (right top) */}
         <Slot
-          label="SS25 / 002"
+          label="LOOK 02"
           size="large"
           position="absolute"
           top="3%"
@@ -321,7 +321,7 @@ export default function HomePage() {
 
         {/* Scattered Annotation Labels with experimental typography */}
         <AnnotationLabel
-          text="AW25"
+          text="CURRENT"
           position={{ top: '8%', left: '25%' }}
           rotation={-3}
           variant="tag"
@@ -378,7 +378,7 @@ export default function HomePage() {
             as="span"
           />
           <ExperimentalText
-            text="저 너머"
+            text="Beyond"
             variant="micro"
             effect="scatter"
             intensity="medium"
@@ -475,16 +475,6 @@ export default function HomePage() {
             }}
             as="h2"
           />
-
-          <div className="mt-8" style={{ marginLeft: '2rem', transform: 'rotate(1deg)' }}>
-            <ExperimentalText
-              text="뒤틀렸지만 조화로운"
-              variant="subtitle"
-              effect="mixed"
-              intensity="strong"
-              colorScheme="accent"
-            />
-          </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-md leading-relaxed"
@@ -720,7 +710,7 @@ export default function HomePage() {
                 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)' }}
               />
               <ExperimentalText
-                text="AW25 — View Collection →"
+                text="View Collection →"
                 variant="caption"
                 effect="wave"
                 intensity="medium"

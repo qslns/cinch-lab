@@ -351,14 +351,6 @@ export default function AboutPage() {
             as="h1"
           />
 
-          <ExperimentalText
-            text="이태현"
-            variant="subtitle"
-            effect="mixed"
-            intensity="strong"
-            colorScheme="accent"
-            className="block mt-3"
-          />
 
           <div className="mt-6 flex items-center gap-4">
             <ExperimentalText
@@ -475,16 +467,6 @@ export default function AboutPage() {
             }}
             as="h2"
           />
-
-          <div className="mt-8" style={{ marginLeft: '2rem', transform: 'rotate(1deg)' }}>
-            <ExperimentalText
-              text="뒤틀렸지만 조화로운"
-              variant="title"
-              effect="mixed"
-              intensity="strong"
-              colorScheme="accent"
-            />
-          </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-lg leading-relaxed"
@@ -689,7 +671,7 @@ export default function AboutPage() {
                 CSM, Parsons, Royal Academy of Antwerp
               </p>
               <WhisperText
-                text="대학원 포트폴리오"
+                text="Graduate Portfolio"
                 className="block mt-2"
                 style={{ fontSize: '0.5rem' }}
               />

@@ -22,9 +22,8 @@ import {
 // Archive items - research and process documentation
 const archiveItems = [
   {
-    id: 'AW25-001',
+    id: '001',
     title: 'Deconstructed Tailoring',
-    season: 'AW25',
     category: 'Construction',
     description: 'Traditional pattern blocks, reimagined. Where structure meets chaos.',
     longDescription: 'Exploring the boundary between precision and disorder in classical tailoring. Each seam becomes a decision point—to follow or to break.',
@@ -33,9 +32,8 @@ const archiveItems = [
     date: '2025.01',
   },
   {
-    id: 'AW25-002',
+    id: '002',
     title: 'Raw Edge Studies',
-    season: 'AW25',
     category: 'Material',
     description: 'Embracing the unfinished. Beauty in the frayed.',
     longDescription: 'What if we celebrated the edges that convention tells us to hide? A meditation on completion and incompleteness.',
@@ -44,9 +42,8 @@ const archiveItems = [
     date: '2025.01',
   },
   {
-    id: 'SS25-001',
+    id: '003',
     title: 'Volume Architecture',
-    season: 'SS25',
     category: 'Form',
     description: 'The space between body and fabric. Sculptural silhouettes.',
     longDescription: 'Architecture for the human form. Creating three-dimensional space that moves, breathes, and transforms with the wearer.',
@@ -55,9 +52,8 @@ const archiveItems = [
     date: '2024.10',
   },
   {
-    id: 'SS25-002',
+    id: '004',
     title: 'Toile Iterations',
-    season: 'SS25',
     category: 'Process',
     description: 'Every muslin tells a story. Prototypes as artifacts.',
     longDescription: 'The toile is not just a test—it is a document of exploration. Each iteration preserves a moment of discovery or failure.',
@@ -66,9 +62,8 @@ const archiveItems = [
     date: '2024.09',
   },
   {
-    id: 'AW24-001',
+    id: '005',
     title: 'Beautiful Failures',
-    season: 'AW24',
     category: 'Experiment',
     description: "What didn't work—and why it matters.",
     longDescription: 'A collection of experiments that did not succeed in their original intention, but revealed unexpected truths about material and form.',
@@ -77,9 +72,8 @@ const archiveItems = [
     date: '2024.06',
   },
   {
-    id: 'AW24-002',
+    id: '006',
     title: 'Seam Exposé',
-    season: 'AW24',
     category: 'Detail',
     description: 'Seams as protagonists. Exposed, celebrated, exaggerated.',
     longDescription: 'Inverting the hierarchy of garment construction. The seam—normally hidden—becomes the main character of the narrative.',
@@ -88,9 +82,8 @@ const archiveItems = [
     date: '2024.05',
   },
   {
-    id: 'SS24-001',
+    id: '007',
     title: 'Concept Sketches',
-    season: 'SS24',
     category: 'Origin',
     description: 'Where it all begins. Raw ideas on paper.',
     longDescription: 'The first marks of imagination. Before fabric, before form—there is the line. These sketches capture the genesis of ideas.',
@@ -99,9 +92,8 @@ const archiveItems = [
     date: '2024.02',
   },
   {
-    id: 'SS24-002',
+    id: '008',
     title: 'Texture Studies',
-    season: 'SS24',
     category: 'Surface',
     description: 'The language of fabric. Close encounters.',
     longDescription: 'Macro explorations of textile surfaces. Understanding material through intimate observation reveals patterns invisible to the casual eye.',
@@ -112,7 +104,6 @@ const archiveItems = [
 ]
 
 const categories = ['All', 'Construction', 'Material', 'Form', 'Process', 'Experiment', 'Detail', 'Origin', 'Surface']
-const seasons = ['All', 'AW25', 'SS25', 'AW24', 'SS24']
 
 // Dense archive card with scattered slots
 function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: number }) {
@@ -163,7 +154,7 @@ function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: num
 
         {/* Swatch */}
         <Slot
-          label={item.season}
+          label={item.id}
           size="swatch"
           position="absolute"
           bottom="-5%"
@@ -232,7 +223,6 @@ function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: num
 export default function ArchivePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [selectedSeason, setSelectedSeason] = useState('All')
   const { openLightbox } = useLightbox()
 
   // Filter items
@@ -244,11 +234,10 @@ export default function ArchivePage() {
         item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 
       const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory
-      const matchesSeason = selectedSeason === 'All' || item.season === selectedSeason
 
-      return matchesSearch && matchesCategory && matchesSeason
+      return matchesSearch && matchesCategory
     })
-  }, [searchQuery, selectedCategory, selectedSeason])
+  }, [searchQuery, selectedCategory])
 
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
@@ -543,15 +532,6 @@ export default function ArchivePage() {
                 Every failure is a step toward discovery. Nothing is wasted.
               </p>
 
-              <div className="mt-4">
-                <ExperimentalText
-                  text="아카이브 — 리서치 & 프로세스"
-                  variant="subtitle"
-                  effect="mixed"
-                  intensity="strong"
-                  colorScheme="accent"
-                />
-              </div>
             </div>
           </div>
         </div>
@@ -591,26 +571,6 @@ export default function ArchivePage() {
               ))}
             </div>
 
-            <span className="text-yon-grey/20">|</span>
-
-            {/* Season filter */}
-            <div className="flex items-center gap-2">
-              {seasons.map(season => (
-                <button
-                  key={season}
-                  onClick={() => setSelectedSeason(season)}
-                  className={`font-mono uppercase tracking-[0.15em] transition-all ${
-                    selectedSeason === season
-                      ? 'text-yon-black border-b border-yon-black'
-                      : 'text-yon-grey/40 hover:text-yon-grey/70'
-                  }`}
-                  style={{ fontSize: '0.55rem', paddingBottom: '2px' }}
-                >
-                  {season}
-                </button>
-              ))}
-            </div>
-
             {/* Results count */}
             <span
               className="ml-auto font-mono text-yon-grey/30"
@@ -646,7 +606,7 @@ export default function ArchivePage() {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={`${selectedCategory}-${selectedSeason}-${searchQuery}`}
+            key={`${selectedCategory}-${searchQuery}`}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -672,7 +632,6 @@ export default function ArchivePage() {
             <button
               onClick={() => {
                 setSelectedCategory('All')
-                setSelectedSeason('All')
                 setSearchQuery('')
               }}
               className="block mx-auto mt-6 font-mono uppercase tracking-[0.15em] text-yon-black hover:text-yon-accent transition-colors border-b border-yon-grey/20 hover:border-yon-black pb-1"
@@ -757,14 +716,6 @@ export default function ArchivePage() {
                 all documented as essential steps toward discovery.
               </p>
 
-              <ExperimentalText
-                text="실패는 발견의 필수 단계"
-                variant="subtitle"
-                effect="scatter"
-                intensity="strong"
-                colorScheme="desaturated"
-                className="mt-4 block"
-              />
             </div>
           </div>
 

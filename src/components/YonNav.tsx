@@ -273,7 +273,7 @@ export default function YonNav() {
                 opacity: 0.7,
               }}
             >
-              저 너머
+              Beyond
             </span>
           </Link>
 

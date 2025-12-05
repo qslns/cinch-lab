@@ -25,8 +25,6 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
     _id: '1',
     title: 'DECONSTRUCTION',
     slug: 'deconstruction',
-    season: 'aw25',
-    year: 2025,
     status: 'in_progress',
     description: 'Exploring pattern deconstruction through experimental tailoring techniques.',
     techniques: ['Raw edge exposure', 'Inverted seaming', 'Visible interfacing'],
@@ -37,8 +35,6 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
     _id: '2',
     title: 'FRAGMENTS',
     slug: 'fragments',
-    season: 'ss25',
-    year: 2025,
     status: 'testing',
     description: 'Hybrid material construction with contrasting textures.',
     techniques: ['Material splicing', 'Surface manipulation'],
@@ -49,8 +45,6 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
     _id: '3',
     title: 'VOID',
     slug: 'void',
-    season: 'aw24',
-    year: 2024,
     status: 'complete',
     description: 'Architectural volume exploration. The space between defines the form.',
     techniques: ['Draping', 'Pattern cutting'],
@@ -61,8 +55,6 @@ const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
     _id: '4',
     title: 'ORIGIN',
     slug: 'origin',
-    season: 'ss24',
-    year: 2024,
     status: 'complete',
     description: 'Return to fundamental shapes. Where every collection begins.',
     techniques: ['Basic construction', 'Form studies'],
@@ -76,14 +68,6 @@ const filterOptions = [
   { id: 'all', label: 'All' },
   { id: 'in_progress', label: 'Current' },
   { id: 'complete', label: 'Archive' },
-]
-
-const seasonOptions = [
-  { id: 'all', label: 'All' },
-  { id: 'aw25', label: 'AW25' },
-  { id: 'ss25', label: 'SS25' },
-  { id: 'aw24', label: 'AW24' },
-  { id: 'ss24', label: 'SS24' },
 ]
 
 // Collection moodboard - each collection as dense scattered collage
@@ -161,7 +145,7 @@ function CollectionMoodboard({
             zIndex={20}
             bleed={isReversed ? 'right' : 'left'}
             bleedAmount="lg"
-            annotationNumber={`${collection.season?.toUpperCase()}-001`}
+            annotationNumber={`${String(index + 1).padStart(3, '0')}`}
             texture="grain"
           />
 
@@ -377,7 +361,7 @@ function CollectionMoodboard({
 
           {/* Scattered Annotations */}
           <AnnotationLabel
-            text={collection.season?.toUpperCase() || 'SEASON'}
+            text={`NO. ${String(index + 1).padStart(2, '0')}`}
             position={{
               top: '5%',
               left: isReversed ? '30%' : 'auto',
@@ -427,7 +411,7 @@ function CollectionMoodboard({
           >
             <Link href={`/collections/${collection.slug}`} className="group block">
               <LabelText
-                text={`${collection.season?.toUpperCase()} — ${collection.year}`}
+                text={`NO. ${String(index + 1).padStart(2, '0')}`}
                 style={{ fontSize: '0.55rem' }}
               />
 
@@ -503,7 +487,6 @@ export default function CollectionsPage() {
   const [filteredCollections, setFilteredCollections] = useState<Partial<Collection>[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('all')
-  const [activeSeason, setActiveSeason] = useState('all')
 
   useEffect(() => {
     async function fetchCollections() {
@@ -541,12 +524,8 @@ export default function CollectionsPage() {
       }
     }
 
-    if (activeSeason !== 'all') {
-      result = result.filter((c) => c.season === activeSeason)
-    }
-
     setFilteredCollections(result)
-  }, [activeFilter, activeSeason, collections])
+  }, [activeFilter, collections])
 
   return (
     <div className="relative min-h-screen bg-yon-white overflow-x-hidden">
@@ -806,17 +785,6 @@ export default function CollectionsPage() {
               material, and form. Work in progress, failures documented.
             </p>
 
-            <ExperimentalText
-              text="컬렉션 — 실험적 패션"
-              variant="subtitle"
-              effect="mixed"
-              intensity="strong"
-              colorScheme="accent"
-              className="block mt-4"
-              style={{
-                marginLeft: '3rem',
-              }}
-            />
           </div>
         </div>
 
@@ -831,26 +799,6 @@ export default function CollectionsPage() {
                   onClick={() => setActiveFilter(option.id)}
                   className={`font-mono uppercase tracking-[0.15em] transition-all ${
                     activeFilter === option.id
-                      ? 'text-yon-black border-b border-yon-black'
-                      : 'text-yon-grey/40 hover:text-yon-grey/70'
-                  }`}
-                  style={{ fontSize: '0.6rem', paddingBottom: '2px' }}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-
-            <span className="text-yon-grey/20">|</span>
-
-            {/* Season filter */}
-            <div className="flex items-center gap-3">
-              {seasonOptions.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setActiveSeason(option.id)}
-                  className={`font-mono uppercase tracking-[0.15em] transition-all ${
-                    activeSeason === option.id
                       ? 'text-yon-black border-b border-yon-black'
                       : 'text-yon-grey/40 hover:text-yon-grey/70'
                   }`}
@@ -894,7 +842,6 @@ export default function CollectionsPage() {
             <button
               onClick={() => {
                 setActiveFilter('all')
-                setActiveSeason('all')
               }}
               className="mt-6 font-mono uppercase tracking-[0.15em] text-yon-black hover:text-yon-accent transition-colors border-b border-yon-grey/20 hover:border-yon-black pb-1"
               style={{ fontSize: '0.6rem' }}
@@ -905,7 +852,7 @@ export default function CollectionsPage() {
         ) : (
           <AnimatePresence mode="wait">
             <motion.div
-              key={`${activeFilter}-${activeSeason}`}
+              key={activeFilter}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

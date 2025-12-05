@@ -13,8 +13,7 @@ const yonEase = [0.22, 1, 0.36, 1] as const
 // Collection data with enhanced image layouts
 const collectionsData: Record<string, {
   title: string
-  season: string
-  year: number
+  index: string
   description: string
   concept: string
   images: {
@@ -31,8 +30,7 @@ const collectionsData: Record<string, {
 }> = {
   'deconstruction': {
     title: 'DECONSTRUCTION',
-    season: 'FW',
-    year: 2025,
+    index: '01',
     description: 'Exploring pattern deconstruction through experimental tailoring techniques. Every seam exposed, every structure questioned.',
     concept: 'This collection questions the fundamental assumptions of garment construction. By exposing the hidden architecture of clothing, we reveal the beauty in structure itself. Seams become decorative elements, interfacing becomes visible texture, and the process of making becomes the final design.',
     images: [
@@ -49,8 +47,7 @@ const collectionsData: Record<string, {
   },
   'fragments': {
     title: 'FRAGMENTS',
-    season: 'SS',
-    year: 2025,
+    index: '02',
     description: 'Hybrid material construction with contrasting textures. Beauty in the broken pieces.',
     concept: 'Fragments explores the poetry of incompleteness. Each piece is constructed from seemingly disparate elements that find unexpected harmony. The collection celebrates the beauty of juxtaposition - rough against smooth, structured against fluid, opacity against transparency.',
     images: [
@@ -66,8 +63,7 @@ const collectionsData: Record<string, {
   },
   'void': {
     title: 'VOID',
-    season: 'FW',
-    year: 2024,
+    index: '03',
     description: 'Architectural volume exploration. The space between defines the form.',
     concept: 'VOID investigates negative space as a design element. The collection is built around the idea that what is absent is as important as what is present. Sculptural volumes are created not by adding, but by careful subtraction and the strategic placement of emptiness.',
     images: [
@@ -82,8 +78,7 @@ const collectionsData: Record<string, {
   },
   'origin': {
     title: 'ORIGIN',
-    season: 'SS',
-    year: 2024,
+    index: '04',
     description: 'Return to fundamental shapes. Where every collection begins.',
     concept: 'ORIGIN strips away complexity to find the essential. This collection returns to the basic geometric forms that underlie all garment construction - the circle, the rectangle, the line. From these simple elements, we build towards complexity.',
     images: [
@@ -154,7 +149,7 @@ export default function CollectionDetailPage() {
     src: `/images/collections/${slug}/${String(image.id).padStart(2, '0')}.jpg`,
     alt: `${collection.title} - ${image.caption || `Image ${image.id}`}`,
     caption: image.caption,
-    captionKo: `${collection.title} ${collection.season} ${collection.year}`,
+    captionKo: `${collection.title} NO.${collection.index}`,
     width: 1200,
     height: image.size === 'large' ? 1600 : image.size === 'medium' ? 1500 : 1200,
   })) || []
@@ -230,7 +225,7 @@ export default function CollectionDetailPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
         >
-          COLLECTION.{collection.year}
+          COLLECTION.{collection.index}
         </motion.span>
 
         {/* Hero content - Extreme Typography */}
@@ -239,7 +234,7 @@ export default function CollectionDetailPage() {
           style={{ y: titleY, opacity: heroOpacity }}
         >
           <div className="max-w-7xl mx-auto">
-            {/* Season tag with accent */}
+            {/* Collection number tag with accent */}
             <motion.div
               className="flex items-center gap-4 mb-6"
               initial={{ opacity: 0, x: -30 }}
@@ -248,7 +243,7 @@ export default function CollectionDetailPage() {
             >
               <span className="w-10 h-px bg-yon-accent" />
               <span className="font-mono text-[11px] text-yon-accent tracking-[0.3em] uppercase">
-                {collection.season} {collection.year}
+                NO. {collection.index}
               </span>
             </motion.div>
 

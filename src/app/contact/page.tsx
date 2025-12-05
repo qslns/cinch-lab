@@ -395,12 +395,6 @@ export default function ContactPage() {
                 For collaborations, press inquiries, or general questions.
               </p>
 
-              <span
-                className="block font-mono text-yon-grey/30 mt-3"
-                style={{ fontSize: '0.5rem', letterSpacing: '0.2em' }}
-              >
-                연락처 — 협업 문의
-              </span>
             </div>
 
             {/* Form */}
@@ -659,7 +653,7 @@ export default function ContactPage() {
                 marginLeft: '2rem',
               }}
             >
-              서울 — 예약제 방문
+              By appointment only
             </span>
           </div>
 
