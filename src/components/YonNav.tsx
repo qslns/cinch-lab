@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -78,43 +78,41 @@ export default function YonNav() {
     }
   }, [isOpen])
 
-  const handleMouseEnter = (href: string) => {
+  const handleMouseEnter = useCallback((href: string) => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current)
     }
     setActiveDropdown(href)
-  }
+  }, [])
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null)
     }, 150)
-  }
+  }, [])
 
   // Keyboard navigation handlers
-  const handleKeyDown = (e: React.KeyboardEvent, href: string, hasSubItems: boolean) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, href: string, hasSubItems: boolean) => {
     if (!hasSubItems) return
 
     switch (e.key) {
       case 'Enter':
       case ' ':
         e.preventDefault()
-        setActiveDropdown(activeDropdown === href ? null : href)
+        setActiveDropdown(prev => prev === href ? null : href)
         break
       case 'Escape':
         setActiveDropdown(null)
         break
       case 'ArrowDown':
-        if (activeDropdown === href) {
-          e.preventDefault()
-          const firstItem = document.querySelector(`[data-dropdown="${href}"] a`) as HTMLElement
-          firstItem?.focus()
-        }
+        e.preventDefault()
+        const firstItem = document.querySelector(`[data-dropdown="${href}"] a`) as HTMLElement
+        firstItem?.focus()
         break
     }
-  }
+  }, [])
 
-  const handleDropdownKeyDown = (e: React.KeyboardEvent, itemHref: string) => {
+  const handleDropdownKeyDown = useCallback((e: React.KeyboardEvent, itemHref: string) => {
     const dropdown = document.querySelector(`[data-dropdown="${itemHref}"]`)
     if (!dropdown) return
 
@@ -139,7 +137,7 @@ export default function YonNav() {
         trigger?.focus()
         break
     }
-  }
+  }, [])
 
   // SSR guard
   if (!isMounted) {

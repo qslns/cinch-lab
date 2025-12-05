@@ -1,14 +1,7 @@
 'use client'
 
-import { useLayoutEffect, useRef, createContext, useContext } from 'react'
+import { useLayoutEffect, useRef, createContext, useContext, useCallback } from 'react'
 import Lenis from 'lenis'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 // Create context for Lenis instance access
 const LenisContext = createContext<Lenis | null>(null)
@@ -19,6 +12,12 @@ export function useLenisInstance() {
 
 export function useLenis() {
   const lenisRef = useRef<Lenis | null>(null)
+  const rafRef = useRef<number | null>(null)
+
+  const raf = useCallback((time: number) => {
+    lenisRef.current?.raf(time)
+    rafRef.current = requestAnimationFrame(raf)
+  }, [])
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return
@@ -28,27 +27,20 @@ export function useLenis() {
 
     // Initialize Lenis with optimized settings for THE YON aesthetic
     const lenis = new Lenis({
-      duration: prefersReducedMotion ? 0.01 : 1.4, // Slightly longer for more elegant feel
+      duration: prefersReducedMotion ? 0.01 : 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Expo ease-out
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: !prefersReducedMotion,
-      wheelMultiplier: 0.8, // Slower wheel for more control
+      wheelMultiplier: 0.8,
       touchMultiplier: 1.5,
       infinite: false,
     })
 
     lenisRef.current = lenis
 
-    // Connect Lenis to GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update)
-
-    // Use GSAP ticker for smoother animation
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
-
-    gsap.ticker.lagSmoothing(0)
+    // Use native requestAnimationFrame for smooth animation
+    rafRef.current = requestAnimationFrame(raf)
 
     // Listen for reduced motion changes
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -70,10 +62,12 @@ export function useLenis() {
 
     return () => {
       motionQuery.removeEventListener('change', handleMotionChange)
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
       lenis.destroy()
-      gsap.ticker.remove(lenis.raf)
     }
-  }, [])
+  }, [raf])
 
   return lenisRef.current
 }

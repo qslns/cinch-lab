@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Link from 'next/link'
 import BackToTop from './BackToTop'
 
@@ -9,14 +10,14 @@ const navItems = [
   { href: '/archive', label: 'Archive' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
-]
+] as const
 
 const socialItems = [
   { href: 'mailto:hello@theyon.com', label: 'Email', external: false },
   { href: 'https://instagram.com/theyon_studio', label: 'Instagram', external: true },
-]
+] as const
 
-export default function Footer() {
+const Footer = memo(function Footer() {
   return (
     <>
       <BackToTop />
@@ -290,4 +291,6 @@ export default function Footer() {
       </footer>
     </>
   )
-}
+})
+
+export default Footer

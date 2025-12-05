@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo, useCallback } from 'react'
 import { motion, useSpring, useMotionValue } from 'framer-motion'
 
 type CursorVariant = 'default' | 'link' | 'hidden'
 
-export default function CustomCursor() {
+const CustomCursor = memo(function CustomCursor() {
   const [variant, setVariant] = useState<CursorVariant>('default')
   const [isVisible, setIsVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(true)
@@ -124,4 +124,6 @@ export default function CustomCursor() {
       `}</style>
     </>
   )
-}
+})
+
+export default CustomCursor

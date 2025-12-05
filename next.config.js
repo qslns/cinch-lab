@@ -21,7 +21,7 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['framer-motion', 'gsap', 'lenis'],
+    optimizePackageImports: ['framer-motion', 'lenis', '@sanity/client', '@sanity/image-url'],
   },
 
   // Performance optimizations
