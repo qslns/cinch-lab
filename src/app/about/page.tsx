@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import {
   LayeredTitle,
+  GlitchTitle,
   ExperimentalText,
   AnnotationText,
   NumberTag,
@@ -12,6 +13,7 @@ import {
   WhisperText,
   HandwrittenNote,
   TagText,
+  GrainDisplay,
 } from '@/components/typography'
 
 export default function AboutPage() {
@@ -326,45 +328,52 @@ export default function AboutPage() {
           style={{
             bottom: '8%',
             left: '6%',
-            transform: 'rotate(-1deg)',
+            transform: 'rotate(-2deg)',
           }}
         >
-          <LabelText
-            text="Designer"
-            style={{ fontSize: '0.55rem' }}
+          <AnnotationText
+            text="DESIGNER"
+            variant="stamp"
+            style={{ fontSize: '0.6rem' }}
           />
 
-          <LayeredTitle
+          <GlitchTitle
             text="Taehyun Lee"
-            size="medium"
-            layerStyle="offset"
-            offsetX={4}
-            offsetY={4}
-            layerOpacity={0.12}
-            layerColor="#8B7355"
-            charRotation
-            rotationIntensity={2}
+            size="heading"
+            glitchOffset={5}
+            rotateChars
+            rotationIntensity={3}
             className="mt-4"
             style={{
-              fontSize: 'clamp(2.5rem, 6vw, 5rem)',
-              letterSpacing: '-0.02em',
+              fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
+              letterSpacing: '-0.03em',
             }}
             as="h1"
           />
 
           <ExperimentalText
             text="이태현"
-            variant="caption"
-            effect="scatter"
-            intensity="subtle"
-            className="block mt-2"
-            style={{ fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(122, 122, 122, 0.3)' }}
+            variant="subtitle"
+            effect="mixed"
+            intensity="strong"
+            colorScheme="accent"
+            className="block mt-3"
           />
 
           <div className="mt-6 flex items-center gap-4">
-            <WhisperText text="Seoul / Tokyo" style={{ fontSize: '0.55rem' }} />
-            <span className="w-6 h-px bg-yon-grey/20" />
-            <WhisperText text="SASADA" style={{ fontSize: '0.55rem' }} />
+            <ExperimentalText
+              text="Seoul / Tokyo"
+              variant="caption"
+              effect="scatter"
+              intensity="medium"
+            />
+            <span className="w-8 h-px bg-yon-accent/40" />
+            <ExperimentalText
+              text="SASADA"
+              variant="caption"
+              effect="wave"
+              intensity="medium"
+            />
           </div>
         </div>
 
@@ -452,39 +461,35 @@ export default function AboutPage() {
         </span>
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-5xl">
-          <LayeredTitle
-            text="&ldquo;Twisted yet harmonious&rdquo;"
-            size="medium"
-            layerStyle="echo"
-            offsetX={4}
-            offsetY={4}
-            layerOpacity={0.1}
-            layerColor="#8B7355"
-            charRotation
-            rotationIntensity={1.5}
+          <GlitchTitle
+            text="Twisted yet harmonious"
+            size="display"
+            glitchOffset={7}
+            rotateChars
+            rotationIntensity={4}
             style={{
               fontStyle: 'italic',
-              fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
-              transform: 'rotate(-1.5deg)',
+              fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+              transform: 'rotate(-2deg)',
               maxWidth: '42ch',
             }}
             as="h2"
           />
 
-          <div className="mt-10" style={{ marginLeft: '3rem', transform: 'rotate(0.5deg)' }}>
+          <div className="mt-8" style={{ marginLeft: '2rem', transform: 'rotate(1deg)' }}>
             <ExperimentalText
               text="뒤틀렸지만 조화로운"
-              variant="caption"
-              effect="scatter"
-              intensity="subtle"
-              style={{ color: 'rgba(122, 122, 122, 0.5)' }}
+              variant="title"
+              effect="mixed"
+              intensity="strong"
+              colorScheme="accent"
             />
           </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-lg leading-relaxed"
             style={{
-              fontSize: '0.9rem',
+              fontSize: '0.95rem',
               marginLeft: '5rem',
               transform: 'rotate(0.8deg)',
             }}

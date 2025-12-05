@@ -10,11 +10,13 @@ import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import {
   LayeredTitle,
+  GlitchTitle,
   ExperimentalText,
   AnnotationText,
   LabelText,
   WhisperText,
   HandwrittenNote,
+  GrainDisplay,
 } from '@/components/typography'
 
 // Fallback data for THE YON
@@ -429,20 +431,16 @@ function CollectionMoodboard({
                 style={{ fontSize: '0.55rem' }}
               />
 
-              <LayeredTitle
+              <GlitchTitle
                 text={collection.title || 'COLLECTION'}
-                size="small"
-                layerStyle="offset"
-                offsetX={3}
-                offsetY={3}
-                layerOpacity={0.1}
-                layerColor="#8B7355"
-                charRotation
-                rotationIntensity={1.5}
-                className="mt-3 group-hover:text-yon-accent transition-colors"
+                size="heading"
+                glitchOffset={5}
+                rotateChars
+                rotationIntensity={3}
+                className="mt-3 group-hover:opacity-80 transition-opacity"
                 style={{
-                  fontSize: 'clamp(1.8rem, 4vw, 3rem)',
-                  letterSpacing: '-0.02em',
+                  fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
+                  letterSpacing: '-0.03em',
                 }}
                 as="h2"
               />
@@ -779,22 +777,18 @@ export default function CollectionsPage() {
               style={{ fontSize: '0.55rem' }}
             />
 
-            <LayeredTitle
+            <GlitchTitle
               text="Collections"
-              size="large"
-              layerStyle="triple"
-              offsetX={5}
-              offsetY={5}
-              layerOpacity={0.08}
-              layerColor="#8B7355"
-              charRotation
-              rotationIntensity={2}
+              size="display"
+              glitchOffset={8}
+              rotateChars
+              rotationIntensity={4}
               className="mt-6"
               style={{
-                fontSize: 'clamp(3rem, 7vw, 6rem)',
-                letterSpacing: '-0.03em',
-                transform: 'rotate(-1.5deg)',
-                lineHeight: 0.95,
+                fontSize: 'clamp(3.5rem, 9vw, 7rem)',
+                letterSpacing: '-0.04em',
+                transform: 'rotate(-2.5deg)',
+                lineHeight: 0.9,
               }}
               as="h1"
             />
@@ -802,7 +796,7 @@ export default function CollectionsPage() {
             <p
               className="font-sans text-yon-grey/60 mt-10 max-w-lg"
               style={{
-                fontSize: '0.9rem',
+                fontSize: '0.95rem',
                 lineHeight: 1.8,
                 marginLeft: '3rem',
                 transform: 'rotate(0.5deg)',
@@ -814,13 +808,13 @@ export default function CollectionsPage() {
 
             <ExperimentalText
               text="컬렉션 — 실험적 패션"
-              variant="micro"
-              effect="scatter"
-              intensity="subtle"
+              variant="subtitle"
+              effect="mixed"
+              intensity="strong"
+              colorScheme="accent"
               className="block mt-4"
               style={{
                 marginLeft: '3rem',
-                color: 'rgba(122, 122, 122, 0.3)',
               }}
             />
           </div>

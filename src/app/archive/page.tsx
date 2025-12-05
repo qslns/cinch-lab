@@ -8,6 +8,7 @@ import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import { useLightbox } from '@/components/ImageLightbox'
 import {
   LayeredTitle,
+  GlitchTitle,
   ExperimentalText,
   LabelText,
   WhisperText,
@@ -15,6 +16,7 @@ import {
   HandwrittenNote,
   CrossedText,
   GrainDisplay,
+  AnnotationText,
 } from '@/components/typography'
 
 // Archive items - research and process documentation
@@ -512,17 +514,19 @@ export default function ArchivePage() {
         {/* Main title */}
         <div className="relative z-35 pt-44 pb-16 px-8 md:px-16 lg:px-24">
           <div className="max-w-5xl">
-            <LabelText className="text-yon-grey/40">
-              THE YON — Archive
-            </LabelText>
+            <AnnotationText
+              text="THE YON — Archive"
+              variant="stamp"
+              className="text-yon-grey/50"
+            />
 
-            <div className="mt-6" style={{ transform: 'rotate(-1.5deg)' }}>
-              <LayeredTitle
+            <div className="mt-6" style={{ transform: 'rotate(-2.5deg)' }}>
+              <GlitchTitle
                 text="Archive"
-                layerStyle="echo"
                 size="display"
+                glitchOffset={8}
                 rotateChars
-                rotationIntensity={0.3}
+                rotationIntensity={4}
               />
             </div>
 
@@ -530,7 +534,7 @@ export default function ArchivePage() {
               <p
                 className="font-sans text-yon-grey/60"
                 style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.95rem',
                   lineHeight: 1.8,
                   transform: 'rotate(0.5deg)',
                 }}
@@ -542,10 +546,10 @@ export default function ArchivePage() {
               <div className="mt-4">
                 <ExperimentalText
                   text="아카이브 — 리서치 & 프로세스"
-                  variant="caption"
-                  effect="scatter"
-                  intensity="subtle"
-                  colorScheme="desaturated"
+                  variant="subtitle"
+                  effect="mixed"
+                  intensity="strong"
+                  colorScheme="accent"
                 />
               </div>
             </div>
@@ -723,14 +727,19 @@ export default function ArchivePage() {
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24">
           <div className="max-w-4xl">
-            <WhisperText className="text-yon-accent/60">
-              Essential Documentation
-            </WhisperText>
+            <AnnotationText
+              text="ESSENTIAL DOCUMENTATION"
+              variant="stamp"
+              className="text-yon-accent/70"
+            />
 
-            <div className="mt-6" style={{ transform: 'rotate(-1deg)' }}>
-              <GrainDisplay
+            <div className="mt-6" style={{ transform: 'rotate(-2deg)' }}>
+              <GlitchTitle
                 text="Failures"
-                variant="photocopy"
+                size="heading"
+                glitchOffset={6}
+                rotateChars
+                rotationIntensity={3}
                 style={{ color: 'var(--yon-accent)' }}
               />
             </div>
@@ -748,9 +757,14 @@ export default function ArchivePage() {
                 all documented as essential steps toward discovery.
               </p>
 
-              <HandwrittenNote className="mt-4 text-yon-grey/40">
-                실패는 발견의 필수 단계
-              </HandwrittenNote>
+              <ExperimentalText
+                text="실패는 발견의 필수 단계"
+                variant="subtitle"
+                effect="scatter"
+                intensity="strong"
+                colorScheme="desaturated"
+                className="mt-4 block"
+              />
             </div>
           </div>
 
@@ -934,17 +948,19 @@ export default function ArchivePage() {
         </span>
 
         <div className="text-center px-8 z-10">
-          <LabelText className="text-yon-grey/40">
-            See the results
-          </LabelText>
+          <AnnotationText
+            text="SEE THE RESULTS"
+            variant="tag"
+            className="text-yon-grey/50"
+          />
 
-          <div className="mt-6" style={{ transform: 'rotate(-1deg)' }}>
-            <LayeredTitle
+          <div className="mt-6" style={{ transform: 'rotate(-2deg)' }}>
+            <GlitchTitle
               text="Collections"
-              layerStyle="offset"
               size="heading"
+              glitchOffset={5}
               rotateChars
-              rotationIntensity={0.4}
+              rotationIntensity={3}
             />
           </div>
 

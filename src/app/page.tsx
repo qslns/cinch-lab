@@ -3,12 +3,15 @@ import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import {
   LayeredTitle,
+  GlitchTitle,
   ExperimentalText,
   AnnotationText,
   NumberTag,
   LabelText,
   WhisperText,
   HandwrittenNote,
+  GrainDisplay,
+  StaggerFadeText,
 } from '@/components/typography'
 
 export default function HomePage() {
@@ -360,27 +363,26 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Brand mark - top left corner with layered effect */}
+        {/* Brand mark - top left corner with GLITCH effect */}
         <div className="absolute top-6 left-6 z-40">
-          <LayeredTitle
+          <GlitchTitle
             text="THE YON"
             size="small"
-            layerStyle="offset"
-            offsetX={2}
-            offsetY={2}
-            layerOpacity={0.15}
+            glitchOffset={3}
             style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.4em',
+              fontSize: '0.85rem',
+              letterSpacing: '0.35em',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 400,
+              fontWeight: 500,
             }}
             as="span"
           />
-          <WhisperText
+          <ExperimentalText
             text="저 너머"
+            variant="micro"
+            effect="scatter"
+            intensity="medium"
             className="block mt-1"
-            style={{ fontSize: '0.5rem' }}
           />
         </div>
 
@@ -460,38 +462,34 @@ export default function HomePage() {
         </span>
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-5xl">
-          {/* Philosophy text - Experimental layered title */}
-          <LayeredTitle
-            text="&ldquo;Twisted yet harmonious&rdquo;"
-            size="medium"
-            layerStyle="offset"
-            offsetX={3}
-            offsetY={3}
-            layerOpacity={0.12}
-            layerColor="#8B7355"
-            charRotation
-            rotationIntensity={2}
+          {/* Philosophy text - GLITCH layered title */}
+          <GlitchTitle
+            text="Twisted yet harmonious"
+            size="display"
+            glitchOffset={6}
+            rotateChars
+            rotationIntensity={3}
             style={{
               fontStyle: 'italic',
-              transform: 'rotate(-1.5deg)',
+              transform: 'rotate(-2deg)',
             }}
             as="h2"
           />
 
-          <div className="mt-10" style={{ marginLeft: '3rem', transform: 'rotate(0.5deg)' }}>
+          <div className="mt-8" style={{ marginLeft: '2rem', transform: 'rotate(1deg)' }}>
             <ExperimentalText
               text="뒤틀렸지만 조화로운"
-              variant="caption"
-              effect="scatter"
-              intensity="subtle"
-              style={{ color: 'rgba(122, 122, 122, 0.5)' }}
+              variant="subtitle"
+              effect="mixed"
+              intensity="strong"
+              colorScheme="accent"
             />
           </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-md leading-relaxed"
             style={{
-              fontSize: '0.9rem',
+              fontSize: '0.95rem',
               marginLeft: '5rem',
               transform: 'rotate(0.8deg)',
             }}
@@ -712,23 +710,21 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Collection info with experimental typography */}
-          <div className="mt-10 ml-4" style={{ transform: 'rotate(-0.5deg)' }}>
+          {/* Collection info with GRAIN experimental typography */}
+          <div className="mt-10 ml-4" style={{ transform: 'rotate(-1deg)' }}>
             <Link href="/collections/deconstruction" className="group">
-              <LayeredTitle
+              <GrainDisplay
                 text="DECONSTRUCTION"
-                size="small"
-                layerStyle="offset"
-                offsetX={2}
-                offsetY={2}
-                layerOpacity={0.1}
-                className="group-hover:text-yon-accent transition-colors"
-                style={{ fontSize: '1.6rem' }}
-                as="h3"
+                variant="photocopy"
+                className="group-hover:opacity-70 transition-opacity"
+                style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)' }}
               />
-              <LabelText
+              <ExperimentalText
                 text="AW25 — View Collection →"
-                style={{ marginTop: '0.5rem' }}
+                variant="caption"
+                effect="wave"
+                intensity="medium"
+                className="mt-3 block"
               />
             </Link>
           </div>
@@ -1043,18 +1039,14 @@ export default function HomePage() {
         </span>
 
         <div className="text-center px-8 z-10">
-          <LayeredTitle
+          <GlitchTitle
             text="Get in Touch"
-            size="large"
-            layerStyle="offset"
-            offsetX={4}
-            offsetY={4}
-            layerOpacity={0.1}
-            layerColor="#8B7355"
-            charRotation
-            rotationIntensity={1.5}
+            size="heading"
+            glitchOffset={5}
+            rotateChars
+            rotationIntensity={2.5}
             style={{
-              transform: 'rotate(-1.5deg)',
+              transform: 'rotate(-2deg)',
             }}
             as="h2"
           />
@@ -1062,10 +1054,15 @@ export default function HomePage() {
           <div className="mt-10">
             <Link
               href="/contact"
-              className="inline-block font-mono uppercase tracking-[0.3em] text-yon-grey/50 hover:text-yon-black transition-colors"
-              style={{ fontSize: '0.6rem' }}
+              className="inline-block group"
             >
-              Contact →
+              <ExperimentalText
+                text="Contact →"
+                variant="caption"
+                effect="scatter"
+                intensity="medium"
+                className="group-hover:opacity-70 transition-opacity"
+              />
             </Link>
           </div>
 
