@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -8,19 +8,19 @@ import dynamic from 'next/dynamic'
 // Dynamic import for FullscreenMenu (client-only)
 const FullscreenMenu = dynamic(() => import('./FullscreenMenu'), { ssr: false })
 
-// Navigation structure with sub-items and IDs for accessibility
-const navItems = [
+// Frozen navigation structure - no re-creation on render
+const NAV_ITEMS = Object.freeze([
   {
     id: 'nav-collections',
     href: '/collections',
     label: 'Collections',
     num: '01',
-    subItems: [
+    subItems: Object.freeze([
       { href: '/collections/deconstruction', label: 'Deconstruction', season: 'AW25' },
       { href: '/collections/fragments', label: 'Fragments', season: 'SS25' },
       { href: '/collections/void', label: 'Void', season: 'AW24' },
       { href: '/collections/origin', label: 'Origin', season: 'SS24' },
-    ],
+    ]),
   },
   { id: 'nav-process', href: '/process', label: 'Process', num: '02' },
   {
@@ -28,15 +28,19 @@ const navItems = [
     href: '/archive',
     label: 'Archive',
     num: '03',
-    subItems: [
+    subItems: Object.freeze([
       { href: '/archive#aw25', label: 'AW25 Research' },
       { href: '/archive#ss25', label: 'SS25 Research' },
       { href: '/archive#aw24', label: 'AW24 Research' },
-    ],
+    ]),
   },
   { id: 'nav-about', href: '/about', label: 'About', num: '04' },
   { id: 'nav-contact', href: '/contact', label: 'Contact', num: '05' },
-]
+] as const)
+
+// Pre-computed rotations - frozen
+const DESKTOP_ROTATIONS = Object.freeze([-0.8, 0.5, -0.3, 0.7, -0.5] as const)
+const MOBILE_ROTATIONS = Object.freeze([-0.3, 0.5, -0.5, 0.3, -0.4] as const)
 
 export default function YonNav() {
   const [isOpen, setIsOpen] = useState(false)
@@ -302,15 +306,13 @@ export default function YonNav() {
             className="desktop-nav"
             aria-label="Main navigation"
           >
-            {navItems.map((item, index) => {
+            {NAV_ITEMS.map((item, index) => {
               const isActive = pathname === item.href ||
                 (item.href !== '/' && pathname.startsWith(item.href))
               const hasSubItems = item.subItems && item.subItems.length > 0
               const dropdownId = `dropdown-${item.href.replace('/', '')}`
               const isHovered = hoveredItem === item.href
-              // Slight rotation variations for deconstructivist feel
-              const rotations = [-0.8, 0.5, -0.3, 0.7, -0.5]
-              const rotation = rotations[index % rotations.length]
+              const rotation = DESKTOP_ROTATIONS[index % DESKTOP_ROTATIONS.length]
 
               return (
                 <div
@@ -717,14 +719,13 @@ export default function YonNav() {
               Home
             </Link>
 
-            {navItems.map((item, index) => {
+            {NAV_ITEMS.map((item, index) => {
               const isActive = pathname === item.href ||
                 (item.href !== '/' && pathname.startsWith(item.href))
               const hasSubItems = item.subItems && item.subItems.length > 0
-              const rotations = [-0.3, 0.5, -0.5, 0.3, -0.4]
 
               return (
-                <div key={item.href} style={{ transform: `rotate(${rotations[index % rotations.length]}deg)` }}>
+                <div key={item.href} style={{ transform: `rotate(${MOBILE_ROTATIONS[index % MOBILE_ROTATIONS.length]}deg)` }}>
                   <Link
                     href={item.href}
                     onClick={() => setIsOpen(false)}

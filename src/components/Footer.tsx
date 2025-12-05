@@ -4,18 +4,22 @@ import { memo } from 'react'
 import Link from 'next/link'
 import BackToTop from './BackToTop'
 
-const navItems = [
+// Frozen constants - no re-creation on render
+const NAV_ITEMS = Object.freeze([
   { href: '/collections', label: 'Collections' },
   { href: '/process', label: 'Process' },
   { href: '/archive', label: 'Archive' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
-] as const
+] as const)
 
-const socialItems = [
+const SOCIAL_ITEMS = Object.freeze([
   { href: 'mailto:hello@theyon.com', label: 'Email', external: false },
   { href: 'https://instagram.com/theyon_studio', label: 'Instagram', external: true },
-] as const
+] as const)
+
+// Current year - computed once at module level
+const CURRENT_YEAR = new Date().getFullYear()
 
 const Footer = memo(function Footer() {
   return (
@@ -133,7 +137,7 @@ const Footer = memo(function Footer() {
                 Navigate
               </h4>
               <ul className="space-y-4">
-                {navItems.map((item, index) => (
+                {NAV_ITEMS.map((item, index) => (
                   <li
                     key={item.href}
                     style={{ transform: `rotate(${(index % 2 === 0 ? -0.5 : 0.5) * 0.5}deg)` }}
@@ -168,7 +172,7 @@ const Footer = memo(function Footer() {
                 Connect
               </h4>
               <ul className="space-y-4">
-                {socialItems.map((item, index) => (
+                {SOCIAL_ITEMS.map((item, index) => (
                   <li
                     key={item.href}
                     style={{ transform: `rotate(${index % 2 === 0 ? 0.3 : -0.3}deg)` }}
@@ -249,7 +253,7 @@ const Footer = memo(function Footer() {
               className="font-mono text-yon-grey/40"
               style={{ fontSize: '0.55rem', letterSpacing: '0.1em' }}
             >
-              &copy; {new Date().getFullYear()} THE YON
+              &copy; {CURRENT_YEAR} THE YON
             </p>
 
             {/* Tagline */}

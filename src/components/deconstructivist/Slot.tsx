@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactNode, memo, useMemo } from 'react'
 
 // Extended Slot sizes - more variety
 type SlotSize =
@@ -148,8 +148,8 @@ interface SlotProps {
   animated?: boolean
 }
 
-// Extended Clip paths with more organic/torn edges
-const clipPaths: Record<ClipVariant, string> = {
+// Frozen clip paths - no re-creation on render
+const CLIP_PATHS = Object.freeze<Record<ClipVariant, string>>({
   'irregular-1': 'polygon(5% 0%, 100% 8%, 95% 100%, 0% 92%)',
   'irregular-2': 'polygon(0% 5%, 92% 0%, 100% 95%, 8% 100%)',
   'irregular-3': 'polygon(3% 0%, 100% 3%, 97% 100%, 0% 97%)',
@@ -180,10 +180,10 @@ const clipPaths: Record<ClipVariant, string> = {
   'organic-2':
     'polygon(5% 10%, 25% 0%, 75% 5%, 95% 15%, 100% 50%, 90% 90%, 60% 100%, 20% 95%, 0% 70%, 5% 30%)',
   none: 'none',
-}
+})
 
-// Extended Shadow CSS values
-const shadows: Record<ShadowVariant, string> = {
+// Frozen shadow values
+const SHADOWS = Object.freeze<Record<ShadowVariant, string>>({
   brutal: '15px 15px 0px rgba(0,0,0,0.9)',
   'brutal-sm': '8px 8px 0px rgba(0,0,0,0.9)',
   'brutal-lg': '25px 25px 0px rgba(0,0,0,0.85)',
@@ -196,10 +196,10 @@ const shadows: Record<ShadowVariant, string> = {
   soft: '0 10px 30px rgba(0,0,0,0.1)',
   harsh: '10px 10px 0px #0A0A0A, 20px 20px 0px rgba(0,0,0,0.1)',
   none: 'none',
-}
+})
 
-// Extended Size styles with more variety
-const sizeStyles: Record<SlotSize, CSSProperties> = {
+// Frozen size styles
+const SIZE_STYLES = Object.freeze<Record<SlotSize, CSSProperties>>({
   hero: { width: 'clamp(400px, 55vw, 1000px)', aspectRatio: '3/4' },
   'hero-wide': { width: 'clamp(500px, 65vw, 1200px)', aspectRatio: '16/10' },
   'hero-tall': { width: 'clamp(350px, 45vw, 800px)', aspectRatio: '2/3' },
@@ -216,10 +216,10 @@ const sizeStyles: Record<SlotSize, CSSProperties> = {
   'tiny-wide': { width: 'clamp(80px, 9vw, 160px)', aspectRatio: '4/3' },
   swatch: { width: 'clamp(45px, 5vw, 90px)', aspectRatio: '1/1' },
   micro: { width: 'clamp(30px, 3vw, 60px)', aspectRatio: '1/1' },
-}
+})
 
-// Extended Border styles
-const borderStyles: Record<string, CSSProperties> = {
+// Frozen border styles
+const BORDER_STYLES = Object.freeze<Record<string, CSSProperties>>({
   rough: { border: '3px solid #0A0A0A', borderRadius: '2px 8px 4px 12px' },
   brutal: { border: '4px solid #0A0A0A' },
   thin: { border: '1px solid #0A0A0A' },
@@ -228,18 +228,43 @@ const borderStyles: Record<string, CSSProperties> = {
   double: { border: '4px double #0A0A0A' },
   dashed: { border: '2px dashed #0A0A0A' },
   none: {},
-}
+})
 
-// Extended Bleed margins
-const bleedMargins = {
+// Frozen bleed margins
+const BLEED_MARGINS = Object.freeze({
   sm: 40,
   md: 80,
   lg: 120,
   xl: 180,
   xxl: 250,
-}
+} as const)
 
-export default function Slot({
+// Frozen label position styles
+const LABEL_POSITION_STYLES = Object.freeze<Record<string, CSSProperties>>({
+  center: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  bottom: {
+    position: 'absolute',
+    bottom: '8px',
+    left: '8px',
+  },
+  top: {
+    position: 'absolute',
+    top: '8px',
+    left: '8px',
+  },
+  corner: {
+    position: 'absolute',
+    bottom: '4px',
+    right: '4px',
+  },
+})
+
+function Slot({
   children,
   src,
   alt = 'Image',
@@ -304,15 +329,15 @@ export default function Slot({
   if (overlapX !== 0) marginLeft = -Math.abs(overlapX)
   if (overlapY !== 0) marginTop = -Math.abs(overlapY)
 
-  if (bleed === 'left' || bleed === 'both-x') marginLeft = -bleedMargins[bleedAmount]
-  if (bleed === 'right' || bleed === 'both-x') marginRight = -bleedMargins[bleedAmount]
-  if (bleed === 'top' || bleed === 'both-y') marginTop = -bleedMargins[bleedAmount]
-  if (bleed === 'bottom' || bleed === 'both-y') marginBottom = -bleedMargins[bleedAmount]
+  if (bleed === 'left' || bleed === 'both-x') marginLeft = -BLEED_MARGINS[bleedAmount]
+  if (bleed === 'right' || bleed === 'both-x') marginRight = -BLEED_MARGINS[bleedAmount]
+  if (bleed === 'top' || bleed === 'both-y') marginTop = -BLEED_MARGINS[bleedAmount]
+  if (bleed === 'bottom' || bleed === 'both-y') marginBottom = -BLEED_MARGINS[bleedAmount]
 
   // Combine all styles
   const combinedStyle: CSSProperties = {
-    ...sizeStyles[size],
-    ...(borderStyles[border] || {}),
+    ...SIZE_STYLES[size],
+    ...(BORDER_STYLES[border] || {}),
     position,
     ...(top && { top }),
     ...(left && { left }),
@@ -324,39 +349,14 @@ export default function Slot({
     ...(marginRight !== undefined && { marginRight }),
     ...(marginBottom !== undefined && { marginBottom }),
     transform: transforms.length > 0 ? transforms.join(' ') : undefined,
-    clipPath: clip !== 'none' ? clipPaths[clip] : undefined,
-    boxShadow: shadow !== 'none' ? shadows[shadow] : undefined,
+    clipPath: clip !== 'none' ? CLIP_PATHS[clip] : undefined,
+    boxShadow: shadow !== 'none' ? SHADOWS[shadow] : undefined,
     mixBlendMode: blend !== 'normal' ? blend : undefined,
     filter: filters.length > 0 ? filters.join(' ') : undefined,
     opacity,
     overflow: 'hidden',
     transition: animated ? 'transform 0.3s ease, box-shadow 0.3s ease' : undefined,
     ...style,
-  }
-
-  // Label position styles
-  const labelPositionStyles: Record<string, CSSProperties> = {
-    center: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-    },
-    bottom: {
-      position: 'absolute',
-      bottom: '8px',
-      left: '8px',
-    },
-    top: {
-      position: 'absolute',
-      top: '8px',
-      left: '8px',
-    },
-    corner: {
-      position: 'absolute',
-      bottom: '4px',
-      right: '4px',
-    },
   }
 
   return (
@@ -719,7 +719,7 @@ export default function Slot({
           {label && (
             <span
               style={{
-                ...labelPositionStyles[labelPosition],
+                ...LABEL_POSITION_STYLES[labelPosition],
                 fontFamily: 'monospace',
                 fontSize: size === 'micro' || size === 'swatch' ? '0.45rem' : '0.6rem',
                 letterSpacing: '0.12em',
@@ -735,6 +735,9 @@ export default function Slot({
     </div>
   )
 }
+
+// Memoized export
+export default memo(Slot)
 
 // Export sub-components for specific use cases
 export function HeroSlot(props: Omit<SlotProps, 'size'>) {
@@ -753,8 +756,43 @@ export function MicroSlot(props: Omit<SlotProps, 'size'>) {
   return <Slot {...props} size="micro" />
 }
 
+// Frozen annotation variant styles
+const ANNOTATION_VARIANT_STYLES = Object.freeze<Record<string, CSSProperties>>({
+  default: {
+    fontFamily: 'monospace',
+    fontSize: '0.55rem',
+    letterSpacing: '0.15em',
+    color: '#7A7A7A',
+    textTransform: 'uppercase',
+  },
+  handwritten: {
+    fontFamily: 'Georgia, serif',
+    fontSize: '0.7rem',
+    fontStyle: 'italic',
+    color: '#4A4A4A',
+  },
+  stamp: {
+    fontFamily: 'monospace',
+    fontSize: '0.5rem',
+    letterSpacing: '0.2em',
+    color: '#C41E3A',
+    textTransform: 'uppercase',
+    border: '1px solid #C41E3A',
+    padding: '2px 6px',
+  },
+  tag: {
+    fontFamily: 'monospace',
+    fontSize: '0.5rem',
+    letterSpacing: '0.1em',
+    color: '#FAFAFA',
+    background: '#0A0A0A',
+    padding: '3px 8px',
+    textTransform: 'uppercase',
+  },
+})
+
 // Utility component for scattered annotation labels
-export function AnnotationLabel({
+export const AnnotationLabel = memo(function AnnotationLabel({
   text,
   position,
   rotation = 0,
@@ -765,40 +803,6 @@ export function AnnotationLabel({
   rotation?: number
   variant?: 'default' | 'handwritten' | 'stamp' | 'tag'
 }) {
-  const variantStyles: Record<string, CSSProperties> = {
-    default: {
-      fontFamily: 'monospace',
-      fontSize: '0.55rem',
-      letterSpacing: '0.15em',
-      color: '#7A7A7A',
-      textTransform: 'uppercase',
-    },
-    handwritten: {
-      fontFamily: 'Georgia, serif',
-      fontSize: '0.7rem',
-      fontStyle: 'italic',
-      color: '#4A4A4A',
-    },
-    stamp: {
-      fontFamily: 'monospace',
-      fontSize: '0.5rem',
-      letterSpacing: '0.2em',
-      color: '#C41E3A',
-      textTransform: 'uppercase',
-      border: '1px solid #C41E3A',
-      padding: '2px 6px',
-    },
-    tag: {
-      fontFamily: 'monospace',
-      fontSize: '0.5rem',
-      letterSpacing: '0.1em',
-      color: '#FAFAFA',
-      background: '#0A0A0A',
-      padding: '3px 8px',
-      textTransform: 'uppercase',
-    },
-  }
-
   return (
     <span
       style={{
@@ -806,10 +810,10 @@ export function AnnotationLabel({
         ...position,
         transform: `rotate(${rotation}deg)`,
         zIndex: 50,
-        ...variantStyles[variant],
+        ...ANNOTATION_VARIANT_STYLES[variant],
       }}
     >
       {text}
     </span>
   )
-}
+})
