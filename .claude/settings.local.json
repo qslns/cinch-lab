@@ -30,7 +30,12 @@
       "Bash(npx next lint)",
       "Bash(npx tsc:*)",
       "Bash(ANALYZE=true npm run build:*)",
-      "Bash(timeout 15 npm run dev:*)"
+      "Bash(timeout 15 npm run dev:*)",
+      "Bash(npx vercel:*)",
+      "Bash(vercel login)",
+      "Bash(set \"USERNAME=user\")",
+      "Bash(cmd /c \"echo %USERNAME%\")",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

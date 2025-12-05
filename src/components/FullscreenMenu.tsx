@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, memo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -10,113 +10,85 @@ interface FullscreenMenuProps {
   onClose: () => void
 }
 
-const menuItems = [
+// Frozen constants - no re-creation on render
+const MENU_ITEMS = Object.freeze([
   { href: '/', label: 'Home', labelKo: '홈', num: '00' },
   { href: '/collections', label: 'Collections', labelKo: '컬렉션', num: '01' },
   { href: '/process', label: 'Process', labelKo: '프로세스', num: '02' },
   { href: '/archive', label: 'Archive', labelKo: '아카이브', num: '03' },
   { href: '/about', label: 'About', labelKo: '소개', num: '04' },
   { href: '/contact', label: 'Contact', labelKo: '연락', num: '05' },
-]
+] as const)
 
-const socialLinks = [
+const SOCIAL_LINKS = Object.freeze([
   { label: 'Instagram', href: 'https://instagram.com/theyon_studio' },
   { label: 'Email', href: 'mailto:hello@theyon.com' },
-]
+] as const)
 
-// Custom easing - deconstructivist feel
-const yonEase = [0.22, 1, 0.36, 1] as const
+// Custom easing - frozen singleton
+const YON_EASE = [0.22, 1, 0.36, 1] as const
 
-// Overlay animation - asymmetric reveal
-const overlayVariants = {
+// Pre-computed rotation values
+const ROTATIONS = Object.freeze([-0.8, 0.6, -0.4, 0.7, -0.5, 0.3] as const)
+
+// Frozen animation variants - no re-creation on render
+const OVERLAY_VARIANTS = Object.freeze({
   closed: {
     clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
-    transition: {
-      duration: 0.6,
-      ease: yonEase,
-      delay: 0.2,
-    },
+    transition: { duration: 0.6, ease: YON_EASE, delay: 0.2 },
   },
   open: {
     clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-    transition: {
-      duration: 0.8,
-      ease: yonEase,
-    },
+    transition: { duration: 0.8, ease: YON_EASE },
   },
-}
+})
 
-// Secondary layer - offset timing
-const secondLayerVariants = {
+const SECOND_LAYER_VARIANTS = Object.freeze({
   closed: {
     clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
-    transition: {
-      duration: 0.5,
-      ease: yonEase,
-      delay: 0.1,
-    },
+    transition: { duration: 0.5, ease: YON_EASE, delay: 0.1 },
   },
   open: {
     clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-    transition: {
-      duration: 0.7,
-      ease: yonEase,
-      delay: 0.1,
-    },
+    transition: { duration: 0.7, ease: YON_EASE, delay: 0.1 },
   },
-}
+})
 
-// Menu item animation - scattered entrance
-const itemVariants = {
-  closed: {
-    opacity: 0,
-    x: 60,
-    rotate: 3,
-  },
+const ITEM_VARIANTS = Object.freeze({
+  closed: { opacity: 0, x: 60, rotate: 3 },
   open: (i: number) => ({
     opacity: 1,
     x: 0,
-    rotate: (i % 2 === 0 ? -0.5 : 0.5),
-    transition: {
-      duration: 0.5,
-      delay: 0.3 + i * 0.06,
-      ease: yonEase,
-    },
+    rotate: i % 2 === 0 ? -0.5 : 0.5,
+    transition: { duration: 0.5, delay: 0.3 + i * 0.06, ease: YON_EASE },
   }),
   exit: (i: number) => ({
     opacity: 0,
     x: -30,
-    transition: {
-      duration: 0.2,
-      delay: i * 0.02,
-    },
+    transition: { duration: 0.2, delay: i * 0.02 },
   }),
-}
+})
 
-// Footer animation
-const footerVariants = {
+const FOOTER_VARIANTS = Object.freeze({
   closed: { opacity: 0, y: 30 },
-  open: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, delay: 0.7, ease: yonEase },
-  },
-}
+  open: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.7, ease: YON_EASE } },
+})
 
-// Background text animation
-const bgTextVariants = {
+const BG_TEXT_VARIANTS = Object.freeze({
   closed: { opacity: 0, scale: 0.9, rotate: -15 },
-  open: {
-    opacity: 1,
-    scale: 1,
-    rotate: -8,
-    transition: { duration: 1.2, delay: 0.2, ease: yonEase },
-  },
-}
+  open: { opacity: 1, scale: 1, rotate: -8, transition: { duration: 1.2, delay: 0.2, ease: YON_EASE } },
+})
 
-export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
+// Current year - computed once
+const CURRENT_YEAR = new Date().getFullYear()
+
+function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps) {
   const pathname = usePathname()
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  // Memoized handlers
+  const handleMouseEnter = useCallback((href: string) => setHoveredItem(href), [])
+  const handleMouseLeave = useCallback(() => setHoveredItem(null), [])
 
   // Close on route change
   useEffect(() => {
@@ -137,10 +109,10 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
 
   // Handle escape key
   useEffect(() => {
+    if (!isOpen) return
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose()
-      }
+      if (e.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
@@ -154,7 +126,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
           <motion.div
             className="fixed inset-0 z-[9989]"
             style={{ backgroundColor: '#8B7355' }}
-            variants={secondLayerVariants}
+            variants={SECOND_LAYER_VARIANTS}
             initial="closed"
             animate="open"
             exit="closed"
@@ -163,7 +135,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
           {/* Primary Overlay */}
           <motion.div
             className="fixed inset-0 z-[9990] bg-yon-charcoal"
-            variants={overlayVariants}
+            variants={OVERLAY_VARIANTS}
             initial="closed"
             animate="open"
             exit="closed"
@@ -189,7 +161,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
                 color: 'rgba(250, 250, 250, 0.02)',
                 lineHeight: 0.8,
               }}
-              variants={bgTextVariants}
+              variants={BG_TEXT_VARIANTS}
               initial="closed"
               animate="open"
             >
@@ -339,27 +311,26 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
             {/* Navigation - deconstructed layout */}
             <nav className="flex-1 flex items-center py-8" aria-label="Main menu">
               <ul className="space-y-1 md:space-y-2">
-                {menuItems.map((item, i) => {
+                {MENU_ITEMS.map((item, i) => {
                   const isActive = pathname === item.href
                   const isHovered = hoveredItem === item.href
-                  const rotations = [-0.8, 0.6, -0.4, 0.7, -0.5, 0.3]
 
                   return (
                     <motion.li
                       key={item.href}
                       custom={i}
-                      variants={itemVariants}
+                      variants={ITEM_VARIANTS}
                       initial="closed"
                       animate="open"
                       exit="exit"
-                      style={{ transform: `rotate(${rotations[i % rotations.length]}deg)` }}
+                      style={{ transform: `rotate(${ROTATIONS[i % ROTATIONS.length]}deg)` }}
                     >
                       <Link
                         href={item.href}
                         onClick={onClose}
                         className="group flex items-center gap-4 md:gap-8 py-2"
-                        onMouseEnter={() => setHoveredItem(item.href)}
-                        onMouseLeave={() => setHoveredItem(null)}
+                        onMouseEnter={() => handleMouseEnter(item.href)}
+                        onMouseLeave={handleMouseLeave}
                         aria-current={isActive ? 'page' : undefined}
                       >
                         {/* Number - exposed structure */}
@@ -402,7 +373,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
                             fontStyle: isHovered ? 'italic' : 'normal',
                             color: isHovered ? '#8B7355' : (isActive ? '#8B7355' : '#FAFAFA'),
                           }}
-                          transition={{ duration: 0.3, ease: yonEase }}
+                          transition={{ duration: 0.3, ease: YON_EASE }}
                         >
                           {item.label}
 
@@ -415,7 +386,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
                             }}
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: isHovered || isActive ? 1 : 0 }}
-                            transition={{ duration: 0.4, ease: yonEase }}
+                            transition={{ duration: 0.4, ease: YON_EASE }}
                           />
 
                           {/* Active indicator dot */}
@@ -470,13 +441,13 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
             {/* Footer - deconstructed layout */}
             <motion.div
               className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8"
-              variants={footerVariants}
+              variants={FOOTER_VARIANTS}
               initial="closed"
               animate="open"
             >
               {/* Social Links - scattered */}
               <div className="flex gap-10">
-                {socialLinks.map((link, index) => (
+                {SOCIAL_LINKS.map((link, index) => (
                   <a
                     key={link.label}
                     href={link.href}
@@ -507,7 +478,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
                   className="font-mono tracking-wider"
                   style={{ fontSize: '9px', color: 'rgba(122, 122, 122, 0.4)' }}
                 >
-                  © {new Date().getFullYear()} THE YON
+                  © {CURRENT_YEAR} THE YON
                 </p>
                 <p
                   className="font-mono mt-2"
@@ -530,7 +501,7 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
               style={{ backgroundColor: '#8B7355', width: '30%' }}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 0.6, delay: 0.5, ease: yonEase }}
+              transition={{ duration: 0.6, delay: 0.5, ease: YON_EASE }}
             />
           </motion.div>
         </>
@@ -538,3 +509,5 @@ export default function FullscreenMenu({ isOpen, onClose }: FullscreenMenuProps)
     </AnimatePresence>
   )
 }
+
+export default memo(FullscreenMenu)
