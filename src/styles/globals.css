@@ -5,6 +5,9 @@
 /* Deconstructivist Design System */
 @import './deconstructivist.css';
 
+/* Experimental Typography System - GEDOKU/Sakiyama inspired */
+@import './experimental-typography.css';
+
 /* ============================================
    THE YON Design System
    "Twisted yet harmonious"

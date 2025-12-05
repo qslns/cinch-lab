@@ -3,6 +3,16 @@
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
+import {
+  LayeredTitle,
+  ExperimentalText,
+  AnnotationText,
+  NumberTag,
+  LabelText,
+  WhisperText,
+  HandwrittenNote,
+  TagText,
+} from '@/components/typography'
 
 export default function AboutPage() {
   return (
@@ -319,44 +329,42 @@ export default function AboutPage() {
             transform: 'rotate(-1deg)',
           }}
         >
-          <span
-            className="block font-mono uppercase tracking-[0.4em] text-yon-grey/40"
+          <LabelText
+            text="Designer"
             style={{ fontSize: '0.55rem' }}
-          >
-            Designer
-          </span>
+          />
 
-          <h1
-            className="font-serif text-yon-black mt-4"
+          <LayeredTitle
+            text="Taehyun Lee"
+            size="medium"
+            layerStyle="offset"
+            offsetX={4}
+            offsetY={4}
+            layerOpacity={0.12}
+            layerColor="#8B7355"
+            charRotation
+            rotationIntensity={2}
+            className="mt-4"
             style={{
               fontSize: 'clamp(2.5rem, 6vw, 5rem)',
               letterSpacing: '-0.02em',
             }}
-          >
-            Taehyun Lee
-          </h1>
+            as="h1"
+          />
 
-          <span
-            className="block font-mono text-yon-grey/30 mt-2"
-            style={{ fontSize: '0.65rem', letterSpacing: '0.15em' }}
-          >
-            이태현
-          </span>
+          <ExperimentalText
+            text="이태현"
+            variant="caption"
+            effect="scatter"
+            intensity="subtle"
+            className="block mt-2"
+            style={{ fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(122, 122, 122, 0.3)' }}
+          />
 
           <div className="mt-6 flex items-center gap-4">
-            <span
-              className="font-mono uppercase tracking-[0.2em] text-yon-grey/40"
-              style={{ fontSize: '0.55rem' }}
-            >
-              Seoul / Tokyo
-            </span>
+            <WhisperText text="Seoul / Tokyo" style={{ fontSize: '0.55rem' }} />
             <span className="w-6 h-px bg-yon-grey/20" />
-            <span
-              className="font-mono uppercase tracking-[0.2em] text-yon-grey/40"
-              style={{ fontSize: '0.55rem' }}
-            >
-              SASADA
-            </span>
+            <WhisperText text="SASADA" style={{ fontSize: '0.55rem' }} />
           </div>
         </div>
 
@@ -444,27 +452,34 @@ export default function AboutPage() {
         </span>
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-5xl">
-          <p
-            className="font-serif italic text-yon-black/90 leading-relaxed"
+          <LayeredTitle
+            text="&ldquo;Twisted yet harmonious&rdquo;"
+            size="medium"
+            layerStyle="echo"
+            offsetX={4}
+            offsetY={4}
+            layerOpacity={0.1}
+            layerColor="#8B7355"
+            charRotation
+            rotationIntensity={1.5}
             style={{
+              fontStyle: 'italic',
               fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
               transform: 'rotate(-1.5deg)',
               maxWidth: '42ch',
             }}
-          >
-            &ldquo;Twisted yet harmonious&rdquo;
-          </p>
+            as="h2"
+          />
 
-          <p
-            className="font-mono uppercase tracking-[0.25em] text-yon-grey/50 mt-10"
-            style={{
-              fontSize: '0.65rem',
-              marginLeft: '3rem',
-              transform: 'rotate(0.5deg)',
-            }}
-          >
-            뒤틀렸지만 조화로운
-          </p>
+          <div className="mt-10" style={{ marginLeft: '3rem', transform: 'rotate(0.5deg)' }}>
+            <ExperimentalText
+              text="뒤틀렸지만 조화로운"
+              variant="caption"
+              effect="scatter"
+              intensity="subtle"
+              style={{ color: 'rgba(122, 122, 122, 0.5)' }}
+            />
+          </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-lg leading-relaxed"
@@ -635,66 +650,49 @@ export default function AboutPage() {
         </span>
 
         <div className="relative z-10 max-w-4xl">
-          <span
-            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
-            style={{ fontSize: '0.55rem' }}
-          >
-            Background
-          </span>
+          <LabelText text="Background" style={{ fontSize: '0.55rem' }} />
 
           <div className="mt-14 space-y-12">
             {/* Education */}
             <div style={{ transform: 'rotate(-0.5deg)' }}>
-              <span
-                className="font-mono text-yon-accent/60"
-                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
-              >
-                EDUCATION
-              </span>
-              <h3
-                className="font-serif text-yon-black mt-3"
+              <AnnotationText text="EDUCATION" variant="label" style={{ color: 'rgba(139, 115, 85, 0.6)' }} />
+              <LayeredTitle
+                text="SASADA Fashion School"
+                size="small"
+                layerStyle="offset"
+                offsetX={2}
+                offsetY={2}
+                layerOpacity={0.08}
+                className="mt-3"
                 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)' }}
-              >
-                SASADA Fashion School
-              </h3>
-              <span
-                className="block font-mono text-yon-grey/40 mt-2"
-                style={{ fontSize: '0.65rem', letterSpacing: '0.15em' }}
-              >
-                Tokyo — 2023–Present
-              </span>
+                as="h3"
+              />
+              <WhisperText
+                text="Tokyo — 2023–Present"
+                className="block mt-2"
+                style={{ fontSize: '0.65rem' }}
+              />
             </div>
 
             {/* Target */}
             <div style={{ marginLeft: '4rem', transform: 'rotate(0.3deg)' }}>
-              <span
-                className="font-mono text-yon-accent/60"
-                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
-              >
-                PORTFOLIO TARGET
-              </span>
+              <AnnotationText text="PORTFOLIO TARGET" variant="label" style={{ color: 'rgba(139, 115, 85, 0.6)' }} />
               <p
                 className="font-sans text-yon-grey/60 mt-3"
                 style={{ fontSize: '0.85rem', lineHeight: 1.7 }}
               >
                 CSM, Parsons, Royal Academy of Antwerp
               </p>
-              <span
-                className="block font-mono text-yon-grey/30 mt-2"
-                style={{ fontSize: '0.5rem', letterSpacing: '0.15em' }}
-              >
-                대학원 포트폴리오
-              </span>
+              <WhisperText
+                text="대학원 포트폴리오"
+                className="block mt-2"
+                style={{ fontSize: '0.5rem' }}
+              />
             </div>
 
             {/* Focus */}
             <div style={{ transform: 'rotate(-0.3deg)' }}>
-              <span
-                className="font-mono text-yon-accent/60"
-                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
-              >
-                FOCUS
-              </span>
+              <AnnotationText text="FOCUS" variant="label" style={{ color: 'rgba(139, 115, 85, 0.6)' }} />
               <p
                 className="font-sans text-yon-grey/60 mt-3"
                 style={{ fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '40ch' }}
@@ -706,12 +704,7 @@ export default function AboutPage() {
 
             {/* Values */}
             <div style={{ marginLeft: '2rem', transform: 'rotate(0.5deg)' }}>
-              <span
-                className="font-mono text-yon-accent/60"
-                style={{ fontSize: '0.55rem', letterSpacing: '0.2em' }}
-              >
-                VALUES
-              </span>
+              <AnnotationText text="VALUES" variant="label" style={{ color: 'rgba(139, 115, 85, 0.6)' }} />
               <p
                 className="font-sans text-yon-grey/60 mt-3"
                 style={{ fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '35ch' }}
@@ -837,23 +830,24 @@ export default function AboutPage() {
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24">
           <div className="max-w-4xl">
-            <span
-              className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
-              style={{ fontSize: '0.55rem' }}
-            >
-              Process
-            </span>
+            <LabelText text="Process" style={{ fontSize: '0.55rem' }} />
 
-            <h2
-              className="font-serif text-yon-black mt-6"
+            <LayeredTitle
+              text="How I Work"
+              size="medium"
+              layerStyle="offset"
+              offsetX={3}
+              offsetY={3}
+              layerOpacity={0.1}
+              layerColor="#8B7355"
+              className="mt-6"
               style={{
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 letterSpacing: '-0.02em',
                 transform: 'rotate(-0.5deg)',
               }}
-            >
-              How I Work
-            </h2>
+              as="h2"
+            />
 
             <p
               className="font-sans text-yon-grey/60 mt-8 max-w-md"
@@ -998,22 +992,25 @@ export default function AboutPage() {
         </span>
 
         <div className="text-center px-8 z-10">
-          <span
-            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
-            style={{ fontSize: '0.55rem' }}
-          >
-            Get in touch
-          </span>
+          <LabelText text="Get in touch" style={{ fontSize: '0.55rem' }} />
 
-          <h2
-            className="font-serif text-yon-black mt-6"
+          <LayeredTitle
+            text="Contact"
+            size="medium"
+            layerStyle="offset"
+            offsetX={4}
+            offsetY={4}
+            layerOpacity={0.1}
+            layerColor="#8B7355"
+            charRotation
+            rotationIntensity={1.5}
+            className="mt-6"
             style={{
               fontSize: 'clamp(1.8rem, 4.5vw, 3rem)',
               transform: 'rotate(-1deg)',
             }}
-          >
-            Contact
-          </h2>
+            as="h2"
+          />
 
           <Link
             href="/contact"

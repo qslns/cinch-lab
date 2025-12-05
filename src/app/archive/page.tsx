@@ -6,6 +6,16 @@ import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
 import { useLightbox } from '@/components/ImageLightbox'
+import {
+  LayeredTitle,
+  ExperimentalText,
+  LabelText,
+  WhisperText,
+  NumberTag,
+  HandwrittenNote,
+  CrossedText,
+  GrainDisplay,
+} from '@/components/typography'
 
 // Archive items - research and process documentation
 const archiveItems = [
@@ -165,27 +175,28 @@ function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: num
       {/* Info below */}
       <div className="mt-4 px-2">
         <div className="flex items-center gap-3">
-          <span
-            className={`font-mono uppercase tracking-[0.15em] ${
-              item.status === 'current' ? 'text-yon-accent' : 'text-yon-grey/40'
-            }`}
-            style={{ fontSize: '0.5rem' }}
-          >
+          <NumberTag className={item.status === 'current' ? 'text-yon-accent' : 'text-yon-grey/40'}>
             {item.status === 'current' ? '● Current' : '○ Archived'}
-          </span>
-          <span className="font-mono text-yon-grey/30" style={{ fontSize: '0.5rem' }}>
+          </NumberTag>
+          <WhisperText className="text-yon-grey/30">
             {item.date}
-          </span>
+          </WhisperText>
         </div>
 
         <h3
-          className="font-serif text-yon-black mt-2"
+          className="mt-2"
           style={{
-            fontSize: 'clamp(1rem, 2vw, 1.3rem)',
             transform: `rotate(${rotations[index % rotations.length] * 0.2}deg)`
           }}
         >
-          {item.title}
+          <ExperimentalText
+            text={item.title}
+            variant="subtitle"
+            effect={item.status === 'archived' ? 'grain' : 'layer'}
+            intensity="subtle"
+            colorScheme="mono"
+            as="span"
+          />
         </h3>
 
         <p
@@ -202,13 +213,13 @@ function ArchiveCard({ item, index }: { item: typeof archiveItems[0]; index: num
           animate={{ opacity: isHovered ? 1 : 0.5 }}
         >
           {item.tags.map(tag => (
-            <span
+            <LabelText
               key={tag}
-              className="font-mono text-yon-grey/50 uppercase tracking-wider"
+              className="text-yon-grey/50"
               style={{ fontSize: '0.45rem' }}
             >
               #{tag}
-            </span>
+            </LabelText>
           ))}
         </motion.div>
       </div>
@@ -501,48 +512,43 @@ export default function ArchivePage() {
         {/* Main title */}
         <div className="relative z-35 pt-44 pb-16 px-8 md:px-16 lg:px-24">
           <div className="max-w-5xl">
-            <span
-              className="block font-mono uppercase tracking-[0.4em] text-yon-grey/40"
-              style={{ fontSize: '0.55rem' }}
-            >
+            <LabelText className="text-yon-grey/40">
               THE YON — Archive
-            </span>
+            </LabelText>
 
-            <h1
-              className="font-serif text-yon-black mt-6"
-              style={{
-                fontSize: 'clamp(3rem, 7vw, 6rem)',
-                letterSpacing: '-0.03em',
-                transform: 'rotate(-1.5deg)',
-                lineHeight: 0.95,
-              }}
-            >
-              Archive
-            </h1>
+            <div className="mt-6" style={{ transform: 'rotate(-1.5deg)' }}>
+              <LayeredTitle
+                text="Archive"
+                layerStyle="echo"
+                size="display"
+                rotateChars
+                rotationIntensity={0.3}
+              />
+            </div>
 
-            <p
-              className="font-sans text-yon-grey/60 mt-10 max-w-lg"
-              style={{
-                fontSize: '0.9rem',
-                lineHeight: 1.8,
-                marginLeft: '3rem',
-                transform: 'rotate(0.5deg)',
-              }}
-            >
-              Research, process documentation, and experiments.
-              Every failure is a step toward discovery. Nothing is wasted.
-            </p>
+            <div className="mt-10 max-w-lg" style={{ marginLeft: '3rem' }}>
+              <p
+                className="font-sans text-yon-grey/60"
+                style={{
+                  fontSize: '0.9rem',
+                  lineHeight: 1.8,
+                  transform: 'rotate(0.5deg)',
+                }}
+              >
+                Research, process documentation, and experiments.
+                Every failure is a step toward discovery. Nothing is wasted.
+              </p>
 
-            <span
-              className="block font-mono text-yon-grey/30 mt-4"
-              style={{
-                fontSize: '0.55rem',
-                letterSpacing: '0.2em',
-                marginLeft: '3rem',
-              }}
-            >
-              아카이브 — 리서치 & 프로세스
-            </span>
+              <div className="mt-4">
+                <ExperimentalText
+                  text="아카이브 — 리서치 & 프로세스"
+                  variant="caption"
+                  effect="scatter"
+                  intensity="subtle"
+                  colorScheme="desaturated"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -717,36 +723,35 @@ export default function ArchivePage() {
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24">
           <div className="max-w-4xl">
-            <span
-              className="block font-mono uppercase tracking-[0.3em] text-yon-accent/60"
-              style={{ fontSize: '0.55rem' }}
-            >
+            <WhisperText className="text-yon-accent/60">
               Essential Documentation
-            </span>
+            </WhisperText>
 
-            <h2
-              className="font-serif text-yon-accent mt-6"
-              style={{
-                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-                letterSpacing: '-0.02em',
-                transform: 'rotate(-1deg)',
-              }}
-            >
-              Failures
-            </h2>
+            <div className="mt-6" style={{ transform: 'rotate(-1deg)' }}>
+              <GrainDisplay
+                text="Failures"
+                variant="photocopy"
+                style={{ color: 'var(--yon-accent)' }}
+              />
+            </div>
 
-            <p
-              className="font-sans text-yon-grey/60 mt-8 max-w-lg"
-              style={{
-                fontSize: '0.9rem',
-                lineHeight: 1.8,
-                marginLeft: '2rem',
-                transform: 'rotate(0.5deg)',
-              }}
-            >
-              Every failed experiment teaches something. Rejected ideas, broken toiles, wrong paths —
-              all documented as essential steps toward discovery.
-            </p>
+            <div className="mt-8 max-w-lg" style={{ marginLeft: '2rem' }}>
+              <p
+                className="font-sans text-yon-grey/60"
+                style={{
+                  fontSize: '0.9rem',
+                  lineHeight: 1.8,
+                  transform: 'rotate(0.5deg)',
+                }}
+              >
+                Every failed experiment teaches something. Rejected ideas, broken toiles, wrong paths —
+                all documented as essential steps toward discovery.
+              </p>
+
+              <HandwrittenNote className="mt-4 text-yon-grey/40">
+                실패는 발견의 필수 단계
+              </HandwrittenNote>
+            </div>
           </div>
 
           {/* Failure slots - 10 scattered grayscale */}
@@ -929,22 +934,19 @@ export default function ArchivePage() {
         </span>
 
         <div className="text-center px-8 z-10">
-          <span
-            className="block font-mono uppercase tracking-[0.3em] text-yon-grey/40"
-            style={{ fontSize: '0.55rem' }}
-          >
+          <LabelText className="text-yon-grey/40">
             See the results
-          </span>
+          </LabelText>
 
-          <h2
-            className="font-serif text-yon-black mt-6"
-            style={{
-              fontSize: 'clamp(1.8rem, 4.5vw, 3rem)',
-              transform: 'rotate(-1deg)',
-            }}
-          >
-            Collections
-          </h2>
+          <div className="mt-6" style={{ transform: 'rotate(-1deg)' }}>
+            <LayeredTitle
+              text="Collections"
+              layerStyle="offset"
+              size="heading"
+              rotateChars
+              rotationIntensity={0.4}
+            />
+          </div>
 
           <Link
             href="/collections"

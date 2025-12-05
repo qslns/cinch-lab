@@ -1,6 +1,15 @@
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
+import {
+  LayeredTitle,
+  ExperimentalText,
+  AnnotationText,
+  NumberTag,
+  LabelText,
+  WhisperText,
+  HandwrittenNote,
+} from '@/components/typography'
 
 export default function HomePage() {
   return (
@@ -11,7 +20,7 @@ export default function HomePage() {
           1920x1080 viewport optimized
           ============================================ */}
       <section className="relative min-h-screen w-full overflow-hidden texture-grain">
-        {/* Background typography - THE YON massive */}
+        {/* Background typography - THE YON massive with layer effect */}
         <span
           className="absolute pointer-events-none select-none"
           style={{
@@ -25,6 +34,27 @@ export default function HomePage() {
             letterSpacing: '-0.05em',
             color: '#0A0A0A',
             zIndex: 1,
+            textShadow: '6px 6px 0 rgba(139, 115, 85, 0.02)',
+          }}
+          aria-hidden="true"
+        >
+          THE YON
+        </span>
+
+        {/* Second layer - offset shadow for depth */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: 'calc(25% + 8px)',
+            left: 'calc(-8% + 8px)',
+            fontSize: 'clamp(14rem, 32vw, 45rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.015,
+            lineHeight: 0.8,
+            letterSpacing: '-0.05em',
+            color: '#8B7355',
+            zIndex: 0,
           }}
           aria-hidden="true"
         >
@@ -49,6 +79,25 @@ export default function HomePage() {
           aria-hidden="true"
         >
           2024
+        </span>
+
+        {/* Third layer - accent mark */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: '60%',
+            right: '15%',
+            fontSize: 'clamp(8rem, 20vw, 28rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-mono), monospace',
+            opacity: 0.012,
+            color: '#8B7355',
+            transform: 'rotate(15deg)',
+            zIndex: 0,
+          }}
+          aria-hidden="true"
+        >
+          →
         </span>
 
         {/* ===== HERO SLOTS - 15 slots with dense overlapping ===== */}
@@ -267,31 +316,31 @@ export default function HomePage() {
           contrast
         />
 
-        {/* Scattered Annotation Labels */}
+        {/* Scattered Annotation Labels with experimental typography */}
         <AnnotationLabel
           text="AW25"
           position={{ top: '8%', left: '25%' }}
           rotation={-3}
           variant="tag"
         />
-        <AnnotationLabel
-          text="test print"
-          position={{ top: '45%', left: '5%' }}
-          rotation={5}
-          variant="handwritten"
-        />
-        <AnnotationLabel
-          text="APPROVED"
-          position={{ bottom: '30%', right: '35%' }}
-          rotation={-2}
-          variant="stamp"
-        />
-        <AnnotationLabel
-          text="ref. 001"
-          position={{ top: '70%', right: '5%' }}
-          rotation={8}
-          variant="default"
-        />
+        <div
+          className="absolute"
+          style={{ top: '45%', left: '5%', transform: 'rotate(5deg)', zIndex: 50 }}
+        >
+          <HandwrittenNote text="test print" />
+        </div>
+        <div
+          className="absolute"
+          style={{ bottom: '30%', right: '35%', transform: 'rotate(-2deg)', zIndex: 50 }}
+        >
+          <AnnotationText text="APPROVED" variant="stamp" />
+        </div>
+        <div
+          className="absolute"
+          style={{ top: '70%', right: '5%', transform: 'rotate(8deg)', zIndex: 50 }}
+        >
+          <NumberTag index={1} />
+        </div>
 
         {/* Navigation hint - bottom center */}
         <div
@@ -311,36 +360,41 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Brand mark - top left corner */}
+        {/* Brand mark - top left corner with layered effect */}
         <div className="absolute top-6 left-6 z-40">
-          <span
-            className="font-mono uppercase tracking-[0.4em] text-yon-black/70"
-            style={{ fontSize: '0.6rem' }}
-          >
-            THE YON
-          </span>
-          <span
-            className="block font-mono text-yon-grey/40 mt-1"
-            style={{ fontSize: '0.5rem', letterSpacing: '0.2em' }}
-          >
-            저 너머
-          </span>
+          <LayeredTitle
+            text="THE YON"
+            size="small"
+            layerStyle="offset"
+            offsetX={2}
+            offsetY={2}
+            layerOpacity={0.15}
+            style={{
+              fontSize: '0.75rem',
+              letterSpacing: '0.4em',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 400,
+            }}
+            as="span"
+          />
+          <WhisperText
+            text="저 너머"
+            className="block mt-1"
+            style={{ fontSize: '0.5rem' }}
+          />
         </div>
 
         {/* Year - top right corner */}
         <div className="absolute top-6 right-6 z-40 text-right">
-          <span
-            className="font-mono uppercase tracking-[0.2em] text-yon-grey/40"
+          <LabelText
+            text="Portfolio"
             style={{ fontSize: '0.55rem' }}
-          >
-            Portfolio
-          </span>
-          <span
-            className="block font-mono text-yon-grey/30 mt-1"
+          />
+          <WhisperText
+            text="2024—25"
+            className="block mt-1"
             style={{ fontSize: '0.5rem' }}
-          >
-            2024—25
-          </span>
+          />
         </div>
       </section>
 
@@ -349,7 +403,7 @@ export default function HomePage() {
           Dense asymmetric typography with floating slots
           ============================================ */}
       <section className="relative min-h-[90vh] w-full flex items-center overflow-hidden texture-paper">
-        {/* Background letter - massive Y */}
+        {/* Background letter - massive Y with echo effect */}
         <span
           className="absolute pointer-events-none select-none"
           style={{
@@ -361,6 +415,24 @@ export default function HomePage() {
             opacity: 0.02,
             lineHeight: 0.8,
             color: '#0A0A0A',
+          }}
+          aria-hidden="true"
+        >
+          Y
+        </span>
+
+        {/* Echo layer */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: 'calc(5% + 15px)',
+            right: 'calc(-15% + 15px)',
+            fontSize: 'clamp(25rem, 60vw, 80rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.008,
+            lineHeight: 0.8,
+            color: '#8B7355',
           }}
           aria-hidden="true"
         >
@@ -388,28 +460,33 @@ export default function HomePage() {
         </span>
 
         <div className="relative z-10 px-8 md:px-16 lg:px-24 max-w-5xl">
-          {/* Philosophy text - asymmetric */}
-          <p
-            className="font-serif italic text-yon-black/90 leading-relaxed"
+          {/* Philosophy text - Experimental layered title */}
+          <LayeredTitle
+            text="&ldquo;Twisted yet harmonious&rdquo;"
+            size="medium"
+            layerStyle="offset"
+            offsetX={3}
+            offsetY={3}
+            layerOpacity={0.12}
+            layerColor="#8B7355"
+            charRotation
+            rotationIntensity={2}
             style={{
-              fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)',
+              fontStyle: 'italic',
               transform: 'rotate(-1.5deg)',
-              maxWidth: '42ch',
             }}
-          >
-            &ldquo;Twisted yet harmonious&rdquo;
-          </p>
+            as="h2"
+          />
 
-          <p
-            className="font-mono uppercase tracking-[0.25em] text-yon-grey/50 mt-10"
-            style={{
-              fontSize: '0.65rem',
-              marginLeft: '3rem',
-              transform: 'rotate(0.5deg)',
-            }}
-          >
-            뒤틀렸지만 조화로운
-          </p>
+          <div className="mt-10" style={{ marginLeft: '3rem', transform: 'rotate(0.5deg)' }}>
+            <ExperimentalText
+              text="뒤틀렸지만 조화로운"
+              variant="caption"
+              effect="scatter"
+              intensity="subtle"
+              style={{ color: 'rgba(122, 122, 122, 0.5)' }}
+            />
+          </div>
 
           <p
             className="font-sans text-yon-grey/70 mt-14 max-w-md leading-relaxed"
@@ -498,12 +575,12 @@ export default function HomePage() {
           zIndex={12}
         />
 
-        <AnnotationLabel
-          text="essential"
-          position={{ bottom: '40%', left: '60%' }}
-          rotation={3}
-          variant="handwritten"
-        />
+        <div
+          className="absolute"
+          style={{ bottom: '40%', left: '60%', transform: 'rotate(3deg)', zIndex: 50 }}
+        >
+          <HandwrittenNote text="essential" />
+        </div>
       </section>
 
       {/* ============================================
@@ -511,7 +588,7 @@ export default function HomePage() {
           Dense moodboard grid - 10+ slots
           ============================================ */}
       <section className="relative min-h-screen w-full py-24 overflow-hidden texture-grain">
-        {/* Section title - background */}
+        {/* Section title - background with triple layer */}
         <span
           className="absolute pointer-events-none select-none"
           style={{
@@ -523,6 +600,44 @@ export default function HomePage() {
             opacity: 0.035,
             letterSpacing: '-0.03em',
             color: '#0A0A0A',
+            transform: 'rotate(-5deg)',
+          }}
+          aria-hidden="true"
+        >
+          COLLECTIONS
+        </span>
+
+        {/* Second layer */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: 'calc(3% + 6px)',
+            left: 'calc(-10% + 6px)',
+            fontSize: 'clamp(8rem, 18vw, 25rem)',
+            fontWeight: 200,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.015,
+            letterSpacing: '-0.03em',
+            color: '#8B7355',
+            transform: 'rotate(-5deg)',
+          }}
+          aria-hidden="true"
+        >
+          COLLECTIONS
+        </span>
+
+        {/* Third layer */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: 'calc(3% + 12px)',
+            left: 'calc(-10% + 12px)',
+            fontSize: 'clamp(8rem, 18vw, 25rem)',
+            fontWeight: 200,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.008,
+            letterSpacing: '-0.03em',
+            color: '#4A4A4A',
             transform: 'rotate(-5deg)',
           }}
           aria-hidden="true"
@@ -597,21 +712,24 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Collection info */}
+          {/* Collection info with experimental typography */}
           <div className="mt-10 ml-4" style={{ transform: 'rotate(-0.5deg)' }}>
             <Link href="/collections/deconstruction" className="group">
-              <h3
-                className="font-serif text-yon-black group-hover:text-yon-accent transition-colors"
+              <LayeredTitle
+                text="DECONSTRUCTION"
+                size="small"
+                layerStyle="offset"
+                offsetX={2}
+                offsetY={2}
+                layerOpacity={0.1}
+                className="group-hover:text-yon-accent transition-colors"
                 style={{ fontSize: '1.6rem' }}
-              >
-                DECONSTRUCTION
-              </h3>
-              <span
-                className="font-mono uppercase tracking-[0.2em] text-yon-grey/50"
-                style={{ fontSize: '0.6rem' }}
-              >
-                AW25 — View Collection →
-              </span>
+                as="h3"
+              />
+              <LabelText
+                text="AW25 — View Collection →"
+                style={{ marginTop: '0.5rem' }}
+              />
             </Link>
           </div>
         </div>
@@ -690,19 +808,19 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Scattered labels */}
-        <AnnotationLabel
-          text="current"
-          position={{ top: '15%', right: '20%' }}
-          rotation={-4}
-          variant="tag"
-        />
-        <AnnotationLabel
-          text="in progress"
-          position={{ top: '45%', left: '8%' }}
-          rotation={6}
-          variant="stamp"
-        />
+        {/* Scattered labels with experimental typography */}
+        <div
+          className="absolute"
+          style={{ top: '15%', right: '20%', transform: 'rotate(-4deg)', zIndex: 50 }}
+        >
+          <AnnotationText text="CURRENT" variant="tag" />
+        </div>
+        <div
+          className="absolute"
+          style={{ top: '45%', left: '8%', transform: 'rotate(6deg)', zIndex: 50 }}
+        >
+          <AnnotationText text="IN PROGRESS" variant="stamp" rotation={2} />
+        </div>
 
         {/* View all link */}
         <div className="text-center mt-20">
@@ -721,7 +839,7 @@ export default function HomePage() {
           Sketchbook feel with 8+ slots
           ============================================ */}
       <section className="relative min-h-[80vh] w-full py-20 overflow-hidden bg-yon-ivory/30 texture-paper">
-        {/* Background */}
+        {/* Background with layered effect */}
         <span
           className="absolute pointer-events-none select-none"
           style={{
@@ -732,6 +850,23 @@ export default function HomePage() {
             fontFamily: 'var(--font-serif), Georgia, serif',
             opacity: 0.025,
             color: '#0A0A0A',
+            transform: 'rotate(5deg)',
+          }}
+          aria-hidden="true"
+        >
+          PROCESS
+        </span>
+
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            bottom: 'calc(8% + 5px)',
+            right: 'calc(-8% + 5px)',
+            fontSize: 'clamp(10rem, 25vw, 35rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.01,
+            color: '#8B7355',
             transform: 'rotate(5deg)',
           }}
           aria-hidden="true"
@@ -853,18 +988,18 @@ export default function HomePage() {
           </div>
         </div>
 
-        <AnnotationLabel
-          text="stage 03"
-          position={{ top: '30%', right: '10%' }}
-          rotation={5}
-          variant="default"
-        />
-        <AnnotationLabel
-          text="needs revision"
-          position={{ bottom: '25%', left: '45%' }}
-          rotation={-3}
-          variant="handwritten"
-        />
+        <div
+          className="absolute"
+          style={{ top: '30%', right: '10%', transform: 'rotate(5deg)', zIndex: 50 }}
+        >
+          <NumberTag index={3} />
+        </div>
+        <div
+          className="absolute"
+          style={{ bottom: '25%', left: '45%', transform: 'rotate(-3deg)', zIndex: 50 }}
+        >
+          <HandwrittenNote text="needs revision" />
+        </div>
       </section>
 
       {/* ============================================
@@ -872,7 +1007,7 @@ export default function HomePage() {
           Minimal with accent slots
           ============================================ */}
       <section className="relative min-h-[60vh] w-full flex items-center justify-center overflow-hidden">
-        {/* Background symbol */}
+        {/* Background symbol with offset */}
         <span
           className="absolute pointer-events-none select-none"
           style={{
@@ -890,17 +1025,39 @@ export default function HomePage() {
           →
         </span>
 
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            top: 'calc(20% + 8px)',
+            left: 'calc(50% + 8px)',
+            transform: 'translateX(-50%)',
+            fontSize: 'clamp(15rem, 35vw, 50rem)',
+            fontWeight: 100,
+            fontFamily: 'var(--font-serif), Georgia, serif',
+            opacity: 0.008,
+            color: '#8B7355',
+          }}
+          aria-hidden="true"
+        >
+          →
+        </span>
+
         <div className="text-center px-8 z-10">
-          <h2
-            className="font-serif text-yon-black/90"
+          <LayeredTitle
+            text="Get in Touch"
+            size="large"
+            layerStyle="offset"
+            offsetX={4}
+            offsetY={4}
+            layerOpacity={0.1}
+            layerColor="#8B7355"
+            charRotation
+            rotationIntensity={1.5}
             style={{
-              fontSize: 'clamp(2.2rem, 5.5vw, 4.5rem)',
-              letterSpacing: '-0.02em',
               transform: 'rotate(-1.5deg)',
             }}
-          >
-            Get in Touch
-          </h2>
+            as="h2"
+          />
 
           <div className="mt-10">
             <Link

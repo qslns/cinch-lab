@@ -8,6 +8,14 @@ import { collectionsQuery } from '@/lib/sanity/queries'
 import type { Collection } from '@/types/sanity'
 import Footer from '@/components/Footer'
 import { Slot, AnnotationLabel } from '@/components/deconstructivist'
+import {
+  LayeredTitle,
+  ExperimentalText,
+  AnnotationText,
+  LabelText,
+  WhisperText,
+  HandwrittenNote,
+} from '@/components/typography'
 
 // Fallback data for THE YON
 const FALLBACK_COLLECTIONS: Partial<Collection>[] = [
@@ -405,7 +413,7 @@ function CollectionMoodboard({
             variant="default"
           />
 
-          {/* Collection info - overlaid */}
+          {/* Collection info - overlaid with experimental typography */}
           <div
             className="absolute z-40"
             style={{
@@ -416,22 +424,28 @@ function CollectionMoodboard({
             }}
           >
             <Link href={`/collections/${collection.slug}`} className="group block">
-              <span
-                className="block font-mono uppercase tracking-[0.3em] text-yon-grey/50"
+              <LabelText
+                text={`${collection.season?.toUpperCase()} — ${collection.year}`}
                 style={{ fontSize: '0.55rem' }}
-              >
-                {collection.season?.toUpperCase()} — {collection.year}
-              </span>
+              />
 
-              <h2
-                className="font-serif text-yon-black group-hover:text-yon-accent transition-colors mt-3"
+              <LayeredTitle
+                text={collection.title || 'COLLECTION'}
+                size="small"
+                layerStyle="offset"
+                offsetX={3}
+                offsetY={3}
+                layerOpacity={0.1}
+                layerColor="#8B7355"
+                charRotation
+                rotationIntensity={1.5}
+                className="mt-3 group-hover:text-yon-accent transition-colors"
                 style={{
                   fontSize: 'clamp(1.8rem, 4vw, 3rem)',
                   letterSpacing: '-0.02em',
                 }}
-              >
-                {collection.title}
-              </h2>
+                as="h2"
+              />
 
               <p
                 className="font-sans text-yon-grey/60 mt-4 max-w-sm"
@@ -757,27 +771,33 @@ export default function CollectionsPage() {
           variant="stamp"
         />
 
-        {/* Main title */}
+        {/* Main title with experimental typography */}
         <div className="relative z-30 pt-44 pb-16 px-8 md:px-16 lg:px-24">
           <div className="max-w-5xl">
-            <span
-              className="block font-mono uppercase tracking-[0.4em] text-yon-grey/40"
+            <LabelText
+              text="THE YON — Collections"
               style={{ fontSize: '0.55rem' }}
-            >
-              THE YON — Collections
-            </span>
+            />
 
-            <h1
-              className="font-serif text-yon-black mt-6"
+            <LayeredTitle
+              text="Collections"
+              size="large"
+              layerStyle="triple"
+              offsetX={5}
+              offsetY={5}
+              layerOpacity={0.08}
+              layerColor="#8B7355"
+              charRotation
+              rotationIntensity={2}
+              className="mt-6"
               style={{
                 fontSize: 'clamp(3rem, 7vw, 6rem)',
                 letterSpacing: '-0.03em',
                 transform: 'rotate(-1.5deg)',
                 lineHeight: 0.95,
               }}
-            >
-              Collections
-            </h1>
+              as="h1"
+            />
 
             <p
               className="font-sans text-yon-grey/60 mt-10 max-w-lg"
@@ -792,16 +812,17 @@ export default function CollectionsPage() {
               material, and form. Work in progress, failures documented.
             </p>
 
-            <span
-              className="block font-mono text-yon-grey/30 mt-4"
+            <ExperimentalText
+              text="컬렉션 — 실험적 패션"
+              variant="micro"
+              effect="scatter"
+              intensity="subtle"
+              className="block mt-4"
               style={{
-                fontSize: '0.55rem',
-                letterSpacing: '0.2em',
                 marginLeft: '3rem',
+                color: 'rgba(122, 122, 122, 0.3)',
               }}
-            >
-              컬렉션 — 실험적 패션
-            </span>
+            />
           </div>
         </div>
 

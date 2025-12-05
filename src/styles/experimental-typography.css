@@ -1,0 +1,576 @@
+/* ============================================
+   THE YON EXPERIMENTAL TYPOGRAPHY SYSTEM
+   GEDOKU/Sakiyama inspired styles
+   "Twisted yet harmonious"
+   ============================================ */
+
+/* ============================================
+   PART 1: Base Typography Variables
+   ============================================ */
+
+:root {
+  /* Experimental text sizes */
+  --exp-text-hero: clamp(4rem, 18vw, 14rem);
+  --exp-text-display: clamp(3rem, 12vw, 10rem);
+  --exp-text-title: clamp(2rem, 8vw, 6rem);
+  --exp-text-heading: clamp(1.5rem, 5vw, 3.5rem);
+  --exp-text-subheading: clamp(1.25rem, 3vw, 2rem);
+  --exp-text-body: clamp(0.875rem, 1.5vw, 1.125rem);
+  --exp-text-caption: 0.75rem;
+  --exp-text-micro: 0.625rem;
+  --exp-text-whisper: 0.5rem;
+
+  /* Desaturated color palette - GEDOKU style */
+  --exp-color-ink: #1a1a1a;
+  --exp-color-graphite: #2d2d2d;
+  --exp-color-slate: #4a4a4a;
+  --exp-color-pewter: #6b6b6b;
+  --exp-color-stone: #8b8b8b;
+  --exp-color-mist: #b0b0b0;
+  --exp-color-paper: #f5f5f0;
+  --exp-color-cream: #fafafa;
+
+  /* Accent colors - muted */
+  --exp-color-sepia: #8b7355;
+  --exp-color-rust: #a06040;
+  --exp-color-sage: #5a6b5a;
+  --exp-color-navy: #3a4a5a;
+  --exp-color-wine: #6a3a4a;
+  --exp-color-stamp-red: #c41e3a;
+
+  /* Experimental timing */
+  --exp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --exp-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --exp-duration-fast: 0.2s;
+  --exp-duration-normal: 0.4s;
+  --exp-duration-slow: 0.8s;
+}
+
+/* ============================================
+   PART 2: Character-Level Effects
+   ============================================ */
+
+/* Base scattered character effect */
+.char-scatter {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.char-scatter > span {
+  display: inline-block;
+  transition: transform var(--exp-duration-normal) var(--exp-ease);
+}
+
+/* Subtle scatter - for body text */
+.char-scatter--subtle > span:nth-child(odd) {
+  transform: rotate(-0.5deg) translateY(-1px);
+}
+.char-scatter--subtle > span:nth-child(even) {
+  transform: rotate(0.5deg) translateY(1px);
+}
+
+/* Medium scatter - for headings */
+.char-scatter--medium > span:nth-child(3n) {
+  transform: rotate(-1.5deg) translateY(-2px);
+}
+.char-scatter--medium > span:nth-child(3n+1) {
+  transform: rotate(1deg) translateY(1px);
+}
+.char-scatter--medium > span:nth-child(3n+2) {
+  transform: rotate(-0.5deg) translateY(-1px);
+}
+
+/* Strong scatter - for display text */
+.char-scatter--strong > span:nth-child(4n) {
+  transform: rotate(-2.5deg) translateY(-3px);
+  opacity: 0.95;
+}
+.char-scatter--strong > span:nth-child(4n+1) {
+  transform: rotate(2deg) translateY(2px);
+}
+.char-scatter--strong > span:nth-child(4n+2) {
+  transform: rotate(-1deg) translateY(-2px);
+  opacity: 0.9;
+}
+.char-scatter--strong > span:nth-child(4n+3) {
+  transform: rotate(1.5deg) translateY(1px);
+}
+
+/* Wave effect - sinusoidal */
+.char-wave > span {
+  display: inline-block;
+  animation: charWave 2s ease-in-out infinite;
+}
+
+.char-wave > span:nth-child(1) { animation-delay: 0s; }
+.char-wave > span:nth-child(2) { animation-delay: 0.1s; }
+.char-wave > span:nth-child(3) { animation-delay: 0.2s; }
+.char-wave > span:nth-child(4) { animation-delay: 0.3s; }
+.char-wave > span:nth-child(5) { animation-delay: 0.4s; }
+.char-wave > span:nth-child(6) { animation-delay: 0.5s; }
+.char-wave > span:nth-child(7) { animation-delay: 0.6s; }
+.char-wave > span:nth-child(8) { animation-delay: 0.7s; }
+.char-wave > span:nth-child(9) { animation-delay: 0.8s; }
+.char-wave > span:nth-child(10) { animation-delay: 0.9s; }
+
+@keyframes charWave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Layered character effect */
+.char-layer > span {
+  display: inline-block;
+  text-shadow:
+    2px 2px 0 rgba(139, 115, 85, 0.15),
+    4px 4px 0 rgba(139, 115, 85, 0.08);
+}
+
+/* ============================================
+   PART 3: Text Effect Classes
+   ============================================ */
+
+/* Grain texture overlay */
+.text-grain {
+  position: relative;
+}
+
+.text-grain::after {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Outline text */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--exp-color-ink);
+}
+
+.text-outline-thin {
+  color: transparent;
+  -webkit-text-stroke: 0.5px var(--exp-color-slate);
+}
+
+.text-outline-accent {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--exp-color-sepia);
+}
+
+/* Double layer text */
+.text-double {
+  position: relative;
+}
+
+.text-double::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--exp-color-sepia);
+  opacity: 0.2;
+  transform: translate(3px, 3px);
+  z-index: -1;
+}
+
+/* Triple layer text */
+.text-triple {
+  position: relative;
+}
+
+.text-triple::before,
+.text-triple::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.text-triple::before {
+  color: var(--exp-color-sepia);
+  opacity: 0.15;
+  transform: translate(3px, 3px);
+  z-index: -1;
+}
+
+.text-triple::after {
+  color: var(--exp-color-slate);
+  opacity: 0.08;
+  transform: translate(6px, 6px);
+  z-index: -2;
+}
+
+/* Offset shadow text */
+.text-offset {
+  text-shadow: 4px 4px 0 rgba(139, 115, 85, 0.15);
+}
+
+.text-offset-strong {
+  text-shadow:
+    6px 6px 0 rgba(139, 115, 85, 0.2),
+    12px 12px 0 rgba(139, 115, 85, 0.1);
+}
+
+/* Glitch text */
+.text-glitch {
+  position: relative;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.8;
+}
+
+.text-glitch::before {
+  color: #c41e3a;
+  transform: translate(2px, -1px);
+  mix-blend-mode: multiply;
+  animation: textGlitch1 3s infinite;
+}
+
+.text-glitch::after {
+  color: #1e3ac4;
+  transform: translate(-2px, 1px);
+  mix-blend-mode: multiply;
+  animation: textGlitch2 3s infinite;
+}
+
+@keyframes textGlitch1 {
+  0%, 90%, 100% { transform: translate(2px, -1px); }
+  92% { transform: translate(-3px, 1px); }
+  94% { transform: translate(4px, -2px); }
+}
+
+@keyframes textGlitch2 {
+  0%, 90%, 100% { transform: translate(-2px, 1px); }
+  93% { transform: translate(3px, -1px); }
+  95% { transform: translate(-4px, 2px); }
+}
+
+/* ============================================
+   PART 4: Color Classes
+   ============================================ */
+
+/* Desaturated colors */
+.text-desaturated { color: var(--exp-color-slate); }
+.text-faded { color: var(--exp-color-pewter); opacity: 0.8; }
+.text-ghost { color: var(--exp-color-mist); opacity: 0.5; }
+.text-whisper { color: var(--exp-color-stone); opacity: 0.3; }
+
+/* Accent colors */
+.text-sepia { color: var(--exp-color-sepia); }
+.text-rust { color: var(--exp-color-rust); }
+.text-sage { color: var(--exp-color-sage); }
+.text-navy { color: var(--exp-color-navy); }
+.text-wine { color: var(--exp-color-wine); }
+.text-stamp { color: var(--exp-color-stamp-red); }
+
+/* ============================================
+   PART 5: Blend Mode Classes
+   ============================================ */
+
+.blend-multiply { mix-blend-mode: multiply; }
+.blend-difference { mix-blend-mode: difference; }
+.blend-overlay { mix-blend-mode: overlay; }
+.blend-screen { mix-blend-mode: screen; }
+.blend-soft-light { mix-blend-mode: soft-light; }
+.blend-color-dodge { mix-blend-mode: color-dodge; }
+
+/* ============================================
+   PART 6: Annotation Styles
+   ============================================ */
+
+/* Handwritten style */
+.annotation-handwritten {
+  font-family: Georgia, 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--exp-color-slate);
+  letter-spacing: -0.01em;
+}
+
+/* Stamp style */
+.annotation-stamp {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--exp-color-ink);
+  border: 2px solid currentColor;
+  padding: 4px 10px;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+
+.annotation-stamp--red {
+  color: var(--exp-color-stamp-red);
+  border-color: var(--exp-color-stamp-red);
+}
+
+/* Tag style */
+.annotation-tag {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--exp-color-cream);
+  background: var(--exp-color-ink);
+  padding: 4px 10px;
+  display: inline-block;
+}
+
+.annotation-tag--inverted {
+  color: var(--exp-color-ink);
+  background: var(--exp-color-paper);
+}
+
+/* Number tag - Margiela style */
+.annotation-number {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.4em;
+  color: var(--exp-color-pewter);
+  opacity: 0.5;
+}
+
+.annotation-number--circle {
+  width: 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+}
+
+/* Crossed out */
+.annotation-crossed {
+  text-decoration: line-through;
+  text-decoration-color: var(--exp-color-stamp-red);
+  text-decoration-thickness: 2px;
+  color: var(--exp-color-pewter);
+}
+
+/* Underlined - hand-drawn style */
+.annotation-underlined {
+  border-bottom: 2px solid var(--exp-color-sepia);
+  padding-bottom: 2px;
+}
+
+/* Circled text */
+.annotation-circled {
+  border: 2px solid var(--exp-color-sepia);
+  border-radius: 50%;
+  padding: 6px 12px;
+  display: inline-block;
+}
+
+/* Note style */
+.annotation-note {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 0.7rem;
+  color: var(--exp-color-pewter);
+  max-width: 180px;
+  line-height: 1.5;
+}
+
+/* Label style */
+.annotation-label {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--exp-color-stone);
+}
+
+/* ============================================
+   PART 7: Layout & Positioning Helpers
+   ============================================ */
+
+/* Scattered positioning */
+.scattered-container {
+  position: relative;
+}
+
+.scattered-item {
+  position: absolute;
+}
+
+.scattered-item--tl { top: 10%; left: 5%; }
+.scattered-item--tr { top: 15%; right: 8%; }
+.scattered-item--bl { bottom: 12%; left: 10%; }
+.scattered-item--br { bottom: 8%; right: 5%; }
+
+/* Rotation helpers */
+.rotate-n1 { transform: rotate(-1deg); }
+.rotate-n2 { transform: rotate(-2deg); }
+.rotate-n3 { transform: rotate(-3deg); }
+.rotate-1 { transform: rotate(1deg); }
+.rotate-2 { transform: rotate(2deg); }
+.rotate-3 { transform: rotate(3deg); }
+
+/* Hover straighten */
+.hover-straighten {
+  transition: transform var(--exp-duration-normal) var(--exp-ease);
+}
+.hover-straighten:hover {
+  transform: rotate(0deg) !important;
+}
+
+/* ============================================
+   PART 8: Typography Scale Classes
+   ============================================ */
+
+.exp-text-hero {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--exp-text-hero);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 300;
+}
+
+.exp-text-display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--exp-text-display);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  font-weight: 300;
+}
+
+.exp-text-title {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--exp-text-title);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-weight: 300;
+}
+
+.exp-text-heading {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--exp-text-heading);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 300;
+}
+
+.exp-text-subheading {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--exp-text-subheading);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-weight: 300;
+}
+
+.exp-text-body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--exp-text-body);
+  line-height: 1.7;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.exp-text-caption {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: var(--exp-text-caption);
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.exp-text-micro {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: var(--exp-text-micro);
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.exp-text-whisper {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: var(--exp-text-whisper);
+  line-height: 1;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* ============================================
+   PART 9: Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Reduce effect intensity on mobile */
+  .char-scatter--strong > span {
+    transform: rotate(-1.5deg) translateY(-2px);
+  }
+
+  .text-offset-strong {
+    text-shadow: 3px 3px 0 rgba(139, 115, 85, 0.15);
+  }
+
+  /* Simplify grain for performance */
+  .text-grain::after {
+    opacity: 0.05;
+  }
+}
+
+/* ============================================
+   PART 10: Print Styles
+   ============================================ */
+
+@media print {
+  /* Remove animations */
+  .char-wave > span,
+  .text-glitch::before,
+  .text-glitch::after {
+    animation: none;
+  }
+
+  /* Simplify effects */
+  .text-outline {
+    color: #000;
+    -webkit-text-stroke: 0;
+  }
+
+  .text-grain::after {
+    display: none;
+  }
+
+  /* Ensure readability */
+  .text-desaturated,
+  .text-faded,
+  .text-ghost,
+  .text-whisper {
+    color: #333;
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   PART 11: Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .char-wave > span,
+  .text-glitch::before,
+  .text-glitch::after {
+    animation: none;
+  }
+
+  .char-scatter > span,
+  .hover-straighten {
+    transition: none;
+  }
+}
