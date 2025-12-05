@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, ReactNode, memo, useMemo } from 'react'
+import { CSSProperties, ReactNode, memo } from 'react'
 
 // Extended Slot sizes - more variety
 type SlotSize =

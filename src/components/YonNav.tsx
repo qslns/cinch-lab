@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -8,8 +8,23 @@ import dynamic from 'next/dynamic'
 // Dynamic import for FullscreenMenu (client-only)
 const FullscreenMenu = dynamic(() => import('./FullscreenMenu'), { ssr: false })
 
+// Type definitions for nav items
+interface SubItem {
+  href: string
+  label: string
+  season?: string
+}
+
+interface NavItem {
+  id: string
+  href: string
+  label: string
+  num: string
+  subItems?: readonly SubItem[]
+}
+
 // Frozen navigation structure - no re-creation on render
-const NAV_ITEMS = Object.freeze([
+const NAV_ITEMS: readonly NavItem[] = Object.freeze([
   {
     id: 'nav-collections',
     href: '/collections',
@@ -36,11 +51,11 @@ const NAV_ITEMS = Object.freeze([
   },
   { id: 'nav-about', href: '/about', label: 'About', num: '04' },
   { id: 'nav-contact', href: '/contact', label: 'Contact', num: '05' },
-] as const)
+])
 
 // Pre-computed rotations - frozen
-const DESKTOP_ROTATIONS = Object.freeze([-0.8, 0.5, -0.3, 0.7, -0.5] as const)
-const MOBILE_ROTATIONS = Object.freeze([-0.3, 0.5, -0.5, 0.3, -0.4] as const)
+const DESKTOP_ROTATIONS: readonly number[] = Object.freeze([-0.8, 0.5, -0.3, 0.7, -0.5])
+const MOBILE_ROTATIONS: readonly number[] = Object.freeze([-0.3, 0.5, -0.5, 0.3, -0.4])
 
 export default function YonNav() {
   const [isOpen, setIsOpen] = useState(false)
